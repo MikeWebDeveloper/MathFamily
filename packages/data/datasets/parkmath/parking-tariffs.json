@@ -173,7 +173,7 @@
           "prices": [
             { "days": 3, "totalPence": 8000 },
             { "days": 7, "totalPence": 14000 },
-            { "days": 14, "totalPence": 28500 }
+            { "days": 14, "totalPence": 24500 }
           ],
           "snapshotDate": null,
           "notes": "Official Long Stay 'TURN UP PRICES' (roll-up/drive-up) table: up to 1h free; 2h £15; 1 day £50.00; 2 days £65.00; 3 days £80.00; each additional day (or part) thereafter £15.00. 3-day total used directly (£80); 7/14-day totals computed from the official 3-day base plus the official £15/day (7d=80+4x15; 14d=80+11x15). 2-day cross-check matches (£65 = 50+15). FLAG: glasgowairport.com is Cloudflare-blocked to plain fetch tools; this official turn-up table was obtained by rendering the official Long Stay page through the jina reader's headless-browser engine (X-Engine: browser) on 2026-06-10."
