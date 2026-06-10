@@ -7,6 +7,8 @@ const validRecord = {
   feeSummary: "£10 for up to 20 minutes",
   bands: [{ upToMinutes: 20, totalPence: 1000 }],
   maxStayMinutes: 20,
+  perMinuteAfterPence: null,
+  maxChargePence: null,
   penaltyPence: 10000,
   penaltyNotes: "Reduced to £50 if paid within 14 days",
   paymentDeadline: "23:59 the day after drop-off",

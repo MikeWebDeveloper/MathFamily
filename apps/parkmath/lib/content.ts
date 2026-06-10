@@ -27,6 +27,7 @@ export function buildDropOffFaqs(record: DropOffRecord, airportName: string): { 
 export function trendNote(record: DropOffRecord): string | null {
   const current = record.bands[0]?.totalPence;
   if (record.isFree || current === undefined || record.priorYearFeePence === null) return null;
+  if (record.priorYearFeePence === 0) return `New charge for 2026 (${formatPence(current)})`;
   const diff = current - record.priorYearFeePence;
   if (diff === 0) return `Unchanged vs 2025 (${formatPence(current)})`;
   const direction = diff > 0 ? "Up" : "Down";

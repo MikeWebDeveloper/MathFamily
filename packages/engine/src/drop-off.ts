@@ -7,8 +7,10 @@ export interface DropOffBand {
 
 export interface DropOffTariff {
   isFree: boolean;
-  bands: DropOffBand[]; // ascending by upToMinutes
+  bands: DropOffBand[]; // cumulative totals; order-independent (smallest qualifying band wins)
   maxStayMinutes: number | null; // display metadata from the tariff page; not used in quoting
+  perMinuteAfterPence: number | null; // published per-minute rate after the last band
+  maxChargePence: number | null; // published cap on the total charge
   penaltyPence: number | null;
   freeAlternative: { name: string; minutesFree: number } | null;
   verifiedAt: string; // YYYY-MM-DD
@@ -58,15 +60,37 @@ export function quoteDropOff(tariff: DropOffTariff, stayMinutes: number, now: Da
 
   if (tariff.isFree) return { costPence: 0, beyondTariff: false, warnings, effectiveMinutes: minutes };
 
-  // Fix 2: order-independent band selection — pick the qualifying band with the smallest upToMinutes
+  // Select the smallest qualifying band so correctness doesn't depend on input ordering.
   let band: DropOffBand | undefined;
   for (const b of tariff.bands) {
     if (minutes <= b.upToMinutes && (band === undefined || b.upToMinutes < band.upToMinutes)) band = b;
   }
   if (band) return { costPence: band.totalPence, beyondTariff: false, warnings, effectiveMinutes: minutes };
 
-  const lastBand = tariff.bands[tariff.bands.length - 1];
-  // Fix 1: guard against malformed penaltyPence — only use PENALTY_RISK path when the value is a valid non-negative integer
+  // The widest published band is the anchor for a per-minute continuation tail.
+  let lastBand: DropOffBand | undefined;
+  for (const b of tariff.bands) {
+    if (lastBand === undefined || b.upToMinutes > lastBand.upToMinutes) lastBand = b;
+  }
+
+  // Honest per-minute continuation: when the published tariff continues at a per-minute rate
+  // after the last band, quote the exact cost instead of implying a PCN. Within max stay only.
+  // perMinuteAfterPence/maxChargePence come from external data; ignore malformed (non-integer/negative) values.
+  if (
+    lastBand &&
+    tariff.perMinuteAfterPence !== null &&
+    Number.isInteger(tariff.perMinuteAfterPence) &&
+    tariff.perMinuteAfterPence > 0 &&
+    !(tariff.maxStayMinutes !== null && minutes > tariff.maxStayMinutes)
+  ) {
+    let cost = lastBand.totalPence + (minutes - lastBand.upToMinutes) * tariff.perMinuteAfterPence;
+    if (tariff.maxChargePence !== null && Number.isInteger(tariff.maxChargePence) && tariff.maxChargePence > 0) {
+      cost = Math.min(cost, tariff.maxChargePence);
+    }
+    return { costPence: cost, beyondTariff: false, warnings, effectiveMinutes: minutes };
+  }
+
+  // penaltyPence comes from external data; only format values that are valid integer pence.
   if (
     tariff.penaltyPence !== null &&
     Number.isInteger(tariff.penaltyPence) &&
@@ -75,7 +99,7 @@ export function quoteDropOff(tariff: DropOffTariff, stayMinutes: number, now: Da
   ) {
     warnings.push({
       code: "PENALTY_RISK",
-      message: `Stays beyond ${lastBand.upToMinutes} minutes risk a ${formatPence(tariff.penaltyPence)} charge notice.`
+      message: `The published tariff doesn't cover stays beyond ${lastBand.upToMinutes} minutes. Unpaid charges can lead to a ${formatPence(tariff.penaltyPence)} charge notice.`
     });
   } else {
     warnings.push({

@@ -8,6 +8,8 @@ const record: DropOffRecord = {
   feeSummary: "£10 for up to 20 minutes",
   bands: [{ upToMinutes: 20, totalPence: 1000 }],
   maxStayMinutes: 20,
+  perMinuteAfterPence: null,
+  maxChargePence: null,
   penaltyPence: 10000,
   penaltyNotes: "Reduced to £50 if paid within 14 days",
   paymentDeadline: "23:59 the day after drop-off",
@@ -46,6 +48,10 @@ describe("trendNote", () => {
   });
   it("returns null for free airports", () => {
     expect(trendNote({ ...record, isFree: true, bands: [] })).toBeNull();
+  });
+  it("frames a brand-new charge (prior year was free) without an up/down delta", () => {
+    const newCharge = { ...record, priorYearFeePence: 0, bands: [{ upToMinutes: 5, totalPence: 800 }] };
+    expect(trendNote(newCharge)).toBe("New charge for 2026 (£8)");
   });
 });
 

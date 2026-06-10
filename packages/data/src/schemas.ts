@@ -35,6 +35,8 @@ export const DropOffRecordSchema = z
     feeSummary: z.string().min(1),
     bands: z.array(DropOffBandSchema),
     maxStayMinutes: z.number().int().positive().nullable(),
+    perMinuteAfterPence: z.number().int().positive().nullable(),
+    maxChargePence: z.number().int().positive().nullable(),
     penaltyPence: z.number().int().positive().nullable(),
     penaltyNotes: z.string().nullable(),
     paymentDeadline: z.string().nullable(),

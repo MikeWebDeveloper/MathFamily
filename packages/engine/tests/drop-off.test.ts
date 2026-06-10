@@ -7,6 +7,8 @@ const gatwickLike: DropOffTariff = {
   isFree: false,
   bands: [{ upToMinutes: 20, totalPence: 1000 }],
   maxStayMinutes: 20,
+  perMinuteAfterPence: null,
+  maxChargePence: null,
   penaltyPence: 10000,
   freeAlternative: { name: "Long Stay car park", minutesFree: 30 },
   verifiedAt: "2026-06-01"
@@ -19,6 +21,8 @@ const stanstedLike: DropOffTariff = {
     { upToMinutes: 60, totalPence: 2800 }
   ],
   maxStayMinutes: 60,
+  perMinuteAfterPence: null,
+  maxChargePence: null,
   penaltyPence: null,
   freeAlternative: null,
   verifiedAt: "2026-06-01"
@@ -28,6 +32,31 @@ const freeAirport: DropOffTariff = {
   isFree: true,
   bands: [],
   maxStayMinutes: null,
+  perMinuteAfterPence: null,
+  maxChargePence: null,
+  penaltyPence: null,
+  freeAlternative: null,
+  verifiedAt: "2026-06-01"
+};
+
+// Per-minute continuation fixtures (Fix 1): published rate continues after the last band.
+const gatwickPerMinute: DropOffTariff = {
+  isFree: false,
+  bands: [{ upToMinutes: 10, totalPence: 1000 }],
+  maxStayMinutes: 30,
+  perMinuteAfterPence: 100,
+  maxChargePence: 3000,
+  penaltyPence: 10000,
+  freeAlternative: null,
+  verifiedAt: "2026-06-01"
+};
+
+const londonCityPerMinute: DropOffTariff = {
+  isFree: false,
+  bands: [{ upToMinutes: 5, totalPence: 800 }],
+  maxStayMinutes: 10,
+  perMinuteAfterPence: 100,
+  maxChargePence: null,
   penaltyPence: null,
   freeAlternative: null,
   verifiedAt: "2026-06-01"
@@ -94,6 +123,8 @@ describe("quoteDropOff", () => {
         { upToMinutes: 15, totalPence: 1000 }
       ],
       maxStayMinutes: 60,
+      perMinuteAfterPence: null,
+      maxChargePence: null,
       penaltyPence: null,
       freeAlternative: null,
       verifiedAt: "2026-06-01"
@@ -116,5 +147,42 @@ describe("quoteDropOff", () => {
   it("effectiveMinutes equals the rounded minutes for a normal call", () => {
     // 10.6 rounds to 11
     expect(quoteDropOff(gatwickLike, 10.6, NOW).effectiveMinutes).toBe(11);
+  });
+
+  // Fix 1: honest per-minute tariff continuation after the last band
+  describe("per-minute continuation", () => {
+    it.each([
+      [15, 1500],
+      [28, 2800],
+      [30, 3000] // capped at maxChargePence £30
+    ])("gatwick-like %i min quotes %i pence (per-minute then cap)", (minutes, expected) => {
+      const q = quoteDropOff(gatwickPerMinute, minutes, NOW);
+      expect(q.costPence).toBe(expected);
+      expect(q.beyondTariff).toBe(false);
+    });
+
+    it("gatwick-like beyond max stay (40 min) is beyond tariff with null cost", () => {
+      const q = quoteDropOff(gatwickPerMinute, 40, NOW);
+      expect(q.costPence).toBeNull();
+      expect(q.beyondTariff).toBe(true);
+    });
+
+    it("respects maxChargePence cap below the linear amount (25 min, cap £20 → £20)", () => {
+      const capped: DropOffTariff = { ...gatwickPerMinute, maxChargePence: 2000 };
+      expect(quoteDropOff(capped, 25, NOW).costPence).toBe(2000);
+    });
+
+    it("london-city-like 8 min quotes £11 (£8 + 3 × £1) with no cap", () => {
+      const q = quoteDropOff(londonCityPerMinute, 8, NOW);
+      expect(q.costPence).toBe(1100);
+      expect(q.beyondTariff).toBe(false);
+    });
+
+    it("ignores malformed perMinuteAfterPence and falls through to beyond-tariff", () => {
+      const bad: DropOffTariff = { ...gatwickPerMinute, perMinuteAfterPence: 100.5, maxChargePence: null };
+      const q = quoteDropOff(bad, 15, NOW);
+      expect(q.costPence).toBeNull();
+      expect(q.beyondTariff).toBe(true);
+    });
   });
 });
