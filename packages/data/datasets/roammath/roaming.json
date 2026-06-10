@@ -1,23 +1,452 @@
 {
-  "version": "0.1.0",
+  "version": "1.0.0",
   "lastUpdated": "2026-06-10",
   "networkSources": [
-    { "network": "ee", "sourceUrl": "https://ee.co.uk/help/roaming", "verifiedAt": "2026-06-10" },
-    { "network": "o2", "sourceUrl": "https://www.o2.co.uk/roaming", "verifiedAt": "2026-06-10" },
-    { "network": "vodafone", "sourceUrl": "https://www.vodafone.co.uk/roaming", "verifiedAt": "2026-06-10" },
-    { "network": "three", "sourceUrl": "https://www.three.co.uk/roaming", "verifiedAt": "2026-06-10" }
+    { "network": "ee", "sourceUrl": "https://ee.co.uk/content/dam/help/terms-and-conditions/price-plans/mobile/ee-pay-monthly-standard-and-non-standard-price-guide-23-July-2025.pdf", "verifiedAt": "2026-06-10" },
+    { "network": "o2", "sourceUrl": "https://www.o2.co.uk/international/travel-inclusive-zone-ultimate", "verifiedAt": "2026-06-10" },
+    { "network": "vodafone", "sourceUrl": "https://binaries.vodafone.co.uk/gbnnsauqav4t/3ynRZJ6BvgpyYyPmoIAHX0/ff9c9463c41c25d0cbf8f5d27f955afb/evo-paym-charges-guide.pdf", "verifiedAt": "2026-06-10" },
+    { "network": "three", "sourceUrl": "https://www.three.co.uk/support/roaming-and-calling-abroad/roaming-abroad/go-roam", "verifiedAt": "2026-06-10" }
   ],
   "destinations": [
     {
       "countrySlug": "spain",
       "countryName": "Spain",
       "perNetwork": [
-        { "network": "ee", "included": false, "dailyPassPence": 259, "passName": "EU Roaming Pass", "fairUseNote": "50GB fair use" },
-        { "network": "o2", "included": true, "dailyPassPence": null, "passName": null, "fairUseNote": "25GB roaming limit applies" },
-        { "network": "vodafone", "included": false, "dailyPassPence": 257, "passName": "8-day European Roaming Pass (per-day equivalent)", "fairUseNote": "25GB fair use" },
-        { "network": "three", "included": false, "dailyPassPence": 200, "passName": "Go Roam Europe daily charge", "fairUseNote": "12GB daily cap" }
+        { "network": "ee", "included": false, "dailyPassPence": 259, "passName": "Daily EU Charge", "fairUseNote": "EU/EEA/Switzerland zone; 50GB Europe roaming fair-use cap (EE help). Included at no charge for plans launched before 7 Jul 2021." },
+        { "network": "o2", "included": true, "dailyPassPence": null, "passName": "Europe Zone (inclusive)", "fairUseNote": "Roam at no extra cost; 25GB roaming fair-use limit applies." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 275, "passName": "Zone B daily charge", "fairUseNote": "Euro Roam Zone B; £2.75/day from 14 Apr 2026; 25GB roaming fair-use cap." },
+        { "network": "three", "included": false, "dailyPassPence": 275, "passName": "Go Roam in Europe daily charge", "fairUseNote": "£2.75/day for plans joined/upgraded on/after 18 Dec 2025; 12GB data fair-use cap." }
+      ],
+      "sourceNote": "EU member; in the inclusive Europe zone for all four networks."
+    },
+    {
+      "countrySlug": "france",
+      "countryName": "France",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 259, "passName": "Daily EU Charge", "fairUseNote": "EU/EEA/Switzerland zone; 50GB Europe fair-use cap. Included for pre-Jul-2021 plans." },
+        { "network": "o2", "included": true, "dailyPassPence": null, "passName": "Europe Zone (inclusive)", "fairUseNote": "Roam at no extra cost; 25GB roaming fair-use limit." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 275, "passName": "Zone B daily charge", "fairUseNote": "Euro Roam Zone B; £2.75/day from 14 Apr 2026; 25GB cap." },
+        { "network": "three", "included": false, "dailyPassPence": 275, "passName": "Go Roam in Europe daily charge", "fairUseNote": "£2.75/day for newest plans; 12GB cap." }
       ],
       "sourceNote": null
+    },
+    {
+      "countrySlug": "italy",
+      "countryName": "Italy",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 259, "passName": "Daily EU Charge", "fairUseNote": "EU zone; 50GB Europe fair-use cap." },
+        { "network": "o2", "included": true, "dailyPassPence": null, "passName": "Europe Zone (inclusive)", "fairUseNote": "Roam at no extra cost; 25GB limit." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 275, "passName": "Zone B daily charge", "fairUseNote": "Euro Roam Zone B; £2.75/day; 25GB cap." },
+        { "network": "three", "included": false, "dailyPassPence": 275, "passName": "Go Roam in Europe daily charge", "fairUseNote": "£2.75/day for newest plans; 12GB cap." }
+      ],
+      "sourceNote": null
+    },
+    {
+      "countrySlug": "portugal",
+      "countryName": "Portugal",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 259, "passName": "Daily EU Charge", "fairUseNote": "EU zone; 50GB Europe fair-use cap." },
+        { "network": "o2", "included": true, "dailyPassPence": null, "passName": "Europe Zone (inclusive)", "fairUseNote": "Roam at no extra cost; 25GB limit." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 275, "passName": "Zone B daily charge", "fairUseNote": "Euro Roam Zone B; £2.75/day; 25GB cap." },
+        { "network": "three", "included": false, "dailyPassPence": 275, "passName": "Go Roam in Europe daily charge", "fairUseNote": "£2.75/day for newest plans; 12GB cap." }
+      ],
+      "sourceNote": null
+    },
+    {
+      "countrySlug": "greece",
+      "countryName": "Greece",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 259, "passName": "Daily EU Charge", "fairUseNote": "EU zone; 50GB Europe fair-use cap." },
+        { "network": "o2", "included": true, "dailyPassPence": null, "passName": "Europe Zone (inclusive)", "fairUseNote": "Roam at no extra cost; 25GB limit." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 275, "passName": "Zone B daily charge", "fairUseNote": "Euro Roam Zone B; £2.75/day; 25GB cap." },
+        { "network": "three", "included": false, "dailyPassPence": 275, "passName": "Go Roam in Europe daily charge", "fairUseNote": "£2.75/day for newest plans; 12GB cap." }
+      ],
+      "sourceNote": null
+    },
+    {
+      "countrySlug": "germany",
+      "countryName": "Germany",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 259, "passName": "Daily EU Charge", "fairUseNote": "EU zone; 50GB Europe fair-use cap." },
+        { "network": "o2", "included": true, "dailyPassPence": null, "passName": "Europe Zone (inclusive)", "fairUseNote": "Roam at no extra cost; 25GB limit." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 275, "passName": "Zone B daily charge", "fairUseNote": "Euro Roam Zone B; £2.75/day; 25GB cap." },
+        { "network": "three", "included": false, "dailyPassPence": 275, "passName": "Go Roam in Europe daily charge", "fairUseNote": "£2.75/day for newest plans; 12GB cap." }
+      ],
+      "sourceNote": null
+    },
+    {
+      "countrySlug": "ireland",
+      "countryName": "Ireland",
+      "perNetwork": [
+        { "network": "ee", "included": true, "dailyPassPence": null, "passName": "EU zone (Republic of Ireland inclusive)", "fairUseNote": "Calls, texts and data within Ireland and from Ireland to the UK are included in allowance with no daily charge." },
+        { "network": "o2", "included": true, "dailyPassPence": null, "passName": "Europe Zone (inclusive)", "fairUseNote": "Roam at no extra cost; 25GB limit." },
+        { "network": "vodafone", "included": true, "dailyPassPence": null, "passName": "Zone A (inclusive)", "fairUseNote": "Zone A (Ireland, Isle of Man, Iceland, Norway) included in all plans; 25GB fair-use cap." },
+        { "network": "three", "included": true, "dailyPassPence": null, "passName": "Go Roam (Ireland excluded from daily charge)", "fairUseNote": "Republic of Ireland and Isle of Man excluded from the Go Roam daily charge; no extra cost. Fair-use limits do not apply in Ireland." }
+      ],
+      "sourceNote": "Ireland is treated as inclusive (no daily charge) by all four networks — EE Republic-of-Ireland allowance, Vodafone Zone A, Three Go Roam exclusion, O2 Europe Zone."
+    },
+    {
+      "countrySlug": "netherlands",
+      "countryName": "Netherlands",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 259, "passName": "Daily EU Charge", "fairUseNote": "EU zone; 50GB Europe fair-use cap." },
+        { "network": "o2", "included": true, "dailyPassPence": null, "passName": "Europe Zone (inclusive)", "fairUseNote": "Roam at no extra cost; 25GB limit." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 275, "passName": "Zone B daily charge", "fairUseNote": "Euro Roam Zone B; £2.75/day; 25GB cap." },
+        { "network": "three", "included": false, "dailyPassPence": 275, "passName": "Go Roam in Europe daily charge", "fairUseNote": "£2.75/day for newest plans; 12GB cap." }
+      ],
+      "sourceNote": null
+    },
+    {
+      "countrySlug": "belgium",
+      "countryName": "Belgium",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 259, "passName": "Daily EU Charge", "fairUseNote": "EU zone; 50GB Europe fair-use cap." },
+        { "network": "o2", "included": true, "dailyPassPence": null, "passName": "Europe Zone (inclusive)", "fairUseNote": "Roam at no extra cost; 25GB limit." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 275, "passName": "Zone B daily charge", "fairUseNote": "Euro Roam Zone B; £2.75/day; 25GB cap." },
+        { "network": "three", "included": false, "dailyPassPence": 275, "passName": "Go Roam in Europe daily charge", "fairUseNote": "£2.75/day for newest plans; 12GB cap." }
+      ],
+      "sourceNote": null
+    },
+    {
+      "countrySlug": "austria",
+      "countryName": "Austria",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 259, "passName": "Daily EU Charge", "fairUseNote": "EU zone; 50GB Europe fair-use cap." },
+        { "network": "o2", "included": true, "dailyPassPence": null, "passName": "Europe Zone (inclusive)", "fairUseNote": "Roam at no extra cost; 25GB limit." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 275, "passName": "Zone B daily charge", "fairUseNote": "Euro Roam Zone B; £2.75/day; 25GB cap." },
+        { "network": "three", "included": false, "dailyPassPence": 275, "passName": "Go Roam in Europe daily charge", "fairUseNote": "£2.75/day for newest plans; 12GB cap." }
+      ],
+      "sourceNote": null
+    },
+    {
+      "countrySlug": "switzerland",
+      "countryName": "Switzerland",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 259, "passName": "Daily EU Charge", "fairUseNote": "Switzerland is in EE's EU/EEA/Switzerland Europe zone; 50GB fair-use cap." },
+        { "network": "o2", "included": true, "dailyPassPence": null, "passName": "Europe Zone (inclusive)", "fairUseNote": "Switzerland is in O2's Europe Zone; roam at no extra cost; 25GB limit." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 275, "passName": "Zone B daily charge", "fairUseNote": "Switzerland is in Vodafone Zone B (Euro Roam); £2.75/day; 25GB cap." },
+        { "network": "three", "included": false, "dailyPassPence": 275, "passName": "Go Roam in Europe daily charge", "fairUseNote": "Switzerland is a Go Roam in Europe (band 1) destination; £2.75/day; 12GB cap." }
+      ],
+      "sourceNote": "Switzerland is treated as a Europe-zone destination by ALL four networks (verified per network in their guides), not a worldwide zone."
+    },
+    {
+      "countrySlug": "poland",
+      "countryName": "Poland",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 259, "passName": "Daily EU Charge", "fairUseNote": "EU zone; 50GB Europe fair-use cap." },
+        { "network": "o2", "included": true, "dailyPassPence": null, "passName": "Europe Zone (inclusive)", "fairUseNote": "Roam at no extra cost; 25GB limit." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 275, "passName": "Zone B daily charge", "fairUseNote": "Euro Roam Zone B; £2.75/day; 25GB cap." },
+        { "network": "three", "included": false, "dailyPassPence": 275, "passName": "Go Roam in Europe daily charge", "fairUseNote": "£2.75/day for newest plans; 12GB cap." }
+      ],
+      "sourceNote": null
+    },
+    {
+      "countrySlug": "croatia",
+      "countryName": "Croatia",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 259, "passName": "Daily EU Charge", "fairUseNote": "EU zone; 50GB Europe fair-use cap." },
+        { "network": "o2", "included": true, "dailyPassPence": null, "passName": "Europe Zone (inclusive)", "fairUseNote": "Roam at no extra cost; 25GB limit." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 275, "passName": "Zone B daily charge", "fairUseNote": "Euro Roam Zone B; £2.75/day; 25GB cap." },
+        { "network": "three", "included": false, "dailyPassPence": 275, "passName": "Go Roam in Europe daily charge", "fairUseNote": "Croatia is a Go Roam in Europe destination; £2.75/day; 12GB cap." }
+      ],
+      "sourceNote": null
+    },
+    {
+      "countrySlug": "cyprus",
+      "countryName": "Cyprus",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 259, "passName": "Daily EU Charge", "fairUseNote": "EU zone; 50GB Europe fair-use cap. (Northern Cyprus is a separate, worldwide zone.)" },
+        { "network": "o2", "included": true, "dailyPassPence": null, "passName": "Europe Zone (inclusive)", "fairUseNote": "Roam at no extra cost; 25GB limit." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 275, "passName": "Zone B daily charge", "fairUseNote": "Euro Roam Zone B; £2.75/day; 25GB cap." },
+        { "network": "three", "included": false, "dailyPassPence": 275, "passName": "Go Roam in Europe daily charge", "fairUseNote": "Cyprus (Republic) is Go Roam in Europe; £2.75/day. Northern Cyprus is band 2 (Around the World)." }
+      ],
+      "sourceNote": "Republic of Cyprus is in the EU Europe zone for all four networks; Northern Cyprus (Turkish) is treated as a worldwide zone by EE and Three."
+    },
+    {
+      "countrySlug": "malta",
+      "countryName": "Malta",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 259, "passName": "Daily EU Charge", "fairUseNote": "EU zone; 50GB Europe fair-use cap." },
+        { "network": "o2", "included": true, "dailyPassPence": null, "passName": "Europe Zone (inclusive)", "fairUseNote": "Roam at no extra cost; 25GB limit." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 275, "passName": "Zone B daily charge", "fairUseNote": "Euro Roam Zone B; £2.75/day; 25GB cap." },
+        { "network": "three", "included": false, "dailyPassPence": 275, "passName": "Go Roam in Europe daily charge", "fairUseNote": "£2.75/day for newest plans; 12GB cap." }
+      ],
+      "sourceNote": null
+    },
+    {
+      "countrySlug": "turkey",
+      "countryName": "Turkey",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 500, "passName": "Roaming Pass ROW Zone 1 (24-hour)", "fairUseNote": "Turkey is in EE's ROW Zone 1 (outside EU/EEA). £5/day 24-hour pass unlocks UK allowance; 7-day pass £25." },
+        { "network": "o2", "included": false, "dailyPassPence": 700, "passName": "O2 Travel Bolt On", "fairUseNote": "Turkey is one of the 75 O2 Travel destinations; £7/day for unlimited mins/texts/data (speed capped 2Mbps)." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 800, "passName": "Zone C daily charge", "fairUseNote": "Turkey is in Vodafone Zone C (Global Roam); £8/day from 14 Apr 2026; 25GB cap." },
+        { "network": "three", "included": false, "dailyPassPence": 800, "passName": "Go Roam Around the World daily charge", "fairUseNote": "Turkey is a band-2 (Around the World) destination; £8/day for newest plans; 12GB cap." }
+      ],
+      "sourceNote": "Turkey sits OUTSIDE the Europe zone on every network (EE ROW Zone 1, Vodafone Zone C, Three Around the World, O2 Travel) — verified per network, not assumed."
+    },
+    {
+      "countrySlug": "usa",
+      "countryName": "United States",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 500, "passName": "Roaming Pass ROW Zone 1 (24-hour)", "fairUseNote": "USA is in EE's ROW Zone 1; £5/day 24-hour pass; 7-day pass £25." },
+        { "network": "o2", "included": false, "dailyPassPence": 700, "passName": "O2 Travel Bolt On", "fairUseNote": "USA is one of the 75 O2 Travel destinations; £7/day unlimited mins/texts/data (2Mbps cap)." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 800, "passName": "Zone C daily charge", "fairUseNote": "USA is in Vodafone Zone C (Global Roam); £8/day from 14 Apr 2026; 25GB cap." },
+        { "network": "three", "included": false, "dailyPassPence": 800, "passName": "Go Roam Around the World daily charge", "fairUseNote": "USA is a band-2 (Around the World) destination; £8/day for newest plans; 12GB cap." }
+      ],
+      "sourceNote": null
+    },
+    {
+      "countrySlug": "canada",
+      "countryName": "Canada",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 500, "passName": "Roaming Pass ROW Zone 1 (24-hour)", "fairUseNote": "Canada is in EE's ROW Zone 1; £5/day 24-hour pass; 7-day pass £25." },
+        { "network": "o2", "included": false, "dailyPassPence": 700, "passName": "O2 Travel Bolt On", "fairUseNote": "Canada is one of the 75 O2 Travel destinations; £7/day unlimited mins/texts/data." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 800, "passName": "Zone C daily charge", "fairUseNote": "Canada is in Vodafone Zone C (Global Roam); £8/day; 25GB cap." },
+        { "network": "three", "included": false, "dailyPassPence": 800, "passName": "Go Roam Around the World daily charge", "fairUseNote": "Canada is a band-2 (Around the World) destination; £8/day; 12GB cap." }
+      ],
+      "sourceNote": null
+    },
+    {
+      "countrySlug": "mexico",
+      "countryName": "Mexico",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 500, "passName": "Roaming Pass ROW Zone 1 (24-hour)", "fairUseNote": "Mexico is in EE's ROW Zone 1; £5/day 24-hour pass; 7-day pass £25." },
+        { "network": "o2", "included": false, "dailyPassPence": 700, "passName": "O2 Travel Bolt On", "fairUseNote": "Mexico is one of the 75 O2 Travel destinations; £7/day unlimited mins/texts/data." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 800, "passName": "Zone C daily charge", "fairUseNote": "Mexico is in Vodafone Zone C (Global Roam); £8/day; 25GB cap." },
+        { "network": "three", "included": false, "dailyPassPence": 800, "passName": "Go Roam Around the World daily charge", "fairUseNote": "Mexico is a band-2 (Around the World) destination; £8/day; 12GB cap." }
+      ],
+      "sourceNote": null
+    },
+    {
+      "countrySlug": "australia",
+      "countryName": "Australia",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 500, "passName": "Roaming Pass ROW Zone 1 (24-hour)", "fairUseNote": "Australia is in EE's ROW Zone 1; £5/day 24-hour pass; 7-day pass £25." },
+        { "network": "o2", "included": false, "dailyPassPence": 700, "passName": "O2 Travel Bolt On", "fairUseNote": "Australia is one of the 75 O2 Travel destinations; £7/day unlimited mins/texts/data." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 800, "passName": "Zone C daily charge", "fairUseNote": "Australia is in Vodafone Zone C (Global Roam); £8/day; 25GB cap." },
+        { "network": "three", "included": false, "dailyPassPence": 800, "passName": "Go Roam Around the World daily charge", "fairUseNote": "Australia is a band-2 (Around the World) destination; £8/day; 12GB cap." }
+      ],
+      "sourceNote": null
+    },
+    {
+      "countrySlug": "new-zealand",
+      "countryName": "New Zealand",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 500, "passName": "Roaming Pass ROW Zone 1 (24-hour)", "fairUseNote": "New Zealand is in EE's ROW Zone 1; £5/day 24-hour pass; 7-day pass £25." },
+        { "network": "o2", "included": false, "dailyPassPence": 700, "passName": "O2 Travel Bolt On", "fairUseNote": "New Zealand is one of the 75 O2 Travel destinations; £7/day unlimited mins/texts/data." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 800, "passName": "Zone C daily charge", "fairUseNote": "New Zealand is in Vodafone Zone C (Global Roam); £8/day; 25GB cap." },
+        { "network": "three", "included": false, "dailyPassPence": 800, "passName": "Go Roam Around the World daily charge", "fairUseNote": "New Zealand is a band-2 (Around the World) destination; £8/day; 12GB cap." }
+      ],
+      "sourceNote": null
+    },
+    {
+      "countrySlug": "uae",
+      "countryName": "United Arab Emirates",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 500, "passName": "Roaming Pass ROW Zone 1 (24-hour)", "fairUseNote": "UAE is in EE's ROW Zone 1; £5/day 24-hour pass; 7-day pass £25." },
+        { "network": "o2", "included": false, "dailyPassPence": 700, "passName": "O2 Travel Bolt On", "fairUseNote": "UAE is one of the 75 O2 Travel destinations; £7/day unlimited mins/texts/data." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 800, "passName": "Zone D daily charge", "fairUseNote": "UAE is in Vodafone Zone D; £8/day from 14 Apr 2026; 25GB cap." },
+        { "network": "three", "included": false, "dailyPassPence": 800, "passName": "Go Roam Around the World daily charge", "fairUseNote": "UAE is a band-2 (Around the World) destination; £8/day; 12GB cap." }
+      ],
+      "sourceNote": "EE places UAE in ROW Zone 1 (£5/day) while Vodafone places it in Zone D (£8/day) — verified per network."
+    },
+    {
+      "countrySlug": "thailand",
+      "countryName": "Thailand",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 500, "passName": "Roaming Pass ROW Zone 1 (24-hour)", "fairUseNote": "Thailand is in EE's ROW Zone 1; £5/day 24-hour pass; 7-day pass £25." },
+        { "network": "o2", "included": false, "dailyPassPence": 700, "passName": "O2 Travel Bolt On", "fairUseNote": "Thailand is one of the 75 O2 Travel destinations; £7/day unlimited mins/texts/data." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 800, "passName": "Zone D daily charge", "fairUseNote": "Thailand is in Vodafone Zone D; £8/day; 25GB cap." },
+        { "network": "three", "included": false, "dailyPassPence": 800, "passName": "Go Roam Around the World daily charge", "fairUseNote": "Thailand is a band-2 (Around the World) destination; £8/day; 12GB cap." }
+      ],
+      "sourceNote": null
+    },
+    {
+      "countrySlug": "japan",
+      "countryName": "Japan",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 750, "passName": "Roaming Pass ROW Zone 3 (24-hour)", "fairUseNote": "Japan is in EE's ROW Zone 3; £7.50/day 24-hour pass (unlimited mins/SMS + 500MB data); no weekly pass." },
+        { "network": "o2", "included": false, "dailyPassPence": 700, "passName": "O2 Travel Bolt On", "fairUseNote": "Japan is one of the 75 O2 Travel destinations; £7/day unlimited mins/texts/data." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 800, "passName": "Zone C daily charge", "fairUseNote": "Japan is in Vodafone Zone C (Global Roam); £8/day; 25GB cap." },
+        { "network": "three", "included": false, "dailyPassPence": 800, "passName": "Go Roam Around the World daily charge", "fairUseNote": "Japan is a band-2 (Around the World) destination; £8/day; 12GB cap." }
+      ],
+      "sourceNote": "EE puts Japan in ROW Zone 3 (£7.50, data limited to 500MB) — more restrictive than its Zone 1; Vodafone/Three put it in their worldwide zone with full allowance."
+    },
+    {
+      "countrySlug": "china",
+      "countryName": "China",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 500, "passName": "Roaming Pass ROW Zone 1 (24-hour)", "fairUseNote": "China is in EE's ROW Zone 1; £5/day 24-hour pass; 7-day pass £25." },
+        { "network": "o2", "included": false, "dailyPassPence": 700, "passName": "O2 Travel Bolt On", "fairUseNote": "China is one of the 75 O2 Travel destinations; £7/day unlimited mins/texts/data." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 800, "passName": "Zone C daily charge", "fairUseNote": "China is in Vodafone Zone C (Global Roam); £8/day; 25GB cap." },
+        { "network": "three", "included": false, "dailyPassPence": 800, "passName": "Go Roam Around the World daily charge", "fairUseNote": "China is a band-2 (Around the World) destination; £8/day; 12GB cap." }
+      ],
+      "sourceNote": null
+    },
+    {
+      "countrySlug": "india",
+      "countryName": "India",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 750, "passName": "Roaming Pass ROW Zone 2 (24-hour)", "fairUseNote": "India is in EE's ROW Zone 2; £7.50/day 24-hour pass; 7-day pass £37.50." },
+        { "network": "o2", "included": false, "dailyPassPence": 700, "passName": "O2 Travel Bolt On", "fairUseNote": "India is one of the 75 O2 Travel destinations; £7/day unlimited mins/texts/data." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 800, "passName": "Zone D daily charge", "fairUseNote": "India is in Vodafone Zone D; £8/day; 25GB cap." },
+        { "network": "three", "included": false, "dailyPassPence": 800, "passName": "Go Roam Around the World daily charge", "fairUseNote": "India is a band-2 (Around the World) destination; £8/day; 12GB cap." }
+      ],
+      "sourceNote": null
+    },
+    {
+      "countrySlug": "south-africa",
+      "countryName": "South Africa",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 500, "passName": "Roaming Pass ROW Zone 1 (24-hour)", "fairUseNote": "South Africa is in EE's ROW Zone 1; £5/day 24-hour pass; 7-day pass £25." },
+        { "network": "o2", "included": false, "dailyPassPence": 700, "passName": "O2 Travel Bolt On", "fairUseNote": "South Africa is one of the 75 O2 Travel destinations; £7/day unlimited mins/texts/data." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 800, "passName": "Zone C daily charge", "fairUseNote": "South Africa is in Vodafone Zone C (Global Roam); £8/day; 25GB cap." },
+        { "network": "three", "included": false, "dailyPassPence": 800, "passName": "Go Roam Around the World daily charge", "fairUseNote": "South Africa is a band-2 (Around the World) destination; £8/day; 12GB cap." }
+      ],
+      "sourceNote": null
+    },
+    {
+      "countrySlug": "egypt",
+      "countryName": "Egypt",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 750, "passName": "Roaming Pass ROW Zone 2 (24-hour)", "fairUseNote": "Egypt is in EE's ROW Zone 2; £7.50/day 24-hour pass; 7-day pass £37.50." },
+        { "network": "o2", "included": false, "dailyPassPence": 700, "passName": "O2 Travel Bolt On", "fairUseNote": "Egypt is one of the 75 O2 Travel destinations; £7/day unlimited mins/texts/data." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 800, "passName": "Zone D daily charge", "fairUseNote": "Egypt is in Vodafone Zone D; £8/day; 25GB cap." },
+        { "network": "three", "included": false, "dailyPassPence": 800, "passName": "Go Roam Around the World daily charge", "fairUseNote": "Egypt is a band-2 (Around the World) destination; £8/day; 12GB cap." }
+      ],
+      "sourceNote": null
+    },
+    {
+      "countrySlug": "morocco",
+      "countryName": "Morocco",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 750, "passName": "Roaming Pass ROW Zone 3 (24-hour)", "fairUseNote": "Morocco is in EE's ROW Zone 3; £7.50/day 24-hour pass (unlimited mins/SMS + 500MB data); no weekly pass." },
+        { "network": "o2", "included": false, "dailyPassPence": 2600, "passName": "Data Roaming Bolt On (Zone 3)", "fairUseNote": "SOFT VALUE: Morocco is NOT in O2 Travel. O2 offers only data-only Bolt Ons — cheapest in Zone 3 is £26 for 100MB. Calls £3/min, texts £1. The £26 figure is the cheapest data pack, NOT an all-inclusive daily pass." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 800, "passName": "Zone D daily charge", "fairUseNote": "Morocco is in Vodafone Zone D; £8/day; 25GB cap." },
+        { "network": "three", "included": false, "dailyPassPence": 800, "passName": "Go Roam Around the World daily charge", "fairUseNote": "Morocco is a band-2 (Around the World) destination; £8/day; 12GB cap." }
+      ],
+      "sourceNote": "O2 does NOT cover Morocco under its £7/day O2 Travel pass; only data-only Zone-3 Bolt Ons apply (cheapest £26/100MB), so O2's value is a soft, data-only figure — flagged. EE places Morocco in ROW Zone 3 (data limited to 500MB)."
+    },
+    {
+      "countrySlug": "tunisia",
+      "countryName": "Tunisia",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 750, "passName": "Roaming Pass ROW Zone 3 (24-hour)", "fairUseNote": "Tunisia is in EE's ROW Zone 3; £7.50/day 24-hour pass (unlimited mins/SMS + 500MB data); no weekly pass." },
+        { "network": "o2", "included": false, "dailyPassPence": 2600, "passName": "Data Roaming Bolt On (Zone 3)", "fairUseNote": "SOFT VALUE: Tunisia is NOT in O2 Travel. O2 offers only data-only Bolt Ons — cheapest in Zone 3 is £26 for 100MB. Calls £3/min, texts £1. The £26 figure is the cheapest data pack, NOT an all-inclusive daily pass." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 257, "passName": "Rest of World Zone 3 (no daily pass)", "fairUseNote": "SOFT VALUE: Tunisia is in Vodafone's Rest of World Zone 3, NOT zones A-D — there is NO inclusive daily roaming pass. The 257p shown is the per-minute call rate; data requires an optional extra. Not an all-inclusive daily charge." },
+        { "network": "three", "included": false, "dailyPassPence": 800, "passName": "Go Roam Around the World daily charge", "fairUseNote": "Tunisia is a band-2 (Around the World) destination; £8/day; 12GB cap." }
+      ],
+      "sourceNote": "Tunisia is a soft case for two networks: O2 has no Travel pass (data-only Bolt Ons) and Vodafone places it in Rest of World Zone 3 (no inclusive daily charge — pay-per-use). Only EE and Three offer a true daily pass."
+    },
+    {
+      "countrySlug": "norway",
+      "countryName": "Norway",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 259, "passName": "Daily EU Charge", "fairUseNote": "Norway is in EE's EU/EEA Europe zone; 50GB fair-use cap. Included for pre-Jul-2021 plans." },
+        { "network": "o2", "included": true, "dailyPassPence": null, "passName": "Europe Zone (inclusive)", "fairUseNote": "Norway is in O2's Europe Zone; roam at no extra cost; 25GB limit." },
+        { "network": "vodafone", "included": true, "dailyPassPence": null, "passName": "Zone A (inclusive)", "fairUseNote": "Norway is in Vodafone Zone A (included in all plans); 25GB fair-use cap." },
+        { "network": "three", "included": false, "dailyPassPence": 275, "passName": "Go Roam in Europe daily charge", "fairUseNote": "Norway is a Go Roam in Europe destination; £2.75/day; 12GB cap." }
+      ],
+      "sourceNote": "Norway is INCLUDED (no daily charge) on O2 and Vodafone (Zone A), but EE and Three apply their Europe daily charge."
+    },
+    {
+      "countrySlug": "iceland",
+      "countryName": "Iceland",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 259, "passName": "Daily EU Charge", "fairUseNote": "Iceland is in EE's EU/EEA Europe zone; 50GB fair-use cap. Included for pre-Jul-2021 plans." },
+        { "network": "o2", "included": true, "dailyPassPence": null, "passName": "Europe Zone (inclusive)", "fairUseNote": "Iceland is in O2's Europe Zone; roam at no extra cost; 25GB limit." },
+        { "network": "vodafone", "included": true, "dailyPassPence": null, "passName": "Zone A (inclusive)", "fairUseNote": "Iceland is in Vodafone Zone A (included in all plans); 25GB fair-use cap." },
+        { "network": "three", "included": false, "dailyPassPence": 275, "passName": "Go Roam in Europe daily charge", "fairUseNote": "Iceland is a Go Roam in Europe destination; £2.75/day; 12GB cap." }
+      ],
+      "sourceNote": "Iceland is INCLUDED (no daily charge) on O2 and Vodafone (Zone A), but EE and Three apply their Europe daily charge."
+    },
+    {
+      "countrySlug": "sweden",
+      "countryName": "Sweden",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 259, "passName": "Daily EU Charge", "fairUseNote": "EU zone; 50GB Europe fair-use cap." },
+        { "network": "o2", "included": true, "dailyPassPence": null, "passName": "Europe Zone (inclusive)", "fairUseNote": "Roam at no extra cost; 25GB limit." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 275, "passName": "Zone B daily charge", "fairUseNote": "Euro Roam Zone B; £2.75/day; 25GB cap." },
+        { "network": "three", "included": false, "dailyPassPence": 275, "passName": "Go Roam in Europe daily charge", "fairUseNote": "£2.75/day for newest plans; 12GB cap." }
+      ],
+      "sourceNote": null
+    },
+    {
+      "countrySlug": "denmark",
+      "countryName": "Denmark",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 259, "passName": "Daily EU Charge", "fairUseNote": "EU zone; 50GB Europe fair-use cap." },
+        { "network": "o2", "included": true, "dailyPassPence": null, "passName": "Europe Zone (inclusive)", "fairUseNote": "Roam at no extra cost; 25GB limit." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 275, "passName": "Zone B daily charge", "fairUseNote": "Euro Roam Zone B; £2.75/day; 25GB cap." },
+        { "network": "three", "included": false, "dailyPassPence": 275, "passName": "Go Roam in Europe daily charge", "fairUseNote": "£2.75/day for newest plans; 12GB cap." }
+      ],
+      "sourceNote": null
+    },
+    {
+      "countrySlug": "czechia",
+      "countryName": "Czechia",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 259, "passName": "Daily EU Charge", "fairUseNote": "Czech Republic is in EE's EU zone; 50GB Europe fair-use cap." },
+        { "network": "o2", "included": true, "dailyPassPence": null, "passName": "Europe Zone (inclusive)", "fairUseNote": "Roam at no extra cost; 25GB limit." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 275, "passName": "Zone B daily charge", "fairUseNote": "Euro Roam Zone B; £2.75/day; 25GB cap." },
+        { "network": "three", "included": false, "dailyPassPence": 275, "passName": "Go Roam in Europe daily charge", "fairUseNote": "£2.75/day for newest plans; 12GB cap." }
+      ],
+      "sourceNote": null
+    },
+    {
+      "countrySlug": "hungary",
+      "countryName": "Hungary",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 259, "passName": "Daily EU Charge", "fairUseNote": "EU zone; 50GB Europe fair-use cap." },
+        { "network": "o2", "included": true, "dailyPassPence": null, "passName": "Europe Zone (inclusive)", "fairUseNote": "Roam at no extra cost; 25GB limit." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 275, "passName": "Zone B daily charge", "fairUseNote": "Euro Roam Zone B; £2.75/day; 25GB cap." },
+        { "network": "three", "included": false, "dailyPassPence": 275, "passName": "Go Roam in Europe daily charge", "fairUseNote": "£2.75/day for newest plans; 12GB cap." }
+      ],
+      "sourceNote": null
+    },
+    {
+      "countrySlug": "romania",
+      "countryName": "Romania",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 259, "passName": "Daily EU Charge", "fairUseNote": "EU zone; 50GB Europe fair-use cap." },
+        { "network": "o2", "included": true, "dailyPassPence": null, "passName": "Europe Zone (inclusive)", "fairUseNote": "Roam at no extra cost; 25GB limit." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 275, "passName": "Zone B daily charge", "fairUseNote": "Euro Roam Zone B; £2.75/day; 25GB cap." },
+        { "network": "three", "included": false, "dailyPassPence": 275, "passName": "Go Roam in Europe daily charge", "fairUseNote": "£2.75/day for newest plans; 12GB cap." }
+      ],
+      "sourceNote": null
+    },
+    {
+      "countrySlug": "bulgaria",
+      "countryName": "Bulgaria",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 259, "passName": "Daily EU Charge", "fairUseNote": "EU zone; 50GB Europe fair-use cap." },
+        { "network": "o2", "included": true, "dailyPassPence": null, "passName": "Europe Zone (inclusive)", "fairUseNote": "Roam at no extra cost; 25GB limit." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 275, "passName": "Zone B daily charge", "fairUseNote": "Euro Roam Zone B; £2.75/day; 25GB cap." },
+        { "network": "three", "included": false, "dailyPassPence": 275, "passName": "Go Roam in Europe daily charge", "fairUseNote": "£2.75/day for newest plans; 12GB cap." }
+      ],
+      "sourceNote": null
+    },
+    {
+      "countrySlug": "albania",
+      "countryName": "Albania",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 500, "passName": "Roaming Pass ROW Zone 1 (24-hour)", "fairUseNote": "Albania is in EE's ROW Zone 1 (outside EU/EEA); £5/day 24-hour pass; 7-day pass £25." },
+        { "network": "o2", "included": false, "dailyPassPence": 700, "passName": "O2 Travel Bolt On", "fairUseNote": "Albania is one of the 75 O2 Travel destinations; £7/day unlimited mins/texts/data." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 257, "passName": "Rest of World Zone 1 (no daily pass)", "fairUseNote": "SOFT VALUE: Albania is in Vodafone's Rest of World Zone 1, NOT zones A-D — there is NO inclusive daily roaming pass. The 257p shown is the per-minute call rate; data requires an optional extra. Not an all-inclusive daily charge." },
+        { "network": "three", "included": false, "dailyPassPence": 800, "passName": "Go Roam Around the World daily charge", "fairUseNote": "Albania is a band-2 (Around the World) destination on Three; £8/day; 12GB cap." }
+      ],
+      "sourceNote": "Albania sits OUTSIDE the Europe zone on every network. Vodafone places it in Rest of World Zone 1 (no inclusive daily pass — pay-per-use), so its value is a soft, per-minute figure — flagged."
+    },
+    {
+      "countrySlug": "montenegro",
+      "countryName": "Montenegro",
+      "perNetwork": [
+        { "network": "ee", "included": false, "dailyPassPence": 500, "passName": "Roaming Pass ROW Zone 1 (24-hour)", "fairUseNote": "Montenegro is in EE's ROW Zone 1 (outside EU/EEA); £5/day 24-hour pass; 7-day pass £25." },
+        { "network": "o2", "included": false, "dailyPassPence": 700, "passName": "O2 Travel Bolt On", "fairUseNote": "Montenegro is one of the 75 O2 Travel destinations; £7/day unlimited mins/texts/data." },
+        { "network": "vodafone", "included": false, "dailyPassPence": 257, "passName": "Rest of World Zone 1 (no daily pass)", "fairUseNote": "SOFT VALUE: Montenegro is in Vodafone's Rest of World Zone 1, NOT zones A-D — there is NO inclusive daily roaming pass. The 257p shown is the per-minute call rate; data requires an optional extra. Not an all-inclusive daily charge." },
+        { "network": "three", "included": false, "dailyPassPence": 800, "passName": "Go Roam Around the World daily charge", "fairUseNote": "Montenegro is a band-2 (Around the World) destination on Three; £8/day; 12GB cap." }
+      ],
+      "sourceNote": "Montenegro sits OUTSIDE the Europe zone on every network. Vodafone places it in Rest of World Zone 1 (no inclusive daily pass — pay-per-use), so its value is a soft, per-minute figure — flagged."
     }
   ]
 }
