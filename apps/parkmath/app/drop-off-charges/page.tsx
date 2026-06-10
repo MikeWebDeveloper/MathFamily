@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { loadAirports, loadDropOffDataset } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
-import { datasetLd, JsonLd } from "@mathfamily/geo";
+import { datasetLd, itemListLd, JsonLd } from "@mathfamily/geo";
 import { FeeGrid, FreshnessBadge } from "@mathfamily/ui";
 import { isPerEntryTariff } from "@/lib/content";
 
@@ -30,6 +30,15 @@ export default function MasterTablePage() {
           url: `${siteUrl}/drop-off-charges`,
           dateModified: latestVerified,
           creatorName: "ParkMath"
+        })}
+      />
+      <JsonLd
+        data={itemListLd({
+          name: "UK airport drop-off charges, highest first",
+          items: records.map((r) => ({
+            name: `${airports.get(r.airportSlug)?.name ?? r.airportSlug} — ${r.isFree ? "free" : formatPence(r.bands[0]?.totalPence ?? 0)}`,
+            url: `${siteUrl}/drop-off-charges/${r.airportSlug}`
+          }))
         })}
       />
       <header className="space-y-3">

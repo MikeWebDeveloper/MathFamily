@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { loadAirports, loadDropOffDataset, type Airport, type DropOffRecord } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
-import { Callout, FaqAccordion, FeeStat, FreshnessBadge, SourceCitation, EmailCaptureSlot } from "@mathfamily/ui";
+import { AnswerLead, Callout, FaqAccordion, FeeStat, FreshnessBadge, SourceCitation, SourcesBlock, EmailCaptureSlot } from "@mathfamily/ui";
 import { DropOffCalculator } from "@/components/drop-off-calculator";
 import { buildDropOffFaqs, isPerEntryTariff, trendNote } from "@/lib/content";
 
@@ -57,6 +57,20 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
         </div>
       </header>
 
+      <AnswerLead
+        answer={
+          record.isFree
+            ? `Dropping off at ${airport.name} is free at the forecourt.`
+            : `Dropping off at ${airport.name} costs ${record.feeSummary.charAt(0).toLowerCase()}${record.feeSummary.slice(1)}.`
+        }
+      >
+        {[
+          ...(record.penaltyPence !== null ? [`Penalty if unpaid: ${formatPence(record.penaltyPence)}`] : []),
+          ...(record.freeAlternative ? [`Free alternative: ${record.freeAlternative.name} (${record.freeAlternative.minutesFree} min)`] : []),
+          ...(record.paymentDeadline ? [`Pay by: ${record.paymentDeadline}`] : [])
+        ]}
+      </AnswerLead>
+
       <FeeStat
         label="Current drop-off charge"
         value={record.isFree ? "Free" : formatPence(record.bands[0]?.totalPence ?? 0)}
@@ -106,6 +120,10 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
           Compare drop-off charges at all UK airports →
         </a>
       </p>
+      <SourcesBlock
+        sources={[{ label: `Official ${airport.name} drop-off page`, url: record.sourceUrl, verifiedAt: record.verifiedAt }]}
+        method="Every figure is read from the airport's official page and re-verified on the date shown. We never republish unverified prices."
+      />
     </article>
   );
 }
