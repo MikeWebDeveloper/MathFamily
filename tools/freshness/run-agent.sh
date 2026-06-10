@@ -9,6 +9,7 @@ REPO="/Volumes/TB4 Workstation/Users/mike/Desktop/Projects/MathFamily"
 LOG_DIR="$HOME/Library/Logs/mathfamily-freshness"
 mkdir -p "$LOG_DIR"
 STAMP=$(date +%Y-%m-%d_%H%M)
+export FRESHNESS_RUN_ID="$STAMP"
 
 cd "$REPO"
 PROMPT="/freshness $*"
