@@ -329,3 +329,36 @@ Cleanly fetched (NOT re-confirmation flags): **east-midlands, aberdeen, southamp
 - "Per-minute thereafter" rates (Gatwick, Luton, Edinburgh, London City, Aberdeen) are deliberately NOT expanded into bands to avoid recording extrapolated (non-published) totals. Only the published anchor amount is a band.
 - Heathrow's £7 is a flat per-entry charge with no timed band; represented as a 1-minute nominal band with `maxStayMinutes: null`.
 - `priorYearFeePence` is recorded as `0` for **london-city** (forecourt was free before the 6 Jan 2026 charge) and `500` for **liverpool** (officially-attested previous £5 minimum). It stays `null` for airports where no prior fee is officially attested.
+
+---
+
+# Full re-verification — 10 June 2026 (rendered official pages)
+
+All 25 airports re-verified using rendered official-page content (reader-proxy transport
+for WAF-blocked sites, Wayback Machine snapshots of official pages, and the official
+HIAL tariff PDF). Dataset bumped to **v1.2.0**. Corrections applied:
+
+| Airport | What changed | Evidence |
+|---|---|---|
+| **cardiff** | **No longer free.** Drop Off Zone now £3/10 min; full tariff to £20/2h. isFree → false; freeAlternative removed | cardiff-airport.com drop-off page (rendered 10 Jun 2026) |
+| **glasgow** | Fee corrected **£7 → £6**/15 min; + £1/min thereafter; £50 rate beyond 30 min; Blue Badge 30-min window in Multi Storey | Official page via Wayback snapshot 2 Feb 2026 (post-January pricing) |
+| **belfast-international** | Full tariff added (£5/10, £8/20, £13/60, £60 over 1h); freeAlternative removed (none published) | belfastairport.com drop-off zone page (rendered) — resolves the earlier £3-vs-£5 conflict in favour of £5 |
+| **liverpool** | Bands added (£10/20 min, £25/1h); the "40 min free" is a **Blue Badge concession**, not a general free alternative — freeAlternative removed | liverpoolairport.com express drop-off page (rendered) |
+| **newcastle** | Full Express tariff added (£12/30, £16/45, £20/1h, £28/2h) | newcastleairport.com picking-up-dropping-off page (rendered) |
+| **southend** | sourceUrl corrected to the pick-up-drop-off page (old URL was T&Cs with no pricing); £8/10 min confirmed; payment by midnight next day; freeAlternative removed (not published) | londonsouthendairport.com pick-up-drop-off page (rendered) |
+| **inverness** | **Source corrected**: invernessairport.co.uk is NOT the official site (it says so itself). Official: hial.co.uk. Free period is **15 min** (was recorded 10) in Short Stay drop-off; Blue Badge 20 min free in Premium | HIAL airport-information page + official tariff PDF effective 1 June 2026 |
+| **bristol** | Full tariff added (£10.50/20, £13/40, £30/1h, £60/2h, max stay 2h); £100/£60 Red Route penalty; Blue Badge 40 min for £8.50; Waiting Zone (1h free + shuttle) re-confirmed | Official page via Wayback snapshot 25 Apr 2026 |
+| **bournemouth** | Band added (£15/30–60 min); £8/30 min confirmed | bournemouthairport.com car-parking page (rendered HTML) |
+| **belfast-city** | £4/10 min confirmed; Blue Badge 2h free in Short Stay; Long Stay re-entry rule added | belfastcityairport.com drop-off page (rendered) |
+| **birmingham** | Free 10 min confirmed; added: no return within 1h, standard tariff after, pay within 24h | Official-domain search-index content (multiple pages) |
+| **leeds-bradford** | £7/10 min + One Hour Free Zone confirmed, no change | Official-domain search-index content |
+| **london-city** | £8/5 min + £1/min to 10-min max re-corroborated; payment-by-midnight-next-day added. Official pages remain hard-blocked (Cloudflare) — figures corroborated via official-domain index + multiple independent reports of the official press release | Strongest available evidence short of a human visit |
+
+**Evidence-dating note:** verifiedAt reflects the date values were verified against the
+best available official evidence. For glasgow and bristol that evidence is an archived
+copy of the official page (2 Feb / 25 Apr 2026 — both post-date the January 2026
+pricing round); a live-page glance at those two plus London City is still worthwhile
+whenever a human visits.
+
+**Remaining manual targets (downgraded):** london-city (hard-blocked), glasgow +
+bristol (archive-dated). All other airports: fully verified against rendered official content.
