@@ -60,15 +60,27 @@ Conventions:
 
 ## stansted — London Stansted (STN)
 - **Official URL:** https://www.stanstedairport.com/parking/pick-up-and-drop-off/
-- Also consulted: /terms-and-conditions/express-set-down/ (same domain).
-- **Charge:** Express Set Down £10 for up to 15 minutes. Single band recorded.
-- **Max stay:** 30 minutes (T&C). Longer than 15 min requires speaking to a marshal.
-- **Penalty:** £100 PCN, reduced to £60 if paid within 14 days.
+- Also consulted: /terms-and-conditions/express-set-down/ (same domain); and the official ticker notice at https://www.stanstedairport.com/communication-ticker-page/ticker-notice-4/ (new tariff announcement).
+- **Charge (post-19 March 2026):** Express Set Down £10 for stays up to 15 minutes; **£28 for stays over 15 minutes** (up to the 30-minute max stay). Two bands recorded.
+- **Max stay:** 30 minutes (T&C). Longer than 15 min incurs the £28 tier.
+- **Penalty:** `penaltyPence = null` — the £100 PCN figure was from the superseded pre-March-2026 regime; the current official ticker notice and pick-up-and-drop-off page do not confirm a specific Parking Charge amount for non-payment under the new tariff. `penaltyNotes` records that a Parking Charge *may* be issued but the amount is not currently published.
 - **Payment deadline:** 23:59 the day after the visit.
 - **Blue Badge:** NOT exempt — normal charges apply, but Blue Badge passengers qualify for an extension to the 30-minute max stay if reasonably required.
-- **Free alternative:** Mid Stay car park free drop-off + free shuttle bus. `minutesFree` recorded as 60 — see ambiguity.
+- **Free alternative:** Mid Stay car park free drop-off + free shuttle bus. `minutesFree` recorded as 60 — see ambiguity note below.
 - **Ambiguity:** The exact free-parking duration at Stansted Mid Stay was not crisply stated as a number on the drop-off page (the page emphasises "free drop-off area" + shuttle). `minutesFree: 60` is the conventional Mid Stay free window but was not pinned to an explicit official figure on the page read — treat the free *duration* as the soft value here; the existence of the free Mid Stay shuttle option IS officially published.
 - **priorYearFeePence = null:** no previous fee published on the page.
+
+### Correction applied 2026-06-10 (caught by independent verification reviewer)
+The initial dataset recorded only a single band (`£10 / 15 min`) and a £100 PCN penalty, which reflected the **pre-19 March 2026** tariff. A verification reviewer identified that from 19 March 2026 Stansted published a two-tier tariff via the official ticker notice (ticker-notice-4). Re-confirmation against that ticker notice page on 2026-06-10 confirmed:
+
+| Field | Previous (stale) value | Corrected value |
+|---|---|---|
+| `feeSummary` | `"£10 for up to 15 minutes (Express Set Down)"` | `"£10 for up to 15 minutes, £28 for stays over 15 minutes"` |
+| `bands` | `[{15, 1000}]` | `[{15, 1000}, {30, 2800}]` |
+| `penaltyPence` | `10000` | `null` |
+| `penaltyNotes` | `"£100 Parking Charge Notice for non-payment, reduced to £60 if paid within 14 days"` | `"£28 tier applies to stays over 15 minutes (from 19 March 2026); a Parking Charge may also be issued for non-payment — amount not currently published"` |
+
+Source for correction: https://www.stanstedairport.com/communication-ticker-page/ticker-notice-4/ (effective 00:01 on 19 March 2026).
 
 ## luton — London Luton (LTN)
 - **Official URL:** https://www.london-luton.co.uk/to-and-from-lla/dropping-off
