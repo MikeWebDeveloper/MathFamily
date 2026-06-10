@@ -5,17 +5,13 @@ import { HttpUrl, IsoDate, Slug } from "./zod-helpers";
 export const NETWORKS = ["ee", "o2", "vodafone", "three"] as const;
 export type Network = (typeof NETWORKS)[number];
 
-export const NetworkRoamingSchema = z
-  .strictObject({
-    network: z.enum(NETWORKS),
-    included: z.boolean(),
-    dailyPassPence: z.number().int().nonnegative().nullable(),
-    passName: z.string().nullable(),
-    fairUseNote: z.string().nullable()
-  })
-  .refine((n) => n.included || n.dailyPassPence !== null, {
-    message: "non-included networks need a daily pass price"
-  });
+export const NetworkRoamingSchema = z.strictObject({
+  network: z.enum(NETWORKS),
+  included: z.boolean(),
+  dailyPassPence: z.number().int().nonnegative().nullable(),
+  passName: z.string().nullable(),
+  fairUseNote: z.string().nullable()
+});
 export type NetworkRoaming = z.infer<typeof NetworkRoamingSchema>;
 
 export const RoamingDestinationSchema = z

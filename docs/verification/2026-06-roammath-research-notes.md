@@ -68,15 +68,17 @@ This keeps the four networks on a like-for-like "what a new joiner pays now" bas
 - **Albania / Montenegro** — band 2 / ROW on every network. Vodafone RoW Zone 1 (no inclusive pass).
 - **Northern Cyprus** noted as a separate worldwide zone on EE/Three vs the Republic of Cyprus (EU/Europe zone).
 
-## Soft-value flags (records carrying a non-inclusive or non-daily-pass figure)
+## Previously-soft records — now null-encoded (dailyPassPence: null)
 
-| Destination | Network | dailyPassPence | Why it's soft |
-|---|---|---|---|
-| Morocco | O2 | 2600 | NOT in O2 Travel; £26 = cheapest **data-only** Zone-3 Bolt On (100MB), not an inclusive daily pass. Calls £3/min, texts £1. |
-| Tunisia | O2 | 2600 | Same as Morocco — Zone 3 data-only Bolt On. |
-| Tunisia | Vodafone | 257 | Vodafone **Rest of World Zone 3** — no inclusive daily pass; 257p is the per-minute call rate, data via optional extra. |
-| Albania | Vodafone | 257 | Vodafone **Rest of World Zone 1** — no inclusive daily pass; per-minute figure. |
-| Montenegro | Vodafone | 257 | Vodafone **Rest of World Zone 1** — no inclusive daily pass; per-minute figure. |
+The five records below were previously flagged as "soft" because they carried misleading non-null values (a per-minute rate or a data bolt-on price masquerading as a daily pass). As of this fix they are null-encoded: `dailyPassPence: null`, `passName: null`, with a plain-language `fairUseNote`. The engine treats null as "no published daily pass" and returns `totalPence: null` for these combos rather than multiplying a spurious figure by trip days.
+
+| Destination | Network | Old dailyPassPence | Why it was wrong | New encoding |
+|---|---|---|---|---|
+| Morocco | O2 | 2600 | NOT in O2 Travel; £26 = cheapest **data-only** Zone-3 Bolt On (100MB), not an inclusive daily pass. Calls £3/min, texts £1. | **null** — "O2 Travel not available — data bolt-ons only (from £26/100MB per the price guide)" |
+| Tunisia | O2 | 2600 | Same as Morocco — Zone 3 data-only Bolt On. | **null** — same fairUseNote as Morocco |
+| Tunisia | Vodafone | 257 | Vodafone **Rest of World Zone 3** — no inclusive daily pass; 257p is the per-minute call rate, data via optional extra. | **null** — "No daily roaming pass — Vodafone charges per-minute/per-MB rates here (see price guide)" |
+| Albania | Vodafone | 257 | Vodafone **Rest of World Zone 1** — no inclusive daily pass; per-minute figure. | **null** — same fairUseNote as Tunisia |
+| Montenegro | Vodafone | 257 | Vodafone **Rest of World Zone 1** — no inclusive daily pass; per-minute figure. | **null** — same fairUseNote as Tunisia |
 
 The EE **50GB** Europe fair-use cap comes from EE's help roaming-fair-use page rather than the price-guide PDF (the PDF lists EU charges but not the GB cap); recorded as a fair-use note rather than a hard table value.
 

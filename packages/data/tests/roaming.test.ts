@@ -26,10 +26,11 @@ describe("RoamingDestinationSchema", () => {
     const dup = [...validDestination.perNetwork.slice(0, 3), { ...validDestination.perNetwork[0]! }];
     expect(() => RoamingDestinationSchema.parse({ ...validDestination, perNetwork: dup })).toThrow();
   });
-  it("rejects a non-included network without a daily pass price", () => {
-    const bad = structuredClone(validDestination);
-    bad.perNetwork[0]!.dailyPassPence = null;
-    expect(() => RoamingDestinationSchema.parse(bad)).toThrow();
+  it("accepts a non-included network without a daily pass (none published)", () => {
+    const noPass = structuredClone(validDestination);
+    noPass.perNetwork[0]!.dailyPassPence = null;
+    noPass.perNetwork[0]!.fairUseNote = "No standard daily pass — pay-per-use rates apply";
+    expect(() => RoamingDestinationSchema.parse(noPass)).not.toThrow();
   });
 });
 
