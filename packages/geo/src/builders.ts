@@ -45,3 +45,17 @@ export function breadcrumbLd(items: { name: string; url: string }[]) {
 export function webSiteLd(input: { name: string; url: string }) {
   return { "@context": "https://schema.org", "@type": "WebSite" as const, name: input.name, url: input.url };
 }
+
+export function itemListLd(input: { name: string; items: { name: string; url: string }[] }) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList" as const,
+    name: input.name,
+    itemListElement: input.items.map((item, index) => ({
+      "@type": "ListItem" as const,
+      position: index + 1,
+      name: item.name,
+      url: item.url
+    }))
+  };
+}

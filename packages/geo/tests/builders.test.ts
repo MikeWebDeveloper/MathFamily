@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { breadcrumbLd, datasetLd, faqPageLd, webSiteLd } from "../src/builders";
+import { breadcrumbLd, datasetLd, faqPageLd, itemListLd, webSiteLd } from "../src/builders";
 
 describe("faqPageLd", () => {
   it("builds a FAQPage with one Question per item", () => {
@@ -39,5 +39,20 @@ describe("breadcrumbLd", () => {
 describe("webSiteLd", () => {
   it("builds a WebSite", () => {
     expect(webSiteLd({ name: "ParkMath", url: "https://example.com" })["@type"]).toBe("WebSite");
+  });
+});
+
+describe("itemListLd", () => {
+  it("builds an ItemList with positioned items", () => {
+    const ld = itemListLd({
+      name: "Cheapest 7-day parking at Manchester",
+      items: [
+        { name: "JetParks 1 — £42", url: "https://example.com/a" },
+        { name: "Short Stay — £90", url: "https://example.com/b" }
+      ]
+    });
+    expect(ld["@type"]).toBe("ItemList");
+    expect(ld.itemListElement).toHaveLength(2);
+    expect(ld.itemListElement[1]).toMatchObject({ "@type": "ListItem", position: 2, name: "Short Stay — £90" });
   });
 });
