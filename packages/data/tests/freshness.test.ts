@@ -13,6 +13,7 @@ describe("freshnessReport", () => {
   it("warns past the warning threshold", () => {
     const report = freshnessReport([{ label: "gatwick", verifiedAt: "2026-03-01" }], NOW);
     expect(report.warnings.length).toBe(1);
+    expect(report.warnings[0]).toContain("gatwick");
     expect(report.errors).toEqual([]);
   });
   it("errors past the failure threshold", () => {
@@ -22,6 +23,15 @@ describe("freshnessReport", () => {
   it("thresholds match the spec", () => {
     expect(FRESHNESS_WARN_DAYS).toBe(60);
     expect(FRESHNESS_FAIL_DAYS).toBe(120);
+  });
+  it("exactly 60 days old is clean", () => {
+    const report = freshnessReport([{ label: "x", verifiedAt: "2026-04-11" }], NOW);
+    expect(report.warnings).toEqual([]);
+    expect(report.errors).toEqual([]);
+  });
+  it("exactly 120 days old is not an error", () => {
+    const report = freshnessReport([{ label: "x", verifiedAt: "2026-02-10" }], NOW);
+    expect(report.errors).toEqual([]);
   });
 });
 
