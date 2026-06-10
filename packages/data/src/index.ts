@@ -17,3 +17,4 @@ export * from "./parking";
 export * from "./lounges";
 export * from "./roaming";
 export * from "./esim";
+export * from "./baggage";
