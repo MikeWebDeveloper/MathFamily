@@ -13,7 +13,7 @@ export function AffiliateBlock({ slotId, airportSlug, officialUrl }: { slotId: S
         {slot.label} ↗
       </a>
       {slot.disclosureRequired ? (
-        <p className="mt-2 text-xs text-ink-muted">
+        <p className="mt-2 text-sm text-ink-muted">
           Affiliate link: if you book through {slot.partnerName}, ParkMath may earn a commission at no cost to you. This
           never affects which option we show as cheapest.
         </p>

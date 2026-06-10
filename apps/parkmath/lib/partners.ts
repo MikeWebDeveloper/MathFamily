@@ -20,7 +20,7 @@ interface SlotConfig {
 export function resolveSlot(slotId: SlotId, airportSlug: string, officialUrl: string): ResolvedSlot {
   const slot = (partnersJson.slots as SlotConfig[]).find((s) => s.id === slotId);
   const partner = slot ? (partnersJson.partners as Record<string, { name: string; active: boolean }>)[slot.partnerId] : undefined;
-  if (slot?.active && partner?.active && slot.deeplinkTemplate) {
+  if (slot?.active && partner?.active && slot.deeplinkTemplate.startsWith("http")) {
     return {
       kind: "affiliate",
       url: slot.deeplinkTemplate.replaceAll("{airportSlug}", airportSlug).replaceAll("{officialUrl}", officialUrl),
