@@ -6,7 +6,7 @@ test("airport page shows the fee, source and freshness without JavaScript", asyn
   await page.goto("/drop-off-charges/gatwick");
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Gatwick");
   await expect(page.getByText(/Verified|Last verified/)).toBeVisible();
-  await expect(page.getByRole("link", { name: /Official/ })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Official/ }).first()).toBeVisible();
   await context.close();
 });
 
