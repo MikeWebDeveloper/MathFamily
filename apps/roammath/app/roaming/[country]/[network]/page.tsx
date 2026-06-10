@@ -161,7 +161,7 @@ export default async function NetworkPage({
           href={`/roaming/${destination.countrySlug}`}
           className="text-brand-accent underline underline-offset-4"
         >
-          ← All networks in {destination.countryName} (Spain roaming compared)
+          ← All networks in {destination.countryName}
         </Link>
       </p>
 
