@@ -14,6 +14,9 @@ describe("formatPence", () => {
   it("adds thousands separators", () => {
     expect(formatPence(2800000)).toBe("£28,000");
   });
+  it("zero-pads single-digit pence remainders", () => {
+    expect(formatPence(705)).toBe("£7.05");
+  });
   it("throws on non-integer input (programmer error, not user input)", () => {
     expect(() => formatPence(10.5)).toThrow();
   });
