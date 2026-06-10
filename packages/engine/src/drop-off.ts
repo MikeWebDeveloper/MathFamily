@@ -8,7 +8,7 @@ export interface DropOffBand {
 export interface DropOffTariff {
   isFree: boolean;
   bands: DropOffBand[]; // ascending by upToMinutes
-  maxStayMinutes: number | null;
+  maxStayMinutes: number | null; // display metadata from the tariff page; not used in quoting
   penaltyPence: number | null;
   freeAlternative: { name: string; minutesFree: number } | null;
   verifiedAt: string; // YYYY-MM-DD
@@ -29,6 +29,7 @@ export interface DropOffQuote {
   costPence: number | null; // null when the published tariff doesn't cover the stay
   beyondTariff: boolean;
   warnings: DropOffWarning[];
+  effectiveMinutes: number; // clamped integer minutes actually quoted
 }
 
 export const STALE_AFTER_DAYS = 60;
@@ -40,10 +41,12 @@ export function quoteDropOff(tariff: DropOffTariff, stayMinutes: number, now: Da
 
   const verified = new Date(`${tariff.verifiedAt}T00:00:00Z`).getTime();
   const ageDays = Math.floor((now.getTime() - verified) / 86_400_000);
-  if (ageDays > STALE_AFTER_DAYS) {
+  if (isNaN(ageDays) || ageDays > STALE_AFTER_DAYS) {
     warnings.push({
       code: "DATA_UNVERIFIED_RECENTLY",
-      message: `Last verified ${tariff.verifiedAt} — check the official page before you travel.`
+      message: isNaN(ageDays)
+        ? "Verification date is unreadable — check the official page before you travel."
+        : `Last verified ${tariff.verifiedAt} — check the official page before you travel.`
     });
   }
   if (tariff.freeAlternative) {
@@ -53,13 +56,23 @@ export function quoteDropOff(tariff: DropOffTariff, stayMinutes: number, now: Da
     });
   }
 
-  if (tariff.isFree) return { costPence: 0, beyondTariff: false, warnings };
+  if (tariff.isFree) return { costPence: 0, beyondTariff: false, warnings, effectiveMinutes: minutes };
 
-  const band = tariff.bands.find((b) => minutes <= b.upToMinutes);
-  if (band) return { costPence: band.totalPence, beyondTariff: false, warnings };
+  // Fix 2: order-independent band selection — pick the qualifying band with the smallest upToMinutes
+  let band: DropOffBand | undefined;
+  for (const b of tariff.bands) {
+    if (minutes <= b.upToMinutes && (band === undefined || b.upToMinutes < band.upToMinutes)) band = b;
+  }
+  if (band) return { costPence: band.totalPence, beyondTariff: false, warnings, effectiveMinutes: minutes };
 
   const lastBand = tariff.bands[tariff.bands.length - 1];
-  if (tariff.penaltyPence !== null && lastBand) {
+  // Fix 1: guard against malformed penaltyPence — only use PENALTY_RISK path when the value is a valid non-negative integer
+  if (
+    tariff.penaltyPence !== null &&
+    Number.isInteger(tariff.penaltyPence) &&
+    tariff.penaltyPence >= 0 &&
+    lastBand
+  ) {
     warnings.push({
       code: "PENALTY_RISK",
       message: `Stays beyond ${lastBand.upToMinutes} minutes risk a ${formatPence(tariff.penaltyPence)} charge notice.`
@@ -70,5 +83,5 @@ export function quoteDropOff(tariff: DropOffTariff, stayMinutes: number, now: Da
       message: "The published tariff doesn't cover stays this long — check the official page."
     });
   }
-  return { costPence: null, beyondTariff: true, warnings };
+  return { costPence: null, beyondTariff: true, warnings, effectiveMinutes: minutes };
 }

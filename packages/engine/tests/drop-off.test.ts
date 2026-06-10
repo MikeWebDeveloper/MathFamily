@@ -72,4 +72,49 @@ describe("quoteDropOff", () => {
     expect(quoteDropOff(gatwickLike, -5, NOW).costPence).toBe(1000);
     expect(quoteDropOff(gatwickLike, 0.4, NOW).costPence).toBe(1000);
   });
+
+  // Fix 1: never throw on malformed tariff penaltyPence
+  it("non-integer penaltyPence does not throw and emits BEYOND_TARIFF_UNKNOWN", () => {
+    const badPenalty: DropOffTariff = {
+      ...gatwickLike,
+      penaltyPence: 10000.5
+    };
+    // 25-min stay is beyond the single 20-min band
+    const q = quoteDropOff(badPenalty, 25, NOW);
+    expect(q.warnings.map((w) => w.code)).toContain("BEYOND_TARIFF_UNKNOWN");
+    expect(q.warnings.map((w) => w.code)).not.toContain("PENALTY_RISK");
+  });
+
+  // Fix 2: order-independent band selection (descending bands)
+  it("selects the tightest qualifying band when bands are in descending order", () => {
+    const descendingBands: DropOffTariff = {
+      isFree: false,
+      bands: [
+        { upToMinutes: 60, totalPence: 2800 },
+        { upToMinutes: 15, totalPence: 1000 }
+      ],
+      maxStayMinutes: 60,
+      penaltyPence: null,
+      freeAlternative: null,
+      verifiedAt: "2026-06-01"
+    };
+    expect(quoteDropOff(descendingBands, 10, NOW).costPence).toBe(1000);
+  });
+
+  // Fix 3: malformed verifiedAt must read as stale
+  it("non-date verifiedAt emits DATA_UNVERIFIED_RECENTLY without throwing", () => {
+    const badDate: DropOffTariff = { ...gatwickLike, verifiedAt: "not-a-date" };
+    const q = quoteDropOff(badDate, 10, NOW);
+    expect(q.warnings.map((w) => w.code)).toContain("DATA_UNVERIFIED_RECENTLY");
+  });
+
+  // Fix 4: effectiveMinutes clamp signal
+  it("effectiveMinutes equals 1 when stayMinutes is -5 (clamped)", () => {
+    expect(quoteDropOff(gatwickLike, -5, NOW).effectiveMinutes).toBe(1);
+  });
+
+  it("effectiveMinutes equals the rounded minutes for a normal call", () => {
+    // 10.6 rounds to 11
+    expect(quoteDropOff(gatwickLike, 10.6, NOW).effectiveMinutes).toBe(11);
+  });
 });
