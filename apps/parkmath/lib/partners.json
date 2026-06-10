@@ -1,0 +1,11 @@
+{
+  "partners": {
+    "holiday-extras": { "name": "Holiday Extras", "active": false },
+    "heathrow-official": { "name": "Heathrow Official Parking", "active": false },
+    "priority-pass": { "name": "Priority Pass", "active": false }
+  },
+  "slots": [
+    { "id": "parking-prebook", "partnerId": "holiday-extras", "deeplinkTemplate": "", "active": false },
+    { "id": "lounge-membership", "partnerId": "priority-pass", "deeplinkTemplate": "", "active": false }
+  ]
+}
