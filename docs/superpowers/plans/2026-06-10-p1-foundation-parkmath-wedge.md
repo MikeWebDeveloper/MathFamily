@@ -14,6 +14,7 @@
 - Every dataset record needs `sourceUrl` (official page only) + `verifiedAt` (YYYY-MM-DD).
 - Run all commands from the repo root `/Volumes/TB4 Workstation/Users/mike/Desktop/Projects/MathFamily` unless a step says otherwise. The path contains a space — always quote it in shell commands.
 - Node ≥ 22 and pnpm ≥ 10 required (`corepack enable` if pnpm missing).
+- **NEVER create `vitest.config.*` files** — esbuild `build()` deadlocks on this volume and vitest hangs forever loading any config file. See `docs/engineering-notes.md`. Tests in `tests/` are found by vitest defaults; `packages/ui` uses a `// @vitest-environment jsdom` docblock; the app's test script is `vitest run tests`.
 
 ---
 
@@ -521,9 +522,10 @@ git add -A && git commit -m "feat(data): freshness gate — warn 60d, fail 120d"
 ### Task 4: `@mathfamily/engine` — money formatting
 
 **Files:**
-- Create: `packages/engine/package.json`, `packages/engine/tsconfig.json`, `packages/engine/vitest.config.ts`
+- Create: `packages/engine/package.json`, `packages/engine/tsconfig.json`
 - Create: `packages/engine/src/money.ts`, `packages/engine/src/index.ts`
 - Test: `packages/engine/tests/money.test.ts`
+- NO vitest config file (see engineering notes — vitest defaults find `tests/`)
 
 - [ ] **Step 1: Package boilerplate**
 
@@ -549,13 +551,6 @@ git add -A && git commit -m "feat(data): freshness gate — warn 60d, fail 120d"
 
 ```json
 { "extends": "@mathfamily/config/tsconfig.base.json", "include": ["src", "tests"] }
-```
-
-`packages/engine/vitest.config.ts`:
-
-```ts
-import { defineConfig } from "vitest/config";
-export default defineConfig({ test: { include: ["tests/**/*.test.ts"] } });
 ```
 
 - [ ] **Step 2: Write failing tests**
@@ -826,9 +821,10 @@ git add -A && git commit -m "feat(engine): drop-off quote engine with typed warn
 ### Task 6: `@mathfamily/geo` — JSON-LD builders
 
 **Files:**
-- Create: `packages/geo/package.json`, `packages/geo/tsconfig.json`, `packages/geo/vitest.config.ts`
+- Create: `packages/geo/package.json`, `packages/geo/tsconfig.json`
 - Create: `packages/geo/src/builders.ts`, `packages/geo/src/jsonld.tsx`, `packages/geo/src/index.ts`
 - Test: `packages/geo/tests/builders.test.ts`
+- NO vitest config file (see engineering notes)
 
 - [ ] **Step 1: Package boilerplate**
 
@@ -857,13 +853,6 @@ git add -A && git commit -m "feat(engine): drop-off quote engine with typed warn
 
 ```json
 { "extends": "@mathfamily/config/tsconfig.base.json", "include": ["src", "tests"] }
-```
-
-`packages/geo/vitest.config.ts`:
-
-```ts
-import { defineConfig } from "vitest/config";
-export default defineConfig({ test: { include: ["tests/**/*.test.ts"] } });
 ```
 
 - [ ] **Step 2: Write failing tests**
@@ -1005,7 +994,7 @@ git add -A && git commit -m "feat(geo): JSON-LD builders — FAQPage, Dataset, B
 ### Task 7: `@mathfamily/ui` — design tokens and components
 
 **Files:**
-- Create: `packages/ui/package.json`, `packages/ui/tsconfig.json`, `packages/ui/vitest.config.ts`
+- Create: `packages/ui/package.json`, `packages/ui/tsconfig.json`
 - Create: `packages/ui/src/tokens.css`, `packages/ui/src/index.ts`
 - Create: `packages/ui/src/fee-stat.tsx`, `packages/ui/src/freshness-badge.tsx`, `packages/ui/src/source-citation.tsx`, `packages/ui/src/callout.tsx`, `packages/ui/src/fee-grid.tsx`, `packages/ui/src/faq-accordion.tsx`, `packages/ui/src/email-capture-slot.tsx`, `packages/ui/src/site-header.tsx`, `packages/ui/src/site-footer.tsx`
 - Test: `packages/ui/tests/components.test.tsx`
@@ -1048,12 +1037,9 @@ Design DNA (from spec §1/§3.3): fintech clarity + data trust. Tokens below are
 { "extends": "@mathfamily/config/tsconfig.base.json", "include": ["src", "tests"] }
 ```
 
-`packages/ui/vitest.config.ts`:
-
-```ts
-import { defineConfig } from "vitest/config";
-export default defineConfig({ test: { include: ["tests/**/*.test.tsx"], environment: "jsdom" } });
-```
+NO vitest config file (see engineering notes). The jsdom environment is declared
+per test file: the FIRST LINE of `packages/ui/tests/components.test.tsx` must be the
+docblock `// @vitest-environment jsdom`.
 
 - [ ] **Step 2: Design tokens**
 
@@ -1078,6 +1064,7 @@ export default defineConfig({ test: { include: ["tests/**/*.test.tsx"], environm
 `packages/ui/tests/components.test.tsx`:
 
 ```tsx
+// @vitest-environment jsdom
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { EmailCaptureSlot } from "../src/email-capture-slot";
@@ -1363,7 +1350,7 @@ git add -A && git commit -m "feat(ui): design tokens + 9 shared components (fint
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "vitest run",
+    "test": "vitest run tests",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -1583,19 +1570,13 @@ git add -A && git commit -m "data(parkmath): complete 25-airport drop-off datase
 ### Task 11: Drop-off airport pages + calculator island
 
 **Files:**
-- Create: `apps/parkmath/lib/content.ts`, `apps/parkmath/vitest.config.ts`
+- Create: `apps/parkmath/lib/content.ts`
 - Create: `apps/parkmath/components/drop-off-calculator.tsx`
 - Create: `apps/parkmath/app/drop-off-charges/[airport]/page.tsx`
 - Test: `apps/parkmath/tests/content.test.ts`
+- NO vitest config file (see engineering notes — the app's test script `vitest run tests` keeps vitest away from Playwright's `e2e/` specs)
 
 - [ ] **Step 1: Write failing tests for the content helpers**
-
-`apps/parkmath/vitest.config.ts`:
-
-```ts
-import { defineConfig } from "vitest/config";
-export default defineConfig({ test: { include: ["tests/**/*.test.ts"] } });
-```
 
 `apps/parkmath/tests/content.test.ts`:
 
