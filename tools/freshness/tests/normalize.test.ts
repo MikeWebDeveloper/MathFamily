@@ -11,9 +11,20 @@ describe("normalizeText", () => {
     expect(a).toBe(b);
   });
   it("removes cookie-banner boilerplate lines", () => {
-    const a = normalizeText("We value your privacy. Accept All. Fee £10");
+    const a = normalizeText("We value your privacy. Accept All.\nFee £10");
     expect(a).toContain("Fee £10");
     expect(a.toLowerCase()).not.toContain("privacy");
+  });
+  it("cookie banner followed by a price table keeps the prices", () => {
+    const html = "<div>We use cookies. Accept All</div><table><tr><td>Drop-off</td><td>£4.00</td></tr></table>";
+    const out = normalizeText(html);
+    expect(out).toContain("£4.00");
+    expect(out.toLowerCase()).not.toContain("cookies");
+  });
+  it("a price change is never masked by boilerplate stripping", () => {
+    const a = normalizeText("cookies and parking fees £5 apply at all times");
+    const b = normalizeText("cookies and parking fees £8 apply at all times");
+    expect(a).not.toBe(b);
   });
   it("a real fee change produces different output", () => {
     expect(normalizeText("Fee £10 for 10 minutes")).not.toBe(normalizeText("Fee £12 for 10 minutes"));

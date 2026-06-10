@@ -6,12 +6,23 @@ const DATE_PATTERNS = [
   /\b(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},?\s+\d{4}\b/gi
 ];
 
-const BOILERPLATE = /\b(?:we value your privacy|accept all|reject all|cookie|cookies|consent)\b[^.]*\.?/gi;
+const BOILERPLATE_WORDS = /(?:we value your privacy|accept all|reject all|cookie|cookies|consent)/i;
+const PRICE_SIGNAL = /[£€$]\s?\d/;
 
 export function normalizeText(input: string): string {
-  let text = input.replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<style[\s\S]*?<\/style>/gi, " ");
-  text = text.replace(/<[^>]+>/g, " ");
-  text = text.replace(BOILERPLATE, " ");
+  // Strip scripts and styles first
+  let text = input.replace(/<script[\s\S]*?<\/script>/gi, "").replace(/<style[\s\S]*?<\/style>/gi, "");
+  // Convert tags to newlines so structural boundaries survive
+  text = text.replace(/<[^>]+>/g, "\n");
+  // Process per-line: drop a line only if it contains boilerplate AND no price signal
+  const lines = text.split("\n").filter((line) => {
+    const trimmed = line.trim();
+    if (!trimmed) return false;
+    if (BOILERPLATE_WORDS.test(trimmed) && !PRICE_SIGNAL.test(trimmed)) return false;
+    return true;
+  });
+  text = lines.join("\n");
+  // Strip date patterns
   for (const pattern of DATE_PATTERNS) text = text.replace(pattern, " ");
   return text.replace(/\s+/g, " ").trim();
 }
