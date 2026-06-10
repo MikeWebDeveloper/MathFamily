@@ -88,3 +88,66 @@ The EE **50GB** Europe fair-use cap comes from EE's help roaming-fair-use page r
 - O2: https://www.o2.co.uk/international/travel-inclusive-zone-ultimate ; https://www.o2.co.uk/international/o2-travel ; https://www.o2.co.uk/international/data-roaming-bolt-ons
 - Vodafone: https://binaries.vodafone.co.uk/gbnnsauqav4t/3ynRZJ6BvgpyYyPmoIAHX0/ff9c9463c41c25d0cbf8f5d27f955afb/evo-paym-charges-guide.pdf ; https://www.vodafone.co.uk/mobile/global-roaming
 - Three: https://www.three.co.uk/support/roaming-and-calling-abroad/roaming-abroad/go-roam ; https://www.three.co.uk/content/dam/threedigital/terms-and-conditions/price-guides/latest-price-guides/advancedplans-priceguide-post19apr2026-19042026.pdf
+
+---
+
+# eSIM batch 1 — 20 destinations (Task 7)
+
+Research date: **2026-06-10**. Providers: **Airalo**, **Holafly**, **Saily** — each provider's own public country store page is official for its own prices. Dataset `packages/data/datasets/roammath/esim.json` replaced entirely (`version: 0.2.0`). `dataGb: null` = unlimited. Per bundle the price-read date is carried in `snapshotDate`.
+
+## Currency conversion
+
+- **Indicative rate used: 1 USD = £0.747** (GBP/USD ≈ 1.3377 on 2026-06-10, per exchangerates.org.uk / Wise mid-market). Holafly prices are quoted in USD on the localised pages and Saily prices are quoted in USD; both are converted at this rate, rounded to the nearest pence, and their `bundleName` carries the **"(converted)"** suffix. Airalo pages served GBP directly (no conversion — IP/locale resolved to the UK store).
+
+## Transport
+
+- **Airalo** (`airalo.com/<country>-esim`): all 20 reached via **WebFetch**, GBP prices. Several countries are now **unlimited-only** on Airalo's local store (no GB tiers shown) — for those we recorded an Airalo unlimited bundle. Where Airalo still publishes GB tiers (France, Greece, Germany, Austria, Croatia) we took the ~5GB bundle.
+- **Holafly** (`esim.holafly.com/esim-<country>/`): all 20 reached via **WebFetch**, USD prices, unlimited-only (their specialty). We recorded the 30-day unlimited as the representative unlimited bundle. (USA: canonical slug is `esim-usa/`; `esim-united-states/` 301-redirects to an image.)
+- **Saily** (`saily.com/esim-<country>/`): **WebFetch 403**, and **r.jina.ai now hits a Cloudflare bot-challenge**. Usable readings came from the **Wayback Machine** (`archive.org/wayback`) and one early live r.jina.ai read (Spain). Saily prices were only recorded where a **2026 snapshot** existed (accuracy gate); 2025-only snapshots and no-snapshot countries omit Saily rather than carry stale prices.
+
+## Per-country coverage
+
+| Country | Airalo | Holafly | Saily | Notes |
+|---|---|---|---|---|
+| spain | Unl 5d £14.00 | Unl 30d $78.90→£58.94 | 5GB/30d $9.99→£7.46 (snap 2026-06-10, live r.jina) | Airalo unlimited-only |
+| france | 5GB/30d £8.50 | Unl 30d $74.90→£55.95 | 5GB/30d $11.99→£8.96 (snap 2026-05-14) | Airalo GB tier |
+| italy | Unl 5d £13.50 | Unl 30d $78.90→£58.94 | — | Saily: no Wayback snapshot |
+| portugal | Unl 5d £15.00 | Unl 30d $73.90→£55.20 | 5GB/30d $9.99→£7.46 (snap 2026-04-27) | Airalo unlimited-only |
+| greece | 5GB/15d £9.00 | Unl 30d $73.90→£55.20 | 5GB/30d $13.99→£10.45 (snap 2026-05-04) | Airalo 30d tier is 50GB; took 5GB/15d |
+| germany | 5GB/15d £8.50 | Unl 30d $74.90→£55.95 | 5GB/30d $12.99→£9.70 (snap 2026-05-04) | Airalo 30d tier is 50GB; took 5GB/15d |
+| ireland | Unl 5d £15.00 | Unl 30d $73.90→£55.20 | — | Saily: no Wayback snapshot |
+| netherlands | Unl 5d £15.00 | Unl 30d $74.90→£55.95 | 5GB/30d $9.99→£7.46 (snap 2026-05-10) | Airalo unlimited-only |
+| belgium | Unl 5d £12.00 | Unl 30d $73.90→£55.20 | — | Saily: no Wayback snapshot |
+| austria | 5GB/30d £6.50 | Unl 30d $73.90→£55.20 | omitted (2025-08 snapshot, stale) | Airalo GB tier |
+| switzerland | Unl 5d £15.00 | Unl 30d $74.90→£55.95 | — | Saily: no Wayback snapshot |
+| poland | Unl 5d £15.00 | Unl 30d $73.90→£55.20 | omitted (2025-08 snapshot, stale) | Airalo unlimited-only |
+| croatia | 5GB/15d £8.00 | Unl 30d $73.90→£55.20 | — | Airalo 30d tier is 50GB; took 5GB/15d. Saily no snapshot |
+| cyprus | Unl 5d £15.00 | Unl 30d $73.90→£55.20 | omitted (2025-09 snapshot, stale) | Airalo unlimited-only |
+| malta | Unl 5d £15.00 | Unl 30d $73.90→£55.20 | — | Saily: no Wayback snapshot |
+| turkey | Unl 5d £15.00 | Unl 30d $74.90→£55.95 | — | Saily: no Wayback snapshot |
+| usa | Unl 5d £14.50 | Unl 30d $74.90→£55.95 | — | Saily: no Wayback snapshot |
+| canada | Unl 5d £21.00 | Unl 30d $95.90→£71.64 | — | Holafly Canada priced higher than other markets |
+| mexico | Unl 5d £14.00 | Unl 30d $74.90→£55.95 | — | Saily: no Wayback snapshot |
+| australia | Unl 5d £14.50 | Unl 30d $74.90→£55.95 | — | Saily snapshot was 2026-02 but plan block not parseable; omitted |
+
+## Coverage summary
+
+- **All 20** countries have **Airalo + Holafly** (2 providers each).
+- **6** countries also have **Saily** (3 providers): spain, france, portugal, greece, germany, netherlands.
+- Saily gaps: italy, ireland, belgium, switzerland, croatia, malta, turkey, usa, canada, mexico (no usable Wayback snapshot or live access blocked); austria, poland, cyprus (only stale 2025 snapshots — omitted on the accuracy-over-completeness rule); australia (2026-02 snapshot present but plan listing not extractable). Saily's live store is fully behind Cloudflare for direct/r.jina fetches.
+
+## Saily source snapshots (Wayback)
+
+- france: http://web.archive.org/web/20260514072716/https://saily.com/esim-france/
+- portugal: http://web.archive.org/web/20260427.../https://saily.com/esim-portugal/ (closest 2026-04-27)
+- greece: http://web.archive.org/web/20260504.../https://saily.com/esim-greece/ (closest 2026-05-04)
+- germany: http://web.archive.org/web/20260504194420/https://saily.com/esim-germany/
+- netherlands: http://web.archive.org/web/20260510.../https://saily.com/esim-netherlands/ (closest 2026-05-10)
+- spain: live r.jina.ai read on 2026-06-10 (saily.com/esim-spain/) before Cloudflare challenge engaged
+
+## Sources (eSIM batch 1)
+
+- Airalo: https://www.airalo.com/<country>-esim (e.g. https://www.airalo.com/spain-esim, https://www.airalo.com/united-states-esim)
+- Holafly: https://esim.holafly.com/esim-<country>/ (e.g. https://esim.holafly.com/esim-spain/, https://esim.holafly.com/esim-usa/)
+- Saily: https://saily.com/esim-<country>/ via Wayback Machine (archive.org)
+- FX: https://www.exchangerates.org.uk/GBP-USD-spot-exchange-rates-history-2026.html ; https://wise.com/gb/currency-converter/gbp-to-usd-rate/history
