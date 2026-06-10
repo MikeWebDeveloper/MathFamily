@@ -8,19 +8,23 @@ export function LoungeCalculator({ walkInPence, tiers, airportName }: { walkInPe
   const r = loungeBreakEven(walkInPence, visits, tiers);
 
   return (
-    <section aria-label={`${airportName} lounge membership break-even`} className="rounded-card border border-ink/10 p-6">
+    <section
+      aria-label={`${airportName} lounge membership break-even`}
+      className="rounded-card border border-ink/10 bg-white p-6"
+      style={{ boxShadow: "var(--shadow-card)" }}
+    >
       <h2 className="text-lg font-semibold text-ink">How many lounge visits a year?</h2>
-      <div className="mt-4 flex items-center gap-4">
+      <div className="mt-5 flex items-center gap-4">
         <input type="range" min={1} max={20} value={visits} aria-valuetext={`${visits} visits`} aria-describedby="lounge-result"
-          onChange={(e) => setVisits(Number(e.target.value))} className="w-full accent-brand-accent" />
-        <span className="w-20 shrink-0 text-right text-sm font-medium text-ink-muted">{visits}×</span>
+          onChange={(e) => setVisits(Number(e.target.value))} className="h-2 w-full cursor-pointer accent-brand-accent" />
+        <span className="mf-num w-16 shrink-0 text-right text-sm font-medium text-ink-muted">{visits}×</span>
       </div>
-      <div id="lounge-result" aria-live="polite" data-testid="lounge-result" className="mt-4 space-y-1 text-sm">
-        <p className="text-ink">Pay-as-you-go: <strong className="tabular-nums">{formatPence(r.payAsYouGoPence)}</strong>/year</p>
+      <div id="lounge-result" aria-live="polite" data-testid="lounge-result" className="mt-5 space-y-2 rounded-xl bg-surface p-4 text-sm">
+        <p className="flex justify-between text-ink">Pay-as-you-go <strong className="mf-num">{formatPence(r.payAsYouGoPence)}/yr</strong></p>
         {r.tierCosts.map((t) => (
-          <p key={t.tier} className="text-ink-muted">Priority Pass {t.tier}: <span className="tabular-nums">{formatPence(t.totalPence)}</span>/year</p>
+          <p key={t.tier} className="flex justify-between text-ink-muted">Priority Pass {t.tier} <span className="mf-num">{formatPence(t.totalPence)}/yr</span></p>
         ))}
-        <p className="mt-2 text-lg font-bold text-brand">
+        <p className="mt-2 border-t border-ink/10 pt-3 text-base font-bold text-brand">
           {r.verdict === "payg" ? "Paying per visit wins at this frequency." : `${r.best?.tier} membership wins — saves ${formatPence(r.savingsPence)}/year.`}
         </p>
       </div>

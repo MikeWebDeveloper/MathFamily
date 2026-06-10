@@ -10,9 +10,13 @@ export function ParkingCalculator({ tariff, airportName, buildDate }: { tariff: 
   const c = compareParking(tariff, days, new Date(buildDate));
 
   return (
-    <section aria-label={`${airportName} parking cost comparison`} className="rounded-card border border-ink/10 p-6">
+    <section
+      aria-label={`${airportName} parking cost comparison`}
+      className="rounded-card border border-ink/10 bg-white p-6"
+      style={{ boxShadow: "var(--shadow-card)" }}
+    >
       <h2 className="text-lg font-semibold text-ink">How long are you going for?</h2>
-      <div className="mt-3 flex flex-wrap gap-2">
+      <div className="mt-4 flex flex-wrap gap-2">
         {CHOICES.map((d) => (
           <button
             key={d}
@@ -21,25 +25,34 @@ export function ParkingCalculator({ tariff, airportName, buildDate }: { tariff: 
             aria-pressed={days === d}
             className={
               days === d
-                ? "rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-white"
-                : "rounded-lg border border-ink/20 px-4 py-2 text-sm font-medium text-ink hover:border-brand-accent"
+                ? "rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-white shadow-sm transition"
+                : "cursor-pointer rounded-lg border border-ink/20 px-4 py-2 text-sm font-medium text-ink transition hover:-translate-y-0.5 hover:border-brand-accent hover:text-brand-accent"
             }
           >
             {d} day{d > 1 ? "s" : ""}
           </button>
         ))}
       </div>
-      <div aria-live="polite" data-testid="parking-result" className="mt-4 space-y-2">
+      <div aria-live="polite" data-testid="parking-result" className="mt-5 space-y-2">
         {c.options.length === 0 ? (
           <p className="text-ink-muted">No published price for {days} days — check the official site.</p>
         ) : (
           c.options.map((o, i) => (
-            <div key={o.name} className="flex items-baseline justify-between rounded-lg border border-ink/10 px-4 py-2">
-              <span className="text-sm font-medium text-ink">
-                {i === 0 ? "🏆 " : ""}
+            <div
+              key={o.name}
+              className={
+                i === 0
+                  ? "flex items-baseline justify-between rounded-xl border border-brand-accent/40 bg-brand-accent/[0.06] px-4 py-3 ring-1 ring-brand-accent/20"
+                  : "flex items-baseline justify-between rounded-xl border border-ink/10 px-4 py-3"
+              }
+            >
+              <span className="flex items-center gap-2 text-sm font-medium text-ink">
+                {i === 0 ? (
+                  <span className="rounded-full bg-brand-accent px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">Cheapest</span>
+                ) : null}
                 {o.name}
               </span>
-              <span className="text-lg font-bold tabular-nums text-brand">{formatPence(o.totalPence)}</span>
+              <span className="mf-num text-lg font-bold text-brand">{formatPence(o.totalPence)}</span>
             </div>
           ))
         )}

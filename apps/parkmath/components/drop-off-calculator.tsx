@@ -20,9 +20,13 @@ export function DropOffCalculator({
   const cost = quote.costPence === null ? "Beyond published tariff" : formatPence(quote.costPence);
 
   return (
-    <section aria-label={`${airportName} drop-off cost calculator`} className="rounded-card border border-ink/10 p-6">
+    <section
+      aria-label={`${airportName} drop-off cost calculator`}
+      className="rounded-card border border-ink/10 bg-white p-6"
+      style={{ boxShadow: "var(--shadow-card)" }}
+    >
       <h2 className="text-lg font-semibold text-ink">How long will you stop?</h2>
-      <div className="mt-4 flex items-center gap-4">
+      <div className="mt-5 flex items-center gap-4">
         <input
           type="range"
           min={1}
@@ -32,13 +36,15 @@ export function DropOffCalculator({
           aria-label="Minutes at the drop-off zone"
           aria-valuetext={`${minutes} minutes`}
           aria-describedby="calc-result"
-          className="w-full accent-brand-accent"
+          className="h-2 w-full cursor-pointer accent-brand-accent"
         />
-        <span className="w-24 shrink-0 text-right text-sm font-medium text-ink-muted">{minutes} min</span>
+        <span className="mf-num w-20 shrink-0 text-right text-sm font-medium text-ink-muted">{minutes} min</span>
       </div>
-      <p id="calc-result" data-testid="calculator-result" aria-live="polite" className="mt-4 text-3xl font-bold tabular-nums text-brand">
-        {cost}
-      </p>
+      <div className="mt-5 rounded-xl bg-surface p-4">
+        <p id="calc-result" data-testid="calculator-result" aria-live="polite" className="mf-num text-4xl font-bold text-brand">
+          <span key={cost} className="mf-fade-in inline-block">{cost}</span>
+        </p>
+      </div>
       <ul className="mt-3 space-y-1 text-sm text-ink-muted">
         {quote.warnings.map((w) => (
           <li key={w.code}>{w.message}</li>

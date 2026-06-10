@@ -24,22 +24,26 @@ export default function HomePage() {
     }
   }
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const feeBySlug: Record<string, string> = {};
+  for (const r of records) {
+    feeBySlug[r.airportSlug] = r.isFree ? "Free" : `${formatPence(r.bands[0]?.totalPence ?? 0)} drop-off`;
+  }
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-14">
       <JsonLd data={webSiteLd({ name: "ParkMath", url: siteUrl })} />
-      <section className="space-y-4">
-        <h1 className="text-4xl font-bold text-ink">
+      <section className="space-y-5">
+        <h1 className="max-w-3xl text-4xl font-bold leading-tight tracking-tight text-ink sm:text-5xl">
           What does it cost to <span className="text-brand-accent">drop someone off</span> at a UK airport?
         </h1>
         <p className="max-w-2xl text-lg text-ink-muted">
           Every UK airport&apos;s drop-off charge, time limit, penalty and the free alternative — verified against
           official airport pages and date-stamped.
         </p>
-        <AirportSearch airports={airports} />
+        <AirportSearch airports={airports} feeBySlug={feeBySlug} />
       </section>
 
-      <section className="grid gap-4 sm:grid-cols-3">
+      <section className="mf-reveal grid gap-4 sm:grid-cols-3">
         <FeeStat label="Most expensive drop-off" value={formatPence(maxBandPence)} note={maxBandNote} />
         <FeeStat label="Airports charging a fee" value={String(charging.length)} note={`of ${records.length} tracked`} />
         <FeeStat label="Still free" value={String(freeCount)} note="Free at the forecourt" />

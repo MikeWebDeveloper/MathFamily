@@ -3,7 +3,7 @@
 import { useState } from "react";
 import type { Airport } from "@mathfamily/data";
 
-export function AirportSearch({ airports }: { airports: Airport[] }) {
+export function AirportSearch({ airports, feeBySlug }: { airports: Airport[]; feeBySlug?: Record<string, string> }) {
   const [query, setQuery] = useState("");
   const q = query.trim().toLowerCase();
   const matches = q
@@ -19,16 +19,20 @@ export function AirportSearch({ airports }: { airports: Airport[] }) {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search your airport — e.g. Gatwick or LGW"
-        className="w-full rounded-lg border border-ink/20 px-4 py-3 text-base"
+        className="w-full rounded-card border border-ink/15 bg-white px-4 py-3.5 text-base shadow-sm outline-none transition focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/30"
       />
-      <ul className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
+      <ul className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
         {matches.map((a) => (
           <li key={a.slug}>
             <a
               href={`/drop-off-charges/${a.slug}`}
-              className="block rounded-lg border border-ink/10 px-3 py-2 text-sm font-medium text-ink hover:border-brand-accent hover:text-brand-accent"
+              className="group flex h-full flex-col justify-between gap-1 rounded-card border border-ink/10 bg-white p-3.5 outline-none transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-accent/40 focus-visible:ring-2 focus-visible:ring-brand-accent/40"
+              style={{ boxShadow: "var(--shadow-card)" }}
             >
-              {a.name}
+              <span className="text-sm font-semibold text-ink transition-colors group-hover:text-brand-accent">{a.name}</span>
+              {feeBySlug?.[a.slug] ? (
+                <span className="mf-num text-xs text-ink-muted">{feeBySlug[a.slug]}</span>
+              ) : null}
             </a>
           </li>
         ))}

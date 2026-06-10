@@ -16,10 +16,11 @@ export function FreshnessBadge({
     <span
       className={
         stale
-          ? "inline-flex items-center gap-1 rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-warning"
-          : "inline-flex items-center gap-1 rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-positive"
+          ? "mf-fade-in inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-warning ring-1 ring-warning/20"
+          : "mf-fade-in inline-flex items-center gap-1.5 rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-positive ring-1 ring-positive/20"
       }
     >
+      <span aria-hidden className={`h-1.5 w-1.5 rounded-full ${stale ? "bg-warning" : "bg-positive"}`} />
       {stale ? `Last verified ${formatted}` : `Verified ${formatted}`}
     </span>
   );

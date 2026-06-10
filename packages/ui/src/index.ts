@@ -9,3 +9,5 @@ export * from "./site-header";
 export * from "./site-footer";
 export * from "./answer-lead";
 export * from "./sources-block";
+export * from "./scroll-progress";
+export * from "./scroll-reveal";

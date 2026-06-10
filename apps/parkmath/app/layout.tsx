@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
-import { SiteFooter, SiteHeader } from "@mathfamily/ui";
+import { ScrollProgress, ScrollReveal, SiteFooter, SiteHeader } from "@mathfamily/ui";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const plexSans = IBM_Plex_Sans({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-plex-sans" });
+const plexMono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500", "600"], variable: "--font-plex-mono" });
 
 // Not exported: Next.js layouts only allow framework-known exports.
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
@@ -25,8 +26,10 @@ const NAV = [
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-GB" className={inter.variable}>
+    <html lang="en-GB" className={`${plexSans.variable} ${plexMono.variable}`}>
       <body className="bg-white font-sans text-ink antialiased">
+        <ScrollProgress />
+        <ScrollReveal />
         <SiteHeader brandName="ParkMath" links={NAV} />
         <main className="mx-auto max-w-5xl px-4 py-8">{children}</main>
         <SiteFooter brandName="ParkMath" links={NAV} />

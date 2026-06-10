@@ -3,7 +3,8 @@
 @source "../../../packages/ui/src";
 
 @theme {
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-plex-sans), "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, monospace;
   --color-brand: #134e4a;
   --color-brand-accent: #0d9488;
 }
