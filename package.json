@@ -1,0 +1,12 @@
+{
+  "name": "mathfamily",
+  "private": true,
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
+    "dev": "turbo run dev"
+  },
+  "devDependencies": { "turbo": "^2.5.0" }
+}
