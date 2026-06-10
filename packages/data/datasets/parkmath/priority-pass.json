@@ -1,0 +1,9 @@
+{
+  "tiers": [
+    { "tier": "Standard", "annualFeePence": 6900, "includedVisits": 0, "perVisitPence": 2400 },
+    { "tier": "Standard Plus", "annualFeePence": 22900, "includedVisits": 10, "perVisitPence": 2400 },
+    { "tier": "Prestige", "annualFeePence": 45900, "includedVisits": null, "perVisitPence": 0 }
+  ],
+  "sourceUrl": "https://www.prioritypass.com/",
+  "verifiedAt": "2026-06-10"
+}

@@ -1,0 +1,15 @@
+{
+  "version": "0.1.0",
+  "lastUpdated": "2026-06-10",
+  "records": [
+    {
+      "airportSlug": "manchester",
+      "lounges": [
+        { "name": "Escape Lounge T1", "walkInPence": 3500, "priorityPass": true, "notes": null },
+        { "name": "1903 Lounge", "walkInPence": 5000, "priorityPass": false, "notes": "Premium lounge" }
+      ],
+      "sourceUrl": "https://www.manchesterairport.co.uk/at-the-airport/lounges/",
+      "verifiedAt": "2026-06-10"
+    }
+  ]
+}
