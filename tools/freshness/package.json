@@ -1,0 +1,20 @@
+{
+  "name": "@mathfamily/freshness-tools",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "generate": "tsx src/generate-watchlist.ts",
+    "watchdog": "tsx src/watchdog.ts"
+  },
+  "dependencies": { "@mathfamily/data": "workspace:*" },
+  "devDependencies": {
+    "@mathfamily/config": "workspace:*",
+    "tsx": "^4.19.0",
+    "typescript": "^5.8.0",
+    "vitest": "^3.2.0",
+    "@types/node": "^22.0.0"
+  }
+}
