@@ -15,9 +15,13 @@ export function FeeGrid({ columns, rows, caption }: { columns: string[]; rows: R
         <tbody className="divide-y divide-ink/5">
           {rows.map((cells, i) => (
             <tr key={i} className="hover:bg-surface">
-              {cells.map((cell, j) => (
-                <td key={j} className="px-4 py-3 tabular-nums">{cell}</td>
-              ))}
+              {cells.map((cell, j) =>
+                j === 0 ? (
+                  <th key={j} scope="row" className="px-4 py-3 font-medium">{cell}</th>
+                ) : (
+                  <td key={j} className="px-4 py-3 tabular-nums">{cell}</td>
+                )
+              )}
             </tr>
           ))}
         </tbody>

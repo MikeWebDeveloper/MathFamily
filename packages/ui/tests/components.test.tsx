@@ -32,5 +32,6 @@ describe("EmailCaptureSlot", () => {
   it("renders a form when configured", () => {
     render(<EmailCaptureSlot formAction="https://assets.mailerlite.com/forms/x" hook="Get notified when fees change" />);
     expect(screen.getByRole("textbox")).toBeDefined();
+    expect(screen.getByLabelText("Email address")).toBeDefined();
   });
 });

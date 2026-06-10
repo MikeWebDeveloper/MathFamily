@@ -4,12 +4,13 @@ export function EmailCaptureSlot({ formAction, hook }: { formAction?: string; ho
     <form action={formAction} method="post" className="rounded-card bg-surface p-6">
       <p className="font-semibold text-ink">{hook}</p>
       <div className="mt-3 flex gap-2">
+        <label htmlFor="email-capture-input" className="sr-only">Email address</label>
         <input
+          id="email-capture-input"
           type="email"
           name="fields[email]"
           required
           placeholder="you@example.com"
-          aria-label="Email address"
           className="w-full rounded-lg border border-ink/20 px-3 py-2 text-sm"
         />
         <button type="submit" className="rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-white">

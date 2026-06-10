@@ -1,5 +1,6 @@
 export function FreshnessBadge({
   verifiedAt,
+  // keep in sync with STALE_AFTER_DAYS in @mathfamily/engine
   staleAfterDays = 60,
   now = new Date()
 }: {

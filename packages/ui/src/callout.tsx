@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+// tint backgrounds use Tailwind palette values (outside the token system) — revisit at design-system refinement
 const styles = {
   free: "border-positive/30 bg-green-50",
   warning: "border-warning/30 bg-amber-50",
