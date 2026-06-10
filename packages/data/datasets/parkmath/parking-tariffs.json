@@ -3,33 +3,111 @@
   "lastUpdated": "2026-06-10",
   "records": [
     {
+      "airportSlug": "heathrow",
+      "products": [
+        {
+          "productType": "gate",
+          "name": "Park & Ride (formerly Long Stay) — drive-up",
+          "prices": [
+            { "days": 3, "totalPence": 12160 },
+            { "days": 7, "totalPence": 27120 },
+            { "days": 14, "totalPence": 53300 }
+          ],
+          "snapshotDate": null,
+          "notes": "Official drive-up tariff: £46.80 first 24h + £37.40 per subsequent 24h. 3/7/14-day totals computed from those official per-day rates (3d=46.80+2x37.40; 7d=46.80+6x37.40; 14d=46.80+13x37.40)."
+        }
+      ],
+      "sourceUrl": "https://www.heathrow.com/transport-and-directions/heathrow-parking/heathrow-park-and-ride",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "airportSlug": "gatwick",
+      "products": [
+        {
+          "productType": "gate",
+          "name": "Long Stay — roll-up (drive-up)",
+          "prices": [
+            { "days": 3, "totalPence": 10200 },
+            { "days": 7, "totalPence": 23000 },
+            { "days": 14, "totalPence": 45400 }
+          ],
+          "snapshotDate": null,
+          "notes": "Official roll-up tariff: £38 first 24h + £32 per subsequent 24h. 3/7/14-day totals computed from those official per-day rates (3d=38+2x32; 7d=38+6x32; 14d=38+13x32)."
+        }
+      ],
+      "sourceUrl": "https://www.gatwickairport.com/parking/roll-up-car-park-prices.html",
+      "verifiedAt": "2026-06-10"
+    },
+    {
       "airportSlug": "manchester",
       "products": [
         {
           "productType": "gate",
-          "name": "Multi-Storey T1 (drive-up)",
+          "name": "Turn Up & Park — T2 West Multi Storey (P3)",
           "prices": [
-            { "days": 1, "totalPence": 4500 },
-            { "days": 3, "totalPence": 13500 },
-            { "days": 7, "totalPence": 31500 },
-            { "days": 14, "totalPence": 63000 }
+            { "days": 3, "totalPence": 18420 },
+            { "days": 7, "totalPence": 42980 },
+            { "days": 14, "totalPence": 85960 }
           ],
           "snapshotDate": null,
-          "notes": null
+          "notes": "Official Turn Up & Park tariff: £61.40 for up to 24h and for each 24h thereafter (flat). 3/7/14-day totals computed from that official per-day rate."
         },
         {
           "productType": "prebook",
-          "name": "JetParks 1 (pre-book)",
+          "name": "JetParks (pre-book only) — published 'from' price",
           "prices": [
-            { "days": 3, "totalPence": 2400 },
-            { "days": 7, "totalPence": 4200 },
-            { "days": 14, "totalPence": 8000 }
+            { "days": 8, "totalPence": 5999 }
           ],
           "snapshotDate": "2026-06-10",
-          "notes": "Quote snapshot from the official pre-booking portal"
+          "notes": "Officially published pre-book 'from' price: 'From £59.99 (8 days)'. JetParks is pre-book only. Single published 'from' point; not a live-quoted 3/7/14-day ladder — gate product above provides the 3/7/14 coverage."
         }
       ],
-      "sourceUrl": "https://www.manchesterairport.co.uk/parking/",
+      "sourceUrl": "https://www.manchesterairport.co.uk/parking/turn-up-and-park/",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "airportSlug": "stansted",
+      "products": [
+        {
+          "productType": "gate",
+          "name": "Mid Stay — Turn Up & Park (drive-up)",
+          "prices": [
+            { "days": 3, "totalPence": 14400 },
+            { "days": 7, "totalPence": 33600 },
+            { "days": 14, "totalPence": 67200 }
+          ],
+          "snapshotDate": null,
+          "notes": "Official Turn Up & Park tariff: Mid Stay £48 per 24h and for each 24h thereafter (flat). 3/7/14-day totals computed from that official per-day rate. (Short Stay drive-up is £70/24h.)"
+        },
+        {
+          "productType": "prebook",
+          "name": "Long Stay (pre-book) — published 'from' price",
+          "prices": [
+            { "days": 8, "totalPence": 7199 }
+          ],
+          "snapshotDate": "2026-06-10",
+          "notes": "Officially published pre-book 'from' price: 'From £71.99' for an 8-day stay (sample dates Oct 2026, read 2026-06-10). Single published 'from' point; gate product above provides the 3/7/14 coverage."
+        }
+      ],
+      "sourceUrl": "https://www.stanstedairport.com/parking/long-stay/",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "airportSlug": "luton",
+      "products": [
+        {
+          "productType": "gate",
+          "name": "Long Stay — on-the-day (drive-up)",
+          "prices": [
+            { "days": 3, "totalPence": 9000 },
+            { "days": 7, "totalPence": 21000 },
+            { "days": 14, "totalPence": 42000 }
+          ],
+          "snapshotDate": null,
+          "notes": "Official on-the-day tariff: Long Stay £30.00 'each additional day, or part of a day'. Treated as a flat £30/day; 3/7/14-day totals computed from that official per-day rate. (Mid Stay on-the-day is £35/day.) FLAG: a distinct first-day rate is not separately published; this assumes a flat daily rate."
+        }
+      ],
+      "sourceUrl": "https://www.london-luton.co.uk/parking-prices",
       "verifiedAt": "2026-06-10"
     }
   ]
