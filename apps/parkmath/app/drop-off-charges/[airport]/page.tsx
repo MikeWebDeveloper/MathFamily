@@ -72,7 +72,7 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
       ) : null}
 
       {!record.isFree && !isPerEntryTariff(record) ? (
-        <DropOffCalculator tariff={record} airportName={airport.name} />
+        <DropOffCalculator tariff={record} airportName={airport.name} buildDate={new Date().toISOString()} />
       ) : null}
       {isPerEntryTariff(record) ? (
         <Callout variant="info" title="Flat charge per entry">

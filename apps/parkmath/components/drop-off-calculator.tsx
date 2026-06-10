@@ -3,9 +3,20 @@
 import { useState } from "react";
 import { formatPence, quoteDropOff, type DropOffTariff } from "@mathfamily/engine";
 
-export function DropOffCalculator({ tariff, airportName }: { tariff: DropOffTariff; airportName: string }) {
-  const [minutes, setMinutes] = useState(10);
-  const quote = quoteDropOff(tariff, minutes);
+export function DropOffCalculator({
+  tariff,
+  airportName,
+  buildDate,
+}: {
+  tariff: DropOffTariff;
+  airportName: string;
+  buildDate: string;
+}) {
+  const [minutes, setMinutes] = useState(() => {
+    const maxUp = tariff.bands.reduce((m, b) => Math.max(m, b.upToMinutes), 0);
+    return maxUp > 0 ? Math.min(10, maxUp) : 10;
+  });
+  const quote = quoteDropOff(tariff, minutes, new Date(buildDate));
   const cost = quote.costPence === null ? "Beyond published tariff" : formatPence(quote.costPence);
 
   return (
@@ -19,11 +30,13 @@ export function DropOffCalculator({ tariff, airportName }: { tariff: DropOffTari
           value={minutes}
           onChange={(e) => setMinutes(Number(e.target.value))}
           aria-label="Minutes at the drop-off zone"
+          aria-valuetext={`${minutes} minutes`}
+          aria-describedby="calc-result"
           className="w-full accent-brand-accent"
         />
         <span className="w-24 shrink-0 text-right text-sm font-medium text-ink-muted">{minutes} min</span>
       </div>
-      <p data-testid="calculator-result" className="mt-4 text-3xl font-bold tabular-nums text-brand">
+      <p id="calc-result" data-testid="calculator-result" aria-live="polite" className="mt-4 text-3xl font-bold tabular-nums text-brand">
         {cost}
       </p>
       <ul className="mt-3 space-y-1 text-sm text-ink-muted">
