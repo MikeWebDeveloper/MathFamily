@@ -28,7 +28,8 @@ export default async function OgImage({ params }: { params: Promise<{ country: s
       parts.push(`${names}: included`);
     }
     if (r.esimChoice) {
-      parts.push(`eSIM from ${formatPence(r.esimChoice.totalPence)}`);
+      const converted = r.esimChoice.bundleName.includes("(converted)") ? " (converted)" : "";
+      parts.push(`eSIM from ${formatPence(r.esimChoice.totalPence)}${converted}`);
     } else if (r.cheapestNetwork?.totalPence !== null && r.cheapestNetwork !== null && includedNetworks.length === 0) {
       const name = NETWORK_LABELS[r.cheapestNetwork.network] ?? r.cheapestNetwork.network;
       parts.push(`from ${formatPence(r.cheapestNetwork.totalPence)} (${name})`);

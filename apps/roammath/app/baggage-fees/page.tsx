@@ -15,16 +15,6 @@ export default function BaggageFeesIndexPage() {
   const { records, lastUpdated } = loadBaggageDataset();
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3001";
 
-  const listItems = records.map((r) => {
-    const cabin = r.fees.find((f) => f.item.toLowerCase().includes("cabin"));
-    const checked = r.fees.find(
-      (f) => f.item.toLowerCase().includes("checked") || /\b\d{2}kg\b/.test(f.item)
-    );
-    const cabinLabel = cabin ? feeRangeLabel(cabin) : "—";
-    const checkedLabel = checked ? feeRangeLabel(checked) : "—";
-    return `${r.airlineName} — ${cabin ? cabin.item : "cabin bag"} ${cabinLabel}${checked && checked !== cabin ? `; ${checked.item} ${checkedLabel}` : ""}`;
-  });
-
   return (
     <article className="space-y-8">
       <JsonLd

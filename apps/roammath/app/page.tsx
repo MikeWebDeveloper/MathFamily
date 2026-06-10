@@ -52,7 +52,8 @@ export default function HomePage() {
 
     // eSIM option
     if (esimChoice) {
-      noteParts.push(`eSIM from ${formatPence(esimChoice.totalPence)}`);
+      const converted = esimChoice.bundleName.includes("(converted)") ? " (converted)" : "";
+      noteParts.push(`eSIM from ${formatPence(esimChoice.totalPence)}${converted}`);
     }
 
     // Trip details

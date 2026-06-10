@@ -32,7 +32,9 @@ export default function RoamingIndexPage() {
       return `${formatPence(n.dailyPassPence)}/day`;
     };
 
-    const esimCell = r.esimChoice ? formatPence(r.esimChoice.totalPence) : "—";
+    const esimCell = r.esimChoice
+      ? `${formatPence(r.esimChoice.totalPence)}${r.esimChoice.bundleName.includes("(converted)") ? "†" : ""}`
+      : "—";
 
     return [
       <Link
@@ -102,6 +104,7 @@ export default function RoamingIndexPage() {
 
       <p className="text-sm text-ink-muted">
         Network sources verified {latestVerified}. eSIM prices are dated snapshots — check providers for live prices.
+        {" "}† converted from the provider&apos;s USD price at an indicative rate.
       </p>
     </article>
   );
