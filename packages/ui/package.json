@@ -1,0 +1,23 @@
+{
+  "name": "@mathfamily/ui",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./tokens.css": "./src/tokens.css"
+  },
+  "scripts": { "test": "vitest run", "typecheck": "tsc --noEmit" },
+  "peerDependencies": { "react": "*" },
+  "devDependencies": {
+    "@mathfamily/config": "workspace:*",
+    "@testing-library/react": "^16.3.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "jsdom": "^26.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "typescript": "^5.8.0",
+    "vitest": "^3.2.0"
+  }
+}
