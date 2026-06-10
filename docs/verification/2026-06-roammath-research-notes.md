@@ -151,3 +151,64 @@ Research date: **2026-06-10**. Providers: **Airalo**, **Holafly**, **Saily** —
 - Holafly: https://esim.holafly.com/esim-<country>/ (e.g. https://esim.holafly.com/esim-spain/, https://esim.holafly.com/esim-usa/)
 - Saily: https://saily.com/esim-<country>/ via Wayback Machine (archive.org)
 - FX: https://www.exchangerates.org.uk/GBP-USD-spot-exchange-rates-history-2026.html ; https://wise.com/gb/currency-converter/gbp-to-usd-rate/history
+
+---
+
+# eSIM batch 2 — remaining 20 destinations (Task 8)
+
+Research date: **2026-06-10**. Completes the 40-destination set; `packages/data/datasets/roammath/esim.json` bumped to **`version: 1.0.0`** (20 records appended to batch 1's 20). Same regime as batch 1: Airalo serves GBP natively; Holafly and Saily are USD and converted at **1 USD = £0.747** with the `"(converted)"` suffix; `dataGb: null` = unlimited; per-bundle read date in `snapshotDate`. Destinations: new-zealand, uae, thailand, japan, china, india, south-africa, egypt, morocco, tunisia, norway, iceland, sweden, denmark, czechia, hungary, romania, bulgaria, albania, montenegro.
+
+## Transport
+
+- **Airalo** (`airalo.com/<country>-esim`): all 20 reached via **WebFetch**, GBP. Mostly unlimited-only stores (recorded an unlimited bundle, usually the 5-day for like-for-like with batch 1); where GB tiers were published we took a ~5GB bundle: **south-africa** (CellC 5GB/30d £10.00), **iceland** (5GB/15d £9.00), **bulgaria** (5GB/7d £5.00). UAE canonical slug is `united-arab-emirates-esim` (`uae-esim` 404s).
+- **Holafly** (`esim.holafly.com/esim-<country>/`): all 20 reached via **WebFetch**, USD, unlimited-only. Recorded the **30-day unlimited** as the representative bundle, matching batch 1. **Exception — UAE**: Holafly's `esim-dubai/` page (the UAE product; `esim-united-arab-emirates/` 301s to an image) tops out at **15-day unlimited $50.90** with no 30-day tier shown, so the 15-day was recorded (no guessing a 30-day price).
+- **Saily** (`saily.com/esim-<country>/`): **WebFetch 403**. **r.jina.ai live reads succeeded for 9** of 20 (Cloudflare let them through this session); the rest hit the bot-challenge. For challenged countries the **Wayback Machine** was checked and used only where a **2026 snapshot** existed (accuracy gate) — that recovered **india** (snap 2026-03-08) and **south-africa** (snap 2026-03-25). 2025-only snapshots (egypt, czechia, hungary, romania, bulgaria, montenegro, albania) and no-snapshot countries (norway, sweden, denmark) omit Saily rather than carry stale prices. Recorded Saily plan = **5GB / 30 days** (converted), consistent with batch 1.
+
+## Per-country coverage
+
+| Country | Airalo | Holafly | Saily | Notes |
+|---|---|---|---|---|
+| new-zealand | Unl 5d £15.00 | Unl 30d $74.90→£55.95 | 5GB/30d $13.99→£10.45 (live r.jina) | Spark network |
+| uae | Unl 5d £16.00 | Unl 15d $50.90→£38.02 | 5GB/30d $11.99→£8.96 (live r.jina) | Holafly Dubai page caps at 15d (no 30d) |
+| thailand | Unl 5d £12.00 | Unl 30d $74.90→£55.95 | — | Saily r.jina Cloudflare-blocked, no 2026 snapshot |
+| japan | Unl 5d £13.50 | Unl 30d $74.90→£55.95 | 5GB/30d $10.99→£8.21 (live r.jina) | Softbank network |
+| china | Unl 5d £15.00 | Unl 30d $74.90→£55.95 | 5GB/30d $15.99→£11.94 (live r.jina) | Saily warns app may be limited in China |
+| india | Unl 5d £24.50 | Unl 30d $111.90→£83.59 | 5GB/30d $13.99→£10.45 (snap 2026-03-08) | Airalo India is unlimited-only & pricey |
+| south-africa | 5GB/30d £10.00 | Unl 30d $111.90→£83.59 | 5GB/30d $12.99→£9.70 (snap 2026-03-25) | Airalo CellC GB tier; Vodacom unlimited dearer |
+| egypt | Unl 5d £23.00 | Unl 30d $93.90→£70.14 | — | Saily only 2025-08 snapshot, omitted |
+| morocco | Unl 5d £22.50 | Unl 30d $74.90→£55.95 | 5GB/30d $21.99→£16.43 (live r.jina) | Airalo Morocco store ≤7d unlimited-only |
+| tunisia | Unl 5d £22.00 | Unl 30d $113.90→£85.08 | 5GB/30d $11.99→£8.96 (live r.jina) | Ooredoo network |
+| norway | Unl 5d £15.00 | Unl 30d $73.90→£55.20 | — | Saily: no Wayback snapshot |
+| iceland | 5GB/15d £9.00 | Unl 30d $73.90→£55.20 | 5GB/30d $11.99→£8.96 (live r.jina) | Airalo Iceland GB tier; Holafly unlimited |
+| sweden | Unl 5d £15.00 | Unl 30d $73.90→£55.20 | — | Saily: no Wayback snapshot |
+| denmark | Unl 5d £15.00 | Unl 30d $73.90→£55.20 | — | Saily: no Wayback snapshot |
+| czechia | Unl 5d £15.00 | Unl 30d $73.90→£55.20 | omitted (2025-08 snapshot, stale) | Airalo slug `czech-republic-esim` |
+| hungary | Unl 5d £15.00 | Unl 30d $73.90→£55.20 | omitted (2025-08 snapshot, stale) | Airalo unlimited-only |
+| romania | Unl 5d £15.00 | Unl 30d $73.90→£55.20 | omitted (2025-04 snapshot, stale) | Airalo unlimited-only |
+| bulgaria | 5GB/7d £5.00 | Unl 30d $73.90→£55.20 | omitted (2025-08 snapshot, stale) | Airalo Bulgaria GB tier |
+| albania | Unl 5d £20.00 | Unl 30d $125.90→£94.05 | omitted (2025-12 snapshot, stale) | Holafly Albania priced high |
+| montenegro | Unl 5d £22.00 | Unl 30d $104.90→£78.36 | omitted (2025-08 snapshot, stale) | MTEL network |
+
+## Coverage summary (batch 2)
+
+- **All 20** countries have **Airalo + Holafly** (2 providers each).
+- **9** countries also have **Saily** (3 providers): new-zealand, uae, japan, china, india, south-africa, morocco, tunisia, iceland.
+- Saily gaps (11): thailand, egypt, norway, sweden, denmark, czechia, hungary, romania, bulgaria, albania, montenegro — Cloudflare-blocked live and either no Wayback snapshot (thailand, norway, sweden, denmark) or only a stale 2025 snapshot (egypt, czechia, hungary, romania, bulgaria, albania, montenegro), omitted on the accuracy-over-completeness rule.
+
+## Combined dataset coverage (40 destinations)
+
+- All **40** roaming destinations have an eSIM record with **Airalo + Holafly**; the new `esim-coverage.test.ts` gate asserts every roaming slug has ≥1 bundle.
+- **15** destinations carry **Saily** as a third provider (6 from batch 1 + 9 from batch 2).
+
+## Saily source snapshots used (batch 2 Wayback)
+
+- india: http://web.archive.org/web/20260308145402/https://saily.com/esim-india/ (5GB/30d $13.99)
+- south-africa: http://web.archive.org/web/20260325221129/https://saily.com/esim-south-africa/ (5GB/30d $12.99)
+- (live r.jina.ai reads on 2026-06-10 for: new-zealand, uae, japan, china, morocco, tunisia, iceland)
+
+## Sources (eSIM batch 2)
+
+- Airalo: https://www.airalo.com/<country>-esim (UAE: https://www.airalo.com/united-arab-emirates-esim ; Czechia: https://www.airalo.com/czech-republic-esim)
+- Holafly: https://esim.holafly.com/esim-<country>/ (UAE: https://esim.holafly.com/esim-dubai/ ; Czechia: https://esim.holafly.com/esim-czech-republic/)
+- Saily: https://saily.com/esim-<country>/ via r.jina.ai live + Wayback Machine (archive.org)
+- FX: https://www.exchangerates.org.uk/GBP-USD-spot-exchange-rates-history-2026.html ; https://wise.com/gb/currency-converter/gbp-to-usd-rate/history

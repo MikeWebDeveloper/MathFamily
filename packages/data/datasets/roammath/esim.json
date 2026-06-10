@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0",
+  "version": "1.0.0",
   "lastUpdated": "2026-06-10",
   "records": [
     {
@@ -508,6 +508,538 @@
         }
       ],
       "sourceUrl": "https://www.airalo.com/australia-esim",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "countrySlug": "new-zealand",
+      "bundles": [
+        {
+          "provider": "airalo",
+          "bundleName": "New Zealand Unlimited / 5 days",
+          "dataGb": null,
+          "validityDays": 5,
+          "totalPence": 1500,
+          "snapshotDate": "2026-06-10"
+        },
+        {
+          "provider": "holafly",
+          "bundleName": "New Zealand Unlimited / 30 days (converted)",
+          "dataGb": null,
+          "validityDays": 30,
+          "totalPence": 5595,
+          "snapshotDate": "2026-06-10"
+        },
+        {
+          "provider": "saily",
+          "bundleName": "New Zealand 5GB / 30 days (converted)",
+          "dataGb": 5,
+          "validityDays": 30,
+          "totalPence": 1045,
+          "snapshotDate": "2026-06-10"
+        }
+      ],
+      "sourceUrl": "https://www.airalo.com/new-zealand-esim",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "countrySlug": "uae",
+      "bundles": [
+        {
+          "provider": "airalo",
+          "bundleName": "United Arab Emirates Unlimited / 5 days",
+          "dataGb": null,
+          "validityDays": 5,
+          "totalPence": 1600,
+          "snapshotDate": "2026-06-10"
+        },
+        {
+          "provider": "holafly",
+          "bundleName": "United Arab Emirates Unlimited / 15 days (converted)",
+          "dataGb": null,
+          "validityDays": 15,
+          "totalPence": 3802,
+          "snapshotDate": "2026-06-10"
+        },
+        {
+          "provider": "saily",
+          "bundleName": "United Arab Emirates 5GB / 30 days (converted)",
+          "dataGb": 5,
+          "validityDays": 30,
+          "totalPence": 896,
+          "snapshotDate": "2026-06-10"
+        }
+      ],
+      "sourceUrl": "https://www.airalo.com/united-arab-emirates-esim",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "countrySlug": "thailand",
+      "bundles": [
+        {
+          "provider": "airalo",
+          "bundleName": "Thailand Unlimited / 5 days",
+          "dataGb": null,
+          "validityDays": 5,
+          "totalPence": 1200,
+          "snapshotDate": "2026-06-10"
+        },
+        {
+          "provider": "holafly",
+          "bundleName": "Thailand Unlimited / 30 days (converted)",
+          "dataGb": null,
+          "validityDays": 30,
+          "totalPence": 5595,
+          "snapshotDate": "2026-06-10"
+        }
+      ],
+      "sourceUrl": "https://www.airalo.com/thailand-esim",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "countrySlug": "japan",
+      "bundles": [
+        {
+          "provider": "airalo",
+          "bundleName": "Japan Unlimited / 5 days",
+          "dataGb": null,
+          "validityDays": 5,
+          "totalPence": 1350,
+          "snapshotDate": "2026-06-10"
+        },
+        {
+          "provider": "holafly",
+          "bundleName": "Japan Unlimited / 30 days (converted)",
+          "dataGb": null,
+          "validityDays": 30,
+          "totalPence": 5595,
+          "snapshotDate": "2026-06-10"
+        },
+        {
+          "provider": "saily",
+          "bundleName": "Japan 5GB / 30 days (converted)",
+          "dataGb": 5,
+          "validityDays": 30,
+          "totalPence": 821,
+          "snapshotDate": "2026-06-10"
+        }
+      ],
+      "sourceUrl": "https://www.airalo.com/japan-esim",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "countrySlug": "china",
+      "bundles": [
+        {
+          "provider": "airalo",
+          "bundleName": "China Unlimited / 5 days",
+          "dataGb": null,
+          "validityDays": 5,
+          "totalPence": 1500,
+          "snapshotDate": "2026-06-10"
+        },
+        {
+          "provider": "holafly",
+          "bundleName": "China Unlimited / 30 days (converted)",
+          "dataGb": null,
+          "validityDays": 30,
+          "totalPence": 5595,
+          "snapshotDate": "2026-06-10"
+        },
+        {
+          "provider": "saily",
+          "bundleName": "China 5GB / 30 days (converted)",
+          "dataGb": 5,
+          "validityDays": 30,
+          "totalPence": 1194,
+          "snapshotDate": "2026-06-10"
+        }
+      ],
+      "sourceUrl": "https://www.airalo.com/china-esim",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "countrySlug": "india",
+      "bundles": [
+        {
+          "provider": "airalo",
+          "bundleName": "India Unlimited / 5 days",
+          "dataGb": null,
+          "validityDays": 5,
+          "totalPence": 2450,
+          "snapshotDate": "2026-06-10"
+        },
+        {
+          "provider": "holafly",
+          "bundleName": "India Unlimited / 30 days (converted)",
+          "dataGb": null,
+          "validityDays": 30,
+          "totalPence": 8359,
+          "snapshotDate": "2026-06-10"
+        },
+        {
+          "provider": "saily",
+          "bundleName": "India 5GB / 30 days (converted)",
+          "dataGb": 5,
+          "validityDays": 30,
+          "totalPence": 1045,
+          "snapshotDate": "2026-03-08"
+        }
+      ],
+      "sourceUrl": "https://www.airalo.com/india-esim",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "countrySlug": "south-africa",
+      "bundles": [
+        {
+          "provider": "airalo",
+          "bundleName": "South Africa 5GB / 30 days",
+          "dataGb": 5,
+          "validityDays": 30,
+          "totalPence": 1000,
+          "snapshotDate": "2026-06-10"
+        },
+        {
+          "provider": "holafly",
+          "bundleName": "South Africa Unlimited / 30 days (converted)",
+          "dataGb": null,
+          "validityDays": 30,
+          "totalPence": 8359,
+          "snapshotDate": "2026-06-10"
+        },
+        {
+          "provider": "saily",
+          "bundleName": "South Africa 5GB / 30 days (converted)",
+          "dataGb": 5,
+          "validityDays": 30,
+          "totalPence": 970,
+          "snapshotDate": "2026-03-25"
+        }
+      ],
+      "sourceUrl": "https://www.airalo.com/south-africa-esim",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "countrySlug": "egypt",
+      "bundles": [
+        {
+          "provider": "airalo",
+          "bundleName": "Egypt Unlimited / 5 days",
+          "dataGb": null,
+          "validityDays": 5,
+          "totalPence": 2300,
+          "snapshotDate": "2026-06-10"
+        },
+        {
+          "provider": "holafly",
+          "bundleName": "Egypt Unlimited / 30 days (converted)",
+          "dataGb": null,
+          "validityDays": 30,
+          "totalPence": 7014,
+          "snapshotDate": "2026-06-10"
+        }
+      ],
+      "sourceUrl": "https://www.airalo.com/egypt-esim",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "countrySlug": "morocco",
+      "bundles": [
+        {
+          "provider": "airalo",
+          "bundleName": "Morocco Unlimited / 5 days",
+          "dataGb": null,
+          "validityDays": 5,
+          "totalPence": 2250,
+          "snapshotDate": "2026-06-10"
+        },
+        {
+          "provider": "holafly",
+          "bundleName": "Morocco Unlimited / 30 days (converted)",
+          "dataGb": null,
+          "validityDays": 30,
+          "totalPence": 5595,
+          "snapshotDate": "2026-06-10"
+        },
+        {
+          "provider": "saily",
+          "bundleName": "Morocco 5GB / 30 days (converted)",
+          "dataGb": 5,
+          "validityDays": 30,
+          "totalPence": 1643,
+          "snapshotDate": "2026-06-10"
+        }
+      ],
+      "sourceUrl": "https://www.airalo.com/morocco-esim",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "countrySlug": "tunisia",
+      "bundles": [
+        {
+          "provider": "airalo",
+          "bundleName": "Tunisia Unlimited / 5 days",
+          "dataGb": null,
+          "validityDays": 5,
+          "totalPence": 2200,
+          "snapshotDate": "2026-06-10"
+        },
+        {
+          "provider": "holafly",
+          "bundleName": "Tunisia Unlimited / 30 days (converted)",
+          "dataGb": null,
+          "validityDays": 30,
+          "totalPence": 8508,
+          "snapshotDate": "2026-06-10"
+        },
+        {
+          "provider": "saily",
+          "bundleName": "Tunisia 5GB / 30 days (converted)",
+          "dataGb": 5,
+          "validityDays": 30,
+          "totalPence": 896,
+          "snapshotDate": "2026-06-10"
+        }
+      ],
+      "sourceUrl": "https://www.airalo.com/tunisia-esim",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "countrySlug": "norway",
+      "bundles": [
+        {
+          "provider": "airalo",
+          "bundleName": "Norway Unlimited / 5 days",
+          "dataGb": null,
+          "validityDays": 5,
+          "totalPence": 1500,
+          "snapshotDate": "2026-06-10"
+        },
+        {
+          "provider": "holafly",
+          "bundleName": "Norway Unlimited / 30 days (converted)",
+          "dataGb": null,
+          "validityDays": 30,
+          "totalPence": 5520,
+          "snapshotDate": "2026-06-10"
+        }
+      ],
+      "sourceUrl": "https://www.airalo.com/norway-esim",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "countrySlug": "iceland",
+      "bundles": [
+        {
+          "provider": "airalo",
+          "bundleName": "Iceland 5GB / 15 days",
+          "dataGb": 5,
+          "validityDays": 15,
+          "totalPence": 900,
+          "snapshotDate": "2026-06-10"
+        },
+        {
+          "provider": "holafly",
+          "bundleName": "Iceland Unlimited / 30 days (converted)",
+          "dataGb": null,
+          "validityDays": 30,
+          "totalPence": 5520,
+          "snapshotDate": "2026-06-10"
+        },
+        {
+          "provider": "saily",
+          "bundleName": "Iceland 5GB / 30 days (converted)",
+          "dataGb": 5,
+          "validityDays": 30,
+          "totalPence": 896,
+          "snapshotDate": "2026-06-10"
+        }
+      ],
+      "sourceUrl": "https://www.airalo.com/iceland-esim",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "countrySlug": "sweden",
+      "bundles": [
+        {
+          "provider": "airalo",
+          "bundleName": "Sweden Unlimited / 5 days",
+          "dataGb": null,
+          "validityDays": 5,
+          "totalPence": 1500,
+          "snapshotDate": "2026-06-10"
+        },
+        {
+          "provider": "holafly",
+          "bundleName": "Sweden Unlimited / 30 days (converted)",
+          "dataGb": null,
+          "validityDays": 30,
+          "totalPence": 5520,
+          "snapshotDate": "2026-06-10"
+        }
+      ],
+      "sourceUrl": "https://www.airalo.com/sweden-esim",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "countrySlug": "denmark",
+      "bundles": [
+        {
+          "provider": "airalo",
+          "bundleName": "Denmark Unlimited / 5 days",
+          "dataGb": null,
+          "validityDays": 5,
+          "totalPence": 1500,
+          "snapshotDate": "2026-06-10"
+        },
+        {
+          "provider": "holafly",
+          "bundleName": "Denmark Unlimited / 30 days (converted)",
+          "dataGb": null,
+          "validityDays": 30,
+          "totalPence": 5520,
+          "snapshotDate": "2026-06-10"
+        }
+      ],
+      "sourceUrl": "https://www.airalo.com/denmark-esim",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "countrySlug": "czechia",
+      "bundles": [
+        {
+          "provider": "airalo",
+          "bundleName": "Czech Republic Unlimited / 5 days",
+          "dataGb": null,
+          "validityDays": 5,
+          "totalPence": 1500,
+          "snapshotDate": "2026-06-10"
+        },
+        {
+          "provider": "holafly",
+          "bundleName": "Czech Republic Unlimited / 30 days (converted)",
+          "dataGb": null,
+          "validityDays": 30,
+          "totalPence": 5520,
+          "snapshotDate": "2026-06-10"
+        }
+      ],
+      "sourceUrl": "https://www.airalo.com/czech-republic-esim",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "countrySlug": "hungary",
+      "bundles": [
+        {
+          "provider": "airalo",
+          "bundleName": "Hungary Unlimited / 5 days",
+          "dataGb": null,
+          "validityDays": 5,
+          "totalPence": 1500,
+          "snapshotDate": "2026-06-10"
+        },
+        {
+          "provider": "holafly",
+          "bundleName": "Hungary Unlimited / 30 days (converted)",
+          "dataGb": null,
+          "validityDays": 30,
+          "totalPence": 5520,
+          "snapshotDate": "2026-06-10"
+        }
+      ],
+      "sourceUrl": "https://www.airalo.com/hungary-esim",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "countrySlug": "romania",
+      "bundles": [
+        {
+          "provider": "airalo",
+          "bundleName": "Romania Unlimited / 5 days",
+          "dataGb": null,
+          "validityDays": 5,
+          "totalPence": 1500,
+          "snapshotDate": "2026-06-10"
+        },
+        {
+          "provider": "holafly",
+          "bundleName": "Romania Unlimited / 30 days (converted)",
+          "dataGb": null,
+          "validityDays": 30,
+          "totalPence": 5520,
+          "snapshotDate": "2026-06-10"
+        }
+      ],
+      "sourceUrl": "https://www.airalo.com/romania-esim",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "countrySlug": "bulgaria",
+      "bundles": [
+        {
+          "provider": "airalo",
+          "bundleName": "Bulgaria 5GB / 7 days",
+          "dataGb": 5,
+          "validityDays": 7,
+          "totalPence": 500,
+          "snapshotDate": "2026-06-10"
+        },
+        {
+          "provider": "holafly",
+          "bundleName": "Bulgaria Unlimited / 30 days (converted)",
+          "dataGb": null,
+          "validityDays": 30,
+          "totalPence": 5520,
+          "snapshotDate": "2026-06-10"
+        }
+      ],
+      "sourceUrl": "https://www.airalo.com/bulgaria-esim",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "countrySlug": "albania",
+      "bundles": [
+        {
+          "provider": "airalo",
+          "bundleName": "Albania Unlimited / 5 days",
+          "dataGb": null,
+          "validityDays": 5,
+          "totalPence": 2000,
+          "snapshotDate": "2026-06-10"
+        },
+        {
+          "provider": "holafly",
+          "bundleName": "Albania Unlimited / 30 days (converted)",
+          "dataGb": null,
+          "validityDays": 30,
+          "totalPence": 9405,
+          "snapshotDate": "2026-06-10"
+        }
+      ],
+      "sourceUrl": "https://www.airalo.com/albania-esim",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "countrySlug": "montenegro",
+      "bundles": [
+        {
+          "provider": "airalo",
+          "bundleName": "Montenegro Unlimited / 5 days",
+          "dataGb": null,
+          "validityDays": 5,
+          "totalPence": 2200,
+          "snapshotDate": "2026-06-10"
+        },
+        {
+          "provider": "holafly",
+          "bundleName": "Montenegro Unlimited / 30 days (converted)",
+          "dataGb": null,
+          "validityDays": 30,
+          "totalPence": 7836,
+          "snapshotDate": "2026-06-10"
+        }
+      ],
+      "sourceUrl": "https://www.airalo.com/montenegro-esim",
       "verifiedAt": "2026-06-10"
     }
   ]
