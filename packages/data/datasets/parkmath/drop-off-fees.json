@@ -1,0 +1,21 @@
+{
+  "version": "0.1.0",
+  "lastUpdated": "2026-06-10",
+  "records": [
+    {
+      "airportSlug": "gatwick",
+      "isFree": false,
+      "feeSummary": "£10 for up to 20 minutes",
+      "bands": [{ "upToMinutes": 20, "totalPence": 1000 }],
+      "maxStayMinutes": 20,
+      "penaltyPence": 10000,
+      "penaltyNotes": "Reduced if paid within 14 days",
+      "paymentDeadline": "23:59 the day after drop-off",
+      "blueBadgePolicy": "Blue Badge holders should check Gatwick's published exemption process before travelling",
+      "freeAlternative": { "name": "Long Stay car park", "minutesFree": 30, "details": "Park free for a short stay and take the shuttle to the terminal" },
+      "priorYearFeePence": 700,
+      "sourceUrl": "https://www.gatwickairport.com/",
+      "verifiedAt": "2026-06-10"
+    }
+  ]
+}
