@@ -24,6 +24,18 @@ describe("AirportSchema", () => {
   it("rejects an invalid slug", () => {
     expect(() => AirportSchema.parse({ name: "X", slug: "Bad Slug!", iata: "LGW", region: "London" })).toThrow();
   });
+  // Issue 3: IATA must be 3 uppercase letters
+  it("rejects a lowercase IATA code", () => {
+    expect(() => AirportSchema.parse({ name: "London Gatwick", slug: "gatwick", iata: "lgw", region: "London" })).toThrow();
+  });
+  // Issue 4: slug must not have leading/trailing/double dashes
+  it("rejects a trailing-dash slug", () => {
+    expect(() => AirportSchema.parse({ name: "London Gatwick", slug: "gat-", iata: "LGW", region: "London" })).toThrow();
+  });
+  // Issue 2: strict object rejects unknown fields
+  it("rejects an airport with an unknown field", () => {
+    expect(() => AirportSchema.parse({ name: "London Gatwick", slug: "gatwick", iata: "LGW", region: "London", extraField: "oops" })).toThrow();
+  });
 });
 
 describe("DropOffRecordSchema", () => {
@@ -44,5 +56,16 @@ describe("DropOffRecordSchema", () => {
     expect(() =>
       DropOffRecordSchema.parse({ ...validRecord, isFree: true, bands: [], feeSummary: "Free at the forecourt" })
     ).not.toThrow();
+  });
+  // Issue 1: IsoDate must reject impossible calendar dates
+  it("rejects an impossible calendar date (2026-13-45)", () => {
+    expect(() => DropOffRecordSchema.parse({ ...validRecord, verifiedAt: "2026-13-45" })).toThrow();
+  });
+  it("accepts a real calendar date (2026-06-10)", () => {
+    expect(() => DropOffRecordSchema.parse({ ...validRecord, verifiedAt: "2026-06-10" })).not.toThrow();
+  });
+  // Issue 2: strict object rejects unknown/typo'd fields
+  it("rejects a record with an unknown field (pentaltyPence typo)", () => {
+    expect(() => DropOffRecordSchema.parse({ ...validRecord, pentaltyPence: 5000 })).toThrow();
   });
 });
