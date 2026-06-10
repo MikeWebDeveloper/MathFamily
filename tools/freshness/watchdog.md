@@ -27,9 +27,12 @@ Short version:
 - **Fetch errors** (not content changes): the workflow's "Errors?" branch fires and
   routes to the "Notify Mike (wire me up)" no-op node.
 - **Sweep recency check:** the workflow also checks daily whether the launchd-driven
-  weekly sweep has written `$HOME/Library/Logs/mathfamily-freshness/last-success`
+  weekly sweep has written `$HOME/Library/Logs/mathfamily-freshness/last-sweep-success`
   within the past 14 days. If not, the "Sweep stale?" branch fires and routes to the
-  same notifier node.
+  same notifier node. Note that `last-success` is a general "any run" beacon written on
+  every invocation (check or sweep); `last-sweep-success` is written **only** by sweep
+  runs — that is what the 14-day staleness alert watches, so a flurry of daily check
+  runs cannot mask a missed weekly sweep.
 
 > **Timeout note (reviewer):** n8n's `executeCommand` node has no default timeout.
 > On a pathological all-blocked day (every watchable URL exhausts both the direct and
@@ -102,9 +105,14 @@ and that `gh` is authenticated to the same account that owns the repo.
 | What | Path |
 |------|------|
 | Agent run logs (each run) | `~/Library/Logs/mathfamily-freshness/<YYYY-MM-DD_HHMM>.log` |
-| Sweep recency beacon | `~/Library/Logs/mathfamily-freshness/last-success` |
+| General "any run" beacon | `~/Library/Logs/mathfamily-freshness/last-success` |
+| Sweep-only recency beacon | `~/Library/Logs/mathfamily-freshness/last-sweep-success` |
 | launchd stdout | `/tmp/mathfamily-freshness-sweep.log` |
 | launchd stderr | `/tmp/mathfamily-freshness-sweep.err` |
+
+`last-success` is written on every run (check or sweep). `last-sweep-success` is written
+only by sweep runs, and is what the n8n "Sweep ran in last 14 days?" node checks — so
+the staleness alert cannot be silenced by daily check runs.
 
 To tail a live run:
 

@@ -14,7 +14,7 @@
     { "id": "ifErrors", "name": "Errors?", "type": "n8n-nodes-base.if", "typeVersion": 2, "position": [660, 120],
       "parameters": { "conditions": { "conditions": [{ "leftValue": "={{ $json.hasErrors }}", "rightValue": true, "operator": { "type": "boolean", "operation": "true" } }] } } },
     { "id": "sweepRecency", "name": "Sweep ran in last 14 days?", "type": "n8n-nodes-base.executeCommand", "typeVersion": 1, "position": [660, 240],
-      "parameters": { "command": "test -n \"$(find \\\"$HOME/Library/Logs/mathfamily-freshness/last-success\\\" -mtime -14 2>/dev/null)\" && echo OK || echo STALE" } },
+      "parameters": { "command": "test -n \"$(find \\\"$HOME/Library/Logs/mathfamily-freshness/last-sweep-success\\\" -mtime -14 2>/dev/null)\" && echo OK || echo STALE" } },
     { "id": "ifStale", "name": "Sweep stale?", "type": "n8n-nodes-base.if", "typeVersion": 2, "position": [880, 240],
       "parameters": { "conditions": { "conditions": [{ "leftValue": "={{ $json.stdout.trim() }}", "rightValue": "STALE", "operator": { "type": "string", "operation": "equals" } }] } } },
     { "id": "notify", "name": "Notify Mike (wire me up)", "type": "n8n-nodes-base.noOp", "typeVersion": 1, "position": [1100, 180], "parameters": {} }

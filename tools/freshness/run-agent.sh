@@ -21,6 +21,7 @@ if [[ "${PRINT_CMD:-0}" == "1" ]]; then
 fi
 
 "${CMD[@]}" >"$LOG_DIR/$STAMP.log" 2>&1
-date +%s > "$LOG_DIR/last-success"   # recency beacon for the n8n stale-sweep alert
+date +%s > "$LOG_DIR/last-success"   # general "any run" beacon
+if [[ "${1:-}" == "sweep" ]]; then date +%s > "$LOG_DIR/last-sweep-success"; fi  # sweep-only beacon
 echo "freshness run complete — log: $LOG_DIR/$STAMP.log"
 tail -5 "$LOG_DIR/$STAMP.log"
