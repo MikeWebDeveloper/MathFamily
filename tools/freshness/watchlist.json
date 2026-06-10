@@ -1,0 +1,694 @@
+{
+  "generatedAt": "2026-06-10",
+  "entries": [
+    {
+      "url": "https://binaries.vodafone.co.uk/gbnnsauqav4t/3ynRZJ6BvgpyYyPmoIAHX0/ff9c9463c41c25d0cbf8f5d27f955afb/evo-paym-charges-guide.pdf",
+      "refs": [
+        "roaming:vodafone"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://cardiff-airport.com/parking-cwl/drop-off-and-pick-up-cwl/",
+      "refs": [
+        "drop-off:cardiff"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://ee.co.uk/content/dam/help/terms-and-conditions/price-plans/mobile/ee-pay-monthly-standard-and-non-standard-price-guide-23-July-2025.pdf",
+      "refs": [
+        "roaming:ee"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://escapelounges.com/uk/airport-lounges/",
+      "refs": [
+        "lounges:bristol",
+        "lounges:edinburgh",
+        "lounges:manchester",
+        "lounges:stansted"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://exeter-airport.co.uk/car-parking/",
+      "refs": [
+        "drop-off:exeter"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://flywith.virginatlantic.com/gb/en/upgrades-and-extras/optional-service-and-travel-fees.html",
+      "refs": [
+        "baggage:virgin-atlantic"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://londonsouthendairport.com/getting-to-and-from/pick-up-drop-off",
+      "refs": [
+        "drop-off:southend"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://no1lounges.com/lounges-by-location/aspire-at-newcastle/",
+      "refs": [
+        "lounges:newcastle"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://no1lounges.com/lounges-by-location/club-aspire-at-gatwick-south/",
+      "refs": [
+        "lounges:gatwick"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://no1lounges.com/lounges-by-location/club-aspire-at-heathrow-t5/",
+      "refs": [
+        "lounges:heathrow"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.aberdeenairport.com/transport-and-directions/dropping-off-at-aberdeen-airport/",
+      "refs": [
+        "drop-off:aberdeen"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.aerlingus.com/travel-information/baggage-information/checked-baggage/",
+      "refs": [
+        "baggage:aer-lingus"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/albania-esim",
+      "refs": [
+        "esim:albania"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/australia-esim",
+      "refs": [
+        "esim:australia"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/austria-esim",
+      "refs": [
+        "esim:austria"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/belgium-esim",
+      "refs": [
+        "esim:belgium"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/bulgaria-esim",
+      "refs": [
+        "esim:bulgaria"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/canada-esim",
+      "refs": [
+        "esim:canada"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/china-esim",
+      "refs": [
+        "esim:china"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/croatia-esim",
+      "refs": [
+        "esim:croatia"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/cyprus-esim",
+      "refs": [
+        "esim:cyprus"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/czech-republic-esim",
+      "refs": [
+        "esim:czechia"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/denmark-esim",
+      "refs": [
+        "esim:denmark"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/egypt-esim",
+      "refs": [
+        "esim:egypt"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/france-esim",
+      "refs": [
+        "esim:france"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/germany-esim",
+      "refs": [
+        "esim:germany"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/greece-esim",
+      "refs": [
+        "esim:greece"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/hungary-esim",
+      "refs": [
+        "esim:hungary"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/iceland-esim",
+      "refs": [
+        "esim:iceland"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/india-esim",
+      "refs": [
+        "esim:india"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/ireland-esim",
+      "refs": [
+        "esim:ireland"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/italy-esim",
+      "refs": [
+        "esim:italy"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/japan-esim",
+      "refs": [
+        "esim:japan"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/malta-esim",
+      "refs": [
+        "esim:malta"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/mexico-esim",
+      "refs": [
+        "esim:mexico"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/montenegro-esim",
+      "refs": [
+        "esim:montenegro"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/morocco-esim",
+      "refs": [
+        "esim:morocco"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/netherlands-esim",
+      "refs": [
+        "esim:netherlands"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/new-zealand-esim",
+      "refs": [
+        "esim:new-zealand"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/norway-esim",
+      "refs": [
+        "esim:norway"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/poland-esim",
+      "refs": [
+        "esim:poland"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/portugal-esim",
+      "refs": [
+        "esim:portugal"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/romania-esim",
+      "refs": [
+        "esim:romania"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/south-africa-esim",
+      "refs": [
+        "esim:south-africa"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/spain-esim",
+      "refs": [
+        "esim:spain"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/sweden-esim",
+      "refs": [
+        "esim:sweden"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/switzerland-esim",
+      "refs": [
+        "esim:switzerland"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/thailand-esim",
+      "refs": [
+        "esim:thailand"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/tunisia-esim",
+      "refs": [
+        "esim:tunisia"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/turkey-esim",
+      "refs": [
+        "esim:turkey"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/united-arab-emirates-esim",
+      "refs": [
+        "esim:uae"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.airalo.com/united-states-esim",
+      "refs": [
+        "esim:usa"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.belfastairport.com/car-parking/drop-off-zone",
+      "refs": [
+        "drop-off:belfast-international"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.belfastcityairport.com/Parking/Drop-Off-and-Pick-Up",
+      "refs": [
+        "drop-off:belfast-city"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.birminghamairport.co.uk/at-the-airport/lounges/",
+      "refs": [
+        "lounges:birmingham"
+      ],
+      "watchable": false
+    },
+    {
+      "url": "https://www.birminghamairport.co.uk/parking/drop-off-and-pick-up/",
+      "refs": [
+        "drop-off:birmingham"
+      ],
+      "watchable": false
+    },
+    {
+      "url": "https://www.birminghamairport.co.uk/parking/turn-up-prices/",
+      "refs": [
+        "parking:birmingham"
+      ],
+      "watchable": false
+    },
+    {
+      "url": "https://www.bournemouthairport.com/car-parking/",
+      "refs": [
+        "drop-off:bournemouth"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.bristolairport.co.uk/parking/drop-off-and-pick-up/",
+      "refs": [
+        "drop-off:bristol"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.bristolairport.co.uk/parking/parking-prices/",
+      "refs": [
+        "parking:bristol"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.britishairways.com/content/en/gb/information/baggage-essentials",
+      "refs": [
+        "baggage:british-airways"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.eastmidlandsairport.com/parking/pick-up-and-drop-off/",
+      "refs": [
+        "drop-off:east-midlands"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.easyjet.com/en/help-centre/policy-terms-and-conditions/fees-charges",
+      "refs": [
+        "baggage:easyjet"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.edinburghairport.com/edinburgh-airport-parking/drop-off-and-pick-up",
+      "refs": [
+        "drop-off:edinburgh"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.edinburghairport.com/edinburgh-airport-parking/long-stay-parking",
+      "refs": [
+        "parking:edinburgh"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.emirates.com/english/before-you-fly/baggage/checked-baggage/",
+      "refs": [
+        "baggage:emirates"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.gatwickairport.com/parking/roll-up-car-park-prices.html",
+      "refs": [
+        "parking:gatwick"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.gatwickairport.com/transport-options/drop-off.html",
+      "refs": [
+        "drop-off:gatwick"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.glasgowairport.com/at-the-airport/airport-services/parking/long-stay/",
+      "refs": [
+        "parking:glasgow"
+      ],
+      "watchable": false
+    },
+    {
+      "url": "https://www.glasgowairport.com/at-the-airport/airport-services/upperdeck-lounge/",
+      "refs": [
+        "lounges:glasgow"
+      ],
+      "watchable": false
+    },
+    {
+      "url": "https://www.glasgowairport.com/to-and-from/pick-up-and-drop-off/",
+      "refs": [
+        "drop-off:glasgow"
+      ],
+      "watchable": false
+    },
+    {
+      "url": "https://www.heathrow.com/transport-and-directions/heathrow-parking/heathrow-park-and-ride",
+      "refs": [
+        "parking:heathrow"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.heathrow.com/transport-and-directions/terminal-drop-off-charge",
+      "refs": [
+        "drop-off:heathrow"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.hial.co.uk/inverness-airport/airport-information-8/4",
+      "refs": [
+        "drop-off:inverness"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.jet2.com/en/baggage",
+      "refs": [
+        "baggage:jet2"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.leedsbradfordairport.co.uk/parking/pick-up-drop-off",
+      "refs": [
+        "drop-off:leeds-bradford"
+      ],
+      "watchable": false
+    },
+    {
+      "url": "https://www.liverpoolairport.com/parking/express-drop-off",
+      "refs": [
+        "drop-off:liverpool"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.london-luton.co.uk/executive-lounges/aspire-lounge",
+      "refs": [
+        "lounges:luton"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.london-luton.co.uk/parking-prices",
+      "refs": [
+        "parking:luton"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.london-luton.co.uk/to-and-from-lla/dropping-off",
+      "refs": [
+        "drop-off:luton"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.londoncityairport.com/parking/drop-off",
+      "refs": [
+        "drop-off:london-city"
+      ],
+      "watchable": false
+    },
+    {
+      "url": "https://www.lufthansa.com/gb/en/baggage",
+      "refs": [
+        "baggage:lufthansa"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.manchesterairport.co.uk/parking/pick-up-and-drop-off/",
+      "refs": [
+        "drop-off:manchester"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.manchesterairport.co.uk/parking/turn-up-and-park/",
+      "refs": [
+        "parking:manchester"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.newcastleairport.com/car-parking/pick-up-drop-off/",
+      "refs": [
+        "drop-off:newcastle"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.norwegian.com/en/booking/booking-information/optional-charges/",
+      "refs": [
+        "baggage:norwegian"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.norwichairport.co.uk/car-parking/",
+      "refs": [
+        "drop-off:norwich"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.o2.co.uk/international/travel-inclusive-zone-ultimate",
+      "refs": [
+        "roaming:o2"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.prioritypass.com/en-GB/join-prioritypass",
+      "refs": [
+        "priority-pass:tiers"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.ryanair.com/gb/en/useful-info/help-centre/fees",
+      "refs": [
+        "baggage:ryanair"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.southamptonairport.com/to-from/pick-up-drop-off/",
+      "refs": [
+        "drop-off:southampton"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.stanstedairport.com/parking/long-stay/",
+      "refs": [
+        "parking:stansted"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.stanstedairport.com/parking/pick-up-and-drop-off/",
+      "refs": [
+        "drop-off:stansted"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.teessideinternational.com/teesside-airport-parking/",
+      "refs": [
+        "drop-off:teesside"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.three.co.uk/support/roaming-and-calling-abroad/roaming-abroad/go-roam",
+      "refs": [
+        "roaming:three"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.tui.co.uk/destinations/info/luggage-allowance",
+      "refs": [
+        "baggage:tui"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.vueling.com/en/vueling-services/supplementary-service-rates",
+      "refs": [
+        "baggage:vueling"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.wizzair.com/en-gb/help-centre/booking-information-and-services/baggage/baggage-allowance/checked-in-baggage",
+      "refs": [
+        "baggage:wizz-air"
+      ],
+      "watchable": true
+    }
+  ]
+}
