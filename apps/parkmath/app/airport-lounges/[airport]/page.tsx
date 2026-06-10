@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: { params: Promise<{ airport: 
   const cheapest = data.record.lounges.filter((l) => l.walkInPence !== null).sort((a, b) => a.walkInPence! - b.walkInPence!)[0];
   return {
     title: `${data.airport.name} lounges 2026 — prices & Priority Pass break-even`,
-    description: `${data.airport.name} lounge walk-in prices${cheapest ? ` from ${formatPence(cheapest.walkInPence!)}` : ""}, which take Priority Pass, and when membership beats paying per visit. Verified ${data.record.verifiedAt}.`
+    description: `${data.airport.name} lounge pre-book from-prices${cheapest ? ` from ${formatPence(cheapest.walkInPence!)}` : ""}, which take Priority Pass, and when membership beats paying per visit. Verified ${data.record.verifiedAt}.`
   };
 }
 
@@ -45,7 +45,7 @@ export default async function LoungePage({ params }: { params: Promise<{ airport
     {
       question: `How much does an airport lounge cost at ${airport.name}?`,
       answer: cheapest
-        ? `Walk-in prices start at ${formatPence(cheapest.walkInPence!)} (${cheapest.name}), verified ${record.verifiedAt}.`
+        ? `Operator pre-book prices start at ${formatPence(cheapest.walkInPence!)} (${cheapest.name}), verified ${record.verifiedAt}.`
         : `Walk-in prices are not published for ${airport.name} lounges — check the official pages.`
     },
     {
@@ -76,7 +76,7 @@ export default async function LoungePage({ params }: { params: Promise<{ airport
       <AnswerLead
         answer={
           cheapest
-            ? `A lounge visit at ${airport.name} costs from ${formatPence(cheapest.walkInPence!)} walk-in — frequent flyers may pay less with a membership.`
+            ? `A lounge visit at ${airport.name} costs from ${formatPence(cheapest.walkInPence!)} (operator pre-book price — walk-up rates can be higher) — frequent flyers may pay less with a membership.`
             : `${airport.name} lounge walk-in prices aren't published online — memberships may still beat on-the-day rates.`
         }
       >
@@ -85,7 +85,7 @@ export default async function LoungePage({ params }: { params: Promise<{ airport
 
       <FeeGrid
         caption={`${airport.name} lounges, verified ${record.verifiedAt}.`}
-        columns={["Lounge", "Walk-in", "Priority Pass"]}
+        columns={["Lounge", "From (pre-book)", "Priority Pass"]}
         rows={record.lounges.map((l) => [l.name, l.walkInPence !== null ? formatPence(l.walkInPence) : "—", l.priorityPass ? "Yes" : "No"])}
       />
 
@@ -111,7 +111,7 @@ export default async function LoungePage({ params }: { params: Promise<{ airport
           { label: `Official ${airport.name} lounge pages`, url: record.sourceUrl, verifiedAt: record.verifiedAt },
           { label: "Priority Pass official pricing", url: pp.sourceUrl, verifiedAt: pp.verifiedAt }
         ]}
-        method="Walk-in prices from the lounge operators' official pages; membership pricing from Priority Pass's official site."
+        method="Pre-book from-prices from the lounge operators' official pages; walk-up rates on the day may be higher. Membership pricing from Priority Pass's official site."
       />
     </article>
   );

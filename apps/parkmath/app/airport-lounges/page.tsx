@@ -6,8 +6,8 @@ import { itemListLd, JsonLd } from "@mathfamily/geo";
 import { FeeGrid } from "@mathfamily/ui";
 
 export const metadata: Metadata = {
-  title: "UK airport lounge prices compared — walk-in costs & Priority Pass",
-  description: "Walk-in lounge prices at major UK airports, which lounges take Priority Pass, and break-even calculators for membership."
+  title: "UK airport lounge prices compared — pre-book from-prices & Priority Pass",
+  description: "Pre-book from-prices for lounges at major UK airports, which lounges take Priority Pass, and break-even calculators for membership."
 };
 
 export default function LoungeIndexPage() {
@@ -23,13 +23,13 @@ export default function LoungeIndexPage() {
   return (
     <article className="space-y-6">
       <JsonLd data={itemListLd({
-        name: "UK airport lounges by cheapest walk-in price",
+        name: "UK airport lounges by cheapest pre-book from-price",
         items: rows.map((r) => ({ name: `${r.name} — ${r.from !== null ? `from ${formatPence(r.from)}` : "price on the day"}`, url: `${siteUrl}/airport-lounges/${r.slug}` }))
       })} />
       <h1 className="text-3xl font-bold text-ink">UK airport lounges, compared</h1>
       <FeeGrid
-        caption="Cheapest verified walk-in price per airport."
-        columns={["Airport", "Lounges", "Walk-in from"]}
+        caption="Cheapest verified pre-book from-price per airport."
+        columns={["Airport", "Lounges", "From (pre-book)"]}
         rows={rows.map((r) => [
           <Link key="a" href={`/airport-lounges/${r.slug}`} className="font-medium text-brand-accent underline-offset-4 hover:underline">{r.name}</Link>,
           String(r.count),

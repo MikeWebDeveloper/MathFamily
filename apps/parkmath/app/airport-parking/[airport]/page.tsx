@@ -72,6 +72,14 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
 
       <ParkingCalculator tariff={record} airportName={airport.name} buildDate={new Date().toISOString()} />
 
+      {m7.warnings.length > 0 ? (
+        <ul className="space-y-1 text-xs text-ink-muted">
+          {m7.warnings.map((w) => (
+            <li key={w.code}>{w.message}</li>
+          ))}
+        </ul>
+      ) : null}
+
       <FeeGrid
         caption={`All published ${airport.name} options by duration. Pre-book figures are dated snapshots from the official portal.`}
         columns={["Option", "3 days", "7 days", "14 days"]}
