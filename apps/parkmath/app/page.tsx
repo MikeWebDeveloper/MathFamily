@@ -9,8 +9,19 @@ export default function HomePage() {
   const airports = loadAirports();
   const records = loadDropOffDataset().records;
   const charging = records.filter((r) => !r.isFree);
-  const maxFee = Math.max(...charging.map((r) => r.bands[0]?.totalPence ?? 0));
   const freeCount = records.length - charging.length;
+  const airportsBySlug = new Map(airports.map((a) => [a.slug, a]));
+  let maxBandPence = 0;
+  let maxBandNote = "";
+  for (const r of charging) {
+    for (const b of r.bands) {
+      if (b.totalPence > maxBandPence) {
+        maxBandPence = b.totalPence;
+        const name = airportsBySlug.get(r.airportSlug)?.name ?? r.airportSlug;
+        maxBandNote = `${name}, up to ${b.upToMinutes} min`;
+      }
+    }
+  }
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
   return (
@@ -28,7 +39,7 @@ export default function HomePage() {
       </section>
 
       <section className="grid gap-4 sm:grid-cols-3">
-        <FeeStat label="Most expensive drop-off" value={formatPence(maxFee)} note="Highest current UK forecourt fee" />
+        <FeeStat label="Most expensive drop-off" value={formatPence(maxBandPence)} note={maxBandNote} />
         <FeeStat label="Airports charging a fee" value={String(charging.length)} note={`of ${records.length} tracked`} />
         <FeeStat label="Still free" value={String(freeCount)} note="Free at the forecourt" />
       </section>

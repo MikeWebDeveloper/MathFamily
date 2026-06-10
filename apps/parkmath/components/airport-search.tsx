@@ -12,12 +12,13 @@ export function AirportSearch({ airports }: { airports: Airport[] }) {
 
   return (
     <div>
+      <label htmlFor="airport-search-input" className="sr-only">Search airports</label>
       <input
+        id="airport-search-input"
         type="search"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search your airport — e.g. Gatwick or LGW"
-        aria-label="Search airports"
         className="w-full rounded-lg border border-ink/20 px-4 py-3 text-base"
       />
       <ul className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -32,6 +33,9 @@ export function AirportSearch({ airports }: { airports: Airport[] }) {
           </li>
         ))}
       </ul>
+      {q && matches.length === 0 ? (
+        <p className="mt-4 text-sm text-ink-muted">No airports found for &quot;{query}&quot;.</p>
+      ) : null}
     </div>
   );
 }

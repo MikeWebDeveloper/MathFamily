@@ -37,7 +37,7 @@ export default function MasterTablePage() {
         <FreshnessBadge verifiedAt={latestVerified} />
       </header>
       <FeeGrid
-        caption="Sorted by fee, highest first. Data verified per airport — click through for details, sources and the free alternative."
+        caption="Sorted by entry fee, highest first. Data verified per airport — click through for details, sources and the free alternative."
         columns={["Airport", "Fee", "Time limit", "Penalty", "Free alternative", "Verified"]}
         rows={records.map((r) => {
           const airport = airports.get(r.airportSlug);
