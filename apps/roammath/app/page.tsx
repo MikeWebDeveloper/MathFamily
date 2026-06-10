@@ -4,6 +4,7 @@ import { roamingTripCost, formatPence } from "@mathfamily/engine";
 import { webSiteLd, JsonLd } from "@mathfamily/geo";
 import { EmailCaptureSlot, FeeStat } from "@mathfamily/ui";
 import { FamilyLinks } from "@/components/family-links";
+import { NETWORK_LABELS } from "@/lib/roaming-content";
 
 export default function HomePage() {
   const roamingDataset = loadRoamingDataset();
@@ -17,14 +18,48 @@ export default function HomePage() {
   const spainResult = spainDest
     ? roamingTripCost(spainDest.perNetwork, spainEsim?.bundles ?? [], 7, 5)
     : null;
-  const cheapestSpainPence =
-    spainResult?.verdict === "esim"
-      ? (spainResult.esimChoice?.totalPence ?? 0)
-      : (spainResult?.cheapestNetwork?.totalPence ?? 0);
-  const cheapestSpainLabel =
-    cheapestSpainPence === 0
-      ? "Included — no extra charge"
-      : formatPence(cheapestSpainPence);
+
+  // Derive the dual-value framing for the Spain stat card
+  let spainStatValue = "";
+  let spainStatNote = "";
+
+  if (spainResult) {
+    const cheapestNetwork = spainResult.cheapestNetwork;
+    const esimChoice = spainResult.esimChoice;
+    const cheapestNetworkIncluded = cheapestNetwork?.included ?? false;
+
+    // Determine the value: £0 (NETWORK) if included network wins, otherwise the cheapest price
+    if (cheapestNetworkIncluded && cheapestNetwork) {
+      const networkLabel = NETWORK_LABELS[cheapestNetwork.network] ?? cheapestNetwork.network;
+      spainStatValue = `£0 (${networkLabel})`;
+    } else if (cheapestNetwork && cheapestNetwork.totalPence !== null) {
+      spainStatValue = formatPence(cheapestNetwork.totalPence);
+    } else {
+      spainStatValue = "Varies by network";
+    }
+
+    // Build the note dynamically
+    const noteParts: string[] = [];
+
+    // Included network or cheapest network label
+    if (cheapestNetworkIncluded && cheapestNetwork) {
+      const networkLabel = NETWORK_LABELS[cheapestNetwork.network] ?? cheapestNetwork.network;
+      noteParts.push(`${networkLabel}: included`);
+    } else if (cheapestNetwork && cheapestNetwork.totalPence !== null) {
+      const networkLabel = NETWORK_LABELS[cheapestNetwork.network] ?? cheapestNetwork.network;
+      noteParts.push(`${networkLabel} from ${formatPence(cheapestNetwork.totalPence)}`);
+    }
+
+    // eSIM option
+    if (esimChoice) {
+      noteParts.push(`eSIM from ${formatPence(esimChoice.totalPence)}`);
+    }
+
+    // Trip details
+    noteParts.push("7 days, 5GB");
+
+    spainStatNote = noteParts.join(" · ");
+  }
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3001";
 
@@ -57,8 +92,8 @@ export default function HomePage() {
         />
         <FeeStat
           label="Cheapest week in Spain"
-          value={cheapestSpainLabel}
-          note="7-day trip, 5GB data (O2 or best eSIM)"
+          value={spainStatValue}
+          note={spainStatNote}
         />
       </section>
 
