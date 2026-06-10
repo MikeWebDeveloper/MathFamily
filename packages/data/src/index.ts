@@ -16,3 +16,4 @@ export function loadDropOffDataset(): DropOffDataset {
 export * from "./parking";
 export * from "./lounges";
 export * from "./roaming";
+export * from "./esim";
