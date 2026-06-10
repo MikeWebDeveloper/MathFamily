@@ -1,0 +1,31 @@
+{
+  "name": "MathFamily freshness watchdog",
+  "nodes": [
+    { "id": "cron", "name": "Daily 06:30", "type": "n8n-nodes-base.scheduleTrigger", "typeVersion": 1.2, "position": [0, 0],
+      "parameters": { "rule": { "interval": [{ "field": "cronExpression", "expression": "30 6 * * *" }] } } },
+    { "id": "watchdog", "name": "Run watchdog", "type": "n8n-nodes-base.executeCommand", "typeVersion": 1, "position": [220, 0],
+      "parameters": { "command": "cd \"/Volumes/TB4 Workstation/Users/mike/Desktop/Projects/MathFamily/tools/freshness\" && pnpm --silent watchdog" } },
+    { "id": "parse", "name": "Parse result", "type": "n8n-nodes-base.code", "typeVersion": 2, "position": [440, 0],
+      "parameters": { "jsCode": "const out = JSON.parse($input.first().json.stdout.trim().split('\\n').pop());\nreturn [{ json: { changed: out.changed, errors: out.errors, hasChanges: out.changed.length > 0, hasErrors: out.errors.length > 0, refs: out.changed.flatMap(c => c.refs).join(' ') } }];" } },
+    { "id": "ifChanged", "name": "Changes?", "type": "n8n-nodes-base.if", "typeVersion": 2, "position": [660, -80],
+      "parameters": { "conditions": { "conditions": [{ "leftValue": "={{ $json.hasChanges }}", "rightValue": true, "operator": { "type": "boolean", "operation": "true" } }] } } },
+    { "id": "agent", "name": "Trigger freshness agent", "type": "n8n-nodes-base.executeCommand", "typeVersion": 1, "position": [880, -80],
+      "parameters": { "command": "=\"/Volumes/TB4 Workstation/Users/mike/Desktop/Projects/MathFamily/tools/freshness/run-agent.sh\" check {{ $json.refs }}" } },
+    { "id": "ifErrors", "name": "Errors?", "type": "n8n-nodes-base.if", "typeVersion": 2, "position": [660, 120],
+      "parameters": { "conditions": { "conditions": [{ "leftValue": "={{ $json.hasErrors }}", "rightValue": true, "operator": { "type": "boolean", "operation": "true" } }] } } },
+    { "id": "sweepRecency", "name": "Sweep ran in last 14 days?", "type": "n8n-nodes-base.executeCommand", "typeVersion": 1, "position": [660, 240],
+      "parameters": { "command": "test -n \"$(find \\\"$HOME/Library/Logs/mathfamily-freshness/last-success\\\" -mtime -14 2>/dev/null)\" && echo OK || echo STALE" } },
+    { "id": "ifStale", "name": "Sweep stale?", "type": "n8n-nodes-base.if", "typeVersion": 2, "position": [880, 240],
+      "parameters": { "conditions": { "conditions": [{ "leftValue": "={{ $json.stdout.trim() }}", "rightValue": "STALE", "operator": { "type": "string", "operation": "equals" } }] } } },
+    { "id": "notify", "name": "Notify Mike (wire me up)", "type": "n8n-nodes-base.noOp", "typeVersion": 1, "position": [1100, 180], "parameters": {} }
+  ],
+  "connections": {
+    "Daily 06:30": { "main": [[{ "node": "Run watchdog", "type": "main", "index": 0 }]] },
+    "Run watchdog": { "main": [[{ "node": "Parse result", "type": "main", "index": 0 }]] },
+    "Parse result": { "main": [[{ "node": "Changes?", "type": "main", "index": 0 }, { "node": "Errors?", "type": "main", "index": 0 }, { "node": "Sweep ran in last 14 days?", "type": "main", "index": 0 }]] },
+    "Changes?": { "main": [[{ "node": "Trigger freshness agent", "type": "main", "index": 0 }]] },
+    "Errors?": { "main": [[{ "node": "Notify Mike (wire me up)", "type": "main", "index": 0 }]] },
+    "Sweep ran in last 14 days?": { "main": [[{ "node": "Sweep stale?", "type": "main", "index": 0 }]] },
+    "Sweep stale?": { "main": [[{ "node": "Notify Mike (wire me up)", "type": "main", "index": 0 }]] }
+  }
+}

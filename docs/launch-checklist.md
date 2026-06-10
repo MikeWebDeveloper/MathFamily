@@ -31,3 +31,15 @@ When roammath.co.uk (+ .uk / maths twins) exists and DNS points at Vercel:
 10. Analytics: confirm Vercel Analytics events; create a GA4/analytics segment for AI-referral traffic (chatgpt.com, perplexity.ai, copilot.microsoft.com referrers).
 11. Lighthouse pass on /, /roaming/spain, /roaming/spain/three, /baggage-fees/ryanair — budget LCP < 1.2s, CLS ≈ 0.
 12. Monitor Search Console for scaled-content/spam manual actions weekly for the first month (expected: none — every page is data-distinct).
+
+---
+
+# P4 — Freshness agent (one-time setup)
+
+Full setup instructions: `tools/freshness/watchdog.md`
+
+1. Create the GitHub private repo (`MikeWebDeveloper/MathFamily`) and push main + tags.
+2. `gh auth login` on the Mac mini (the agent needs it for `gh pr create`).
+3. Install the launchd plist (weekly sweep, Sunday 07:00): `cp docs/launchd/com.mathfamily.freshness-sweep.plist ~/Library/LaunchAgents/ && launchctl load ~/Library/LaunchAgents/com.mathfamily.freshness-sweep.plist`
+4. Import `tools/freshness/n8n-workflow.json` into n8n and wire the "Notify Mike (wire me up)" no-op node to your preferred notifier channel.
+5. Supervised first run: `tools/freshness/run-agent.sh sweep --no-pr` (inspect the local branch + diff), then a real `sweep` (with PR).
