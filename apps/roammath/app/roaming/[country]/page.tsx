@@ -1,0 +1,146 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { loadRoamingDataset, loadEsimDataset, NETWORKS, type RoamingDestination, type EsimCountry } from "@mathfamily/data";
+import { formatPence } from "@mathfamily/engine";
+import { breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
+import { AnswerLead, FaqAccordion, FeeGrid, FreshnessBadge, SourceCitation, SourcesBlock } from "@mathfamily/ui";
+import { RoamingCalculator } from "@/components/roaming-calculator";
+import { buildRoamingFaqs, roamingPageModel, NETWORK_LABELS } from "@/lib/roaming-content";
+
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return loadRoamingDataset().destinations.map((d) => ({ country: d.countrySlug }));
+}
+
+function getData(slug: string): { destination: RoamingDestination; esim: EsimCountry | null } | null {
+  const destination = loadRoamingDataset().destinations.find((d) => d.countrySlug === slug);
+  if (!destination) return null;
+  const esim = loadEsimDataset().records.find((r) => r.countrySlug === slug) ?? null;
+  return { destination, esim };
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ country: string }> }): Promise<Metadata> {
+  const { country } = await params;
+  const data = getData(country);
+  if (!data) return {};
+  const { destination, esim } = data;
+  const m = roamingPageModel(destination, esim, 7, 5);
+  return {
+    title: `${destination.countryName} roaming charges 2026 — EE, O2, Vodafone, Three & eSIM`,
+    description: `${m.answer} Verified against official network price guides.`
+  };
+}
+
+export default async function CountryHubPage({ params }: { params: Promise<{ country: string }> }) {
+  const { country: slug } = await params;
+  const data = getData(slug);
+  if (!data) notFound();
+  const { destination, esim } = data;
+
+  const { networkSources } = loadRoamingDataset();
+  const latestVerified = networkSources.map((s) => s.verifiedAt).sort().at(-1) ?? "";
+
+  const m = roamingPageModel(destination, esim, 7, 5);
+  const faqs = buildRoamingFaqs(destination, esim, 7);
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3001";
+
+  const networkFacts = destination.perNetwork.map((n) => {
+    const label = NETWORK_LABELS[n.network] ?? n.network;
+    if (n.included) return `${label}: included at no extra daily charge${n.fairUseNote ? ` (${n.fairUseNote})` : ""}`;
+    if (n.dailyPassPence === null) return `${label}: no standard daily pass — check price guide`;
+    return `${label}: ${formatPence(n.dailyPassPence)}/day${n.passName ? ` (${n.passName})` : ""}${n.fairUseNote ? `; ${n.fairUseNote}` : ""}`;
+  });
+
+  if (m.esimChoice) {
+    networkFacts.push(
+      `Best eSIM: ${formatPence(m.esimChoice.totalPence)} (${m.esimChoice.provider}, ${m.esimChoice.bundleName}, snapshot ${m.esimChoice.snapshotDate})`
+    );
+  }
+
+  const sources = [
+    ...networkSources.map((s) => ({
+      label: `${NETWORK_LABELS[s.network] ?? s.network} official price guide`,
+      url: s.sourceUrl,
+      verifiedAt: s.verifiedAt
+    })),
+    ...(esim
+      ? [{ label: `eSIM comparison (Airalo, Holafly, Saily)`, url: esim.sourceUrl, verifiedAt: esim.verifiedAt }]
+      : [])
+  ];
+
+  return (
+    <article className="space-y-8">
+      <JsonLd data={faqPageLd(faqs)} />
+      <JsonLd
+        data={breadcrumbLd([
+          { name: "Home", url: siteUrl },
+          { name: "Roaming charges", url: `${siteUrl}/roaming` },
+          { name: destination.countryName, url: `${siteUrl}/roaming/${destination.countrySlug}` }
+        ])}
+      />
+
+      <header className="space-y-3">
+        <h1 className="text-3xl font-bold text-ink">{destination.countryName} roaming charges: all four UK networks compared</h1>
+        <div className="flex flex-wrap items-center gap-3">
+          <FreshnessBadge verifiedAt={latestVerified} />
+          {networkSources.slice(0, 1).map((s) => (
+            <SourceCitation key={s.network} url={s.sourceUrl} label={`${NETWORK_LABELS[s.network] ?? s.network} price guide`} />
+          ))}
+        </div>
+      </header>
+
+      <AnswerLead answer={m.answer}>{networkFacts}</AnswerLead>
+
+      <RoamingCalculator
+        networks={destination.perNetwork}
+        esims={esim?.bundles ?? []}
+        countryName={destination.countryName}
+      />
+
+      <FeeGrid
+        caption={`All four networks' ${destination.countryName} roaming charges (verified ${latestVerified}).`}
+        columns={["Network", "Daily charge", "Pass / product name", "Fair-use note"]}
+        rows={destination.perNetwork.map((n) => [
+          NETWORK_LABELS[n.network] ?? n.network,
+          n.included ? "Included" : n.dailyPassPence !== null ? formatPence(n.dailyPassPence) + "/day" : "No standard pass",
+          n.passName ?? "—",
+          n.fairUseNote ?? "—"
+        ])}
+      />
+
+      <nav aria-label="Per-network detail pages" className="space-y-2">
+        <h2 className="text-lg font-semibold text-ink">Network-specific pages</h2>
+        <ul className="flex flex-wrap gap-3 text-sm">
+          {NETWORKS.map((network) => (
+            <li key={network}>
+              <Link
+                href={`/roaming/${destination.countrySlug}/${network}`}
+                className="font-medium text-brand-accent underline underline-offset-4"
+              >
+                {NETWORK_LABELS[network]} roaming in {destination.countryName} →
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <section className="space-y-2">
+        <h2 className="text-xl font-semibold text-ink">Frequently asked questions</h2>
+        <FaqAccordion items={faqs} />
+      </section>
+
+      <p className="text-sm">
+        <Link href="/roaming" className="text-brand-accent underline underline-offset-4">
+          ← All destinations
+        </Link>
+      </p>
+
+      <SourcesBlock
+        sources={sources}
+        method="Daily roaming charges are taken from each network's official published price guide or roaming page. eSIM prices are dated snapshots from the providers' own public store pages — never from aggregators."
+      />
+    </article>
+  );
+}
