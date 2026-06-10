@@ -60,7 +60,9 @@ PR body describing exactly what and why.
 ## Procedure
 
 1. `git checkout main && git pull`, then branch `freshness/YYYY-MM-DD` (append
-   `-<slug>` for single-ref checks).
+   `-<slug>` for single-ref checks). If that branch name already exists and
+   `$FRESHNESS_RUN_ID` is set, suffix the branch with `-$FRESHNESS_RUN_ID` to avoid a
+   same-day collision.
 2. Verify per the rules above. Datasets validate via the strict Zod schemas — run
    the data tests after every dataset edit: from `packages/data`:
    `./node_modules/.bin/vitest run --reporter=basic`. NEVER create vitest config
