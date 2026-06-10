@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "1.0.0",
   "lastUpdated": "2026-06-10",
   "records": [
     {
@@ -108,6 +108,87 @@
         }
       ],
       "sourceUrl": "https://www.london-luton.co.uk/parking-prices",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "airportSlug": "edinburgh",
+      "products": [
+        {
+          "productType": "gate",
+          "name": "Long Stay — drive-up (roll-up)",
+          "prices": [
+            { "days": 3, "totalPence": 14000 },
+            { "days": 7, "totalPence": 30000 },
+            { "days": 14, "totalPence": 58000 }
+          ],
+          "snapshotDate": null,
+          "notes": "Official drive-up Long Stay tariff: 3-24h £60.00, then £40.00 per day (or part) thereafter (0-30 min free). 3/7/14-day totals computed from those official per-day rates (3d=60+2x40; 7d=60+6x40; 14d=60+13x40)."
+        }
+      ],
+      "sourceUrl": "https://www.edinburghairport.com/edinburgh-airport-parking/long-stay-parking",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "airportSlug": "birmingham",
+      "products": [
+        {
+          "productType": "gate",
+          "name": "Car Park 7 — off-site Long Stay (turn-up)",
+          "prices": [
+            { "days": 3, "totalPence": 13300 },
+            { "days": 7, "totalPence": 30100 },
+            { "days": 14, "totalPence": 59500 }
+          ],
+          "snapshotDate": null,
+          "notes": "Official turn-up tariff for Car Park 7 (the off-site long-stay car park): up to 24h £49.00, then £42.00 per day (or part) thereafter. 3/7/14-day totals computed from those official per-day rates (3d=49+2x42; 7d=49+6x42; 14d=49+13x42). FLAG: birminghamairport.co.uk is Cloudflare-blocked to every automated transport; figures read from the official birminghamairport.co.uk turn-up-prices page captured in the Wayback Machine on 2025-09-06. Re-confirm against the live 2026 tariff."
+        }
+      ],
+      "sourceUrl": "https://www.birminghamairport.co.uk/parking/turn-up-prices/",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "airportSlug": "bristol",
+      "products": [
+        {
+          "productType": "gate",
+          "name": "Silver Zone — long stay gate price (drive-up)",
+          "prices": [
+            { "days": 3, "totalPence": 10000 },
+            { "days": 7, "totalPence": 24000 },
+            { "days": 14, "totalPence": 48500 }
+          ],
+          "snapshotDate": null,
+          "notes": "Official Silver Zone gate (drive-up) prices: 3 Days £100.00, 4 Days £135.00, 5 Days £170.00, each additional day (or part) thereafter £35.00. Published 3-day total used directly; 7/14-day totals computed from the official 3-day base plus the official £35/day (7d=100+4x35; 14d=100+11x35). 5-day cross-check matches (100+2x35=170)."
+        }
+      ],
+      "sourceUrl": "https://www.bristolairport.co.uk/parking/parking-prices/",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "airportSlug": "glasgow",
+      "products": [
+        {
+          "productType": "gate",
+          "name": "Long Stay — turn-up (roll-up / drive-up)",
+          "prices": [
+            { "days": 3, "totalPence": 8000 },
+            { "days": 7, "totalPence": 14000 },
+            { "days": 14, "totalPence": 28500 }
+          ],
+          "snapshotDate": null,
+          "notes": "Official Long Stay 'TURN UP PRICES' (roll-up/drive-up) table: up to 1h free; 2h £15; 1 day £50.00; 2 days £65.00; 3 days £80.00; each additional day (or part) thereafter £15.00. 3-day total used directly (£80); 7/14-day totals computed from the official 3-day base plus the official £15/day (7d=80+4x15; 14d=80+11x15). 2-day cross-check matches (£65 = 50+15). FLAG: glasgowairport.com is Cloudflare-blocked to plain fetch tools; this official turn-up table was obtained by rendering the official Long Stay page through the jina reader's headless-browser engine (X-Engine: browser) on 2026-06-10."
+        },
+        {
+          "productType": "prebook",
+          "name": "Long Stay (pre-book) — published 'from' price",
+          "prices": [
+            { "days": 7, "totalPence": 4999 }
+          ],
+          "snapshotDate": "2026-06-10",
+          "notes": "Officially published pre-book 'from' price: '1-week (7-day) Long Stay from £49.99' (read 2026-06-10). Single published 'from' point; the gate product above provides the 3/7/14 coverage."
+        }
+      ],
+      "sourceUrl": "https://www.glasgowairport.com/at-the-airport/airport-services/parking/long-stay/",
       "verifiedAt": "2026-06-10"
     }
   ]
