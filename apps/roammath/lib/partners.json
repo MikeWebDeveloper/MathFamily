@@ -1,0 +1,10 @@
+{
+  "partners": {
+    "airalo": { "name": "Airalo", "active": false },
+    "saily": { "name": "Saily", "active": false },
+    "holafly": { "name": "Holafly", "active": false }
+  },
+  "slots": [
+    { "id": "esim", "partnerId": "airalo", "deeplinkTemplate": "", "active": false }
+  ]
+}

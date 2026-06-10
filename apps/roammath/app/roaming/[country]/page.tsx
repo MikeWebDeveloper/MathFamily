@@ -6,6 +6,7 @@ import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
 import { AnswerLead, FaqAccordion, FeeGrid, FreshnessBadge, SourceCitation, SourcesBlock } from "@mathfamily/ui";
 import { RoamingCalculator } from "@/components/roaming-calculator";
+import { AffiliateBlock } from "@/components/affiliate-block";
 import { buildRoamingFaqs, roamingPageModel, NETWORK_LABELS } from "@/lib/roaming-content";
 
 export const dynamicParams = false;
@@ -98,6 +99,10 @@ export default async function CountryHubPage({ params }: { params: Promise<{ cou
         esims={esim?.bundles ?? []}
         countryName={destination.countryName}
       />
+
+      {esim ? (
+        <AffiliateBlock slotId="esim" airportSlug={destination.countrySlug} officialUrl={esim.sourceUrl} />
+      ) : null}
 
       <FeeGrid
         caption={`All four networks' ${destination.countryName} roaming charges (verified ${latestVerified}).`}

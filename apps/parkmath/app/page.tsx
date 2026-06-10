@@ -4,6 +4,7 @@ import { formatPence } from "@mathfamily/engine";
 import { webSiteLd, JsonLd } from "@mathfamily/geo";
 import { EmailCaptureSlot, FeeStat } from "@mathfamily/ui";
 import { AirportSearch } from "@/components/airport-search";
+import { FamilyLinks } from "@/components/family-links";
 
 export default function HomePage() {
   const airports = loadAirports();
@@ -63,6 +64,8 @@ export default function HomePage() {
         formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
         hook="Get notified when any UK airport changes its drop-off fees"
       />
+
+      <FamilyLinks />
     </div>
   );
 }
