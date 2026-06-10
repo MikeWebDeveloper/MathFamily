@@ -1,14 +1,90 @@
 {
-  "version": "0.1.0",
+  "version": "1.0.0",
   "lastUpdated": "2026-06-10",
   "records": [
     {
+      "airportSlug": "heathrow",
+      "lounges": [
+        { "name": "Club Aspire Lounge (Terminal 5)", "walkInPence": 4000, "priorityPass": true, "notes": "Operator No1 Lounges; from-price per adult, pre-booking recommended. Priority Pass accepted pre-booking only." },
+        { "name": "Plaza Premium Lounge (Terminal 5)", "walkInPence": 4750, "priorityPass": true, "notes": "Operator Plaza Premium; on-the-day 2-hour walk-in rate (~10% off if booked online). Priority Pass accepted subject to capacity." }
+      ],
+      "sourceUrl": "https://no1lounges.com/lounges-by-location/club-aspire-at-heathrow-t5/",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "airportSlug": "gatwick",
+      "lounges": [
+        { "name": "Club Aspire Lounge (South Terminal)", "walkInPence": 3400, "priorityPass": true, "notes": "Operator No1 Lounges; from-price per adult. Priority Pass accepted pre-booking only." },
+        { "name": "No1 Lounge (North Terminal)", "walkInPence": 3800, "priorityPass": true, "notes": "Operator No1 Lounges; from-price per adult." }
+      ],
+      "sourceUrl": "https://no1lounges.com/lounges-by-location/club-aspire-at-gatwick-south/",
+      "verifiedAt": "2026-06-10"
+    },
+    {
       "airportSlug": "manchester",
       "lounges": [
-        { "name": "Escape Lounge T1", "walkInPence": 3500, "priorityPass": true, "notes": null },
-        { "name": "1903 Lounge", "walkInPence": 5000, "priorityPass": false, "notes": "Premium lounge" }
+        { "name": "Escape Lounge (Terminal 2)", "walkInPence": 4199, "priorityPass": true, "notes": "Operator Escape Lounges; from-price per adult. Priority Pass accepted (prioritypass.com directory)." },
+        { "name": "Escape Lounge (Terminal 3)", "walkInPence": 3699, "priorityPass": true, "notes": "Operator Escape Lounges; from-price per adult." }
       ],
-      "sourceUrl": "https://www.manchesterairport.co.uk/at-the-airport/lounges/",
+      "sourceUrl": "https://escapelounges.com/uk/airport-lounges/",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "airportSlug": "stansted",
+      "lounges": [
+        { "name": "Essence by Escape Lounge", "walkInPence": 2599, "priorityPass": true, "notes": "Operator Escape Lounges; pre-book from-price per adult (walk-up ~£35). Priority Pass accepted (prioritypass.com directory)." }
+      ],
+      "sourceUrl": "https://escapelounges.com/uk/airport-lounges/",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "airportSlug": "luton",
+      "lounges": [
+        { "name": "MyLounge", "walkInPence": 3799, "priorityPass": true, "notes": "Replaced the former Aspire Lounge (2024). From-price per adult; walk-in on the day subject to availability. Priority Pass / LoungeKey / DragonPass accepted." }
+      ],
+      "sourceUrl": "https://www.london-luton.co.uk/executive-lounges/aspire-lounge",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "airportSlug": "edinburgh",
+      "lounges": [
+        { "name": "Escape Lounge", "walkInPence": 3899, "priorityPass": true, "notes": "Operator Escape Lounges; from-price per adult. Priority Pass accepted (prioritypass.com directory)." }
+      ],
+      "sourceUrl": "https://escapelounges.com/uk/airport-lounges/",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "airportSlug": "birmingham",
+      "lounges": [
+        { "name": "Aspire Lounge", "walkInPence": 2099, "priorityPass": true, "notes": "Operator Aspire; official one-day admission from-price per adult. Priority Pass / Dragonpass accepted (prioritypass.com directory)." },
+        { "name": "No1 Lounge", "walkInPence": null, "priorityPass": false, "notes": "Premium lounge listed on Birmingham Airport official lounges page; walk-in price set dynamically and not statically published." }
+      ],
+      "sourceUrl": "https://www.birminghamairport.co.uk/at-the-airport/lounges/",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "airportSlug": "glasgow",
+      "lounges": [
+        { "name": "UpperDeck Lounge", "walkInPence": 3200, "priorityPass": true, "notes": "Operator Aspire; from-price per adult per Glasgow Airport official page. Priority Pass accepted (prioritypass.com directory)." }
+      ],
+      "sourceUrl": "https://www.glasgowairport.com/at-the-airport/airport-services/upperdeck-lounge/",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "airportSlug": "bristol",
+      "lounges": [
+        { "name": "Escape Lounge", "walkInPence": 4199, "priorityPass": true, "notes": "Operator Escape Lounges; from-price per adult. Priority Pass accepted (prioritypass.com directory)." },
+        { "name": "Essence by Escape Lounge", "walkInPence": 3500, "priorityPass": true, "notes": "Operator Escape Lounges; from-price per adult." }
+      ],
+      "sourceUrl": "https://escapelounges.com/uk/airport-lounges/",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "airportSlug": "newcastle",
+      "lounges": [
+        { "name": "Aspire Lounge", "walkInPence": 4600, "priorityPass": true, "notes": "Operator No1 Lounges / Aspire; from-price per adult (dynamic by date). Priority Pass / Dragonpass / Dreamfolks accepted, pre-booking required." }
+      ],
+      "sourceUrl": "https://no1lounges.com/lounges-by-location/aspire-at-newcastle/",
       "verifiedAt": "2026-06-10"
     }
   ]

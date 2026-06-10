@@ -200,3 +200,94 @@ Three of the five MAG/AGS/Cloudflare-group sites blocked every automated transpo
 > domains (Glasgow) download fine via `curl` with a desktop browser User-Agent even when the HTML
 > pages return the "Just a moment…" JS challenge; HTML pages on those domains do not. `poppler`
 > (`pdftotext -layout`) was installed locally to read the downloaded tariff PDFs.
+
+---
+
+# Lounges + Priority Pass (Task 9 — 2026-06-10)
+
+Scope: 1–2 busiest-terminal lounges per airport. Walk-in figures are mostly operator
+"from"/pre-book prices (noted as such per record). Sources are the lounge operator's own
+official sites (No1 Lounges, Escape Lounges, Aspire, Plaza Premium — official for their own
+lounges) or the airport's official lounge page. Priority Pass participation taken from the
+prioritypass.com UK lounge directory. **All 10 airports are kept here, including Newcastle**
+(unlike parking, which excludes Newcastle). Prices in `lounges.json` are stored in integer pence.
+
+## Priority Pass tier pricing (UK)
+
+Source: <https://www.prioritypass.com/en-GB/join-prioritypass> (verifiedAt 2026-06-10),
+cross-checked via site-scoped WebSearch on prioritypass.com.
+
+| Tier          | Annual fee | Included member visits | Member/guest per-visit fee |
+|---------------|-----------:|------------------------|---------------------------:|
+| Standard      |       £69  | 0 (pay per visit)      |                       £24  |
+| Standard Plus |      £229  | 10                     |                       £24  |
+| Prestige      |      £419  | Unlimited (member)     |          £24 (guest only)  |
+
+Stored as: Standard 6900p / included 0 / 2400p; Standard Plus 22900p / included 10 / 2400p;
+Prestige 41900p / included `null` (unlimited) / 2400p (guest visit fee — Prestige members
+themselves are free, but the guest/extra fee remains £24, which the schema's single
+`perVisitPence` field captures). The £24 guest visit fee is uniform across all three tiers.
+Note: the old placeholder had Prestige at £459 with perVisitPence 0 and Standard Plus at £229
+— corrected to the verified £419 annual fee and £24 guest visit fee.
+
+## Per-airport lounges
+
+- **Heathrow (LHR)** — *Club Aspire Lounge T5* from £40/adult (No1 Lounges, PP accepted pre-book
+  only) and *Plaza Premium Lounge T5* walk-in ~£47.50 / 2h (Plaza Premium official; ~10% off if
+  booked online — online from ~£42.77; PP accepted subject to capacity).
+  Sources: <https://no1lounges.com/lounges-by-location/club-aspire-at-heathrow-t5/>,
+  <https://www.prioritypass.com/en-GB/lounges/united-kingdom/heathrow/lhr30-plaza-premium-lounge-terminal-5-departures>.
+  Transport: WebFetch on No1 Lounges OK; Plaza Premium price via site-scoped WebSearch (official site + PP directory).
+- **Gatwick (LGW)** — *Club Aspire Lounge South* from £34/adult; *No1 Lounge North* from £38/adult.
+  Both No1 Lounges; PP accepted (pre-book only at Club Aspire).
+  Source: <https://no1lounges.com/lounges-by-location/club-aspire-at-gatwick-south/>.
+  Transport: WebFetch on No1 Lounges page OK.
+- **Manchester (MAN)** — *Escape Lounge T2* from £41.99/adult; *Escape Lounge T3* from £36.99/adult.
+  Escape Lounges official; PP accepted (prioritypass.com directory: man2/man4 Escape listings).
+  Source: <https://escapelounges.com/uk/airport-lounges/>.
+  Transport: WebFetch on escapelounges.com OK; PP via site-scoped WebSearch.
+- **Stansted (STN)** — *Essence by Escape Lounge* pre-book from £25.99/adult (walk-up ~£35).
+  Escape Lounges official; PP accepted (prioritypass.com directory).
+  Source: <https://escapelounges.com/uk/airport-lounges/>.
+- **Luton (LTN)** — *MyLounge* from £37.99/adult (walk-in on the day subject to availability).
+  MyLounge replaced the former Aspire Lounge in 2024 on the Luton official page; PP / LoungeKey /
+  DragonPass accepted.
+  Source: <https://www.london-luton.co.uk/executive-lounges/aspire-lounge>.
+  Transport: airport HTML is Cloudflare/JS-rendered; confirmed via site-scoped WebSearch +
+  `r.jina.ai` (title + content) — figure is the operator/airport-stated from-price.
+- **Edinburgh (EDI)** — *Escape Lounge* from £38.99/adult. Escape Lounges official; PP accepted
+  (prioritypass.com directory: edi4 Escape listing).
+  Source: <https://escapelounges.com/uk/airport-lounges/>.
+- **Birmingham (BHX)** — *Aspire Lounge* official one-day admission from £20.99/adult (PP /
+  Dragonpass accepted, prioritypass.com directory: birm-aspire-lounge); *No1 Lounge* premium,
+  walk-in not statically published → `walkInPence: null`.
+  Source: <https://www.birminghamairport.co.uk/at-the-airport/lounges/>.
+  Transport: airport HTML 403/Cloudflare to WebFetch; lounge names + Aspire from-price via
+  site-scoped WebSearch (Birmingham official lounges page + Aspire/PP listings).
+- **Glasgow (GLA)** — *UpperDeck Lounge* from £32/adult (Aspire-operated; Glasgow Airport official
+  page). PP accepted (prioritypass.com directory: gla2 UpperDeck listing).
+  Source: <https://www.glasgowairport.com/at-the-airport/airport-services/upperdeck-lounge/>.
+  Transport: airport HTML Cloudflare-fronted; figure via site-scoped WebSearch of the official
+  Glasgow Airport / Aspire UpperDeck pages (aspirelounges.com returns 403 to WebFetch and to jina).
+- **Bristol (BRS)** — *Escape Lounge* from £41.99/adult; *Essence by Escape Lounge* from £35/adult.
+  Escape Lounges official; PP accepted (prioritypass.com directory).
+  Source: <https://escapelounges.com/uk/airport-lounges/>.
+- **Newcastle (NCL)** — *Aspire Lounge* from £46/adult (price is dynamic by date). Operator
+  No1 Lounges / Aspire; PP / Dragonpass / Dreamfolks accepted, pre-booking required.
+  **Kept in the lounges dataset** (parking excludes NCL, lounges do not).
+  Source: <https://no1lounges.com/lounges-by-location/aspire-at-newcastle/>.
+  Transport: No1 Lounges page WebFetch OK (from-price £46); Aspire's own site (aspirelounges.com)
+  confirms PP/Dragonpass/Dreamfolks acceptance via `r.jina.ai` but exposes no static price (dynamic
+  booking widget) — the from-price is the No1 Lounges operator figure.
+
+### Items for human re-confirmation (lounges)
+1. All lounge walk-in figures are operator "from"/pre-book prices, not guaranteed on-the-day
+   walk-up rates; many lounges price the actual walk-up higher (e.g. Stansted walk-up ~£35 vs
+   pre-book £25.99). Treat stored pence as indicative from-prices.
+2. **Glasgow** UpperDeck £32 and **Birmingham** Aspire £20.99 were obtained via site-scoped
+   WebSearch of the official pages because both airport/operator domains are Cloudflare-fronted
+   and block WebFetch/jina HTML — worth a live glance to confirm.
+3. **Newcastle** Aspire (£46) and **Heathrow** Plaza Premium (£47.50/2h) are dynamic/tiered and
+   may move with date and duration.
+4. **Luton** MyLounge replaced Aspire (2024) — the official URL still resolves under the
+   `/executive-lounges/aspire-lounge` path; confirm naming if the page slug changes.
