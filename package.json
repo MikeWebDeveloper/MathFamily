@@ -1,7 +1,8 @@
 {
   "name": "mathfamily",
   "private": true,
-  "engines": { "node": ">=22" },
+  "packageManager": "pnpm@11.5.1",
+  "engines": { "node": ">=22", "pnpm": ">=10" },
   "scripts": {
     "build": "turbo run build",
     "test": "turbo run test",
