@@ -212,3 +212,41 @@ Research date: **2026-06-10**. Completes the 40-destination set; `packages/data/
 - Holafly: https://esim.holafly.com/esim-<country>/ (UAE: https://esim.holafly.com/esim-dubai/ ; Czechia: https://esim.holafly.com/esim-czech-republic/)
 - Saily: https://saily.com/esim-<country>/ via r.jina.ai live + Wayback Machine (archive.org)
 - FX: https://www.exchangerates.org.uk/GBP-USD-spot-exchange-rates-history-2026.html ; https://wise.com/gb/currency-converter/gbp-to-usd-rate/history
+
+## Baggage fees (Task 9 — 12 airlines, verified 2026-06-10)
+
+All figures from each airline's OWN published fee/baggage page. Most carriers price bags dynamically by route/date — recorded official published min–max ranges; fixed published figures recorded as min=max; unpublished items recorded as `null` min/max with a note. FX for EUR/USD conversions: **1 EUR = 0.864 GBP** (08 Jun 2026, exchangerates.org.uk), **1 USD ≈ 0.74 GBP** (Jun 2026).
+
+| Airline | Items captured | Headline cabin / checked ranges (GBP) | Transport | Flags |
+|---|---|---|---|---|
+| ryanair | small bag (free), 10kg cabin, 10kg/20kg/23kg check-in, excess/kg | cabin £12–£60 · checked £9.49–£97 · excess £13/kg | WebSearch → r.jina.ai (help page 403) | Page shows £/€ parity; GBP figures used directly |
+| easyjet | small cabin (free), large cabin, hold bag, excess/kg | large cabin from £5.99 (£60 gate) · hold from £6.99 (£60 drop) · excess £12/kg | WebFetch + r.jina.ai | Online prices fully dynamic; airport caps published |
+| jet2 | 10kg hand (free), 22kg hold (dynamic), excess/kg | hand free · hold dynamic (null) · excess £12/kg | WebSearch (FAQ/baggage pages JS-only via jina) | Hold bag has no published fixed table → null; £12/kg excess published |
+| british-airways | hand baggage (free), 1st checked 23kg (free std fares), overweight | hand free · 1st checked free (std) · overweight £65 | WebSearch + r.jina.ai (GB baggage-essentials) | Basic = hand-only, hold dynamic via calculator; overweight £65 fixed |
+| wizz-air | carry-on (free), trolley (dynamic), checked (dynamic), excess/kg | carry-on free · trolley/checked dynamic (null) · excess £11.23 (EUR 13/kg conv) | WebSearch + r.jina.ai | GBP not published statically; only EUR 13/kg excess → converted |
+| tui | 10kg hand (free), 15kg hold short/long-haul, extra/kg short/long | hand free · hold £60 (short) / £80 (long) per 15kg · extra £15/£20 per kg | WebSearch + r.jina.ai (page 403) | Flight-only fixed fees published; package incl 20kg+ |
+| virgin-atlantic | hand (free), 1st/2nd checked, overweight, oversized | hand free · 1st checked free (exc Economy Light £80) · overweight £65 · oversized £200 | WebSearch + r.jina.ai (GB fees table) | Full GBP fee table published per fare/bag number |
+| aer-lingus | 10kg cabin (Saver), 1st checked (free Smart/Flex/Plus+), overweight | cabin free-if-checked · 1st checked free (Smart/Flex 23kg) · overweight £68 (EUR 75) | WebSearch | Saver checked dynamic by route/channel → null max; overweight £68 published |
+| vueling | under-seat (free), checked 15-30kg, oversized cabin, excess/kg | checked £8.64–£82 (EUR 10–95 conv) · oversized cabin £52–£121 · excess £10.37 (EUR 12/kg) | WebSearch | Published EUR ranges only → all converted to GBP |
+| norwegian | small under-seat (free), overhead cabin, checked (dynamic), excess/kg | cabin from £5–£9 · checked dynamic (null) · excess £11.10 (USD 15/kg conv) | WebSearch (optional-charges JS-only) | Cabin floor in GBP; checked dynamic; excess USD 15/kg → converted |
+| emirates | cabin 7kg (free), 1st checked 25kg (free Saver+), extra (dynamic) | cabin free · 1st checked free (Saver+) · extra dynamic (null) | WebSearch | Long-haul: bags included on Economy; extras calculator-only |
+| lufthansa | carry-on 8kg (free), 1st checked 23kg (free Classic+), excess (dynamic) | carry-on free · 1st checked free (Economy Classic+) · excess dynamic (null) | WebSearch | Economy Light no free checked bag; flat rates route/fare-specific via calculator |
+
+### Per-airline source URLs
+- ryanair: https://www.ryanair.com/gb/en/useful-info/help-centre/fees
+- easyjet: https://www.easyjet.com/en/help-centre/policy-terms-and-conditions/fees-charges
+- jet2: https://www.jet2.com/en/baggage
+- british-airways: https://www.britishairways.com/content/en/gb/information/baggage-essentials
+- wizz-air: https://www.wizzair.com/en-gb/help-centre/booking-information-and-services/baggage/baggage-allowance/checked-in-baggage
+- tui: https://www.tui.co.uk/destinations/info/luggage-allowance
+- virgin-atlantic: https://flywith.virginatlantic.com/gb/en/upgrades-and-extras/optional-service-and-travel-fees.html
+- aer-lingus: https://www.aerlingus.com/travel-information/baggage-information/checked-baggage/
+- vueling: https://www.vueling.com/en/vueling-services/supplementary-service-rates
+- norwegian: https://www.norwegian.com/en/booking/booking-information/optional-charges/
+- emirates: https://www.emirates.com/english/before-you-fly/baggage/checked-baggage/
+- lufthansa: https://www.lufthansa.com/gb/en/baggage
+
+### Notes / decisions
+- **Currency conversions** recorded with a "(converted)" item label or note: wizz-air excess (EUR 13/kg), vueling checked + oversized + excess (EUR), aer-lingus overweight (EUR 75 = published GBP 68 used), norwegian excess (USD 15/kg). FX 1 EUR = 0.864 GBP, 1 USD = 0.74 GBP.
+- **Omitted/null items**: jet2 22kg hold, wizz-air trolley + checked, british-airways extra/Basic hold bags, aer-lingus Saver checked, norwegian checked, emirates extra, lufthansa excess — none publish a fixed GBP figure or static range (calculator/route-dynamic only), recorded with null min/max per the no-invention rule.
+- **Long-haul included items** (Rule 2): BA, Virgin, Emirates, Lufthansa record cabin + first checked bag as Free (0/0) on standard/Economy fares, with the fare exceptions noted (BA Basic, Virgin/Lufthansa Light).

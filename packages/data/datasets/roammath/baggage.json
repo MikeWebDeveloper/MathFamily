@@ -1,17 +1,160 @@
 {
-  "version": "0.1.0",
+  "version": "1.0.0",
   "lastUpdated": "2026-06-10",
   "records": [
     {
       "airlineSlug": "ryanair",
       "airlineName": "Ryanair",
       "fees": [
-        { "item": "Small personal bag (under seat)", "minPence": 0, "maxPence": 0, "note": "Included with every fare" },
-        { "item": "10kg cabin bag", "minPence": 600, "maxPence": 3600, "note": "Price varies by route and date" },
-        { "item": "20kg checked bag", "minPence": 1899, "maxPence": 5999, "note": "Price varies by route and date" }
+        { "item": "Small personal bag (40x30x20cm, under seat)", "minPence": 0, "maxPence": 0, "note": "Included with every fare" },
+        { "item": "Priority & 2 Cabin Bags (10kg cabin bag)", "minPence": 1200, "maxPence": 6000, "note": "Online price; varies by route and date" },
+        { "item": "10kg Check-in Bag", "minPence": 949, "maxPence": 4499, "note": "Online price; airport bag drop £35.99-£40" },
+        { "item": "20kg Check-in Bag", "minPence": 1899, "maxPence": 5999, "note": "Online price; airport bag drop £59.99" },
+        { "item": "23kg Check-in Bag", "minPence": 2999, "maxPence": 9700, "note": "Online price; varies by route and date" },
+        { "item": "Excess baggage per kg", "minPence": 1300, "maxPence": 1300, "note": "£13 per kilo, fixed" }
       ],
-      "dynamicPricingNote": "Ryanair prices bags dynamically; ranges reflect the official published min–max",
+      "dynamicPricingNote": "Ryanair prices bags dynamically; ranges reflect the official published online min-max charges per item",
       "sourceUrl": "https://www.ryanair.com/gb/en/useful-info/help-centre/fees",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "airlineSlug": "easyjet",
+      "airlineName": "easyJet",
+      "fees": [
+        { "item": "Small cabin bag (45x36x20cm, up to 15kg)", "minPence": 0, "maxPence": 0, "note": "Free with every fare" },
+        { "item": "Large cabin bag (56x45x25cm)", "minPence": 599, "maxPence": 6000, "note": "From £5.99 online; £60 at the boarding gate" },
+        { "item": "Hold bag (up to 23kg)", "minPence": 699, "maxPence": 6000, "note": "From £6.99 online; £60 at airport bag drop" },
+        { "item": "Excess weight per kg", "minPence": 1200, "maxPence": 1200, "note": "£12 per kilo, fixed" }
+      ],
+      "dynamicPricingNote": "easyJet prices cabin and hold bags dynamically by demand, route, date and time of booking; online floor prices and airport caps shown",
+      "sourceUrl": "https://www.easyjet.com/en/help-centre/policy-terms-and-conditions/fees-charges",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "airlineSlug": "jet2",
+      "airlineName": "Jet2.com",
+      "fees": [
+        { "item": "10kg hand luggage (56x45x25cm)", "minPence": 0, "maxPence": 0, "note": "Included as standard, plus one small under-seat bag" },
+        { "item": "22kg hold bag", "minPence": null, "maxPence": null, "note": "Pre-book; price varies by route and date (not published as a fixed table)" },
+        { "item": "Excess baggage per kg", "minPence": 1200, "maxPence": 1200, "note": "£12 per kilo, fixed; max 32kg per bag" }
+      ],
+      "dynamicPricingNote": "Jet2 charges hold bags dynamically by route and date; only the excess per-kg rate is a published fixed figure",
+      "sourceUrl": "https://www.jet2.com/en/baggage",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "airlineSlug": "british-airways",
+      "airlineName": "British Airways",
+      "fees": [
+        { "item": "Hand baggage (56x45x25cm) + personal item", "minPence": 0, "maxPence": 0, "note": "Included on all fares including Basic" },
+        { "item": "First checked bag (23kg)", "minPence": 0, "maxPence": 0, "note": "Included on standard fares; not included on hand-baggage-only (Basic) fares, where extra hold bags are charged dynamically by route" },
+        { "item": "Overweight bag (23-32kg)", "minPence": 6500, "maxPence": 6500, "note": "£65 per overweight bag, fixed" }
+      ],
+      "dynamicPricingNote": "BA includes hand baggage on all fares and a 23kg checked bag on standard fares; extra and Basic-fare hold bags are priced dynamically via the baggage calculator",
+      "sourceUrl": "https://www.britishairways.com/content/en/gb/information/baggage-essentials",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "airlineSlug": "wizz-air",
+      "airlineName": "Wizz Air",
+      "fees": [
+        { "item": "Carry-on bag (40x30x20cm, up to 10kg)", "minPence": 0, "maxPence": 0, "note": "Free for all passengers" },
+        { "item": "Trolley/large cabin bag (55x40x23cm, WIZZ Priority)", "minPence": null, "maxPence": null, "note": "Priced dynamically by route and date; no fixed published GBP figure" },
+        { "item": "Checked bag (10/20/26/32kg)", "minPence": null, "maxPence": null, "note": "Priced dynamically by route and date; no fixed published GBP figure" },
+        { "item": "Excess baggage per kg (converted)", "minPence": 1123, "maxPence": 1123, "note": "Published as EUR 13/kg; converted at 1 EUR = 0.864 GBP (08 Jun 2026)" }
+      ],
+      "dynamicPricingNote": "Wizz Air prices cabin and checked bags dynamically; the only published fixed rate is the EUR 13/kg airport excess fee (recorded converted to GBP)",
+      "sourceUrl": "https://www.wizzair.com/en-gb/help-centre/booking-information-and-services/baggage/baggage-allowance/checked-in-baggage",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "airlineSlug": "tui",
+      "airlineName": "TUI Airways",
+      "fees": [
+        { "item": "Hand luggage (55x40x20cm, up to 10kg) + personal item", "minPence": 0, "maxPence": 0, "note": "Free on every flight" },
+        { "item": "Hold bag (15kg, flight-only, short-haul)", "minPence": 6000, "maxPence": 6000, "note": "£60 per 15kg bag, fixed (short-haul)" },
+        { "item": "Hold bag (15kg, flight-only, long-haul/Cape Verde/Egypt/Gambia/Senegal)", "minPence": 8000, "maxPence": 8000, "note": "£80 per 15kg bag, fixed (long-haul)" },
+        { "item": "Extra weight per kg (short/mid-haul)", "minPence": 1500, "maxPence": 1500, "note": "£15 per additional kilo, fixed" },
+        { "item": "Extra weight per kg (long-haul)", "minPence": 2000, "maxPence": 2000, "note": "£20 per additional kilo, fixed" }
+      ],
+      "dynamicPricingNote": "TUI publishes fixed flight-only hold-bag and excess rates (package bookings include 20kg+); short-haul vs long-haul rates differ",
+      "sourceUrl": "https://www.tui.co.uk/destinations/info/luggage-allowance",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "airlineSlug": "virgin-atlantic",
+      "airlineName": "Virgin Atlantic",
+      "fees": [
+        { "item": "Hand baggage (23x36x56cm)", "minPence": 0, "maxPence": 0, "note": "Included on all tickets" },
+        { "item": "First checked bag (23kg)", "minPence": 0, "maxPence": 8000, "note": "Included free on Economy Classic/Delight, Premium and Upper Class; £80 on Economy Light" },
+        { "item": "Second checked bag (23kg)", "minPence": 0, "maxPence": 8000, "note": "Included on Premium/Upper Class; £80 on Economy Light/Classic/Delight" },
+        { "item": "Overweight bag", "minPence": 6500, "maxPence": 6500, "note": "£65 per overweight bag, fixed" },
+        { "item": "Oversized bag", "minPence": 20000, "maxPence": 20000, "note": "£200 per oversized bag, fixed" }
+      ],
+      "dynamicPricingNote": "Virgin Atlantic publishes fixed per-bag GBP fees by fare and bag number; one 23kg checked bag is included on all Economy fares except Economy Light",
+      "sourceUrl": "https://flywith.virginatlantic.com/gb/en/upgrades-and-extras/optional-service-and-travel-fees.html",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "airlineSlug": "aer-lingus",
+      "airlineName": "Aer Lingus",
+      "fees": [
+        { "item": "10kg cabin bag (Saver)", "minPence": 0, "maxPence": 0, "note": "Free if checked at the gate, or carried on; included with Plus/Advantage/AerSpace" },
+        { "item": "First checked bag (20kg/23kg)", "minPence": 0, "maxPence": null, "note": "Included free on Smart/Flex (23kg) and Plus/Advantage/AerSpace (20kg); Saver fares charged dynamically by route and channel" },
+        { "item": "Overweight bag (23-32kg, converted)", "minPence": 6800, "maxPence": 6800, "note": "Published as GBP 68 / EUR 75; recorded as GBP figure" }
+      ],
+      "dynamicPricingNote": "Aer Lingus includes a checked bag on all fares above Saver; Saver checked-bag fees are dynamic by route and booking channel, while the overweight rate is a published fixed figure",
+      "sourceUrl": "https://www.aerlingus.com/travel-information/baggage-information/checked-baggage/",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "airlineSlug": "vueling",
+      "airlineName": "Vueling",
+      "fees": [
+        { "item": "Under-seat cabin bag (40x30x20cm)", "minPence": 0, "maxPence": 0, "note": "Free with every fare" },
+        { "item": "Checked bag (15/20/25/30kg, converted)", "minPence": 864, "maxPence": 8208, "note": "Published as EUR 10-95; converted at 1 EUR = 0.864 GBP (08 Jun 2026)" },
+        { "item": "Oversized cabin bag (over 40x30x20cm, converted)", "minPence": 5184, "maxPence": 12096, "note": "Published as EUR 60-140; converted at 1 EUR = 0.864 GBP (08 Jun 2026)" },
+        { "item": "Excess baggage per kg over 25kg (converted)", "minPence": 1037, "maxPence": 1037, "note": "Published as EUR 12/kg; converted at 1 EUR = 0.864 GBP (08 Jun 2026)" }
+      ],
+      "dynamicPricingNote": "Vueling publishes EUR price ranges for checked and oversized bags; all figures recorded converted to GBP at 1 EUR = 0.864 GBP",
+      "sourceUrl": "https://www.vueling.com/en/vueling-services/supplementary-service-rates",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "airlineSlug": "norwegian",
+      "airlineName": "Norwegian",
+      "fees": [
+        { "item": "Small under-seat cabin bag (30x40x20cm)", "minPence": 0, "maxPence": 0, "note": "Free with LowFare" },
+        { "item": "Overhead cabin bag (55x40x23cm)", "minPence": 500, "maxPence": 900, "note": "From £5-£9; varies by route and date" },
+        { "item": "Checked bag (up to 23kg)", "minPence": null, "maxPence": null, "note": "Priced dynamically by route; no fixed published GBP figure" },
+        { "item": "Excess baggage per kg over 23kg (converted)", "minPence": 1110, "maxPence": 1110, "note": "Published as USD 15/kg; converted at 1 USD = 0.74 GBP (Jun 2026)" }
+      ],
+      "dynamicPricingNote": "Norwegian prices the overhead cabin bag and checked bags dynamically; cabin bag floor is published in GBP, checked/excess rates in USD (excess recorded converted)",
+      "sourceUrl": "https://www.norwegian.com/en/booking/booking-information/optional-charges/",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "airlineSlug": "emirates",
+      "airlineName": "Emirates",
+      "fees": [
+        { "item": "Cabin baggage (up to 7kg) + personal item", "minPence": 0, "maxPence": 0, "note": "Included in Economy on all fares" },
+        { "item": "First checked bag (25kg, Saver+)", "minPence": 0, "maxPence": 0, "note": "Included free in Economy from Saver fare upwards (weight concept; 23kg piece concept to/from the Americas/Africa)" },
+        { "item": "Extra/additional checked baggage", "minPence": null, "maxPence": null, "note": "Priced dynamically by route, fare and Skywards tier via Manage Booking; no fixed published GBP table" }
+      ],
+      "dynamicPricingNote": "Emirates includes generous cabin and checked allowance on Economy fares; extra baggage is priced dynamically online (cheaper than airport)",
+      "sourceUrl": "https://www.emirates.com/english/before-you-fly/baggage/checked-baggage/",
+      "verifiedAt": "2026-06-10"
+    },
+    {
+      "airlineSlug": "lufthansa",
+      "airlineName": "Lufthansa",
+      "fees": [
+        { "item": "Carry-on baggage (55x40x23cm, up to 8kg) + personal item", "minPence": 0, "maxPence": 0, "note": "Included in Economy on all fares" },
+        { "item": "First checked bag (23kg, Economy Classic+)", "minPence": 0, "maxPence": null, "note": "Included free on Economy Classic and above; Economy Light has no free checked bag and charges one bag up to 23kg dynamically" },
+        { "item": "Extra/excess checked baggage", "minPence": null, "maxPence": null, "note": "Flat rates apply but are route/fare-specific via the baggage calculator; no fixed published GBP table" }
+      ],
+      "dynamicPricingNote": "Lufthansa includes carry-on on all Economy fares and a 23kg checked bag from Economy Classic up; Economy Light and extra/excess bags are priced via the baggage calculator",
+      "sourceUrl": "https://www.lufthansa.com/gb/en/baggage",
       "verifiedAt": "2026-06-10"
     }
   ]
