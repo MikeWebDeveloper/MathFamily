@@ -8,6 +8,12 @@ const DATE_PATTERNS = [
 
 const BOILERPLATE_WORDS = /(?:we value your privacy|accept all|reject all|cookie|cookies|consent)/i;
 const PRICE_SIGNAL = /[£€$]\s?\d/;
+// A standalone wall-clock token on its own line (e.g. "23:15" or "23:15:42").
+// Several airport templates inject a live HH:MM clock in the header nav that ticks
+// every minute. It is never a price (no currency symbol) and never a band label,
+// so a line that is *only* a clock is safe to drop. Anchored to the full trimmed
+// line so inline times ("Open 09:00 to 17:00") are untouched.
+const STANDALONE_CLOCK = /^([01]?\d|2[0-3]):[0-5]\d(?::[0-5]\d)?$/;
 
 export function normalizeText(input: string): string {
   // Strip scripts and styles first
@@ -18,6 +24,7 @@ export function normalizeText(input: string): string {
   const lines = text.split("\n").filter((line) => {
     const trimmed = line.trim();
     if (!trimmed) return false;
+    if (STANDALONE_CLOCK.test(trimmed)) return false; // live header wall-clock — not a price
     if (BOILERPLATE_WORDS.test(trimmed) && !PRICE_SIGNAL.test(trimmed)) return false;
     return true;
   });

@@ -29,6 +29,36 @@ describe("normalizeText", () => {
   it("a real fee change produces different output", () => {
     expect(normalizeText("Fee £10 for 10 minutes")).not.toBe(normalizeText("Fee £12 for 10 minutes"));
   });
+
+  // Several airport templates (Exeter/Bournemouth/Norwich, shared "Regional & City Airports"
+  // theme) inject a live HH:MM wall-clock as a standalone line in the header nav. It changes
+  // every minute and is not a price — strip it so it doesn't trigger false changes.
+  it("strips a standalone live-clock HH:MM token so minute churn doesn't trigger", () => {
+    const at2315 = normalizeText("Special Assistance\n23:15\nCar Parking\nDrop-off £4.00");
+    const at0902 = normalizeText("Special Assistance\n09:02\nCar Parking\nDrop-off £4.00");
+    expect(at2315).toBe(at0902);
+    expect(at2315).toContain("£4.00");
+    expect(at2315).not.toMatch(/\b\d{1,2}:\d{2}\b/); // no clock survives
+  });
+  it("strips a standalone HH:MM:SS clock too", () => {
+    expect(normalizeText("Header\n23:15:42\nFooter")).toBe(normalizeText("Header\n09:02:07\nFooter"));
+  });
+  it("a real price change is NEVER masked by clock stripping (guard)", () => {
+    expect(normalizeText("Special Assistance\n23:15\nDrop-off £4.00")).not.toBe(
+      normalizeText("Special Assistance\n23:15\nDrop-off £6.00")
+    );
+  });
+  it("does not eat a time that is part of an opening-hours range or inline text (guard)", () => {
+    // inline times carry surrounding content, so they are not standalone-clock lines
+    expect(normalizeText("Open 09:00 to 17:00 daily")).toContain("09:00");
+    expect(normalizeText("Last entry 14:30")).toContain("14:30");
+  });
+  it("does not eat band labels or prices that merely contain digits (guard)", () => {
+    const out = normalizeText("0 - 10 minutes\n£5.00\nUp to 1 hour\n£12.00");
+    expect(out).toContain("£5.00");
+    expect(out).toContain("£12.00");
+    expect(out).toContain("0 - 10 minutes");
+  });
 });
 
 describe("contentFingerprint", () => {
