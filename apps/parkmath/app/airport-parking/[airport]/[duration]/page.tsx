@@ -96,6 +96,14 @@ export default async function DurationPage({
         ])}
       />
 
+      {m.warnings.length > 0 ? (
+        <ul className="space-y-1 text-xs text-ink-muted">
+          {m.warnings.map((w) => (
+            <li key={w.code}>{w.message}</li>
+          ))}
+        </ul>
+      ) : null}
+
       <AffiliateBlock slotId="parking-prebook" airportSlug={airport.slug} officialUrl={record.sourceUrl} />
 
       <section className="space-y-2">
