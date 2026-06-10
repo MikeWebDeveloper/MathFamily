@@ -6,7 +6,7 @@ describe("faqPageLd", () => {
     const ld = faqPageLd([{ question: "Q1?", answer: "A1" }, { question: "Q2?", answer: "A2" }]);
     expect(ld["@type"]).toBe("FAQPage");
     expect(ld.mainEntity).toHaveLength(2);
-    expect(ld.mainEntity[0]).toMatchObject({ "@type": "Question", name: "Q1?" });
+    expect(ld.mainEntity[0]).toMatchObject({ "@type": "Question", name: "Q1?", acceptedAnswer: { "@type": "Answer", text: "A1" } });
   });
 });
 
@@ -22,6 +22,7 @@ describe("datasetLd", () => {
     expect(ld["@type"]).toBe("Dataset");
     expect(ld.dateModified).toBe("2026-06-10");
     expect(ld.isAccessibleForFree).toBe(true);
+    expect(ld.creator).toMatchObject({ "@type": "Organization", name: "ParkMath" });
   });
 });
 
@@ -31,7 +32,7 @@ describe("breadcrumbLd", () => {
       { name: "Home", url: "https://example.com" },
       { name: "Drop-off", url: "https://example.com/drop-off-charges" }
     ]);
-    expect(ld.itemListElement[1]).toMatchObject({ position: 2, name: "Drop-off" });
+    expect(ld.itemListElement[1]).toMatchObject({ position: 2, name: "Drop-off", item: "https://example.com/drop-off-charges" });
   });
 });
 
