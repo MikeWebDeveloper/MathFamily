@@ -57,14 +57,216 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* ── Gradient hairline edge: card looks lit from above ──
+   Mutually exclusive with .mf-edge-shine (both render via ::before). */
+.mf-edge {
+  position: relative;
+}
+.mf-edge::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    to bottom,
+    rgb(15 23 42 / 0.16),
+    rgb(15 23 42 / 0.05) 45%,
+    rgb(15 23 42 / 0.10)
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* ── Answer-card shining edge: one per page, ~8s loop ── */
+@property --mf-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+.mf-edge-shine {
+  position: relative;
+}
+.mf-edge-shine::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--mf-angle),
+    rgb(255 255 255 / 0.08),
+    var(--color-brand-accent) 12%,
+    rgb(255 255 255 / 0.08) 30%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  animation: mf-rotate-edge 8s linear infinite;
+  pointer-events: none;
+}
+@keyframes mf-rotate-edge {
+  to { --mf-angle: 360deg; }
+}
+
+/* Looping animations pause when ScrollReveal marks them off-screen */
+.mf-paused,
+.mf-paused::before {
+  animation-play-state: paused !important;
+}
+
+/* ── Hover sheen: one-shot diagonal light sweep (pointer devices only) ── */
+.mf-sheen {
+  position: relative;
+  overflow: hidden;
+}
+.mf-sheen::after {
+  content: "";
+  position: absolute;
+  top: -150%;
+  left: -60%;
+  width: 50%;
+  height: 400%;
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.35), transparent);
+  transform: rotate(25deg) translateX(-150%);
+  opacity: 0;
+  pointer-events: none;
+}
+@media (hover: hover) {
+  .mf-sheen:hover::after {
+    animation: mf-sheen-sweep 0.5s ease-out;
+  }
+}
+@keyframes mf-sheen-sweep {
+  from { transform: rotate(25deg) translateX(-150%); opacity: 1; }
+  to { transform: rotate(25deg) translateX(320%); opacity: 0; }
+}
+
+/* ── Press state for touch ── */
+.mf-press {
+  transition: transform 120ms ease;
+}
+.mf-press:active {
+  transform: scale(0.98);
+}
+
+/* ── Radar pulse (map pins) ── */
+@keyframes mf-pulse-ring {
+  0% { transform: scale(0.6); opacity: 0.7; }
+  70% { transform: scale(2.2); opacity: 0; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+.mf-pulse {
+  animation: mf-pulse-ring 2s cubic-bezier(0.2, 0.6, 0.4, 1) infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+/* ── Ambient backdrop: masked dot grid + drifting blobs ── */
+.mf-grid-bg {
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--color-brand) 6%, transparent) 1px,
+    transparent 1px
+  );
+  background-size: 22px 22px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black, transparent 70%);
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black, transparent 70%);
+}
+.mf-blob {
+  will-change: transform;
+  filter: blur(80px);
+  animation: mf-drift 75s ease-in-out infinite alternate;
+}
+.mf-blob-2 {
+  will-change: transform;
+  filter: blur(80px);
+  animation: mf-drift 90s ease-in-out infinite alternate-reverse;
+}
+@keyframes mf-drift {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(40px, 28px, 0) scale(1.12); }
+}
+
+/* ── Section heading underline grows when its .mf-reveal parent reveals ──
+   Renders via ::after — cannot combine with .mf-sheen on the same element. */
+.mf-underline-grow::after {
+  content: "";
+  display: block;
+  height: 2px;
+  width: 0;
+  margin-top: 6px;
+  background: var(--color-brand-accent);
+  transition: width 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.15s;
+}
+.mf-reveal.mf-in .mf-underline-grow::after,
+.mf-in .mf-underline-grow::after {
+  width: 2.5rem;
+}
+
+/* ── Verified-pill tick draws itself (one-time) ──
+   16 = path length of the FreshnessBadge checkmark; update both if its d/scale changes. */
+.mf-tick {
+  stroke-dasharray: 16;
+  stroke-dashoffset: 16;
+  animation: mf-tick-draw 0.3s ease-out 0.15s forwards;
+}
+@keyframes mf-tick-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* ── =Math logo entrance (once per session, toggled by BrandLogo) + hover tilt ── */
+.mf-logo-tile {
+  transition: transform 180ms ease;
+}
+a:hover .mf-logo-tile {
+  transform: rotate(3deg);
+}
+.mf-logo-animate .mf-logo-bar-top {
+  animation: mf-bar-left 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.mf-logo-animate .mf-logo-bar-bottom {
+  animation: mf-bar-right 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both;
+}
+@keyframes mf-bar-left {
+  from { transform: translateX(-8px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+@keyframes mf-bar-right {
+  from { transform: translateX(8px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .mf-fade-in,
-  .mf-rise-in {
+  .mf-rise-in,
+  .mf-edge-shine::before,
+  .mf-sheen:hover::after,
+  .mf-pulse,
+  .mf-blob,
+  .mf-blob-2,
+  .mf-logo-animate .mf-logo-bar-top,
+  .mf-logo-animate .mf-logo-bar-bottom {
     animation: none;
   }
   .mf-reveal {
     opacity: 1;
     transform: none;
+    transition: none;
+  }
+  .mf-underline-grow::after {
+    transition: none;
+    width: 2.5rem;
+  }
+  .mf-tick {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .mf-press,
+  .mf-logo-tile {
     transition: none;
   }
 }
