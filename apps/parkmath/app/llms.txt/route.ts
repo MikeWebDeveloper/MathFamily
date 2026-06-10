@@ -29,6 +29,7 @@ reviewed changes only.
 - /airport-parking — gate vs pre-book parking hub for all tracked airports
 - /airport-parking/[airport] — per-airport parking comparison with gate and pre-book
   prices, savings callout, and interactive calculator (schema.org FAQPage)
+- /airport-parking/[airport]/[duration] — duration-specific comparison (3-days, 7-days or 14-days) with cheapest verdict (schema.org FAQPage)
 - /airport-lounges — walk-in lounge prices and Priority Pass overview for all tracked airports
 - /airport-lounges/[airport] — per-airport lounge prices, Priority Pass eligibility, and
   membership break-even calculator (schema.org FAQPage)
