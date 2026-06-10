@@ -22,7 +22,7 @@ export default async function OgImage({ params }: { params: Promise<{ airport: s
         <div style={{ display: "flex", fontSize: 36, opacity: 0.8 }}>{airport?.name ?? slug} parking · 7 days</div>
         <div style={{ display: "flex", fontSize: 120, fontWeight: 700, marginTop: 12 }}>{m?.cheapest ? `from ${formatPence(m.cheapest.totalPence)}` : "compared"}</div>
         <div style={{ display: "flex", fontSize: 28, marginTop: 18, opacity: 0.85 }}>{m?.cheapest?.name ?? ""}</div>
-        <div style={{ display: "flex", fontSize: 24, marginTop: 40, color: "#7fd1a8" }}>✓ Verified {record?.verifiedAt} · ParkMath</div>
+        <div style={{ display: "flex", fontSize: 24, marginTop: 40, color: "#7fd1a8" }}>Verified {record?.verifiedAt} · ParkMath</div>
       </div>
     ),
     size
