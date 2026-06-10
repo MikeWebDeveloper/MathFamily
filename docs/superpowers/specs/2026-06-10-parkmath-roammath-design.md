@@ -127,7 +127,7 @@ sites.
 
 ## 3. ParkMath product (built fully)
 
-### 3.1 Routes (~200 static pages at launch)
+### 3.1 Routes (~100 static pages at launch)
 
 | Route | Count | Content |
 |---|---|---|
@@ -164,8 +164,11 @@ only.
 
 - `drop-off-fees.json` — ~25 UK airports: fee, time limit, penalty, payment deadline,
   Blue Badge policy, free alternative (location + minutes), prior-year fee.
-- `parking-tariffs.json` — top 10 airports: gate rate and pre-book typical price per
-  duration band per product type.
+- `parking-tariffs.json` — top 10 airports: gate rate (published drive-up tariff) and
+  pre-book price snapshot per duration band per product type. Pre-book prices come from
+  the airports' own official pre-booking portals (dated quote snapshots, labelled as
+  such on-page) — never scraped from third-party aggregators; live comparison waits for
+  the SkyParkSecure API in a later phase.
 - `lounges.json` — top 10 airports: lounge names, walk-in price, Priority Pass
   participation; Priority Pass tier pricing.
 - `airports.json` (shared, `packages/data`) — names, slugs, IATA codes, regions.
