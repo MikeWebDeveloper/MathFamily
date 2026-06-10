@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { loadAirports, loadLoungeDataset, loadPriorityPass, type Airport, type LoungeRecord } from "@mathfamily/data";
+import { loadAirports, loadLoungeDataset, loadParkingDataset, loadPriorityPass, type Airport, type LoungeRecord } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
 import { AnswerLead, FaqAccordion, FeeGrid, FreshnessBadge, SourceCitation, SourcesBlock } from "@mathfamily/ui";
@@ -39,6 +39,7 @@ export default async function LoungePage({ params }: { params: Promise<{ airport
   const pp = loadPriorityPass();
   const priced = record.lounges.filter((l) => l.walkInPence !== null);
   const cheapest = [...priced].sort((a, b) => a.walkInPence! - b.walkInPence!)[0];
+  const hasParking = loadParkingDataset().records.some((r) => r.airportSlug === airport.slug);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
   const faqs = [
     {
@@ -97,11 +98,13 @@ export default async function LoungePage({ params }: { params: Promise<{ airport
         <FaqAccordion items={faqs} />
       </section>
 
-      <p className="text-sm">
-        <Link href={`/airport-parking/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
-          Parking at {airport.name} compared →
-        </Link>
-      </p>
+      {hasParking ? (
+        <p className="text-sm">
+          <Link href={`/airport-parking/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
+            Parking at {airport.name} compared →
+          </Link>
+        </p>
+      ) : null}
 
       <SourcesBlock
         sources={[
