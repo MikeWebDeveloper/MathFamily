@@ -7,3 +7,5 @@ export * from "./faq-accordion";
 export * from "./email-capture-slot";
 export * from "./site-header";
 export * from "./site-footer";
+export * from "./answer-lead";
+export * from "./sources-block";

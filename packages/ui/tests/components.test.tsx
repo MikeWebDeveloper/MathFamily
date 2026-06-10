@@ -35,3 +35,31 @@ describe("EmailCaptureSlot", () => {
     expect(screen.getByLabelText("Email address")).toBeDefined();
   });
 });
+
+import { AnswerLead } from "../src/answer-lead";
+import { SourcesBlock } from "../src/sources-block";
+
+describe("AnswerLead", () => {
+  it("renders the direct answer and key facts", () => {
+    render(
+      <AnswerLead answer="Dropping off at Gatwick costs £10 for up to 10 minutes.">
+        {["Penalty: £100", "Free alternative: Long Stay (2h)"]}
+      </AnswerLead>
+    );
+    expect(screen.getByText(/costs £10/)).toBeDefined();
+    expect(screen.getByText("Penalty: £100")).toBeDefined();
+  });
+});
+
+describe("SourcesBlock", () => {
+  it("lists each source with its verification date", () => {
+    render(
+      <SourcesBlock
+        sources={[{ label: "Official Gatwick drop-off page", url: "https://www.gatwickairport.com/x", verifiedAt: "2026-06-10" }]}
+        method="Fees read from the official airport page and re-checked on the date shown."
+      />
+    );
+    expect(screen.getByRole("link", { name: /Official Gatwick/ })).toBeDefined();
+    expect(screen.getByText(/2026-06-10/)).toBeDefined();
+  });
+});
