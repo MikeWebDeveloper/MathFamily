@@ -50,6 +50,15 @@ export default function HomePage() {
         </Link>
       </p>
 
+      <p className="flex flex-wrap gap-6">
+        <Link href="/airport-parking" className="text-base font-semibold text-brand-accent underline underline-offset-4">
+          Compare airport parking →
+        </Link>
+        <Link href="/airport-lounges" className="text-base font-semibold text-brand-accent underline underline-offset-4">
+          Lounge or membership? →
+        </Link>
+      </p>
+
       <EmailCaptureSlot
         formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
         hook="Get notified when any UK airport changes its drop-off fees"

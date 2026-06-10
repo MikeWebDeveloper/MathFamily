@@ -18,6 +18,8 @@ export const metadata: Metadata = {
 
 const NAV = [
   { label: "Drop-off charges", href: "/drop-off-charges" },
+  { label: "Parking", href: "/airport-parking" },
+  { label: "Lounges", href: "/airport-lounges" },
   { label: "Privacy", href: "/privacy" }
 ];
 

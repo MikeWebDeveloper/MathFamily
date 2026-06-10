@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import { loadAirports, loadDropOffDataset, type Airport, type DropOffRecord } from "@mathfamily/data";
+import { loadAirports, loadDropOffDataset, loadParkingDataset, loadLoungeDataset, type Airport, type DropOffRecord } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
 import { AnswerLead, Callout, FaqAccordion, FeeStat, FreshnessBadge, SourceCitation, SourcesBlock, EmailCaptureSlot } from "@mathfamily/ui";
@@ -37,6 +38,8 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
   const faqs = buildDropOffFaqs(record, airport.name);
   const trend = trendNote(record);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const hasParking = loadParkingDataset().records.some((r) => r.airportSlug === slug);
+  const hasLounge = loadLoungeDataset().records.some((r) => r.airportSlug === slug);
 
   return (
     <article className="space-y-8">
@@ -109,6 +112,28 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
         <h2 className="text-xl font-semibold text-ink">Frequently asked questions</h2>
         <FaqAccordion items={faqs} />
       </section>
+
+      {(hasParking || hasLounge) ? (
+        <section className="space-y-2">
+          <h2 className="text-lg font-semibold text-ink">More at this airport</h2>
+          <ul className="space-y-1 text-sm">
+            {hasParking ? (
+              <li>
+                <Link href={`/airport-parking/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
+                  Parking at {airport.name} compared →
+                </Link>
+              </li>
+            ) : null}
+            {hasLounge ? (
+              <li>
+                <Link href={`/airport-lounges/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
+                  Lounges at {airport.name} — prices &amp; Priority Pass →
+                </Link>
+              </li>
+            ) : null}
+          </ul>
+        </section>
+      ) : null}
 
       <EmailCaptureSlot
         formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
