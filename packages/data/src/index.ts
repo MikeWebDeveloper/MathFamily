@@ -12,3 +12,5 @@ export function loadAirports(): Airport[] {
 export function loadDropOffDataset(): DropOffDataset {
   return DropOffDatasetSchema.parse(dropOffJson);
 }
+
+export * from "./parking";

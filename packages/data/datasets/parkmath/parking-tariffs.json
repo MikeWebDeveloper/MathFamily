@@ -1,0 +1,36 @@
+{
+  "version": "0.1.0",
+  "lastUpdated": "2026-06-10",
+  "records": [
+    {
+      "airportSlug": "manchester",
+      "products": [
+        {
+          "productType": "gate",
+          "name": "Multi-Storey T1 (drive-up)",
+          "prices": [
+            { "days": 1, "totalPence": 4500 },
+            { "days": 3, "totalPence": 13500 },
+            { "days": 7, "totalPence": 31500 },
+            { "days": 14, "totalPence": 63000 }
+          ],
+          "snapshotDate": null,
+          "notes": null
+        },
+        {
+          "productType": "prebook",
+          "name": "JetParks 1 (pre-book)",
+          "prices": [
+            { "days": 3, "totalPence": 2400 },
+            { "days": 7, "totalPence": 4200 },
+            { "days": 14, "totalPence": 8000 }
+          ],
+          "snapshotDate": "2026-06-10",
+          "notes": "Quote snapshot from the official pre-booking portal"
+        }
+      ],
+      "sourceUrl": "https://www.manchesterairport.co.uk/parking/",
+      "verifiedAt": "2026-06-10"
+    }
+  ]
+}
