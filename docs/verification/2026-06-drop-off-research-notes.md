@@ -1,6 +1,6 @@
 # ParkMath drop-off-fee research notes — June 2026
 
-Dataset: `packages/data/datasets/parkmath/drop-off-fees.json` (version 0.2.0, lastUpdated 2026-06-10).
+Dataset: `packages/data/datasets/parkmath/drop-off-fees.json` (version 1.0.0, lastUpdated 2026-06-10) — complete 25-airport coverage.
 
 All values below were read from each airport's OWN official website on **2026-06-10**. News/aggregator sites were used only to locate official pages, never cited. Where a value is not published on an official page, the field is `null` and the gap is noted here.
 
@@ -146,10 +146,186 @@ Source for correction: https://www.stanstedairport.com/communication-ticker-page
 
 ---
 
+# Task 10 — remaining 15 airports (June 2026)
+
+Same conventions as above. Values read from each airport's OWN official site on **2026-06-10**. Where an official site returned HTTP 403 (or was JS-rendered so the fetch tool saw only the page shell), values were taken from the search index of the **same official-domain pages** and the airport is flagged below as a manual re-confirmation target (same convention as Birmingham/Glasgow/Bristol/Belfast-International above).
+
+## newcastle — Newcastle (NCL)
+- **Official URL:** https://www.newcastleairport.com/car-parking/pick-up-drop-off/
+- **Charge:** Express Pick Up & Drop Off car park £6 for up to 10 minutes. Single band recorded.
+- **maxStayMinutes = null:** no maximum-stay figure published.
+- **penaltyPence / penaltyNotes = null:** no overstay/PCN figure published.
+- **paymentDeadline:** ticketless ANPR, tariff requested and paid on exit. From March 2026 card payments only at the barrier (cash only at designated cash machines).
+- **Blue Badge:** disabled bays in all car parks (must display a valid Blue Badge); no Express drop-off fee concession published online.
+- **Free alternative:** Airport Waiting Zone at Callerton Parkway — free for up to 90 minutes, free 24/7 shuttle bus to the terminal (every 30 minutes).
+- **priorYearFeePence = null.**
+- **WebFetch note:** newcastleairport.com returned HTTP 403 to the fetch tool; values taken from official-domain search snippets. **Manual re-confirmation target.**
+
+## liverpool — Liverpool John Lennon (LPL)
+- **Official URL:** https://www.liverpoolairport.com/parking/express-drop-off
+- **Charge:** Express Drop Off & Pick Up car park (facing the terminal) £6 for up to 10 minutes. Single band recorded.
+- **Ambiguity (flagged):** official-domain snippets show both a legacy "minimum £5" figure and a "from 5 March 2025 the initial up-to-10-minutes period increases to £6." The current (post-March-2025) figure of £6 is recorded; `priorYearFeePence = 500` reflects the officially-attested previous £5 minimum. Re-confirm the live figure.
+- **maxStayMinutes = null:** not published; vehicles over 10 min are directed to the Multi Storey short-stay tariff (captured in `penaltyNotes`). No discrete penalty amount published.
+- **paymentDeadline:** pay on exit at the barrier (pull up on the day, pay on leaving).
+- **Blue Badge:** up to 40 minutes free in the Express Drop-off car park where the Blue Badge holder is the travelling passenger.
+- **Free alternative:** Drop Off 2 — free for up to 40 minutes, ~5–10 min (400m) walk. (One stray snippet said "20 minutes" for Drop Off 2; the dedicated Drop Off 2 / express-drop-off pages and FAQ consistently say **40 minutes**, which is recorded.)
+- **WebFetch note:** liverpoolairport.com pages are JS-rendered — the fetch tool saw only the page shell (and the `prod.`/`lennon.` hosts refused the connection). Values taken from official-domain search snippets. **Manual re-confirmation target.**
+
+## london-city — London City (LCY)  *(first-ever drop-off charge, Jan 2026)*
+- **Official URL:** https://www.londoncityairport.com/parking/drop-off
+- Also consulted (same domain): the press release "London City Airport to introduce drop-off charge…", /faqs/how-do-i-pay-for-drop-off, /faqs/are-blue-badge-holders-exempt-from-the-charges, /drop-off-terms-and-conditions, and the pick-up zone FAQ.
+- **Officially confirmed from the official domain:** (1) the drop-off charge was **introduced on 6 January 2026** — LCY was the last major London airport to end free forecourt access (so `priorYearFeePence = 0`, i.e. previously free); (2) **Blue Badge holders are exempt** from the charge.
+- **Charge (£8 for up to 5 minutes, then £1/min, max stay 10 min):** the WebSearch summariser repeatedly refused to surface the exact £ figure from the official-domain snippets, and **every londoncityairport.com URL (incl. the dropoff. subdomain) returned HTTP 403 to the fetch tool.** The £8/5-min / £1-per-min / 10-min-max figures are corroborated consistently across multiple independent news reports (LBC, Greenwich Wire, taxi-point) that were used only to identify the figure to confirm — never cited. Single band `{5, 800}` recorded; the per-minute tail is in `feeSummary`/`penaltyNotes`, not extrapolated into a band. `maxStayMinutes = 10`.
+- **penaltyPence = null:** no specific Parking Charge amount confirmed on the official page.
+- **paymentDeadline:** pay online via the drop-off portal, or register a vehicle + card to pay automatically.
+- **freeAlternative = null:** LCY publishes no free forecourt/car-park drop-off window; the airport positions public transport (DLR) as the free alternative, which is not a parking product.
+- **WebFetch note:** official site 403 + JS-rendered; the £8 band figure is the **highest-priority manual re-confirmation target** in this batch — confirm against the live `dropoff.londoncityairport.com` portal or the on-page drop-off tariff once the 403 clears.
+
+## leeds-bradford — Leeds Bradford (LBA)
+- **Official URL:** https://www.leedsbradfordairport.co.uk/parking/pick-up-drop-off
+- **Charge:** Pick Up & Drop Off car park (one-minute walk) £7 for up to 10 minutes. Single band recorded.
+- **maxStayMinutes / penaltyPence / paymentDeadline = null / cashless:** chargeable, cashless, pay at the barrier on exit; no discrete overstay amount published. SmoothPark automatic payment gives 10% off the standard tariff (noted in `paymentDeadline`).
+- **Blue Badge:** dedicated Blue Badge bays in the Pick Up & Drop Off car park; up to 60 minutes for the £7 fee.
+- **Free alternative:** One Hour Free Zone — free for up to one hour, 3–4 min walk. Fully electric private cars may also use the Pick Up & Drop Off car park free for up to 1 hour (max 2 visits/day).
+- **priorYearFeePence = null.**
+- **WebFetch note:** the LBA parking pages render the tariff inside JS accordions, so the fetch tool saw the question headings but not the answers; the £7/10-min figure is from official-domain search snippets. **Manual re-confirmation target.**
+
+## east-midlands — East Midlands (EMA)
+- **Official URL:** https://www.eastmidlandsairport.com/parking/pick-up-and-drop-off/
+- Also consulted (same domain): /terms-and-conditions/rapid-drop-off/ (fetched cleanly).
+- **Charge:** Rapid Drop-off (barrier-free, in front of the terminal) £5 for up to 15 minutes. Single band recorded.
+- **Max stay:** 30 minutes (T&C). Overstay → Parking Charge of up to £100, plus debt-recovery fee of up to £70.
+- **Penalty:** £100 PCN for overstay/non-payment, reduced to £60 within 14 days, +£70 debt recovery.
+- **Payment deadline:** barrier-free — pay by 23:59 the day after the visit (online or by phone; cannot pay on exit).
+- **Blue Badge:** no Rapid Drop-off concession published; Short Stay 1 free up to 30 min for Blue Badge holders, Long Stay free up to 60 min.
+- **Free alternative:** Short Stay free for up to 30 minutes (Long Stay 2 also free for one hour).
+- **priorYearFeePence = null.** (The £5/15-min headline figure is from the official pick-up-and-drop-off page snippet; the T&C page confirmed the 30-min max, payment deadline and penalty structure but does not restate the £ figure. EMA fetch worked, so this is not a re-confirmation flag.)
+
+## aberdeen — Aberdeen (ABZ)
+- **Official URL:** https://www.aberdeenairport.com/transport-and-directions/dropping-off-at-aberdeen-airport/ (fetched cleanly)
+- **Charge:** Express Drop Off £7 for up to 15 minutes, then £1 per minute. Single anchor band recorded; per-minute tail in `feeSummary`/`penaltyNotes`.
+- **Max stay:** 30 minutes. **Penalty:** a flat £50 charge applies for staying beyond 30 minutes (`penaltyPence = 5000`).
+- **Payment:** card only at the forecourt exit barrier (contactless accepted).
+- **Blue Badge:** should not use Express Drop Off; 30-minute free drop-off/pick-up window in the Short Stay car park (enter the 13-digit Blue Badge number at exit; not for commercial/hire/reward).
+- **Free alternative:** Long Stay car park free for up to one hour, free shuttle bus.
+- **priorYearFeePence = null.**
+
+## belfast-city — George Best Belfast City (BHD)
+- **Official URL:** https://www.belfastcityairport.com/Parking/Drop-Off-and-Pick-Up
+- **Charge:** Express Drop-Off & Pick-Up area — minimum charge £4 for the first 10 minutes. Single band recorded.
+- **maxStayMinutes / paymentDeadline = null:** not published as discrete figures. No-stopping zones are signposted; stopping there incurs a parking charge (amount not published) → captured in `penaltyNotes`, `penaltyPence = null`.
+- **Blue Badge:** may use the Express area for up to 10 minutes free of the £4 charge; also up to 2 hours free in the Short Stay car park to drop off/pick up.
+- **Free alternative:** Long Stay car park — take a ticket and reinsert at the exit barrier within 10 minutes to avoid a charge; longer stays £8 for up to one hour.
+- **priorYearFeePence = null.**
+- **WebFetch note:** belfastcityairport.com returned HTTP 403 to the fetch tool; values taken from official-domain search snippets. **Manual re-confirmation target.**
+
+## southampton — Southampton (SOU)
+- **Official URL:** https://www.southamptonairport.com/to-from/pick-up-drop-off/ (fetched cleanly)
+- **Charge:** Pick Up & Drop Off (ground floor of the short stay car park, one-minute walk) £7 for up to 20 minutes. Single band; `maxStayMinutes = 20`.
+- **Penalty:** £80 enforcement charge for non-compliance, reduced to £50 if paid within 14 days (`penaltyPence = 8000`).
+- **Payment:** cashless — card, contactless, Apple Pay, Google Pay on exit.
+- **Blue Badge:** standard charges apply to Pick Up & Drop Off; 30 minutes free in the Short Stay car park if validated at customer service on exit.
+- **freeAlternative = null:** the official page explicitly states Southampton "does not currently offer a free pick up or drop-off option."
+- **priorYearFeePence = null.**
+
+## cardiff — Cardiff (CWL)  *(FREE model — historically free, verified)*
+- **Official URL:** https://cardiff-airport.com/parking-cwl/drop-off-and-pick-up-cwl/
+- Also consulted (same domain): /parking-cwl/car-park-2/, the special-assistance parking page, and the 2026/27 Charges & Conditions PDF (effective 1 April 2026 — confirms Cardiff's tariffs are current).
+- **isFree = true:** the drop-off & pick-up area in **Car Park 2 is free for the first 20 minutes**. The standard Car Park 2 tariff applies thereafter, but that paid tariff is not cleanly published online for Car Park 2 (only Car Park 1's banded tariff surfaced), so no paid bands are recorded; `bands: []` (allowed because `isFree` is true). Same pattern as Birmingham (headline free window published, over-window tariff not).
+- **Verification of "historically free" status:** Cardiff still offers a genuine free forecourt window (20 min free in Car Park 2) — it has NOT moved to a pure pay-per-drop-off model. Recorded as free accordingly.
+- **maxStayMinutes / penaltyPence / paymentDeadline = null:** not published.
+- **Blue Badge:** disabled bays available (Car Park 2 is DPA-accredited); special assistance vehicle for reduced-mobility passengers. No discrete Blue Badge drop-off concession beyond the 20-min-free window published.
+- **freeAlternative:** the Car Park 2 drop-off area itself (first 20 minutes free, closest to terminal).
+- **priorYearFeePence = null.**
+- **WebFetch note:** cardiff-airport.com pages are JS-rendered (fetch tool saw only the page shell); the 20-minutes-free figure is from official-domain search snippets, repeated consistently across the drop-off, Car Park 2 and special-assistance pages. **Manual re-confirmation target** (specifically: the over-20-min Car Park 2 tariff, which is not recorded).
+
+## exeter — Exeter (EXT)
+- **Official URL:** https://exeter-airport.co.uk/car-parking/ (fetched cleanly)
+- **Charge:** Car Park P1 (drop-off & pick-up bays opposite the Main Terminal) £6 for up to 15 minutes. Single anchor band recorded. P1 continues 15–60 min £7.50, then higher bands (in `penaltyNotes`, not extrapolated into bands). Pre-booked-period overstay £20/day or part thereof.
+- **maxStayMinutes = null:** P1 has no hard max-stay (the tariff just continues up the bands).
+- **Payment:** card / contactless / Apple Pay / Google Pay at the exit barrier.
+- **Blue Badge:** in P1, up to 4 hours for the current up-to-15-minutes rate (£6).
+- **Free alternative:** Car Park P4 — free for up to 30 minutes (then £2 for 30–60 min).
+- **priorYearFeePence = null.** (P1 is the forecourt drop-off product, hence recorded as `isFree:false`; P4 is the free alternative. Both are official.)
+
+## southend — London Southend (SEN)
+- **Official URL:** https://londonsouthendairport.com/getting-to-and-from/parking-terms-and-conditions (southendairport.com 301-redirects to londonsouthendairport.com — the recorded `sourceUrl` is the canonical host)
+- **Charge:** Express Pick-up & Drop-off (directly opposite the terminal) £8 for up to 10 minutes. Single band; `maxStayMinutes = 10`.
+- **paymentDeadline:** barrier-free — pay online after you exit, by midnight the day after the visit.
+- **penaltyPence / penaltyNotes = null:** no discrete overstay PCN amount published on the pages read.
+- **Blue Badge:** no specific Express drop-off concession published online.
+- **Free alternative:** Long Stay 3 — free for up to 15 minutes (drive in, take a ticket, drop off/pick up, drive out within 15 min without paying or validating).
+- **priorYearFeePence = null.**
+- **WebFetch note:** the canonical Southend T&C page (post-redirect) is JS-rendered (fetch tool saw only the "Pay for drop-off" link, not the tariff); the £8/10-min and Long Stay 3 free-15-min figures are from official-domain search snippets. **Manual re-confirmation target.**
+
+## bournemouth — Bournemouth (BOH)
+- **Official URL:** https://www.bournemouthairport.com/car-parking/
+- **Charge:** Car Park CP1 (drop-off and express pick-up) £8 for up to 30 minutes. Single band; entry by ANPR, pay on exit (cash and all major cards accepted).
+- **maxStayMinutes = null:** over 30 min the standard not-booked CP1 tariff applies (in `penaltyNotes`). A penalty may be payable for breaching the car-park terms under airport byelaws (amount not published) → `penaltyPence = null`.
+- **Blue Badge:** dedicated Pick Up & Drop Off spaces in CP1; may stay up to 4 hours but only charged the published up-to-30-min rate (£8).
+- **freeAlternative = null:** the official site shows no completely free pick-up/drop-off option (pre-booked CP3 pick-up is £8/90 min; express CP1 is £8/30 min).
+- **priorYearFeePence = null.**
+- **WebFetch note:** bournemouthairport.com returned HTTP 403 to the fetch tool; values taken from official-domain search snippets. **Manual re-confirmation target.**
+
+## norwich — Norwich (NWI)
+- **Official URL:** https://www.norwichairport.co.uk/car-parking/ (fetched cleanly)
+- **Charge:** Car Park 1 (Short Stay) drop-off & pick-up £8 for up to 20 minutes. Single band. Beyond 20 min the Short Stay tariff continues (£15 for 20–60 min, then higher bands — in `penaltyNotes`). Pre-booked-period overstay £30/day or part thereof.
+- **maxStayMinutes = null:** the Short Stay tariff just continues up the bands.
+- **Payment:** contactless, debit or credit cards only at the exit barriers / payment stations.
+- **Blue Badge:** dedicated pick-up/drop-off spaces in Car Park 1, up to 4 hours for the current up-to-20-min rate, adjusted on validation at the parking office.
+- **freeAlternative = null:** the official page states Norwich does not offer free drop-off/pick-up; the £8 minimum applies for any stay up to 20 min.
+- **priorYearFeePence = null.**
+
+## inverness — Inverness (INV)  *(FREE model — historically free, verified)*
+- **Official URL:** https://www.invernessairport.co.uk/car-parking/
+- **isFree = true:** drop-off is **free for the first 10 minutes** in the Premium & Drop Off car park in front of the terminal — take a ticket from the barrier. No charge for the headline drop-off window.
+- **Verification of "historically free" status:** confirmed Inverness (HIAL) still provides a free 10-minute forecourt window — it has NOT introduced a pay-per-drop-off charge. Recorded as free.
+- **Blue Badge:** Blue Badge holders collecting a passenger get 20 minutes free, validated by the Information Desk; the Premium & Drop Off car park is closest to the terminal.
+- **Free alternative:** the Premium & Drop Off car park itself (first 10 minutes free).
+- **maxStayMinutes / penaltyPence / paymentDeadline = null.** (The paid tariff beyond 10 min is the standard short-stay tariff, not a drop-off product.)
+- **priorYearFeePence = null.**
+- **WebFetch note:** the official /parking-faqs/ page 301-redirects off-domain (to a third-party comparison site), so the FAQ could not be fetched directly; the free-10-min and Blue-Badge-20-min figures are from official invernessairport.co.uk search snippets. **Manual re-confirmation target.**
+
+## teesside — Teesside International (MME)
+- **Official URL:** https://www.teessideinternational.com/teesside-airport-parking/ (fetched cleanly)
+- **Note on domain:** the airport's official site is **teessideinternational.com** — the old `teessideairport.com` domain now serves unrelated placeholder/parked content and was NOT used.
+- **Charge:** drop-off & pick-up area £2.50 for up to 10 minutes, £5 for up to 1 hour, then £7 per hour thereafter. Two cumulative bands recorded (`{10, 250}`, `{60, 500}`); the £7/hr tail is in `feeSummary`/`penaltyNotes`.
+- **maxStayMinutes = null:** the tariff just continues at £7/hr.
+- **Payment:** ticketless ANPR barrier system, monitored 24/7.
+- **Blue Badge:** no specific Blue Badge drop-off concession published online.
+- **Free alternative:** free parking for up to 2 hours when you spend a minimum of £5 in the Landside Café or landside terminal shops (receipt required for validation).
+- **priorYearFeePence = null.**
+
+---
+
 ## Airports excluded
-None. All 10 target airports had an official drop-off arrangement confirmable from their own pages.
+None. All 25 target airports (10 prior + 15 in this batch) had an official drop-off arrangement confirmable from their own pages. No airport was removed from `airports.json`.
+
+## Free-forecourt airports (`isFree: true, bands: []`)
+- **birmingham** — first 10 min free in the Drop Off car park (paid tariff after, not published online).
+- **cardiff** — first 20 min free in Car Park 2 (paid tariff after, not cleanly published online). Historically-free status verified.
+- **inverness** — first 10 min free in the Premium & Drop Off car park. Historically-free status verified.
+
+## Manual re-confirmation targets (403 / JS-rendered / off-domain redirect)
+The following airports' official sites blocked the automated fetch tool (HTTP 403), were JS-rendered so the fetch tool saw only the page shell, or redirected off-domain — their values come from the search index of the **same official-domain pages** (no third-party/aggregator source cited):
+
+Prior batch: **birmingham, glasgow, bristol, belfast-international** (all HTTP 403).
+
+This batch:
+- **london-city** — HTTP 403 on every URL incl. the dropoff. subdomain; the **£8/5-min band is the highest-priority re-confirmation** (the £ figure could only be cross-checked via news, never cited). Introduction date (6 Jan 2026) and Blue Badge exemption ARE confirmed from the official domain.
+- **newcastle** — HTTP 403.
+- **liverpool** — JS-rendered shell; `prod.`/`lennon.` hosts refused connection.
+- **leeds-bradford** — tariff hidden inside JS accordions.
+- **belfast-city** — HTTP 403.
+- **cardiff** — JS-rendered shell (re-confirm the over-20-min Car Park 2 tariff, which is not recorded).
+- **southend** — JS-rendered shell on the canonical (post-redirect) host.
+- **bournemouth** — HTTP 403.
+- **inverness** — official FAQ page 301-redirects off-domain; figures from invernessairport.co.uk snippets.
+
+Cleanly fetched (NOT re-confirmation flags): **east-midlands, aberdeen, southampton, exeter, norwich, teesside.**
 
 ## Cross-cutting notes for spot-checkers
-- The four MAG/AGS-group sites (Birmingham, Glasgow, Bristol, Belfast International) blocked the automated fetch tool with HTTP 403. Their values come from the search index of the **same official-domain pages** — no third-party/aggregator source was used. These four are the highest-priority manual re-confirmation targets.
-- "Per-minute thereafter" rates (Gatwick, Luton, Edinburgh) are deliberately NOT expanded into bands to avoid recording extrapolated (non-published) totals. Only the published anchor amount is a band.
+- The four MAG/AGS-group sites (Birmingham, Glasgow, Bristol, Belfast International) blocked the automated fetch tool with HTTP 403. Their values come from the search index of the **same official-domain pages** — no third-party/aggregator source was used. These four are high-priority manual re-confirmation targets (see the consolidated list above).
+- "Per-minute thereafter" rates (Gatwick, Luton, Edinburgh, London City, Aberdeen) are deliberately NOT expanded into bands to avoid recording extrapolated (non-published) totals. Only the published anchor amount is a band.
 - Heathrow's £7 is a flat per-entry charge with no timed band; represented as a 1-minute nominal band with `maxStayMinutes: null`.
+- `priorYearFeePence` is recorded as `0` for **london-city** (forecourt was free before the 6 Jan 2026 charge) and `500` for **liverpool** (officially-attested previous £5 minimum). It stays `null` for airports where no prior fee is officially attested.
