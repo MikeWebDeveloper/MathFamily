@@ -1,0 +1,214 @@
+[
+  {
+    "lens": "Mobile-first typography & responsive scale",
+    "ideas": [
+      {
+        "title": "Add a fluid clamp() type scale as @theme tokens (the foundational fix)",
+        "what": "Introduce a small set of clamp()-based font-size tokens in packages/ui/src/tokens.css so every heading and big number scales with the viewport instead of being a fixed Tailwind step. This is the root-cause fix: the giant numbers stop dominating the 390px fold and only reach showpiece size on wider screens.",
+        "why": "Today only the home h1 has a breakpoint; AnswerCard (60px), FeeStat (48px) and the calc result (36px) are hard-fixed, which is exactly why the fold 'crashes' on mobile. A fluid scale is how premium fintech (Monzo, Wise, Stripe) keep one number heroic on desktop yet calm on a phone \u2014 the number stays the hero, it just breathes. Token-driven means one edit governs both ParkMath and RoamMath via the shared @theme.",
+        "how": "In tokens.css @theme add, mapping to Tailwind's --text-* so existing classes inherit the fluid behaviour: --text-display: clamp(2.25rem, 1.6rem + 3.2vw, 3.75rem) /*36->60 AnswerCard*/; --text-stat: clamp(2rem, 1.5rem + 2.5vw, 3rem) /*32->48 FeeStat*/; --text-h1: clamp(1.875rem, 1.5rem + 1.9vw, 2.75rem) /*30->44*/; --text-h2: clamp(1.125rem, 1rem + 0.6vw, 1.375rem) /*18->22*/; --text-lead: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem) /*17->20 AnswerLead/intro*/. Pair each with a --text-*--line-height. Keep the 12/14/16 body steps static. Document the scale at the top of tokens.css next to the existing Typography comment.",
+        "effort": "M",
+        "priority": "high"
+      },
+      {
+        "title": "Right-size the per-page hero number (AnswerCard) and reserve 60px for desktop only",
+        "what": "Change AnswerCard's value from the fixed text-6xl (60px) to the fluid display token so it renders ~36-40px on a 390px fold and grows to 60px on desktop. Also reduce the card padding on mobile so the number has room.",
+        "why": "AnswerCard is the single biggest cause of the 'too big' feeling \u2014 60px bold mono inside p-7 leaves barely 330px of usable width, so multi-token answers ('Up to \u00a325 for 30 min') wrap and the showpiece looks broken (visible on pm-dropoff-heathrow__m-full). The 60px showpiece IS justified \u2014 but only when the column is wide enough to honour it. This keeps the 'one big number' brand move intact while making it feel engineered rather than oversized.",
+        "how": "In packages/ui/src/fee-stat? no \u2014 packages/ui/src/answer-card.tsx line 25: replace text-6xl with a class bound to the display token (e.g. text-[length:var(--text-display)] or a tailwind text-display alias) and keep leading-none + font-bold + mf-num. Line 20: change p-7 to p-5 sm:p-7. The value stays IBM Plex Mono tabular via mf-num. Net: 36px @390px, 60px @>=1024px.",
+        "effort": "S",
+        "priority": "high"
+      },
+      {
+        "title": "Establish a true heading hierarchy: stronger h1, calmer-but-consistent h2",
+        "what": "Apply the fluid h1/h2 tokens across all page headings so h1 lands ~30px on mobile (down from 36px) and h2 stays a controlled 18->22px, with a deliberate size ratio between them. Standardise the currently ad-hoc mix of text-4xl/text-3xl/text-xl headings.",
+        "why": "Right now h1 is 36-48px and every h2 is a flat 20px, so on mobile the h1 swamps the fold while h2s are weakly differentiated from 16px body \u2014 hierarchy reads muddy, which undercuts the 'precise instrument' brand. A tightened ratio (\u22481.5x h1:h2) reads as designed and premium, and a smaller mobile h1 frees vertical space so the answer reaches the fold sooner (a core UX rule in DESIGN.md: answer in first viewport).",
+        "how": "Replace text-3xl on the eight detail/list h1s (drop-off-charges/[airport]/page.tsx:56, airport-parking/[airport]/page.tsx:59, lounges, roaming/[country]/page.tsx:102, baggage, etc.) and the home text-4xl sm:text-5xl (page.tsx:41) with a single shared text-h1 utility (tracking-tight, leading-[1.1]). Replace every text-xl h2 (parking:117, drop-off:123/132, roaming:154, etc.) with text-h2 (font-semibold, leading-snug). Optionally extract a Heading component in packages/ui to enforce it.",
+        "effort": "M",
+        "priority": "high"
+      },
+      {
+        "title": "Tighten line-height and tracking on display/heading type",
+        "what": "Set explicit, tighter leading and slight negative tracking on the large tokens so big type reads as one compact unit rather than airy stacked lines; loosen tracking very slightly on the mono numbers for legibility.",
+        "why": "Large IBM Plex Sans at default leading looks loose and consumes extra fold height \u2014 part of why headings feel like they 'crash' the layout. Tight leading on display sizes is a hallmark of premium type (Stripe/Linear use ~1.05-1.1 on big heads). Conversely IBM Plex Mono at display size benefits from a hair of positive tracking so the \u00a3 + digits don't feel cramped \u2014 reinforcing the 'measured data' read the brief asks for.",
+        "how": "Display/stat tokens: line-height 1.0-1.05, letter-spacing -0.01em to -0.02em (h1 keeps existing tracking-tight; add leading-[1.1]). h2: leading-snug (1.3), tracking-normal. mono hero numbers (mf-num at display size): letter-spacing 0.01em \u2014 add a .mf-num-display modifier rather than touching base .mf-num (used in tables where 0 tracking + tabular-nums must stay). The home intro p (page.tsx:44 text-lg) drop to text-lead token with leading-relaxed.",
+        "effort": "S",
+        "priority": "medium"
+      },
+      {
+        "title": "Differentiate FeeStat (supporting) from AnswerCard (hero) by size, not just colour",
+        "what": "Give the three-up FeeStat numbers their own smaller fluid token (~32->48px) that is deliberately a step below the AnswerCard display token, so the page has a clear two-tier numeric hierarchy: one hero number, three supporting stats.",
+        "why": "Currently FeeStat (48px) and AnswerCard (60px) are close in size and both navy, so on mobile (where FeeStats stack full-width) three 48px numbers in a row read as three competing heroes \u2014 the eye doesn't know where to land. Defining the giant number as justified ONLY for the single AnswerCard, and restraining the supporting trio, is the 'when is the giant number justified vs restrained' rule the lens asks for. It also recovers fold space on the home grid (pm-home).",
+        "how": "packages/ui/src/fee-stat.tsx line 9: swap text-5xl for the text-stat token (clamp 32->48). Keep AnswerCard on text-display (clamp 36->60). Result: a consistent ~1.25x ratio between hero and supporting numbers at every width. Tighten FeeStat label (line 8) to text-[11px] and note (line 10) to text-xs for a denser, instrument-panel stat block.",
+        "effort": "S",
+        "priority": "medium"
+      },
+      {
+        "title": "Right-size the calculator result and align it to the same numeric scale",
+        "what": "Bind the live calculator output (DropOffCalculator) to the stat token so it matches the FeeStat tier and scales down on mobile, instead of a fixed 36px that sits awkwardly between body and hero.",
+        "why": "The calculator is the interactive payoff; its result currently jumps to a fixed text-4xl (36px) brand-coloured number that doesn't relate to either the AnswerCard hero or the FeeStat trio, so the numeric system feels inconsistent. Aligning it to the supporting-stat tier makes the whole page feel like one coherent measuring instrument \u2014 and the fluid token keeps it from crowding the slider UI on a 390px screen.",
+        "how": "apps/parkmath/components/drop-off-calculator.tsx line 44: replace text-4xl with the text-stat token (or a slightly smaller text-h1 token if it should read below FeeStat), keep font-bold text-brand and add mf-num so the count/crossfade animation and tabular figures stay consistent with the rest of the numeric system. Verify aria-live result still fits one line at 390px.",
+        "effort": "S",
+        "priority": "medium"
+      },
+      {
+        "title": "Codify the scale in DESIGN.md and a Storybook/visual type-specimen guardrail",
+        "what": "Update the Typography section of DESIGN.md to replace the static '12\u00b714\u00b716\u00b720\u00b724\u00b732\u00b748\u00b764' ladder with the documented fluid token scale (min/max per role), and add a one-page type-specimen route or test that renders every token at 390/768/1280 so regressions are caught.",
+        "why": "The brief still prescribes a fixed 48-64px headline fee, which is precisely the spec that produced the too-big mobile result; documenting the fluid roles makes the new system the source of truth and prevents the next contributor from hard-coding text-6xl again. A visible specimen is how mature design systems (Stripe, GOV.UK) keep type disciplined \u2014 and it directly serves this brand's 'calm, precise instrument' promise.",
+        "how": "Edit DESIGN.md Typography bullets to list roles: display 36->60, stat 32->48, h1 30->44, h2 18->22, lead 17->20, body 16, small 14/12 \u2014 each with its clamp. Add apps/parkmath/app/_type-specimen/page.tsx (dev-only) or a Vitest+jsdom snapshot in packages/ui/tests asserting computed font-size at simulated widths. Note: per the user's TB4 memory, do NOT add new vitest/vite config files on this volume \u2014 extend the existing test setup rather than creating one.",
+        "effort": "M",
+        "priority": "low"
+      }
+    ]
+  },
+  {
+    "lens": "Premium visual finish & micro-interaction polish \u2014 the next tier of \"stunning but trustworthy fintech,\" built directly on the existing navy/teal system (conic shining edge, ambient blobs+grid, count-up numbers, scroll reveals, =Math glyph). Every idea is tied to a Stripe/Linear/Monzo/Revolut reference and most do double duty: raise perceived quality AND shrink the oversized mobile type that currently eats the first fold.",
+    "ideas": [
+      {
+        "title": "Fluid type scale \u2014 kill the mobile-too-big fold with one clamp() pass",
+        "what": "Replace the fixed jumps (hero h1 text-4xl\u2192sm:text-5xl, FeeStat text-5xl, AnswerCard text-6xl) with viewport-aware clamp() values so the headline and the big mono number scale smoothly between 375px and desktop instead of staying desktop-sized on a phone. On the pm-home fold the h1 currently consumes the entire first viewport above the search field; on Heathrow the \u00a37 AnswerCard plus headline crowd the top. Fluid scaling buys back ~1\u20131.5 lines of vertical space on mobile and makes the answer + search both visible on first paint.",
+        "why": "This is the single highest-leverage fix for the 96%-mobile audience: it directly solves 'too big on mobile' while reading as deliberate, engineered restraint \u2014 the exact Stripe/Linear move where headline size feels tuned to the device rather than shrunk by media queries. The answer-first promise in DESIGN.md ('answer is always in the first viewport, before the calculator') is only half-true on a phone today; this makes it literally true.",
+        "how": "Add design tokens to tokens.css: --step-hero: clamp(1.75rem, 1.1rem + 4.2vw, 3rem); --step-answer-num: clamp(2.5rem, 1.6rem + 6vw, 3.75rem); --step-feestat-num: clamp(2rem, 1.4rem + 4vw, 3rem). Swap the hero h1 (apps/parkmath/app/page.tsx:41, mirror in roammath) from 'text-4xl ... sm:text-5xl' to style={{fontSize:'var(--step-hero)'}}; change AnswerCard's 'text-6xl' (answer-card.tsx:25) and FeeStat's 'text-5xl' (fee-stat.tsx:9) to the answer/feestat tokens. Keep IBM Plex Mono tabular-nums so nothing reflows. Tighten hero block top padding on mobile (py-* ) in the same pass. Pure CSS, no JS, reduced-motion-safe by construction.",
+        "effort": "S",
+        "priority": "high"
+      },
+      {
+        "title": "Hero count-up + odometer on the AnswerCard's headline number",
+        "what": "On first paint of an airport/country page, animate the showpiece number in the AnswerCard from a neutral start to its final value (\u00a37, \u20ac37.65, etc.) with the existing 250ms ease-out count-up, and give each mono digit a tiny vertical 'odometer' settle. Today AnimatedNumber only fires when the calculator slider changes \u2014 the hero number itself just appears statically. Letting the page's single biggest number tick up once is the 'wow on first paint' moment.",
+        "why": "Monzo and Revolut both animate a balance/amount counting up on load \u2014 it signals 'this is a live, computed figure, not marketing copy,' which is precisely ParkMath's trust thesis ('measured data, not marketing'). It costs nothing in layout (tabular figures), reads as fintech-serious rather than salesy, and reinforces the brand's signature monospaced-number move with motion instead of just typography.",
+        "how": "Reuse AnimatedNumber (packages/ui/src/animated-number.tsx) inside AnswerCard for the value line, seeded from a from-value on mount (e.g. start at 0 or at a rounded-down anchor) via a one-shot effect, gated so it only runs once per mount and is instant under prefers-reduced-motion (the component already checks matchMedia). For the per-digit odometer, wrap each glyph in a span and add a keyframe mf-digit-settle (translateY 0.12em\u21920 + opacity) staggered ~20ms via --mf-delay, added to tokens.css next to mf-rise-in. Trigger only on the AnswerCard (one per page) to stay restrained; FeeStat trio stays static.",
+        "effort": "M",
+        "priority": "high"
+      },
+      {
+        "title": "Iconography system \u2014 a 16px stroke icon set replacing bare-text trust rows",
+        "what": "Introduce a small, consistent line-icon set (1.5px stroke, currentColor, 16px on a 20px frame) for the recurring semantic moments: penalty/warning, free-alternative (the trust move), time-limit clock, sources/shield-tick, savings, 'charges nothing' tick. Right now those rows (Heathrow's 'Penalty if exceeded', 'Free alternative', country-page caveat chips) are pure text or rely on colour alone; the FeeGrid 'Free' cell is just a word. Icons add scannability and finish without adding noise.",
+        "why": "Stripe and Linear both lean on a tight, single-weight stroke-icon vocabulary that makes dense data scannable and unmistakably premium \u2014 and DESIGN.md's own a11y rule ('colour is never the only signal') wants a non-colour cue beside the green/amber states. A coherent icon set is the cheapest way to lift a text-heavy data page from 'functional' to 'crafted' while improving accessibility, not decorating for its own sake.",
+        "how": "Extend the existing stroke-art convention in line-glyphs.tsx (aria-hidden, currentColor, stroke-based) with a Icon component + ~8 paths; export from packages/ui/src/index.ts. Render at text color so they inherit positive/warning/ink-muted from the parent. Wire into Callout, CaveatChip, the penalty section, and the FeeGrid free-alternative cell. Pair every icon with its existing text label (never icon-only) to keep the colour-plus-word rule. Add a one-time mf-tick-style draw-on for the shield-tick in SourcesBlock to echo the verified-pill checkmark.",
+        "effort": "M",
+        "priority": "medium"
+      },
+      {
+        "title": "Sticky mini-header condense + scroll-progress hairline as a 'data instrument' rail",
+        "what": "Tie the existing translucent header and ScrollProgress into one coordinated scroll behaviour: on scroll-down the header condenses (logo + page title shrink, gains the on-scroll shadow), and the scroll-progress hairline reads as a thin brand-accent rail seated flush under the header rather than a separate bar. On long airport/country pages this reclaims vertical space (mobile win) and gives a precise, instrument-panel feel.",
+        "why": "Linear's condensing header and Stripe-docs' progress rail both make long pages feel navigable and 'engineered.' For a stressed mobile reader scrolling a Heathrow or Spain page, a header that gets out of the way (more answer visible) plus a quiet progress cue is calm, not flashy \u2014 squarely on the trust-first side while clearly raising the finish.",
+        "how": "ScrollProgress (packages/ui/src/scroll-progress.tsx) already exists; have SiteHeader subscribe to the same scroll position (IntersectionObserver sentinel or a shared scroll listener) and toggle a data-condensed attribute that drops header height and logo scale via transform (180ms ease-out, matching the 180ms in tokens.css). Render the progress bar as a 2px var(--color-brand-accent) line anchored to the header's bottom edge. All transform/opacity; under prefers-reduced-motion the header snaps between states with no transition (mirror the existing reduced-motion block).",
+        "effort": "M",
+        "priority": "medium"
+      },
+      {
+        "title": "Skeleton + crossfade polish for the airport-search and calculator islands",
+        "what": "Give the two interactive moments real loading/empty-state finish: (1) the AirportSearch results render as shimmer skeleton rows (mono-width placeholders) before resolving and crossfade in; (2) the calculator island shows a tasteful empty/at-rest state ('Drag to see your cost') and crossfades outputs on slider change instead of hard-swapping. Today the search jumps and the calculator just recomputes.",
+        "why": "Revolut and Monzo treat the micro-moment between intent and result as a place to feel premium \u2014 a brief, calm skeleton reads as 'the system is working precisely' rather than janky. It removes the only places on these pages that currently feel abrupt, and a designed empty-state turns the calculator from a bare control into an inviting, self-explaining instrument.",
+        "how": "Add a Skeleton primitive to packages/ui (rounded-card, mf-num-width bars, a subtle shimmer keyframe added to tokens.css, paused under reduced-motion). Use it in apps/parkmath/components/airport-search.tsx for the results list; crossfade resolved rows with mf-fade-in. For the calculator, wrap the AnimatedNumber output in a fixed-min-height container with an at-rest copy line, and apply a 150ms opacity crossfade on value change (transform-free, so tabular figures never shift). Both degrade to instant under prefers-reduced-motion.",
+        "effort": "M",
+        "priority": "medium"
+      },
+      {
+        "title": "Elevation + edge-light refinement: a true 3-tier surface system and a winner 'glow' that earns its place",
+        "what": "Tighten the depth language so the page reads in clear layers instead of a flat field of bordered boxes: standardise resting/raised/hero shadows, add a barely-there top inner-highlight to white cards (echoing the AnswerCard's existing from-white/10 cap), and reserve a single brand-tinted outer glow for the genuine 'winner' (cheapest option / crowned parking pre-book) so the eye lands on it instantly. Pair with a 2px hover-lift on grid cards and the FeeGrid winner row.",
+        "why": "Stripe's surfaces are famous for looking lit-from-above via a 1px inner highlight + soft two-stop shadow \u2014 it's what separates 'premium card' from 'div with border.' DESIGN.md already asks for three elevation tiers and a winner ring; this operationalises it so depth is systematic and the one glowing element (the recommendation) does real informational work rather than decorating. Restraint is the point: exactly one glow per page.",
+        "how": "In tokens.css, formalise --shadow-card / --shadow-raised / --shadow-hero (present) and add --highlight-inner: inset 0 1px 0 rgb(255 255 255 / 0.6) for white cards; add a .mf-card utility bundling radius-card + shadow-card + highlight-inner + the existing mf-edge hairline. Add .mf-winner-glow: box-shadow combining shadow-raised + 0 0 0 1px var(--color-brand-accent)/30 + a soft accent-tinted outer glow, applied only to the crowned card and reusing the existing mf-winner-row hook in fee-grid.tsx. Hover-lift via translateY(-2px) + shadow-raised (180ms ease-out, already the system tempo). RoamMath inherits automatically through the teal --color-brand-accent override.",
+        "effort": "M",
+        "priority": "high"
+      }
+    ]
+  },
+  {
+    "lens": "Premium mobile data-presentation patterns for the Math-family calculator/comparison product: how best-in-class mobile fintech/calculator apps present (a) dense comparison data and (b) one hero answer on a 390px screen \u2014 and the specific pattern each ParkMath/RoamMath table and calculator should adopt. Grounded in the live build: all four master tables (drop-off, parking, baggage, roaming) render through one shared FeeGrid (packages/ui/src/fee-grid.tsx) that keeps the full desktop column-set inside overflow-x-auto, so PENALTY/FREE-ALTERNATIVE/VERIFIED clip off the right edge on mobile and long text cells wrap to 4-6 lines. A working segmented control (parking duration toggle) and a sticky MiniAnswerBar (IntersectionObserver on #mf-answer-anchor) already exist as proven primitives to build on.",
+    "ideas": [
+      {
+        "title": "Make FeeGrid responsive: stacked card-rows on mobile, real table on desktop (the single highest-leverage fix)",
+        "what": "Replace the one-size table inside overflow-x-auto with a CSS-only responsive split: below ~640px every row renders as a self-contained card (row-header airport/airline as the card title, the remaining columns as label\u2192value pairs), and at md+ it reverts to the current <table>. One change to packages/ui/src/fee-grid.tsx fixes drop-off, parking, baggage AND roaming tables at once because they all consume this component.",
+        "why": "This is the root cause of the mobile-too-big problem and the biggest premium win available. The clipped PENALTY/FREE-ALTERNATIVE/VERIFIED columns and 6-line wrapping cells (e.g. parking's 'Park & Ride (formerly Long Stay) \u2014 drive-up') are the most un-fintech thing on the site \u2014 Monzo, Wise and Revolut never make a phone user scroll sideways through a clipped grid. Card-rows are the established mobile pattern (NerdWallet, MoneySavingExpert comparison lists, Apple's 'compare' pages) and let every datum breathe with whitespace the brief already calls for.",
+        "how": "In FeeGrid, render two trees from the same columns/rows props. Desktop: keep the existing <table> wrapped in `hidden md:block`. Mobile (`md:hidden`): map rows \u2192 an array of `rounded-card mf-edge bg-white` cards with `var(--shadow-card)`; card head = cells[0] (the Link) at text-base font-semibold text-ink; body = a 2-col definition list where left = columns[j] (uppercase text-xs tracking-wider text-ink-muted) and right = cells[j] in `mf-num text-ink` right-aligned. Skip pairs whose value is '\u2014' so free airports render a clean short card. Map `highlightRow` to a brand-accent ring (`ring-1 ring-brand-accent/40` + tinted surface) and a small 'Cheapest'/'Most expensive' chip. Stagger-reveal the cards via the existing scroll-reveal at 30-50ms, reduced-motion safe. No JS, no horizontal scroll, works with JS off.",
+        "effort": "M",
+        "priority": "high"
+      },
+      {
+        "title": "Add a sticky 'sort + key column' segmented control above the comparison list",
+        "what": "Put a slim segmented control at the top of each master table that switches the single emphasised metric and re-sorts the card-rows: drop-off = Fee | Time limit | Penalty; parking = price by duration (reuse the existing toggle); baggage = Cabin | Checked; roaming = Cost per day | Total per trip. The chosen metric becomes the big mono value on each card; the rest stay as secondary label\u2192value pairs.",
+        "why": "Dense comparison data on mobile works best when you show ONE number big and let the user pick which number that is \u2014 this is exactly how Skyscanner, Trainline and Revolut's plan-compare screens behave. It directly converts 'too many columns' into 'one answer the user chose', which is the brand's whole promise (one trustworthy number fast). It also makes the table feel like an instrument the reader drives, raising the premium/fintech feel.",
+        "how": "Build a shared `SegmentedControl` in packages/ui (44px tall pills, `rounded-card` track, active pill = brand surface + `--shadow-card`, inactive = transparent; tabular labels). Drive it client-side over the same records FeeGrid already gets; sort + pick the highlighted column in state. Reuse the parking duration toggle's existing visual language so the family looks consistent. Keep a no-JS default sort (current 'highest fee first') so the SSR answer is intact per the brief's JS-off rule. Make it `sticky top-[header]` with the translucent-on-scroll treatment already used by the site header.",
+        "effort": "M",
+        "priority": "high"
+      },
+      {
+        "title": "Bottom-sheet row detail instead of full navigation for a quick peek",
+        "what": "Tapping a comparison card opens a bottom sheet with the full breakdown (all columns + the free-alternative callout + verified date + 'Open full page \u2192'), rather than only the current hard navigation. The hero number sits at the top of the sheet; secondary data and the source link sit below.",
+        "why": "Bottom sheets are the signature mobile-fintech detail pattern (Monzo transaction detail, Revolut, Apple Wallet) \u2014 they let a user compare 3-4 airports in seconds without losing their place in the list, which a full page navigation forbids. It turns the comparison page into a fast triage surface while keeping the rich detail page as the canonical destination, and it feels distinctly more premium than a flat list of links.",
+        "how": "Add a `<RowSheet>` to packages/ui using a <dialog> element (native, focusable, ESC/scrim close, \u226544px targets) animated with translate-y + opacity \u2264300ms, disabled under prefers-reduced-motion. Progressive enhancement: each card is still a real <a> to the detail page; a client effect intercepts the tap to open the sheet, so JS-off users get plain navigation. Populate from the same record. Include the green Verified pill and a dotted-underline source link inside the sheet to keep trust signals first-class.",
+        "effort": "M",
+        "priority": "medium"
+      },
+      {
+        "title": "Promote the calculator answer into a live sticky FeeStat that updates as you drag",
+        "what": "On the calculator pages (drop-off minutes slider, parking duration, lounge visits/year, roaming days), bind the existing MiniAnswerBar \u2014 or a calculator-specific variant \u2014 to the live calculated number so the current cost stays pinned at the bottom of the screen while the user scrubs the slider and reads the warnings/FAQ below.",
+        "why": "The brief's #1 rule is 'the answer is always the hero, one big number'. On mobile the FeeStat scrolls away the moment the user touches the slider or reads the penalty section, so the number they're tuning leaves the screen \u2014 the opposite of the intent. Keeping the live figure pinned (like a mortgage/loan calculator's sticky monthly-payment bar in Monzo/Nationwide apps) is the canonical premium calculator pattern and costs almost nothing because the sticky-bar infra already exists.",
+        "how": "MiniAnswerBar already shows/hides via IntersectionObserver on #mf-answer-anchor. Add an optional `live` slot so calculator pages can feed it the current output string (reuse AnimatedNumber for the count/crossfade the brief specifies, transform/opacity only, reduced-motion \u2192 instant). Anchor it to the calculator island instead of the AnswerCard on those pages. Keep the mono tabular figure + green \u2713 verified styling it already has.",
+        "effort": "S",
+        "priority": "high"
+      },
+      {
+        "title": "Standardise every in-page mini comparison as horizontally-scrollable snap cards (not a squeezed sub-table)",
+        "what": "The per-network roaming table on the Spain detail page and the gate-vs-pre-book row on parking detail currently embed a mini multi-column table that overflows worse than the master tables. Replace these embedded comparisons with a horizontal swipe-snap rail of 2-4 option cards (one card per network/option), each showing provider, the headline cost big, and 'saves \u00a3X / costs \u00a3X more vs cheapest'.",
+        "why": "For a small fixed set of options (4 networks, 2 parking modes, 3 lounge tiers) a swipeable card rail reads as deliberate and premium \u2014 it's how Apple Card, Wise and N26 present plan/option choices on mobile \u2014 whereas a 4-wide table on 390px is a guaranteed overflow. Swipe-snap also signals 'there's more to the right', solving the discoverability problem the current silent horizontal scroll has.",
+        "how": "Add `<OptionRail>` to packages/ui: a flex row with `overflow-x-auto snap-x snap-mandatory` and `[scrollbar-width:none]`, each child a `snap-start` `rounded-card mf-edge` card ~80% viewport width so the next peeks in. Crown the cheapest with the brand-accent ring + 'Cheapest' chip the brief specifies, and render the savings string explicitly (colour is never the only signal). Pair with 2-3 dot indicators. Use it on roaming/[country] and airport-parking/[airport] detail pages. Reduced-motion: snap still works, no auto-scroll.",
+        "effort": "M",
+        "priority": "medium"
+      },
+      {
+        "title": "Tighten table density tokens for mobile: condensed padding, hairline zebra, and abbreviated unit labels",
+        "what": "Even after the card-row split, audit the mobile data presentation for premium density: reduce the giant px-5 py-3.5 cell padding to a mobile-specific scale, keep the zebra/row-hover only on desktop, right-size the mono figures so \u00a3429.80 and \u00a38.50 align on the decimal, and abbreviate verbose values ('Park & Ride (formerly Long Stay) \u2014 drive-up' \u2192 'Park & Ride \u00b7 drive-up' with the full string in the sheet/detail).",
+        "why": "The current cells inherit desktop padding and full prose, which is what forces the 6-line wraps and the oversized feel. Premium fintech tables (Wise fee tables, ONS data tables) are dense but legible \u2014 decimal-aligned tabular figures, terse labels, generous but not wasteful spacing. This is the polish layer that makes the whole thing read as 'a calm financial instrument' rather than a stretched desktop grid.",
+        "how": "Add a `--space-cell-y/--space-cell-x` token pair with smaller mobile values; apply `text-right tabular-nums` and a fixed decimal column so prices line up (the mf-num/IBM Plex Mono already gives tabular figures). Introduce a `compactLabel` mapping in the parking/roaming data layer for the long mode names, keeping the verbose version for the detail page and bottom sheet. Move zebra + hover-ring styles behind `md:` so mobile cards stay clean. Verify contrast \u22654.5:1 and 44px tap targets per the brief.",
+        "effort": "S",
+        "priority": "medium"
+      }
+    ]
+  },
+  {
+    "lens": "Competitive benchmark direction",
+    "ideas": [
+      {
+        "title": "Answer Card, number first",
+        "what": "Pin a dense Answer Card under the H1 with the mono figure, a verdict, a green Verified pill, and the key caveat as tinted chips.",
+        "why": "Opposite of Omni and MSE; it fixes the buried answer and reclaims fold height.",
+        "how": "Mono figure, brand left rule, green pill, warning tint chips, and demote the navy FeeStat.",
+        "effort": "M",
+        "priority": "high"
+      },
+      {
+        "title": "FeeStat one strip",
+        "what": "Merge the three full screen navy stat cards into one three up strip with dividers.",
+        "why": "Fixes mobile too big and saves two viewport heights.",
+        "how": "Three columns, navy container, mono numbers, hairlines, and a 44px minimum height.",
+        "effort": "S",
+        "priority": "high"
+      },
+      {
+        "title": "Monzo grade sticky header",
+        "what": "Fix the broken wrapping header with a clean sticky translucent bar: the Math wordmark, a scrollable pill nav, a scroll shadow, and a thin progress line.",
+        "why": "It is the first thing seen and least polished; the collision undercuts the calm instrument promise, and the fix lifts every page cheaply.",
+        "how": "On mobile show only the Math lockup; backdrop blur, hairline border, an observer scroll shadow, and a thin accent progress bar off under reduced motion.",
+        "effort": "M",
+        "priority": "high"
+      },
+      {
+        "title": "SVG flags plus IATA tiles",
+        "what": "Replace RoamMath emoji flags with crisp SVG flag chips and a picker, and give ParkMath airport cards an IATA monogram tile or a tiny UK dot map.",
+        "why": "Real SVG beats reseller stock photos and the eSIM flag grids, and the anchors cut perceived density on long mobile lists.",
+        "how": "Add an SVG flag set keyed by ISO code in the dataset; ParkMath gets a mono IATA tile or an inline UK SVG with a dot from the dataset lat long. Lazy, no shift.",
+        "effort": "M",
+        "priority": "medium"
+      },
+      {
+        "title": "Saves verdict module",
+        "what": "Promote the quiet savings callout to a branded module with an icon, a bold mono Saves figure, a plain English winner sentence, and a one time reveal.",
+        "why": "It counters dishonest reseller percent off claims with a sourced figure and becomes a memorable family signature like Monzo Pots.",
+        "how": "A tinted card, green on ParkMath and teal on RoamMath, the Saves amount in mono, revealing over 240ms once and instant under reduced motion. Figure from the dataset.",
+        "effort": "S",
+        "priority": "high"
+      }
+    ]
+  }
+]
