@@ -18,3 +18,5 @@ export * from "./country-flag";
 export * from "./answer-card";
 export * from "./verified-stamp";
 export * from "./caveat-chip";
+export * from "./mini-answer-bar";
+export * from "./animated-number";
