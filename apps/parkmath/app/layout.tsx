@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
-import { ScrollProgress, ScrollReveal, SiteFooter, SiteHeader } from "@mathfamily/ui";
+import { AmbientBackdrop, ScrollProgress, ScrollReveal, SiteFooter, SiteHeader } from "@mathfamily/ui";
 import "./globals.css";
 
 const plexSans = IBM_Plex_Sans({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-plex-sans" });
@@ -27,10 +27,14 @@ const NAV = [
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en-GB" className={`${plexSans.variable} ${plexMono.variable}`}>
-      <body className="bg-white font-sans text-ink antialiased">
+      <body className="relative bg-white font-sans text-ink antialiased">
+        <noscript>
+          <style>{`.mf-reveal{opacity:1;transform:none;transition:none}`}</style>
+        </noscript>
         <ScrollProgress />
         <ScrollReveal />
-        <SiteHeader brandName="ParkMath" links={NAV} />
+        <AmbientBackdrop />
+        <SiteHeader brandName="ParkMath" brandPrefix="Park" links={NAV} />
         <main className="mx-auto max-w-5xl px-4 py-8">{children}</main>
         <SiteFooter brandName="ParkMath" links={NAV} />
         <Analytics />

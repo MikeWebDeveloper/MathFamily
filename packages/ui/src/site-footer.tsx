@@ -11,7 +11,10 @@ export function SiteFooter({ brandName, links }: { brandName: string; links: { l
           Prices change — always verify against the official airport page before you travel. {brandName} links to
           official sources on every page. Not financial advice.
         </p>
-        <p>Part of the Math family of UK cost calculators.</p>
+        <p className="flex items-center gap-2">
+          <span aria-hidden className="inline-flex h-4 w-4 items-center justify-center rounded bg-brand text-[10px] font-bold leading-none text-white">=</span>
+          <span>Part of the <strong className="font-semibold text-ink">=Math family</strong> of UK cost calculators.</span>
+        </p>
       </div>
     </footer>
   );

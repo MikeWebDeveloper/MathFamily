@@ -18,6 +18,7 @@ export const RoamingDestinationSchema = z
   .strictObject({
     countrySlug: Slug,
     countryName: z.string().min(1),
+    iso2: z.string().regex(/^[a-z]{2}$/, "expected lowercase ISO 3166-1 alpha-2"),
     perNetwork: z.array(NetworkRoamingSchema).length(4),
     sourceNote: z.string().nullable()
   })

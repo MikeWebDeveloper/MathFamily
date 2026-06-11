@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { loadAirports, loadDropOffDataset, loadParkingDataset, loadLoungeDataset, type Airport, type DropOffRecord } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
-import { AnswerLead, Callout, FaqAccordion, FeeStat, FreshnessBadge, SourceCitation, SourcesBlock, EmailCaptureSlot } from "@mathfamily/ui";
+import { AnswerCard, AnswerLead, CaveatChip, Callout, FaqAccordion, FreshnessBadge, MiniAnswerBar, SourceCitation, SourcesBlock, EmailCaptureSlot, UkMap, VerifiedStamp } from "@mathfamily/ui";
 import { DropOffCalculator } from "@/components/drop-off-calculator";
 import { buildDropOffFaqs, isPerEntryTariff, trendNote } from "@/lib/content";
 
@@ -60,6 +60,14 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
         </div>
       </header>
 
+      {!record.isFree ? (
+        <div className="flex flex-wrap gap-2">
+          {record.maxStayMinutes !== null ? <CaveatChip>Max stay {record.maxStayMinutes} min</CaveatChip> : null}
+          {record.penaltyPence !== null ? <CaveatChip>{formatPence(record.penaltyPence)} penalty if unpaid</CaveatChip> : null}
+          {record.paymentDeadline ? <CaveatChip>Pay by {record.paymentDeadline}</CaveatChip> : null}
+        </div>
+      ) : null}
+
       <AnswerLead
         answer={
           record.isFree
@@ -74,10 +82,22 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
         ]}
       </AnswerLead>
 
-      <FeeStat
-        label="Current drop-off charge"
-        value={record.isFree ? "Free" : formatPence(record.bands[0]?.totalPence ?? 0)}
-        note={record.isFree ? "No forecourt charge" : record.feeSummary}
+      <div className="grid items-start gap-5 sm:grid-cols-[1fr_220px]">
+        <AnswerCard
+          label="Current drop-off charge"
+          value={record.isFree ? "Free" : formatPence(record.bands[0]?.totalPence ?? 0)}
+          note={record.isFree ? "No forecourt charge" : record.feeSummary}
+          footer={
+            <span className="inline-block rounded bg-white/90 px-1.5">
+              <VerifiedStamp verifiedAt={record.verifiedAt} sourceUrl={record.sourceUrl} sourceLabel={`Official ${airport.name} page`} />
+            </span>
+          }
+        />
+        <UkMap markers={[{ lat: airport.lat, lng: airport.lng, active: true }]} className="hidden text-brand sm:block" />
+      </div>
+      <MiniAnswerBar
+        summary={`${airport.iata} drop-off · ${record.isFree ? "Free" : record.feeSummary}`}
+        verified
       />
 
       {trend ? <p className="text-sm font-medium text-warning">{trend}</p> : null}
@@ -99,8 +119,8 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
       ) : null}
 
       {!record.isFree ? (
-        <section className="space-y-2">
-          <h2 className="text-xl font-semibold text-ink">If you don&apos;t pay</h2>
+        <section className="mf-reveal space-y-2">
+          <h2 className="mf-underline-grow text-xl font-semibold text-ink">If you don&apos;t pay</h2>
           <p className="text-sm text-ink-muted">
             {record.penaltyPence !== null ? `Penalty: ${formatPence(record.penaltyPence)}. ` : ""}
             {record.penaltyNotes ?? ""} {record.paymentDeadline ? `Payment deadline: ${record.paymentDeadline}.` : ""}
@@ -108,8 +128,8 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
         </section>
       ) : null}
 
-      <section className="space-y-2">
-        <h2 className="text-xl font-semibold text-ink">Frequently asked questions</h2>
+      <section className="mf-reveal space-y-2">
+        <h2 className="mf-underline-grow text-xl font-semibold text-ink">Frequently asked questions</h2>
         <FaqAccordion items={faqs} />
       </section>
 

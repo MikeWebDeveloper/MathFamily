@@ -19,24 +19,26 @@ const validRecord = {
   verifiedAt: "2026-06-10"
 };
 
+const validAirport = { name: "London Gatwick", slug: "gatwick", iata: "LGW", region: "London", lat: 51.1537, lng: -0.1821 };
+
 describe("AirportSchema", () => {
   it("accepts a valid airport", () => {
-    expect(() => AirportSchema.parse({ name: "London Gatwick", slug: "gatwick", iata: "LGW", region: "London" })).not.toThrow();
+    expect(() => AirportSchema.parse(validAirport)).not.toThrow();
   });
   it("rejects an invalid slug", () => {
-    expect(() => AirportSchema.parse({ name: "X", slug: "Bad Slug!", iata: "LGW", region: "London" })).toThrow();
+    expect(() => AirportSchema.parse({ ...validAirport, slug: "Bad Slug!" })).toThrow();
   });
   // Issue 3: IATA must be 3 uppercase letters
   it("rejects a lowercase IATA code", () => {
-    expect(() => AirportSchema.parse({ name: "London Gatwick", slug: "gatwick", iata: "lgw", region: "London" })).toThrow();
+    expect(() => AirportSchema.parse({ ...validAirport, iata: "lgw" })).toThrow();
   });
   // Issue 4: slug must not have leading/trailing/double dashes
   it("rejects a trailing-dash slug", () => {
-    expect(() => AirportSchema.parse({ name: "London Gatwick", slug: "gat-", iata: "LGW", region: "London" })).toThrow();
+    expect(() => AirportSchema.parse({ ...validAirport, slug: "gat-" })).toThrow();
   });
   // Issue 2: strict object rejects unknown fields
   it("rejects an airport with an unknown field", () => {
-    expect(() => AirportSchema.parse({ name: "London Gatwick", slug: "gatwick", iata: "LGW", region: "London", extraField: "oops" })).toThrow();
+    expect(() => AirportSchema.parse({ ...validAirport, extraField: "oops" })).toThrow();
   });
 });
 

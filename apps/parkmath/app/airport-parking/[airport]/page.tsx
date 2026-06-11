@@ -40,6 +40,9 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
   const m7 = parkingPageModel(record, 7);
   const faqs = buildParkingFaqs(record, airport.name, 7);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const sevenDayPrices = record.products.map((p) => p.prices.find((x) => x.days === 7)?.totalPence ?? Number.POSITIVE_INFINITY);
+  const cheapestSevenDay = Math.min(...sevenDayPrices);
+  const winnerIndex = Number.isFinite(cheapestSevenDay) ? sevenDayPrices.indexOf(cheapestSevenDay) : -1;
 
   return (
     <article className="space-y-8">
@@ -83,8 +86,16 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
       <FeeGrid
         caption={`All published ${airport.name} options by duration. Pre-book figures are dated snapshots from the official portal.`}
         columns={["Option", "3 days", "7 days", "14 days"]}
-        rows={record.products.map((p) => [
-          p.name,
+        highlightRow={winnerIndex >= 0 ? winnerIndex : undefined}
+        rows={record.products.map((p, i) => [
+          i === winnerIndex ? (
+            <span key="w" className="inline-flex items-center gap-2">
+              {p.name}
+              <span className="rounded-full bg-brand-accent/15 px-2 py-0.5 text-[11px] font-bold text-brand-accent">Cheapest 7-day</span>
+            </span>
+          ) : (
+            p.name
+          ),
           ...[3, 7, 14].map((d) => {
             const price = p.prices.find((x) => x.days === d);
             return price ? formatPence(price.totalPence) : "—";

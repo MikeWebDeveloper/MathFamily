@@ -18,7 +18,13 @@ export default async function OgImage({ params }: { params: Promise<{ airport: s
   return new ImageResponse(
     (
       <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", padding: 80, backgroundColor: "#0a2540", color: "white", fontFamily: "sans-serif" }}>
-        <div style={{ display: "flex", fontSize: 36, opacity: 0.8 }}>{airport?.name ?? slug} drop-off charge</div>
+        <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 8 }}>
+          <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", gap: 6, width: 56, height: 56, borderRadius: 14, backgroundColor: "#0d3158", padding: 14 }}>
+            <div style={{ display: "flex", height: 7, borderRadius: 3, backgroundColor: "#2563eb" }} />
+            <div style={{ display: "flex", height: 7, borderRadius: 3, backgroundColor: "#ffffff" }} />
+          </div>
+          <div style={{ display: "flex", fontSize: 36, opacity: 0.8 }}>{airport?.name ?? slug} drop-off charge</div>
+        </div>
         <div style={{ display: "flex", fontSize: 140, fontWeight: 700, marginTop: 12 }}>{fee}</div>
         <div style={{ display: "flex", fontSize: 28, marginTop: 18, opacity: 0.85 }}>{record?.feeSummary ?? ""}</div>
         <div style={{ display: "flex", fontSize: 24, marginTop: 40, color: "#7fd1a8" }}>Verified {record?.verifiedAt} · ParkMath</div>

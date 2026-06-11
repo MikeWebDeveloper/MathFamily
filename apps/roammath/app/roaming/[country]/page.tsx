@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { loadRoamingDataset, loadEsimDataset, NETWORKS, type RoamingDestination, type EsimCountry } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
-import { AnswerLead, FaqAccordion, FeeGrid, FreshnessBadge, SourceCitation, SourcesBlock } from "@mathfamily/ui";
+import { AnswerLead, CountryFlag, FaqAccordion, FeeGrid, FreshnessBadge, MiniAnswerBar, RegionMap, SourceCitation, SourcesBlock } from "@mathfamily/ui";
 import { RoamingCalculator } from "@/components/roaming-calculator";
 import { AffiliateBlock } from "@/components/affiliate-block";
 import { buildRoamingFaqs, roamingPageModel, NETWORK_LABELS } from "@/lib/roaming-content";
@@ -44,6 +44,15 @@ export default async function CountryHubPage({ params }: { params: Promise<{ cou
   const latestVerified = networkSources.map((s) => s.verifiedAt).sort().at(-1) ?? "";
 
   const m = roamingPageModel(destination, esim, 7, 5);
+  // Short, figure-first line for the sticky bar (the full sentence would truncate).
+  const miniPrices = [m.cheapestNetwork?.totalPence, m.esimChoice?.totalPence].filter(
+    (p): p is number => p != null && p > 0
+  );
+  const miniSummary = m.cheapestNetwork?.included
+    ? `${destination.countryName} · included on ${NETWORK_LABELS[m.cheapestNetwork.network] ?? m.cheapestNetwork.network}`
+    : miniPrices.length > 0
+      ? `${destination.countryName} · 7 days from ${formatPence(Math.min(...miniPrices))}`
+      : `${destination.countryName} · see network price guides`;
   const faqs = buildRoamingFaqs(destination, esim, 7);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3001";
 
@@ -82,8 +91,16 @@ export default async function CountryHubPage({ params }: { params: Promise<{ cou
         ])}
       />
 
-      <header className="space-y-3">
-        <h1 className="text-3xl font-bold text-ink">{destination.countryName} roaming charges: all four UK networks compared</h1>
+      <header className="relative space-y-3">
+        <CountryFlag
+          iso2={destination.iso2}
+          size={260}
+          className="pointer-events-none absolute -top-10 right-0 opacity-[0.06]"
+        />
+        <div className="flex items-center gap-3">
+          <CountryFlag iso2={destination.iso2} size={36} className="shrink-0 rounded-full shadow-sm" />
+          <h1 className="text-3xl font-bold text-ink">{destination.countryName} roaming charges: all four UK networks compared</h1>
+        </div>
         <div className="flex flex-wrap items-center gap-3">
           <FreshnessBadge verifiedAt={latestVerified} />
           {networkSources.slice(0, 1).map((s) => (
@@ -92,7 +109,11 @@ export default async function CountryHubPage({ params }: { params: Promise<{ cou
         </div>
       </header>
 
-      <AnswerLead answer={m.answer}>{networkFacts}</AnswerLead>
+      <div id="mf-answer-anchor">
+        <AnswerLead answer={m.answer}>{networkFacts}</AnswerLead>
+      </div>
+      <RegionMap iso2={destination.iso2} className="mx-auto -my-2 hidden w-full max-w-xl text-ink sm:block" />
+      <MiniAnswerBar summary={miniSummary} verified />
 
       <RoamingCalculator
         networks={destination.perNetwork}
