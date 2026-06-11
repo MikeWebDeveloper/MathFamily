@@ -28,6 +28,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en-GB" className={`${plexSans.variable} ${plexMono.variable}`}>
       <body className="relative bg-white font-sans text-ink antialiased">
+        <noscript>
+          <style>{`.mf-reveal{opacity:1;transform:none;transition:none}`}</style>
+        </noscript>
         <ScrollProgress />
         <ScrollReveal />
         <AmbientBackdrop />

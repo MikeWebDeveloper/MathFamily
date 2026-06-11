@@ -35,7 +35,7 @@ export default function HomePage() {
       <section className="relative">
         <UkMap
           markers={airports.map((a) => ({ lat: a.lat, lng: a.lng }))}
-          className="pointer-events-none absolute -top-6 right-0 hidden h-[340px] text-brand sm:block"
+          className="pointer-events-none absolute -top-6 right-0 hidden h-[340px] text-brand lg:block"
         />
         <div className="relative space-y-5">
           <h1 className="max-w-3xl text-4xl font-bold leading-tight tracking-tight text-ink sm:text-5xl">

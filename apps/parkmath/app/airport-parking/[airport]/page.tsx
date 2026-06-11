@@ -41,7 +41,8 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
   const faqs = buildParkingFaqs(record, airport.name, 7);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
   const sevenDayPrices = record.products.map((p) => p.prices.find((x) => x.days === 7)?.totalPence ?? Number.POSITIVE_INFINITY);
-  const winnerIndex = sevenDayPrices.indexOf(Math.min(...sevenDayPrices));
+  const cheapestSevenDay = Math.min(...sevenDayPrices);
+  const winnerIndex = Number.isFinite(cheapestSevenDay) ? sevenDayPrices.indexOf(cheapestSevenDay) : -1;
 
   return (
     <article className="space-y-8">

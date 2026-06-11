@@ -240,6 +240,16 @@ a:hover .mf-logo-tile {
   to { transform: none; opacity: 1; }
 }
 
+/* No-JS: reveals depend on ScrollReveal adding .mf-in — without scripting,
+   content must never stay hidden. (Layouts also ship a <noscript> fallback.) */
+@media (scripting: none) {
+  .mf-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .mf-fade-in,
   .mf-rise-in,
