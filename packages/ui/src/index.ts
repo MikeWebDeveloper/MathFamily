@@ -12,3 +12,6 @@ export * from "./answer-lead";
 export * from "./sources-block";
 export * from "./scroll-progress";
 export * from "./scroll-reveal";
+export * from "./uk-map";
+export * from "./region-map";
+export * from "./country-flag";
