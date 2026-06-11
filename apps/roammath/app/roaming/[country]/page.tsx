@@ -44,6 +44,15 @@ export default async function CountryHubPage({ params }: { params: Promise<{ cou
   const latestVerified = networkSources.map((s) => s.verifiedAt).sort().at(-1) ?? "";
 
   const m = roamingPageModel(destination, esim, 7, 5);
+  // Short, figure-first line for the sticky bar (the full sentence would truncate).
+  const miniPrices = [m.cheapestNetwork?.totalPence, m.esimChoice?.totalPence].filter(
+    (p): p is number => p != null && p > 0
+  );
+  const miniSummary = m.cheapestNetwork?.included
+    ? `${destination.countryName} · included on ${NETWORK_LABELS[m.cheapestNetwork.network] ?? m.cheapestNetwork.network}`
+    : miniPrices.length > 0
+      ? `${destination.countryName} · 7 days from ${formatPence(Math.min(...miniPrices))}`
+      : `${destination.countryName} · see network price guides`;
   const faqs = buildRoamingFaqs(destination, esim, 7);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3001";
 
@@ -104,7 +113,7 @@ export default async function CountryHubPage({ params }: { params: Promise<{ cou
         <AnswerLead answer={m.answer}>{networkFacts}</AnswerLead>
       </div>
       <RegionMap iso2={destination.iso2} className="mx-auto -my-2 hidden w-full max-w-xl text-ink sm:block" />
-      <MiniAnswerBar summary={`${destination.countryName} · ${m.answer}`} verified />
+      <MiniAnswerBar summary={miniSummary} verified />
 
       <RoamingCalculator
         networks={destination.perNetwork}
