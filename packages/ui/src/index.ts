@@ -15,3 +15,6 @@ export * from "./scroll-reveal";
 export * from "./uk-map";
 export * from "./region-map";
 export * from "./country-flag";
+export * from "./answer-card";
+export * from "./verified-stamp";
+export * from "./caveat-chip";
