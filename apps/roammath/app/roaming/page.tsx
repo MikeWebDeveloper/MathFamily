@@ -113,6 +113,7 @@ export default function RoamingIndexPage() {
       <FeeGrid
         caption="Daily charge per network. 'included' = no extra cost. eSIM column = cheapest eligible bundle for a 7-day / 5GB trip."
         columns={["Destination", "EE", "O2", "Vodafone", "Three", "Best eSIM (5GB/7d)"]}
+        numericColumns={[1, 2, 3, 4, 5]}
         rows={rows}
       />
 

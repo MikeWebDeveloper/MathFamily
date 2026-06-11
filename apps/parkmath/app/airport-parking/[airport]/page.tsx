@@ -86,6 +86,7 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
       <FeeGrid
         caption={`All published ${airport.name} options by duration. Pre-book figures are dated snapshots from the official portal.`}
         columns={["Option", "3 days", "7 days", "14 days"]}
+        numericColumns={[1, 2, 3]}
         highlightRow={winnerIndex >= 0 ? winnerIndex : undefined}
         rows={record.products.map((p, i) => [
           i === winnerIndex ? (

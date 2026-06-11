@@ -45,6 +45,7 @@ export default function BaggageFeesIndexPage() {
       <FeeGrid
         caption={`Baggage fees for 12 airlines — verified ${lastUpdated}. Ranges reflect official published min–max charges.`}
         columns={["Airline", "Cabin bag", "First checked bag", "Verified"]}
+        numericColumns={[1, 2]}
         rows={records.map((r) => {
           const cabin = r.fees.find((f) => f.item.toLowerCase().includes("cabin"));
           const checked = r.fees.find(

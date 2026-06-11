@@ -30,6 +30,7 @@ export default function LoungeIndexPage() {
       <FeeGrid
         caption="Cheapest verified pre-book from-price per airport."
         columns={["Airport", "Lounges", "From (pre-book)"]}
+        numericColumns={[1, 2]}
         rows={rows.map((r) => [
           <Link key="a" href={`/airport-lounges/${r.slug}`} className="font-medium text-brand-accent underline-offset-4 hover:underline">{r.name}</Link>,
           String(r.count),

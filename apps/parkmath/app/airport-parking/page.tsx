@@ -47,6 +47,7 @@ export default function ParkingIndexPage() {
       <FeeGrid
         caption="7-day cheapest verified option per airport. Click through for all durations, gate prices and the full comparison."
         columns={["Airport", "Cheapest 7-day option", "From", "Verified"]}
+        numericColumns={[2]}
         rows={rows.map((r) => [
           <Link key="a" href={`/airport-parking/${r.slug}`} className="font-medium text-brand-accent underline-offset-4 hover:underline">
             {r.name}

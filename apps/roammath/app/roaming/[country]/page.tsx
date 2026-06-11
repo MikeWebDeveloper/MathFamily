@@ -128,6 +128,7 @@ export default async function CountryHubPage({ params }: { params: Promise<{ cou
       <FeeGrid
         caption={`All four networks' ${destination.countryName} roaming charges (verified ${latestVerified}).`}
         columns={["Network", "Daily charge", "Pass / product name", "Fair-use note"]}
+        numericColumns={[1]}
         rows={destination.perNetwork.map((n) => [
           NETWORK_LABELS[n.network] ?? n.network,
           n.included ? "Included" : n.dailyPassPence !== null ? formatPence(n.dailyPassPence) + "/day" : "No standard pass",
