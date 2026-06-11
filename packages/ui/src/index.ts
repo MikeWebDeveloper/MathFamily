@@ -20,3 +20,5 @@ export * from "./verified-stamp";
 export * from "./caveat-chip";
 export * from "./mini-answer-bar";
 export * from "./animated-number";
+export * from "./ambient-backdrop";
+export * from "./line-glyphs";

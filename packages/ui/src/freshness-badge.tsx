@@ -20,7 +20,9 @@ export function FreshnessBadge({
           : "mf-fade-in inline-flex items-center gap-1.5 rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-positive ring-1 ring-positive/20"
       }
     >
-      <span aria-hidden className={`h-1.5 w-1.5 rounded-full ${stale ? "bg-warning" : "bg-positive"}`} />
+      <svg aria-hidden viewBox="0 0 12 12" className="h-3 w-3 shrink-0" fill="none">
+        <path d="M2.5 6.5 5 9l4.5-5.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="mf-tick" />
+      </svg>
       {stale ? `Last verified ${formatted}` : `Verified ${formatted}`}
     </span>
   );

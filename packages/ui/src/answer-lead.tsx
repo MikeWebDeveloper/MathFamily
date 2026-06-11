@@ -1,7 +1,7 @@
 export function AnswerLead({ answer, children }: { answer: string; children?: string[] }) {
   return (
     <div
-      className="mf-rise-in rounded-card border border-ink/5 border-l-4 border-l-brand-accent bg-gradient-to-br from-surface to-white p-6"
+      className="mf-edge mf-rise-in rounded-card border-l-4 border-l-brand-accent bg-gradient-to-br from-surface to-white p-6"
       style={{ boxShadow: "var(--shadow-card)" }}
     >
       <p className="text-xl font-semibold leading-snug text-ink">{answer}</p>

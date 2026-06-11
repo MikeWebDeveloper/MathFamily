@@ -1,9 +1,19 @@
 import type { ReactNode } from "react";
 
-export function FeeGrid({ columns, rows, caption }: { columns: string[]; rows: ReactNode[][]; caption?: string }) {
+export function FeeGrid({
+  columns,
+  rows,
+  caption,
+  highlightRow
+}: {
+  columns: string[];
+  rows: ReactNode[][];
+  caption?: string;
+  highlightRow?: number;
+}) {
   return (
     <div
-      className="overflow-hidden rounded-card border border-ink/10 bg-white"
+      className="mf-edge overflow-hidden rounded-card bg-white"
       style={{ boxShadow: "var(--shadow-card)" }}
     >
       <div className="overflow-x-auto">
@@ -20,7 +30,9 @@ export function FeeGrid({ columns, rows, caption }: { columns: string[]; rows: R
             {rows.map((cells, i) => (
               <tr
                 key={i}
-                className="border-b border-ink/5 transition-colors duration-150 odd:bg-white even:bg-surface/40 hover:bg-brand-accent/[0.06]"
+                className={`border-b border-ink/5 transition-[background-color,box-shadow] duration-150 odd:bg-white even:bg-surface/40 hover:bg-brand-accent/[0.06] hover:shadow-[inset_2px_0_0_0_var(--color-brand-accent)] ${
+                  i === highlightRow ? "mf-winner-row bg-brand-accent/[0.07] font-semibold odd:bg-brand-accent/[0.07] even:bg-brand-accent/[0.07]" : ""
+                }`}
               >
                 {cells.map((cell, j) =>
                   j === 0 ? (
