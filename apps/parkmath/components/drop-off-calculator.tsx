@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { formatPence, quoteDropOff, type DropOffTariff } from "@mathfamily/engine";
+import { AnimatedNumber, CaveatChip } from "@mathfamily/ui";
 
 export function DropOffCalculator({
   tariff,
@@ -17,12 +18,11 @@ export function DropOffCalculator({
     return maxUp > 0 ? Math.min(10, maxUp) : 10;
   });
   const quote = quoteDropOff(tariff, minutes, new Date(buildDate));
-  const cost = quote.costPence === null ? "Beyond published tariff" : formatPence(quote.costPence);
 
   return (
     <section
       aria-label={`${airportName} drop-off cost calculator`}
-      className="rounded-card border border-ink/10 bg-white p-6"
+      className="mf-edge rounded-card bg-white p-6"
       style={{ boxShadow: "var(--shadow-card)" }}
     >
       <h2 className="text-lg font-semibold text-ink">How long will you stop?</h2>
@@ -36,18 +36,18 @@ export function DropOffCalculator({
           aria-label="Minutes at the drop-off zone"
           aria-valuetext={`${minutes} minutes`}
           aria-describedby="calc-result"
-          className="h-2 w-full cursor-pointer accent-brand-accent"
+          className="h-2 w-full cursor-pointer accent-brand-accent transition-shadow focus-visible:shadow-[0_0_0_4px_color-mix(in_srgb,var(--color-brand-accent)_25%,transparent)] active:shadow-[0_0_12px_color-mix(in_srgb,var(--color-brand-accent)_45%,transparent)]"
         />
         <span className="mf-num w-20 shrink-0 text-right text-sm font-medium text-ink-muted">{minutes} min</span>
       </div>
       <div className="mt-5 rounded-xl bg-surface p-4">
-        <p id="calc-result" data-testid="calculator-result" aria-live="polite" className="mf-num text-4xl font-bold text-brand">
-          <span key={cost} className="mf-fade-in inline-block">{cost}</span>
+        <p id="calc-result" data-testid="calculator-result" aria-live="polite" className="text-4xl font-bold text-brand">
+          <AnimatedNumber pence={quote.costPence} render={(p) => (p === null ? "Beyond published tariff" : formatPence(p))} />
         </p>
       </div>
-      <ul className="mt-3 space-y-1 text-sm text-ink-muted">
+      <ul className="mt-3 flex flex-wrap gap-2">
         {quote.warnings.map((w) => (
-          <li key={w.code}>{w.message}</li>
+          <li key={w.code} className="mf-rise-in"><CaveatChip>{w.message}</CaveatChip></li>
         ))}
       </ul>
     </section>

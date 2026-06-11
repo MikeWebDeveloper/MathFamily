@@ -2,7 +2,7 @@ import Link from "next/link";
 import { loadAirports, loadDropOffDataset } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { webSiteLd, JsonLd } from "@mathfamily/geo";
-import { EmailCaptureSlot, FeeStat } from "@mathfamily/ui";
+import { EmailCaptureSlot, FeeStat, RunwayDivider, UkMap } from "@mathfamily/ui";
 import { AirportSearch } from "@/components/airport-search";
 import { FamilyLinks } from "@/components/family-links";
 
@@ -32,15 +32,21 @@ export default function HomePage() {
   return (
     <div className="space-y-14">
       <JsonLd data={webSiteLd({ name: "ParkMath", url: siteUrl })} />
-      <section className="space-y-5">
-        <h1 className="max-w-3xl text-4xl font-bold leading-tight tracking-tight text-ink sm:text-5xl">
-          What does it cost to <span className="text-brand-accent">drop someone off</span> at a UK airport?
-        </h1>
-        <p className="max-w-2xl text-lg text-ink-muted">
-          Every UK airport&apos;s drop-off charge, time limit, penalty and the free alternative — verified against
-          official airport pages and date-stamped.
-        </p>
-        <AirportSearch airports={airports} feeBySlug={feeBySlug} />
+      <section className="relative">
+        <UkMap
+          markers={airports.map((a) => ({ lat: a.lat, lng: a.lng }))}
+          className="pointer-events-none absolute -top-6 right-0 hidden h-[340px] text-brand sm:block"
+        />
+        <div className="relative space-y-5">
+          <h1 className="max-w-3xl text-4xl font-bold leading-tight tracking-tight text-ink sm:text-5xl">
+            What does it cost to <span className="text-brand-accent">drop someone off</span> at a UK airport?
+          </h1>
+          <p className="max-w-2xl text-lg text-ink-muted">
+            Every UK airport&apos;s drop-off charge, time limit, penalty and the free alternative — verified against
+            official airport pages and date-stamped.
+          </p>
+          <AirportSearch airports={airports} feeBySlug={feeBySlug} />
+        </div>
       </section>
 
       <section className="mf-reveal grid gap-4 sm:grid-cols-3">
@@ -63,6 +69,8 @@ export default function HomePage() {
           Lounge or membership? →
         </Link>
       </p>
+
+      <RunwayDivider className="h-2 w-full text-brand/15" />
 
       <EmailCaptureSlot
         formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}

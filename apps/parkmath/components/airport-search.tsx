@@ -26,7 +26,7 @@ export function AirportSearch({ airports, feeBySlug }: { airports: Airport[]; fe
           <li key={a.slug}>
             <a
               href={`/drop-off-charges/${a.slug}`}
-              className="group flex h-full flex-col justify-between gap-1 rounded-card border border-ink/10 bg-white p-3.5 outline-none transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-accent/40 focus-visible:ring-2 focus-visible:ring-brand-accent/40"
+              className="mf-sheen mf-press group flex h-full flex-col justify-between gap-1 rounded-card border border-ink/10 bg-white p-3.5 outline-none transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-accent/40 focus-visible:ring-2 focus-visible:ring-brand-accent/40"
               style={{ boxShadow: "var(--shadow-card)" }}
             >
               <span className="text-sm font-semibold text-ink transition-colors group-hover:text-brand-accent">{a.name}</span>
