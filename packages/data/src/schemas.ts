@@ -6,7 +6,10 @@ export const AirportSchema = z.strictObject({
   name: z.string().min(1),
   slug: Slug,
   iata: z.string().regex(/^[A-Z]{3}$/, "expected 3-letter uppercase IATA code"),
-  region: z.string().min(1)
+  region: z.string().min(1),
+  // Aerodrome coordinates (decimal degrees) — used only for map decoration
+  lat: z.number().min(49.8).max(61),
+  lng: z.number().min(-8.5).max(2)
 });
 export type Airport = z.infer<typeof AirportSchema>;
 export const AirportsFileSchema = z.array(AirportSchema).min(1);
