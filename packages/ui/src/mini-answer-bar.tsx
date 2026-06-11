@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 
 /** Slim sticky bar that appears once #mf-answer-anchor (the AnswerCard, or any
  *  element given that id) has scrolled above the viewport — the answer never
- *  leaves the screen. */
+ *  leaves the screen.
+ *  my-0! — parent `space-y-*` margins enter the position equation of a
+ *  bottom-fixed element and would leave a sliver of the bar visible. */
 export function MiniAnswerBar({ summary, verified }: { summary: string; verified?: boolean }) {
   const [show, setShow] = useState(false);
   useEffect(() => {
@@ -25,7 +27,7 @@ export function MiniAnswerBar({ summary, verified }: { summary: string; verified
     <div
       data-testid="mini-answer-bar"
       aria-hidden={!show}
-      className={`fixed inset-x-0 bottom-0 z-50 transition-transform duration-200 ${show ? "translate-y-0" : "translate-y-full"}`}
+      className={`fixed inset-x-0 bottom-0 z-50 my-0! transition-transform duration-200 ${show ? "translate-y-0" : "translate-y-full"}`}
     >
       <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 border-t border-white/10 bg-brand/95 px-4 py-2.5 text-white backdrop-blur">
         <span className="mf-num truncate text-sm font-semibold">{summary}</span>
