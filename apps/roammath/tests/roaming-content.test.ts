@@ -5,6 +5,7 @@ import { buildRoamingFaqs, roamingPageModel, NETWORK_LABELS } from "../lib/roami
 const destination: RoamingDestination = {
   countrySlug: "spain",
   countryName: "Spain",
+  iso2: "es",
   perNetwork: [
     { network: "ee", included: false, dailyPassPence: 259, passName: "EU Roaming Pass", fairUseNote: "50GB fair use" },
     { network: "o2", included: true, dailyPassPence: null, passName: null, fairUseNote: "25GB roaming limit" },

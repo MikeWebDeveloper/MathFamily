@@ -27,6 +27,7 @@
     {
       "countrySlug": "spain",
       "countryName": "Spain",
+      "iso2": "es",
       "perNetwork": [
         {
           "network": "ee",
@@ -62,6 +63,7 @@
     {
       "countrySlug": "france",
       "countryName": "France",
+      "iso2": "fr",
       "perNetwork": [
         {
           "network": "ee",
@@ -97,6 +99,7 @@
     {
       "countrySlug": "italy",
       "countryName": "Italy",
+      "iso2": "it",
       "perNetwork": [
         {
           "network": "ee",
@@ -132,6 +135,7 @@
     {
       "countrySlug": "portugal",
       "countryName": "Portugal",
+      "iso2": "pt",
       "perNetwork": [
         {
           "network": "ee",
@@ -167,6 +171,7 @@
     {
       "countrySlug": "greece",
       "countryName": "Greece",
+      "iso2": "gr",
       "perNetwork": [
         {
           "network": "ee",
@@ -202,6 +207,7 @@
     {
       "countrySlug": "germany",
       "countryName": "Germany",
+      "iso2": "de",
       "perNetwork": [
         {
           "network": "ee",
@@ -237,6 +243,7 @@
     {
       "countrySlug": "ireland",
       "countryName": "Ireland",
+      "iso2": "ie",
       "perNetwork": [
         {
           "network": "ee",
@@ -272,6 +279,7 @@
     {
       "countrySlug": "netherlands",
       "countryName": "Netherlands",
+      "iso2": "nl",
       "perNetwork": [
         {
           "network": "ee",
@@ -307,6 +315,7 @@
     {
       "countrySlug": "belgium",
       "countryName": "Belgium",
+      "iso2": "be",
       "perNetwork": [
         {
           "network": "ee",
@@ -342,6 +351,7 @@
     {
       "countrySlug": "austria",
       "countryName": "Austria",
+      "iso2": "at",
       "perNetwork": [
         {
           "network": "ee",
@@ -377,6 +387,7 @@
     {
       "countrySlug": "switzerland",
       "countryName": "Switzerland",
+      "iso2": "ch",
       "perNetwork": [
         {
           "network": "ee",
@@ -412,6 +423,7 @@
     {
       "countrySlug": "poland",
       "countryName": "Poland",
+      "iso2": "pl",
       "perNetwork": [
         {
           "network": "ee",
@@ -447,6 +459,7 @@
     {
       "countrySlug": "croatia",
       "countryName": "Croatia",
+      "iso2": "hr",
       "perNetwork": [
         {
           "network": "ee",
@@ -482,6 +495,7 @@
     {
       "countrySlug": "cyprus",
       "countryName": "Cyprus",
+      "iso2": "cy",
       "perNetwork": [
         {
           "network": "ee",
@@ -517,6 +531,7 @@
     {
       "countrySlug": "malta",
       "countryName": "Malta",
+      "iso2": "mt",
       "perNetwork": [
         {
           "network": "ee",
@@ -552,6 +567,7 @@
     {
       "countrySlug": "turkey",
       "countryName": "Turkey",
+      "iso2": "tr",
       "perNetwork": [
         {
           "network": "ee",
@@ -587,6 +603,7 @@
     {
       "countrySlug": "usa",
       "countryName": "United States",
+      "iso2": "us",
       "perNetwork": [
         {
           "network": "ee",
@@ -622,6 +639,7 @@
     {
       "countrySlug": "canada",
       "countryName": "Canada",
+      "iso2": "ca",
       "perNetwork": [
         {
           "network": "ee",
@@ -657,6 +675,7 @@
     {
       "countrySlug": "mexico",
       "countryName": "Mexico",
+      "iso2": "mx",
       "perNetwork": [
         {
           "network": "ee",
@@ -692,6 +711,7 @@
     {
       "countrySlug": "australia",
       "countryName": "Australia",
+      "iso2": "au",
       "perNetwork": [
         {
           "network": "ee",
@@ -727,6 +747,7 @@
     {
       "countrySlug": "new-zealand",
       "countryName": "New Zealand",
+      "iso2": "nz",
       "perNetwork": [
         {
           "network": "ee",
@@ -762,6 +783,7 @@
     {
       "countrySlug": "uae",
       "countryName": "United Arab Emirates",
+      "iso2": "ae",
       "perNetwork": [
         {
           "network": "ee",
@@ -797,6 +819,7 @@
     {
       "countrySlug": "thailand",
       "countryName": "Thailand",
+      "iso2": "th",
       "perNetwork": [
         {
           "network": "ee",
@@ -832,6 +855,7 @@
     {
       "countrySlug": "japan",
       "countryName": "Japan",
+      "iso2": "jp",
       "perNetwork": [
         {
           "network": "ee",
@@ -867,6 +891,7 @@
     {
       "countrySlug": "china",
       "countryName": "China",
+      "iso2": "cn",
       "perNetwork": [
         {
           "network": "ee",
@@ -902,6 +927,7 @@
     {
       "countrySlug": "india",
       "countryName": "India",
+      "iso2": "in",
       "perNetwork": [
         {
           "network": "ee",
@@ -937,6 +963,7 @@
     {
       "countrySlug": "south-africa",
       "countryName": "South Africa",
+      "iso2": "za",
       "perNetwork": [
         {
           "network": "ee",
@@ -972,6 +999,7 @@
     {
       "countrySlug": "egypt",
       "countryName": "Egypt",
+      "iso2": "eg",
       "perNetwork": [
         {
           "network": "ee",
@@ -1007,6 +1035,7 @@
     {
       "countrySlug": "morocco",
       "countryName": "Morocco",
+      "iso2": "ma",
       "perNetwork": [
         {
           "network": "ee",
@@ -1042,6 +1071,7 @@
     {
       "countrySlug": "tunisia",
       "countryName": "Tunisia",
+      "iso2": "tn",
       "perNetwork": [
         {
           "network": "ee",
@@ -1077,6 +1107,7 @@
     {
       "countrySlug": "norway",
       "countryName": "Norway",
+      "iso2": "no",
       "perNetwork": [
         {
           "network": "ee",
@@ -1112,6 +1143,7 @@
     {
       "countrySlug": "iceland",
       "countryName": "Iceland",
+      "iso2": "is",
       "perNetwork": [
         {
           "network": "ee",
@@ -1147,6 +1179,7 @@
     {
       "countrySlug": "sweden",
       "countryName": "Sweden",
+      "iso2": "se",
       "perNetwork": [
         {
           "network": "ee",
@@ -1182,6 +1215,7 @@
     {
       "countrySlug": "denmark",
       "countryName": "Denmark",
+      "iso2": "dk",
       "perNetwork": [
         {
           "network": "ee",
@@ -1217,6 +1251,7 @@
     {
       "countrySlug": "czechia",
       "countryName": "Czechia",
+      "iso2": "cz",
       "perNetwork": [
         {
           "network": "ee",
@@ -1252,6 +1287,7 @@
     {
       "countrySlug": "hungary",
       "countryName": "Hungary",
+      "iso2": "hu",
       "perNetwork": [
         {
           "network": "ee",
@@ -1287,6 +1323,7 @@
     {
       "countrySlug": "romania",
       "countryName": "Romania",
+      "iso2": "ro",
       "perNetwork": [
         {
           "network": "ee",
@@ -1322,6 +1359,7 @@
     {
       "countrySlug": "bulgaria",
       "countryName": "Bulgaria",
+      "iso2": "bg",
       "perNetwork": [
         {
           "network": "ee",
@@ -1357,6 +1395,7 @@
     {
       "countrySlug": "albania",
       "countryName": "Albania",
+      "iso2": "al",
       "perNetwork": [
         {
           "network": "ee",
@@ -1392,6 +1431,7 @@
     {
       "countrySlug": "montenegro",
       "countryName": "Montenegro",
+      "iso2": "me",
       "perNetwork": [
         {
           "network": "ee",
