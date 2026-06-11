@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { loadRoamingDataset, loadEsimDataset, NETWORKS, type RoamingDestination, type EsimCountry } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
-import { AnswerLead, FaqAccordion, FeeGrid, FreshnessBadge, SourceCitation, SourcesBlock } from "@mathfamily/ui";
+import { AnswerLead, CountryFlag, FaqAccordion, FeeGrid, FreshnessBadge, MiniAnswerBar, RegionMap, SourceCitation, SourcesBlock } from "@mathfamily/ui";
 import { RoamingCalculator } from "@/components/roaming-calculator";
 import { AffiliateBlock } from "@/components/affiliate-block";
 import { buildRoamingFaqs, roamingPageModel, NETWORK_LABELS } from "@/lib/roaming-content";
@@ -82,8 +82,16 @@ export default async function CountryHubPage({ params }: { params: Promise<{ cou
         ])}
       />
 
-      <header className="space-y-3">
-        <h1 className="text-3xl font-bold text-ink">{destination.countryName} roaming charges: all four UK networks compared</h1>
+      <header className="relative space-y-3">
+        <CountryFlag
+          iso2={destination.iso2}
+          size={260}
+          className="pointer-events-none absolute -top-10 right-0 opacity-[0.06]"
+        />
+        <div className="flex items-center gap-3">
+          <CountryFlag iso2={destination.iso2} size={36} className="shrink-0 rounded-full shadow-sm" />
+          <h1 className="text-3xl font-bold text-ink">{destination.countryName} roaming charges: all four UK networks compared</h1>
+        </div>
         <div className="flex flex-wrap items-center gap-3">
           <FreshnessBadge verifiedAt={latestVerified} />
           {networkSources.slice(0, 1).map((s) => (
@@ -92,7 +100,11 @@ export default async function CountryHubPage({ params }: { params: Promise<{ cou
         </div>
       </header>
 
-      <AnswerLead answer={m.answer}>{networkFacts}</AnswerLead>
+      <div id="mf-answer-anchor">
+        <AnswerLead answer={m.answer}>{networkFacts}</AnswerLead>
+      </div>
+      <RegionMap iso2={destination.iso2} className="mx-auto -my-2 hidden w-full max-w-xl text-ink sm:block" />
+      <MiniAnswerBar summary={`${destination.countryName} · ${m.answer}`} verified />
 
       <RoamingCalculator
         networks={destination.perNetwork}

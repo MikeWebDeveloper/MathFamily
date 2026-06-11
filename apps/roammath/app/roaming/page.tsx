@@ -3,7 +3,7 @@ import Link from "next/link";
 import { loadRoamingDataset, loadEsimDataset, NETWORKS } from "@mathfamily/data";
 import { roamingTripCost, formatPence } from "@mathfamily/engine";
 import { datasetLd, itemListLd, JsonLd } from "@mathfamily/geo";
-import { FeeGrid, FreshnessBadge } from "@mathfamily/ui";
+import { CountryFlag, FeeGrid, FreshnessBadge } from "@mathfamily/ui";
 import { NETWORK_LABELS } from "@/lib/roaming-content";
 
 export const metadata: Metadata = {
@@ -40,8 +40,9 @@ export default function RoamingIndexPage() {
       <Link
         key="dest"
         href={`/roaming/${dest.countrySlug}`}
-        className="font-medium text-brand-accent underline-offset-4 hover:underline"
+        className="inline-flex items-center gap-2 font-medium text-brand-accent underline-offset-4 hover:underline"
       >
+        <CountryFlag iso2={dest.iso2} size={16} />
         {dest.countryName}
       </Link>,
       networkCell("ee"),
@@ -95,6 +96,19 @@ export default function RoamingIndexPage() {
         Daily pass prices from official network price guides for all four major UK networks. Click a destination for the
         full comparison, calculator and eSIM alternatives.
       </p>
+
+      <nav aria-label="Destinations" className="mf-reveal flex flex-wrap gap-2">
+        {destinations.map((dest) => (
+          <Link
+            key={dest.countrySlug}
+            href={`/roaming/${dest.countrySlug}`}
+            className="mf-press inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white px-3 py-1.5 text-sm font-medium text-ink transition-colors hover:border-brand-accent/40 hover:bg-brand-accent/5"
+          >
+            <CountryFlag iso2={dest.iso2} size={18} />
+            {dest.countryName}
+          </Link>
+        ))}
+      </nav>
 
       <FeeGrid
         caption="Daily charge per network. 'included' = no extra cost. eSIM column = cheapest eligible bundle for a 7-day / 5GB trip."
