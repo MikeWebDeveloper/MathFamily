@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { loadAirports, loadDropOffDataset, loadParkingDataset, loadLoungeDataset, type Airport, type DropOffRecord } from "@mathfamily/data";
+import { loadAirports, loadDropOffDataset, loadParkingDataset, loadLoungeDataset, newsForAirport, type Airport, type DropOffRecord } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
-import { AnswerCard, AnswerLead, CaveatChip, Callout, FaqAccordion, FreshnessBadge, MiniAnswerBar, PageHeading, SourceCitation, SourcesBlock, EmailCaptureSlot, UkMap, VerifiedStamp } from "@mathfamily/ui";
+import { AnswerCard, AnswerLead, CaveatChip, Callout, FaqAccordion, FreshnessBadge, LatestUpdates, MiniAnswerBar, PageHeading, SourceCitation, SourcesBlock, EmailCaptureSlot, UkMap, VerifiedStamp } from "@mathfamily/ui";
 import { DropOffCalculator } from "@/components/drop-off-calculator";
 import { buildDropOffFaqs, isPerEntryTariff, trendNote } from "@/lib/content";
 
@@ -40,6 +40,8 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
   const hasParking = loadParkingDataset().records.some((r) => r.airportSlug === slug);
   const hasLounge = loadLoungeDataset().records.some((r) => r.airportSlug === slug);
+  const latestNews = newsForAirport(airport.slug, 1)[0];
+  const pageVerifiedAt = latestNews && latestNews.verifiedAt > record.verifiedAt ? latestNews.verifiedAt : record.verifiedAt;
 
   return (
     <article className="space-y-8">
@@ -55,7 +57,7 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
       <header className="space-y-3">
         <PageHeading>{airport.name} drop-off charge</PageHeading>
         <div className="flex flex-wrap items-center gap-3">
-          <FreshnessBadge verifiedAt={record.verifiedAt} />
+          <FreshnessBadge verifiedAt={pageVerifiedAt} />
           <SourceCitation url={record.sourceUrl} label={`Official ${airport.name} page`} />
         </div>
       </header>
@@ -165,6 +167,10 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
           Compare drop-off charges at all UK airports →
         </a>
       </p>
+      {(() => {
+        const updates = newsForAirport(airport.slug, 3);
+        return updates.length ? <LatestUpdates items={updates} heading={`Latest at ${airport.name}`} /> : null;
+      })()}
       <SourcesBlock
         sources={[{ label: `Official ${airport.name} drop-off page`, url: record.sourceUrl, verifiedAt: record.verifiedAt }]}
         method="Every figure is read from the airport's official page and re-verified on the date shown. We never republish unverified prices."
