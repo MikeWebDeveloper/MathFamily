@@ -46,11 +46,20 @@ Analytics & Logs → Traffic** — no code, no beacon token, no env var.
 *(Gotcha: the Cloudflare dashboard SPA won't load while the MetaMask extension's SES lockdown
 is active — disable MetaMask to reach it.)*
 
-A second, optional path is **Cloudflare Web Analytics** (JS beacon), injected by
-`<SiteAnalytics>` (`packages/ui/src/site-analytics.tsx`) when `NEXT_PUBLIC_CF_BEACON_TOKEN`
-is set in the Vercel project env (Cloudflare dashboard → Web Analytics → add a site, beacon
-mode). No cookies → no consent banner. Not required now that traffic is proxied, but it adds
-per-path Core Web Vitals / RUM that edge Traffic analytics doesn't break out.
+**Web Analytics beacon — installed 2026-06-13.** This is the second analytics product
+(page views + unique visitors + per-path Core Web Vitals/RUM), separate from the edge Traffic
+analytics above. Cloudflare's *automatic* RUM injection does **not** fire on the Vercel origin
+(the beacon never appeared in the live HTML even with the zone proxied and RUM set to plain
+"Enable"), so it's installed **manually**: `<SiteAnalytics>` (`packages/ui/src/site-analytics.tsx`)
+renders the `beacon.min.js` tag, and ParkMath's layout passes the **public** site token via the
+`cfToken` prop (`apps/parkmath/app/layout.tsx`). `NEXT_PUBLIC_CF_BEACON_TOKEN` still overrides it
+if set in Vercel. No cookies → no consent banner. Confirmed live: the beacon tag is in the HTML
+and CSP-allowed (`script-src` includes `static.cloudflareinsights.com`).
+
+> **Gotcha:** in Cloudflare → Web analytics → *Manage site*, RUM must be **"Enable"**, not
+> "Enable, excluding visitor data in the EU" — the latter suppresses the beacon for EU
+> visitors, so a UK site (≈96% UK/EU) records **zero**. Cloudflare auto-added the proxied site
+> with the EU-excluded default, which is why it read 0 until flipped.
 
 ### Later: self-hosted Plausible
 To add Plausible alongside/instead of Cloudflare, add its `<script defer data-domain="…"
