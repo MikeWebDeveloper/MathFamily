@@ -2,7 +2,7 @@ import Link from "next/link";
 import { loadRoamingDataset, loadEsimDataset } from "@mathfamily/data";
 import { roamingTripCost, formatPence } from "@mathfamily/engine";
 import { webSiteLd, JsonLd } from "@mathfamily/geo";
-import { CountryFlag, EmailCaptureSlot, FeeStat } from "@mathfamily/ui";
+import { CountryFlag, EmailCaptureSlot, StatStrip } from "@mathfamily/ui";
 import { FamilyLinks } from "@/components/family-links";
 import { NETWORK_LABELS } from "@/lib/roaming-content";
 
@@ -80,22 +80,12 @@ export default function HomePage() {
         </p>
       </section>
 
-      <section className="grid gap-4 sm:grid-cols-3">
-        <FeeStat
-          label="Destinations tracked"
-          value={String(destinationCount)}
-          note="roaming charges per destination"
-        />
-        <FeeStat
-          label="Networks compared"
-          value="4 + 3"
-          note="EE, O2, Vodafone, Three + eSIM providers"
-        />
-        <FeeStat
-          label="Cheapest week in Spain"
-          value={spainStatValue}
-          note={spainStatNote}
-        />
+      <section>
+        <StatStrip stats={[
+          { label: "Destinations tracked", value: String(destinationCount), note: "roaming charges per destination" },
+          { label: "Networks compared", value: "4 + 3", note: "EE, O2, Vodafone, Three + eSIM providers" },
+          { label: "Cheapest week in Spain", value: spainStatValue, note: spainStatNote },
+        ]} />
       </section>
 
       <section>

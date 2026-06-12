@@ -2,7 +2,7 @@ import Link from "next/link";
 import { loadAirports, loadDropOffDataset } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { webSiteLd, JsonLd } from "@mathfamily/geo";
-import { EmailCaptureSlot, FeeStat, RunwayDivider, UkMap } from "@mathfamily/ui";
+import { EmailCaptureSlot, RunwayDivider, StatStrip, UkMap } from "@mathfamily/ui";
 import { AirportSearch } from "@/components/airport-search";
 import { FamilyLinks } from "@/components/family-links";
 
@@ -49,10 +49,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="mf-reveal grid gap-4 sm:grid-cols-3">
-        <FeeStat label="Most expensive drop-off" value={formatPence(maxBandPence)} note={maxBandNote} />
-        <FeeStat label="Airports charging a fee" value={String(charging.length)} note={`of ${records.length} tracked`} />
-        <FeeStat label="Still free" value={String(freeCount)} note="Free at the forecourt" />
+      <section className="mf-reveal">
+        <StatStrip stats={[
+          { label: "Most expensive drop-off", value: formatPence(maxBandPence), note: maxBandNote },
+          { label: "Airports charging a fee", value: String(charging.length), note: `of ${records.length} tracked` },
+          { label: "Still free", value: String(freeCount), note: "Free at the forecourt" },
+        ]} />
       </section>
 
       <p className="flex flex-wrap gap-x-6 gap-y-2">

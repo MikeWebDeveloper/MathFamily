@@ -25,3 +25,4 @@ export * from "./ambient-backdrop";
 export * from "./line-glyphs";
 export * from "./range-slider";
 export * from "./page-heading";
+export * from "./stat-strip";
