@@ -95,6 +95,13 @@ verified on a Vercel preview and again on production.
 - **Live now:** all three affiliate stages, the SEO batch (headers/schema/canonical confirmed live),
   and the turbo bump.
 - **Env vars (already set in Vercel Production):** `NEXT_PUBLIC_SITE_URL=https://www.parkmath.co.uk`.
+- **⚠️ Analytics is currently collecting NOTHING** — the Cloudflare Web Analytics beacon doesn't render
+  because `NEXT_PUBLIC_CF_BEACON_TOKEN` is **not set** (confirmed: the beacon script is absent from the
+  live HTML). Fix: in the **Cloudflare** dashboard → *Web Analytics* → add `www.parkmath.co.uk` → copy
+  the beacon **token**; in **Vercel** (Production) set `NEXT_PUBLIC_CF_BEACON_TOKEN=<token>` → redeploy.
+  The new CSP already allowlists `cloudflareinsights.com`; this works on Vercel (no DNS move needed).
+- **Cloudflare MCP installed globally** — `cloudflare-graphql` (GraphQL Analytics) at user scope in
+  `~/.claude.json`; needs a one-time Cloudflare OAuth on first use (restart Claude Code to load it).
 - **To verify earnings:** click a live "Pre-book" CTA and confirm the click lands in your AWIN
   dashboard against publisher `2932035` (look at the **Click Report** for the `parkmath-<airport>` refs).
 - **News routine (local):** the weekly `/news-watch` launchd job isn't installed yet —
