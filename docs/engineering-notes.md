@@ -35,11 +35,22 @@ sudo, and the no-config convention makes it unnecessary for this repo.
 
 ## Analytics
 
-Live analytics is **Cloudflare Web Analytics**, injected by `<SiteAnalytics>`
-(`packages/ui/src/site-analytics.tsx`) when `NEXT_PUBLIC_CF_BEACON_TOKEN` is set in the
-Vercel project env. No cookies → no consent banner. Get the token from the Cloudflare
-dashboard → Web Analytics → add a site (beacon mode, since we're served from Vercel, not
-proxied through Cloudflare).
+Live analytics is **Cloudflare Traffic (Zone) analytics** — automatic because the domain is
+now **proxied through Cloudflare** (orange cloud). **Done 2026-06-12:** the `parkmath.co.uk`
+apex + `www` CNAMEs (→ Vercel, `…vercel-dns-017.com`) were flipped from *DNS only* to
+**Proxied** in the Cloudflare dashboard, and **SSL/TLS** set to **Automatic** (running Full,
+auto-upgrades toward Strict on the next origin scan — Automatic avoids a transient `526` vs.
+forcing Full-strict). Verified live: both hosts return `server: cloudflare` + a `cf-ray`
+header, apex still 308→`www` with no redirect loop. Data appears under **Cloudflare →
+Analytics & Logs → Traffic** — no code, no beacon token, no env var.
+*(Gotcha: the Cloudflare dashboard SPA won't load while the MetaMask extension's SES lockdown
+is active — disable MetaMask to reach it.)*
+
+A second, optional path is **Cloudflare Web Analytics** (JS beacon), injected by
+`<SiteAnalytics>` (`packages/ui/src/site-analytics.tsx`) when `NEXT_PUBLIC_CF_BEACON_TOKEN`
+is set in the Vercel project env (Cloudflare dashboard → Web Analytics → add a site, beacon
+mode). No cookies → no consent banner. Not required now that traffic is proxied, but it adds
+per-path Core Web Vitals / RUM that edge Traffic analytics doesn't break out.
 
 ### Later: self-hosted Plausible
 To add Plausible alongside/instead of Cloudflare, add its `<script defer data-domain="…"
