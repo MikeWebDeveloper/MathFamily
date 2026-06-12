@@ -19,3 +19,8 @@ describe("fluid type-scale tokens", () => {
     expect(mfNumBlock![0]).not.toContain("letter-spacing");
   });
 });
+
+it("defines a single-glow winner utility distinct from the static winner ring", () => {
+  expect(css).toContain(".mf-glow-winner");
+  expect(css).toMatch(/--shadow-card|--shadow-raised|--shadow-hero/);
+});

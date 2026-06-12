@@ -77,6 +77,15 @@
   letter-spacing: 0.01em;
 }
 
+/* The one accent glow per page — reserve for the single recommended/cheapest element. */
+.mf-glow-winner {
+  box-shadow:
+    0 0 0 1.5px color-mix(in srgb, var(--color-brand-accent) 60%, transparent),
+    0 6px 22px -6px color-mix(in srgb, var(--color-brand-accent) 40%, transparent),
+    var(--shadow-card);
+}
+@media (prefers-reduced-motion: reduce) { .mf-glow-winner { box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--color-brand-accent) 60%, transparent), var(--shadow-card); } }
+
 /* ── Gradient hairline edge: card looks lit from above ──
    Mutually exclusive with .mf-edge-shine (both render via ::before). */
 .mf-edge {
