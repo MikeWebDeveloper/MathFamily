@@ -16,6 +16,20 @@ All three are **Holiday Extras Group** brands (same parent, same account manager
 
 Also available to apply for: **BCP** (`mid 3495`), **Holiday Extras UK Breaks** (`mid 20881`).
 
+## Join status & EPC (AWIN dashboard, 2026-06-12)
+
+Only **Holiday Extras is JOINED/live**. The others received welcome packs but AWIN still shows them **Pending** — `partners.json` reflects this (HE active, rest inactive). Don't treat pending merchants as live.
+
+| Merchant | Status | EPC (GBP) | Conv. |
+|---|---|---|---|
+| Holiday Extras | **Joined** | 0.17 | 7.64% |
+| Heathrow Airport Parking | Pending | **1.48** | 11.42% |
+| APH | Pending | 0.23 | 8.07% |
+| Purple Parking | Pending | 0.09 | 6.81% |
+| Airparks | Pending | 0.08 | 6.76% |
+
+**Revenue note:** HE is the best *general* merchant by EPC. **Heathrow Airport Parking (£1.48 ≈ 9× HE)** is the obvious Heathrow per-airport override once approved; APH (£0.23) also beats HE. Purple Parking / Airparks have low EPC despite better headline user discounts — little case to feature them over HE.
+
 ## Rules that apply to all three
 
 - **Auto-discount:** the discount code is embedded in the affiliate link — no code to paste. Tell users: *"Code automatically applies. Search on {brand} to see the discount."*
