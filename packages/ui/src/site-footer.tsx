@@ -2,9 +2,9 @@ export function SiteFooter({ brandName, links }: { brandName: string; links: { l
   return (
     <footer className="mt-16 border-t border-ink/10 bg-surface">
       <div className="mx-auto max-w-5xl space-y-4 px-4 py-8 text-sm text-ink-muted">
-        <nav aria-label="Footer" className="flex gap-4">
+        <nav aria-label="Footer" className="flex flex-wrap gap-x-4 gap-y-1">
           {links.map((l) => (
-            <a key={l.href} href={l.href} className="hover:text-brand-accent">{l.label}</a>
+            <a key={l.href} href={l.href} className="inline-flex min-h-11 items-center py-1.5 hover:text-brand-accent">{l.label}</a>
           ))}
         </nav>
         <p>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { CheckTick } from "./check-tick";
 
 /** Slim sticky bar that appears once #mf-answer-anchor (the AnswerCard, or any
  *  element given that id) has scrolled above the viewport — the answer never
@@ -29,9 +30,9 @@ export function MiniAnswerBar({ summary, verified }: { summary: string; verified
       aria-hidden={!show}
       className={`fixed inset-x-0 bottom-0 z-50 my-0! transition-transform duration-200 ${show ? "translate-y-0" : "translate-y-full"}`}
     >
-      <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 border-t border-white/10 bg-brand/95 px-4 py-2.5 text-white backdrop-blur">
+      <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 border-t border-white/10 bg-brand/95 px-4 pt-2.5 pb-[max(0.625rem,env(safe-area-inset-bottom))] text-white backdrop-blur">
         <span className="mf-num truncate text-sm font-semibold">{summary}</span>
-        {verified ? <span className="shrink-0 text-xs font-semibold text-emerald-300">✓ verified</span> : null}
+        {verified ? <span className="inline-flex shrink-0 items-center gap-1 text-xs font-semibold text-emerald-300"><CheckTick className="h-3.5 w-3.5 text-emerald-300" /> verified</span> : null}
       </div>
     </div>
   );
