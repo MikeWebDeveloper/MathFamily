@@ -26,8 +26,9 @@ export async function generateMetadata({ params }: { params: Promise<{ airport: 
   const data = getData(airport);
   if (!data) return {};
   return {
-    title: `${data.airport.name} drop-off charge 2026 — fee, time limit & the free alternative`,
-    description: `${data.airport.name} drop-off: ${data.record.feeSummary}. Penalty, payment deadline, Blue Badge rules and how to avoid the fee — verified ${data.record.verifiedAt}.`
+    title: `${data.airport.name} drop-off charge 2026 — fee, limit & free alternative`,
+    description: `${data.airport.name} drop-off: ${data.record.feeSummary}. Penalty, payment deadline, Blue Badge rules and how to avoid the fee — verified ${data.record.verifiedAt}.`,
+    alternates: { canonical: `/drop-off-charges/${airport}` }
   };
 }
 

@@ -34,7 +34,8 @@ export async function generateMetadata({
   const m = parkingPageModel(data.record, days);
   return {
     title: `${days}-day parking at ${data.airport.name} — cheapest verified price`,
-    description: `${m.answer} Gate vs pre-book for ${days} days at ${data.airport.name}, verified ${data.record.verifiedAt}.`
+    description: `${m.answer} Gate vs pre-book for ${days} days at ${data.airport.name}, verified ${data.record.verifiedAt}.`,
+    alternates: { canonical: `/airport-parking/${airport}/${duration}` }
   };
 }
 

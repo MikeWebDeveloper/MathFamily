@@ -6,8 +6,9 @@ import { itemListLd, JsonLd } from "@mathfamily/geo";
 import { FeeGrid, PageHeading } from "@mathfamily/ui";
 
 export const metadata: Metadata = {
-  title: "UK airport lounge prices compared — pre-book from-prices & Priority Pass",
-  description: "Pre-book from-prices for lounges at major UK airports, which lounges take Priority Pass, and break-even calculators for membership."
+  title: "UK airport lounge prices & Priority Pass, compared",
+  description: "Pre-book from-prices for lounges at major UK airports, which lounges take Priority Pass, and break-even calculators for membership.",
+  alternates: { canonical: "/airport-lounges" }
 };
 
 export default function LoungeIndexPage() {
@@ -27,6 +28,15 @@ export default function LoungeIndexPage() {
         items: rows.map((r) => ({ name: `${r.name} — ${r.from !== null ? `from ${formatPence(r.from)}` : "price on the day"}`, url: `${siteUrl}/airport-lounges/${r.slug}` }))
       })} />
       <PageHeading>UK airport lounges, compared</PageHeading>
+      <p className="text-lead text-ink">
+        {(() => {
+          const priced = rows.filter((r) => r.from !== null);
+          if (priced.length === 0) return "Walk-in lounge prices aren't published for most UK airports — pre-booking guarantees entry, and membership can beat paying per visit.";
+          const min = priced.reduce((m, r) => (r.from! < m.from ? { name: r.name, from: r.from! } : m), { name: "", from: Number.POSITIVE_INFINITY });
+          return `Pre-book lounge access at major UK airports. The cheapest published from-price is ${formatPence(min.from)} at ${min.name}; membership can beat paying per visit if you fly often.`;
+        })()}
+      </p>
+      <h2 className="text-h2 font-semibold text-ink">Every airport, cheapest pre-book</h2>
       <FeeGrid
         caption="Cheapest verified pre-book from-price per airport."
         columns={["Airport", "Lounges", "From (pre-book)"]}

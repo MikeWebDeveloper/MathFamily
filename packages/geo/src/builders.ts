@@ -10,11 +10,24 @@ export function faqPageLd(items: { question: string; answer: string }[]) {
   };
 }
 
+export function organizationLd(input: { siteUrl: string; name: string; logoUrl: string; sameAs?: string[] }) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization" as const,
+    "@id": `${input.siteUrl}/#organization`,
+    name: input.name,
+    url: input.siteUrl,
+    logo: { "@type": "ImageObject" as const, url: input.logoUrl },
+    ...(input.sameAs && input.sameAs.length ? { sameAs: input.sameAs } : {})
+  };
+}
+
 export function datasetLd(input: {
   name: string;
   description: string;
   url: string;
   dateModified: string;
+  siteUrl: string;
   creatorName: string;
 }) {
   return {
@@ -25,7 +38,7 @@ export function datasetLd(input: {
     url: input.url,
     dateModified: input.dateModified,
     isAccessibleForFree: true,
-    creator: { "@type": "Organization" as const, name: input.creatorName }
+    creator: { "@type": "Organization" as const, "@id": `${input.siteUrl}/#organization`, name: input.creatorName }
   };
 }
 
@@ -67,8 +80,11 @@ export function newsArticleLd(input: {
   datePublished: string;
   dateModified: string;
   sourceUrl: string;
-  publisherName: string;
+  siteUrl: string;
+  imageUrl: string;
+  publisherName?: string;
 }) {
+  const org = { "@type": "Organization" as const, "@id": `${input.siteUrl}/#organization`, name: input.publisherName ?? "ParkMath" };
   return {
     "@context": "https://schema.org",
     "@type": "NewsArticle" as const,
@@ -76,10 +92,12 @@ export function newsArticleLd(input: {
     description: input.description,
     url: input.url,
     mainEntityOfPage: input.url,
+    image: [input.imageUrl],
     datePublished: input.datePublished,
     dateModified: input.dateModified,
     isBasedOn: input.sourceUrl,
     isAccessibleForFree: true,
-    publisher: { "@type": "Organization" as const, name: input.publisherName }
+    author: org,
+    publisher: org
   };
 }

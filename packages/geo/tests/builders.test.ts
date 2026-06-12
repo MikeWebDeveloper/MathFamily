@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { breadcrumbLd, datasetLd, faqPageLd, itemListLd, webSiteLd, newsArticleLd } from "../src/builders";
+import { breadcrumbLd, datasetLd, faqPageLd, itemListLd, webSiteLd, newsArticleLd, organizationLd } from "../src/builders";
 
 describe("faqPageLd", () => {
   it("builds a FAQPage with one Question per item", () => {
@@ -11,18 +11,30 @@ describe("faqPageLd", () => {
 });
 
 describe("datasetLd", () => {
-  it("builds a Dataset with dateModified", () => {
+  it("builds a Dataset whose creator references the Organization @id", () => {
     const ld = datasetLd({
       name: "UK airport drop-off fees",
       description: "Current drop-off charges at 25 UK airports",
       url: "https://example.com/drop-off-charges",
       dateModified: "2026-06-10",
+      siteUrl: "https://example.com",
       creatorName: "ParkMath"
     });
     expect(ld["@type"]).toBe("Dataset");
     expect(ld.dateModified).toBe("2026-06-10");
     expect(ld.isAccessibleForFree).toBe(true);
-    expect(ld.creator).toMatchObject({ "@type": "Organization", name: "ParkMath" });
+    expect(ld.creator).toEqual({ "@type": "Organization", "@id": "https://example.com/#organization", name: "ParkMath" });
+  });
+});
+
+describe("organizationLd", () => {
+  it("has a stable @id, url and logo, and omits empty sameAs", () => {
+    const o = organizationLd({ siteUrl: "https://example.com", name: "ParkMath", logoUrl: "https://example.com/opengraph-image" });
+    expect(o["@type"]).toBe("Organization");
+    expect(o["@id"]).toBe("https://example.com/#organization");
+    expect(o.url).toBe("https://example.com");
+    expect(o.logo).toEqual({ "@type": "ImageObject", url: "https://example.com/opengraph-image" });
+    expect("sameAs" in o).toBe(false);
   });
 });
 
@@ -58,19 +70,23 @@ describe("itemListLd", () => {
 });
 
 describe("newsArticleLd", () => {
-  it("emits a schema.org NewsArticle with dates, publisher and source", () => {
+  it("emits a NewsArticle with image, author and an @id-referenced publisher", () => {
     const ld = newsArticleLd({
       headline: "Heathrow drop-off rises to £7",
       description: "Heathrow raised its forecourt drop-off charge to £7.",
-      url: "https://parkmath.co.uk/news/heathrow-dropoff-fee-jun-2026",
+      url: "https://www.parkmath.co.uk/news/heathrow-dropoff-fee-jun-2026",
       datePublished: "2026-06-01", dateModified: "2026-06-02",
-      sourceUrl: "https://www.heathrow.com/x", publisherName: "ParkMath"
+      sourceUrl: "https://www.heathrow.com/x",
+      siteUrl: "https://www.parkmath.co.uk",
+      imageUrl: "https://www.parkmath.co.uk/opengraph-image"
     }) as any;
     expect(ld["@type"]).toBe("NewsArticle");
     expect(ld.headline).toContain("Heathrow");
     expect(ld.datePublished).toBe("2026-06-01");
     expect(ld.dateModified).toBe("2026-06-02");
-    expect(ld.publisher.name).toBe("ParkMath");
     expect(ld.isBasedOn).toBe("https://www.heathrow.com/x");
+    expect(ld.image).toEqual(["https://www.parkmath.co.uk/opengraph-image"]);
+    expect(ld.author).toEqual({ "@type": "Organization", "@id": "https://www.parkmath.co.uk/#organization", name: "ParkMath" });
+    expect(ld.publisher).toEqual({ "@type": "Organization", "@id": "https://www.parkmath.co.uk/#organization", name: "ParkMath" });
   });
 });

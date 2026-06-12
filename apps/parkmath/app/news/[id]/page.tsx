@@ -14,7 +14,12 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const { id } = await params;
   const item = newsById(id);
   if (!item) return {};
-  return { title: `${item.title} — ParkMath update`, description: item.summary };
+  return {
+    title: `${item.title} — ParkMath update`,
+    description: item.summary,
+    alternates: { canonical: `/news/${id}` },
+    openGraph: { type: "article", publishedTime: item.publishedAt, modifiedTime: item.verifiedAt }
+  };
 }
 
 export default async function NewsItemPage({ params }: { params: Promise<{ id: string }> }) {
@@ -28,7 +33,7 @@ export default async function NewsItemPage({ params }: { params: Promise<{ id: s
 
   return (
     <article className="space-y-5">
-      <JsonLd data={newsArticleLd({ headline: item.title, description: item.summary, url, datePublished: item.publishedAt, dateModified: item.verifiedAt, sourceUrl: item.sourceUrl, publisherName: "ParkMath" })} />
+      <JsonLd data={newsArticleLd({ headline: item.title, description: item.summary, url, datePublished: item.publishedAt, dateModified: item.verifiedAt, sourceUrl: item.sourceUrl, siteUrl, imageUrl: `${siteUrl}/opengraph-image` })} />
       <JsonLd data={breadcrumbLd([
         { name: "Home", url: siteUrl }, { name: "Updates", url: `${siteUrl}/news` }, { name: item.title, url }
       ])} />

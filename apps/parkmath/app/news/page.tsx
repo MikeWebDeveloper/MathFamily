@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "UK airport updates & news — drop-off, parking & lounge changes",
   description:
     "Dated, official-sourced updates to UK airport drop-off charges, parking, lounges and operations — verified and tracked by ParkMath.",
+  alternates: { canonical: "/news" },
 };
 
 export default function NewsHubPage() {
@@ -44,7 +45,7 @@ export default function NewsHubPage() {
       ) : (
         <div className="space-y-3">
           {items.map((i) => (
-            <NewsCard key={i.id} item={i} href={`/news/${i.id}`} />
+            <NewsCard key={i.id} item={i} href={`/news/${i.id}`} headingLevel="h2" />
           ))}
         </div>
       )}
