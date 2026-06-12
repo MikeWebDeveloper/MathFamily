@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { formatPence, quoteDropOff, type DropOffTariff } from "@mathfamily/engine";
 import { AnimatedNumber, CaveatChip, RangeSlider } from "@mathfamily/ui";
 
@@ -18,6 +18,14 @@ export function DropOffCalculator({
     return maxUp > 0 ? Math.min(10, maxUp) : 10;
   });
   const quote = quoteDropOff(tariff, minutes, new Date(buildDate));
+  const costString = quote.costPence === null ? "Beyond tariff" : formatPence(quote.costPence);
+  const liveText = `${minutes} min · ${costString}`;
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("mf-live-answer", { detail: `${airportName} · ${liveText}` }));
+    }
+  }, [liveText]);
 
   return (
     <section
