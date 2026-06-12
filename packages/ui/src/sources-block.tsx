@@ -21,7 +21,8 @@ export function SourcesBlock({
       <p className="mt-2">{method}</p>
       <p className="mt-3 border-t border-ink/10 pt-3 text-xs text-ink-muted">
         <strong className="font-semibold text-ink">Independent:</strong> we are not owned by any airport, network or
-        booking site. Links marked * may earn us a commission — commissions never affect the figures we publish.
+        booking site. Any affiliate links are labelled Ad and earn us a commission — this never affects the figures we
+        publish or which option we show as cheapest.
       </p>
     </section>
   );
