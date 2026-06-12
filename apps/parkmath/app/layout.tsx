@@ -13,7 +13,10 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: "ParkMath — UK airport drop-off & parking costs, verified", template: "%s | ParkMath" },
   description:
-    "Current UK airport drop-off charges, parking costs and the free alternatives — every figure verified against official airport pages and date-stamped."
+    "Current UK airport drop-off charges, parking costs and the free alternatives — every figure verified against official airport pages and date-stamped.",
+  alternates: {
+    types: { "application/rss+xml": "/news/feed.xml" }
+  }
 };
 
 const NAV = [
