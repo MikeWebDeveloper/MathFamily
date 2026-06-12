@@ -15,9 +15,9 @@
     "@mathfamily/engine": "workspace:*",
     "@mathfamily/geo": "workspace:*",
     "@mathfamily/ui": "workspace:*",
-    "next": "latest",
-    "react": "latest",
-    "react-dom": "latest"
+    "next": "^16.2.9",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
   },
   "devDependencies": {
     "@mathfamily/config": "workspace:*",

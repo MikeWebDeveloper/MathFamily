@@ -77,6 +77,7 @@ export default function RoamingIndexPage() {
             "Daily roaming charges for EE, O2, Vodafone and Three across 40 destinations, with eSIM alternatives — verified against official network price guides.",
           url: `${siteUrl}/roaming`,
           dateModified: latestVerified,
+          siteUrl,
           creatorName: "RoamMath"
         })}
       />
