@@ -95,15 +95,16 @@ verified on a Vercel preview and again on production.
 - **Live now:** all three affiliate stages, the SEO batch (headers/schema/canonical confirmed live),
   and the turbo bump.
 - **Env vars (already set in Vercel Production):** `NEXT_PUBLIC_SITE_URL=https://www.parkmath.co.uk`.
-- **⚠️ Cloudflare shows no data — the domain isn't *proxied* through Cloudflare.** `parkmath.co.uk`'s
-  nameservers ARE Cloudflare (`*.ns.cloudflare.com`), but the `www`/apex DNS records are **"DNS only"
-  (grey cloud)** — traffic goes straight to Vercel (`server: Vercel`, no `cf-ray`), so Cloudflare's
-  **Traffic** analytics never sees it. (The other Vercel sites that DO show data are **Proxied / orange
-  cloud**.) **Fix:** Cloudflare → **DNS** → flip the `www` and apex `@` records to **Proxied (orange
-  cloud)**, and set **SSL/TLS → Full (strict)** (Flexible causes a redirect loop with Vercel). Data
-  then appears under *Analytics & Logs → Traffic* within minutes — no code, no beacon, no env var.
-  *(Optional alternative: the JS Web Analytics beacon via `NEXT_PUBLIC_CF_BEACON_TOKEN` — already
-  CSP-allowlisted — but proxying matches your other sites and needs no redeploy.)*
+- **✅ Cloudflare analytics — FIXED (2026-06-12).** Root cause was that the `www`/apex DNS records were
+  **"DNS only" (grey cloud)**, so traffic went straight to Vercel and Cloudflare's **Traffic** analytics
+  never saw it. Both CNAMEs (`parkmath.co.uk` + `www`, → `…vercel-dns-017.com`) were flipped to
+  **Proxied (orange cloud)** via the dashboard, and **SSL/TLS** set to **Automatic** (recommended;
+  currently running **Full**, auto-upgrades toward Strict on the next origin scan — avoids a transient
+  `526` vs. forcing Full-strict immediately). Verified live: both hosts now return `server: cloudflare`
+  + a `cf-ray` header (London edge), apex still 308→`www` with no redirect loop, HSTS intact. **Traffic
+  analytics populates under *Analytics & Logs → Traffic* within minutes** as visitors arrive — no code,
+  no beacon, no env var. *(Dashboard note: the Cloudflare SPA wouldn't load while the MetaMask browser
+  extension's SES lockdown was active — had to disable MetaMask to reach the dashboard.)*
 - **Cloudflare MCP installed globally** — `cloudflare-graphql` (GraphQL Analytics) at user scope in
   `~/.claude.json`; needs a one-time Cloudflare OAuth on first use (restart Claude Code to load it).
 - **To verify earnings:** click a live "Pre-book" CTA and confirm the click lands in your AWIN
