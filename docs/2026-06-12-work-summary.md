@@ -95,11 +95,15 @@ verified on a Vercel preview and again on production.
 - **Live now:** all three affiliate stages, the SEO batch (headers/schema/canonical confirmed live),
   and the turbo bump.
 - **Env vars (already set in Vercel Production):** `NEXT_PUBLIC_SITE_URL=https://www.parkmath.co.uk`.
-- **⚠️ Analytics is currently collecting NOTHING** — the Cloudflare Web Analytics beacon doesn't render
-  because `NEXT_PUBLIC_CF_BEACON_TOKEN` is **not set** (confirmed: the beacon script is absent from the
-  live HTML). Fix: in the **Cloudflare** dashboard → *Web Analytics* → add `www.parkmath.co.uk` → copy
-  the beacon **token**; in **Vercel** (Production) set `NEXT_PUBLIC_CF_BEACON_TOKEN=<token>` → redeploy.
-  The new CSP already allowlists `cloudflareinsights.com`; this works on Vercel (no DNS move needed).
+- **⚠️ Cloudflare shows no data — the domain isn't *proxied* through Cloudflare.** `parkmath.co.uk`'s
+  nameservers ARE Cloudflare (`*.ns.cloudflare.com`), but the `www`/apex DNS records are **"DNS only"
+  (grey cloud)** — traffic goes straight to Vercel (`server: Vercel`, no `cf-ray`), so Cloudflare's
+  **Traffic** analytics never sees it. (The other Vercel sites that DO show data are **Proxied / orange
+  cloud**.) **Fix:** Cloudflare → **DNS** → flip the `www` and apex `@` records to **Proxied (orange
+  cloud)**, and set **SSL/TLS → Full (strict)** (Flexible causes a redirect loop with Vercel). Data
+  then appears under *Analytics & Logs → Traffic* within minutes — no code, no beacon, no env var.
+  *(Optional alternative: the JS Web Analytics beacon via `NEXT_PUBLIC_CF_BEACON_TOKEN` — already
+  CSP-allowlisted — but proxying matches your other sites and needs no redeploy.)*
 - **Cloudflare MCP installed globally** — `cloudflare-graphql` (GraphQL Analytics) at user scope in
   `~/.claude.json`; needs a one-time Cloudflare OAuth on first use (restart Claude Code to load it).
 - **To verify earnings:** click a live "Pre-book" CTA and confirm the click lands in your AWIN
