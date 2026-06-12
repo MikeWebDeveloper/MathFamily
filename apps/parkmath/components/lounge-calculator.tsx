@@ -27,7 +27,7 @@ export function LoungeCalculator({ walkInPence, tiers, airportName }: { walkInPe
         />
         <span className="mf-num w-16 shrink-0 text-right text-sm font-medium text-ink-muted">{visits}×</span>
       </div>
-      <div id="lounge-result" aria-live="polite" data-testid="lounge-result" className="mt-5 space-y-2 rounded-xl bg-surface p-4 text-sm">
+      <div id="lounge-result" aria-live="polite" data-testid="lounge-result" className="mf-fade-in mt-5 space-y-2 rounded-xl bg-surface p-4 text-sm">
         <p className="flex justify-between text-ink">Pay-as-you-go <strong className="mf-num">{formatPence(r.payAsYouGoPence)}/yr</strong></p>
         {r.tierCosts.map((t) => (
           <p key={t.tier} className="flex justify-between text-ink-muted">Priority Pass {t.tier} <span className="mf-num">{formatPence(t.totalPence)}/yr</span></p>

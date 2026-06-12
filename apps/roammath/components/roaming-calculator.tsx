@@ -35,7 +35,7 @@ export function RoamingCalculator({
           <RangeSlider min={1} max={30} value={dataGb} onChange={setDataGb} ariaLabel="Data needed in gigabytes" ariaValuetext={`${dataGb} gigabytes`} className="mt-1" />
         </label>
       </div>
-      <div aria-live="polite" data-testid="roaming-result" className="mt-5 space-y-2 rounded-xl bg-surface p-4 text-sm">
+      <div aria-live="polite" data-testid="roaming-result" className="mf-fade-in mt-5 space-y-2 rounded-xl bg-surface p-4 text-sm">
         {r.networkCosts.map((n) => (
           <p key={n.network} className="flex justify-between text-ink-muted">
             <span>{NETWORK_LABELS[n.network] ?? n.network}</span>

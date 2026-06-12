@@ -269,6 +269,15 @@ a:hover .mf-logo-tile {
   to { transform: none; opacity: 1; }
 }
 
+/* Skeleton shimmer — use on loading placeholders. Reduced-motion: freezes to a static tint. */
+.mf-skeleton {
+  background: linear-gradient(90deg, rgb(15 23 42 / 0.05) 25%, rgb(15 23 42 / 0.09) 37%, rgb(15 23 42 / 0.05) 63%);
+  background-size: 400% 100%;
+  animation: mf-shimmer 1.4s ease-in-out infinite;
+  border-radius: 0.75rem;
+}
+@keyframes mf-shimmer { from { background-position: 100% 0 } to { background-position: 0 0 } }
+
 /* No-JS: reveals depend on ScrollReveal adding .mf-in — without scripting,
    content must never stay hidden. (Layouts also ship a <noscript> fallback.) */
 @media (scripting: none) {
@@ -291,6 +300,7 @@ a:hover .mf-logo-tile {
   .mf-logo-animate .mf-logo-bar-bottom {
     animation: none;
   }
+  .mf-skeleton { animation: none; }
   .mf-reveal {
     opacity: 1;
     transform: none;

@@ -43,7 +43,24 @@ export function AirportSearch({ airports, feeBySlug }: { airports: Airport[]; fe
         ))}
       </ul>
       {q && matches.length === 0 ? (
-        <p className="mt-4 text-sm text-ink-muted">No airports found for &quot;{query}&quot;.</p>
+        <div className="mt-6 flex flex-col items-center gap-3 rounded-card border border-ink/8 bg-surface py-10 px-6 text-center mf-fade-in">
+          <svg aria-hidden viewBox="0 0 40 40" className="h-10 w-10 text-ink-muted/50" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+            <circle cx="18" cy="18" r="11" />
+            <path d="m27 27 7 7" />
+            <path d="M14 18h8M18 14v8" strokeWidth="1.2" opacity="0.5" />
+          </svg>
+          <div>
+            <p className="text-sm font-semibold text-ink">No airports found for &ldquo;{query}&rdquo;</p>
+            <p className="mt-0.5 text-xs text-ink-muted">Try the full name (e.g. Gatwick) or the 3-letter code (e.g. LGW)</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setQuery("")}
+            className="mt-1 inline-flex min-h-9 items-center rounded-full border border-ink/15 bg-white px-4 text-xs font-medium text-ink-muted transition hover:border-brand-accent/40 hover:text-brand-accent"
+          >
+            Clear search
+          </button>
+        </div>
       ) : null}
     </div>
   );

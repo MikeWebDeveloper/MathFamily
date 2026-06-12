@@ -34,7 +34,7 @@ export function ParkingCalculator({ tariff, airportName, buildDate }: { tariff: 
           </button>
         ))}
       </div>
-      <div aria-live="polite" data-testid="parking-result" className="mt-5 space-y-2">
+      <div aria-live="polite" data-testid="parking-result" className="mf-fade-in mt-5 space-y-2">
         {c.options.length === 0 ? (
           <p className="text-ink-muted">No published price for {days} days — check the official site.</p>
         ) : (

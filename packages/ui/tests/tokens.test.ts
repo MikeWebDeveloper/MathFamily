@@ -24,3 +24,7 @@ it("defines a single-glow winner utility distinct from the static winner ring", 
   expect(css).toContain(".mf-glow-winner");
   expect(css).toMatch(/--shadow-card|--shadow-raised|--shadow-hero/);
 });
+
+it("defines a reduced-motion-safe skeleton shimmer", () => {
+  expect(css).toContain(".mf-skeleton");
+});
