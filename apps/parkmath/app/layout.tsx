@@ -49,7 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SiteHeader brandName="ParkMath" brandPrefix="Park" links={NAV} />
         <main id="main" className="mx-auto max-w-5xl px-4 py-8">{children}</main>
         <SiteFooter brandName="ParkMath" links={NAV} />
-        <SiteAnalytics cfToken="e8c1588261954283b404ac5040c7552e" />
+        <SiteAnalytics />
       </body>
     </html>
   );
