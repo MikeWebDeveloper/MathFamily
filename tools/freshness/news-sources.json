@@ -1,0 +1,14 @@
+{
+  "generatedAt": "2026-06-12",
+  "sources": [
+    { "airportSlug": "bristol", "url": "https://www.bristolairport.co.uk/corporate/news-and-media/news-and-media-centre/", "label": "Bristol Airport news & media centre" },
+    { "airportSlug": "edinburgh", "url": "https://corporate.edinburghairport.com/news", "label": "Edinburgh Airport corporate news" },
+    { "airportSlug": "manchester", "url": "https://mediacentre.manchesterairport.co.uk/", "label": "Manchester Airport media centre" },
+    { "airportSlug": "birmingham", "url": "https://www.birminghamairport.co.uk/news/", "label": "Birmingham Airport news" },
+    { "airportSlug": "east-midlands", "url": "https://mediacentre.eastmidlandsairport.com/", "label": "East Midlands Airport media centre" },
+    { "airportSlug": "heathrow", "url": "https://www.heathrow.com/transport-and-directions/terminal-drop-off-charge", "label": "Heathrow Terminal Drop-Off Charge" },
+    { "airportSlug": "luton", "url": "https://www.london-luton.co.uk/to-and-from-lla/dropping-off", "label": "London Luton drop-off" },
+    { "airportSlug": "stansted", "url": "https://www.stanstedairport.com/parking/pick-up-and-drop-off/", "label": "London Stansted pick-up & drop-off" },
+    { "airportSlug": "gatwick", "url": "https://www.gatwickairport.com/transport-options/drop-off.html", "label": "London Gatwick drop-off" }
+  ]
+}

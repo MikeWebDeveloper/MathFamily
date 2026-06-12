@@ -10,6 +10,7 @@ import {
   loadRoamingDataset
 } from "@mathfamily/data";
 import { buildWatchlist, UNWATCHABLE_DOMAINS } from "../src/watchlist";
+import { loadNewsSources } from "../src/news-sources";
 
 describe("buildWatchlist", () => {
   const list = buildWatchlist();
@@ -23,6 +24,7 @@ describe("buildWatchlist", () => {
     for (const s of loadRoamingDataset().networkSources) urls.add(s.sourceUrl);
     for (const r of loadEsimDataset().records) urls.add(r.sourceUrl);
     for (const r of loadBaggageDataset().records) urls.add(r.sourceUrl);
+    for (const s of loadNewsSources().sources) urls.add(s.url);
 
     expect(new Set(list.entries.map((e) => e.url)).size).toBe(list.entries.length); // no dupes
     expect(list.entries.map((e) => e.url).sort()).toEqual([...urls].sort()); // exact cover
@@ -31,7 +33,7 @@ describe("buildWatchlist", () => {
   it("every entry carries at least one ref and refs are namespaced", () => {
     for (const e of list.entries) {
       expect(e.refs.length).toBeGreaterThanOrEqual(1);
-      for (const ref of e.refs) expect(ref).toMatch(/^(drop-off|parking|lounges|priority-pass|roaming|esim|baggage):/);
+      for (const ref of e.refs) expect(ref).toMatch(/^(drop-off|parking|lounges|priority-pass|roaming|esim|baggage|news):/);
     }
   });
 

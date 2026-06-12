@@ -7,6 +7,7 @@ import {
   loadPriorityPass,
   loadRoamingDataset
 } from "@mathfamily/data";
+import { loadNewsSources } from "./news-sources";
 
 export interface WatchEntry {
   url: string;
@@ -49,6 +50,7 @@ export function buildWatchlist(now: Date = new Date()): Watchlist {
   for (const s of loadRoamingDataset().networkSources) add(s.sourceUrl, `roaming:${s.network}`);
   for (const r of loadEsimDataset().records) add(r.sourceUrl, `esim:${r.countrySlug}`);
   for (const r of loadBaggageDataset().records) add(r.sourceUrl, `baggage:${r.airlineSlug}`);
+  for (const s of loadNewsSources().sources) add(s.url, `news:${s.airportSlug}`);
 
   const entries: WatchEntry[] = [...byUrl.entries()]
     .map(([url, refs]) => {
