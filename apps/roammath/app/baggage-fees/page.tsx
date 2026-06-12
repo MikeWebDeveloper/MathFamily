@@ -36,7 +36,7 @@ export default function BaggageFeesIndexPage() {
       />
 
       <header className="space-y-3">
-        <h1 className="text-3xl font-bold text-ink">Airline baggage fees: 12 carriers compared</h1>
+        <h1 className="text-h1 font-bold tracking-tight text-balance text-ink">Airline baggage fees: 12 carriers compared</h1>
         <p className="text-ink-muted">
           Official published min–max bag charges for 12 UK-popular airlines, verified {lastUpdated}. Click an airline for the full fee breakdown.
         </p>
@@ -44,7 +44,7 @@ export default function BaggageFeesIndexPage() {
 
       <FeeGrid
         caption={`Baggage fees for 12 airlines — verified ${lastUpdated}. Ranges reflect official published min–max charges.`}
-        columns={["Airline", "Cabin bag", "First checked bag", "Verified"]}
+        columns={["Airline", "Cabin bag", "Checked bag", "Verified"]}
         numericColumns={[1, 2]}
         rows={records.map((r) => {
           const cabin = r.fees.find((f) => f.item.toLowerCase().includes("cabin"));
