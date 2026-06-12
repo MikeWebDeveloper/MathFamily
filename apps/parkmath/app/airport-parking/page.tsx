@@ -8,7 +8,8 @@ import { FeeGrid, FreshnessBadge, PageHeading } from "@mathfamily/ui";
 export const metadata: Metadata = {
   title: "UK airport parking compared — verified gate vs pre-book prices",
   description:
-    "Gate (drive-up) vs pre-book parking prices at major UK airports for 3, 7 and 14 days — verified against official airport tariffs and dated portal snapshots."
+    "Gate (drive-up) vs pre-book parking prices at major UK airports for 3, 7 and 14 days — verified against official airport tariffs and dated portal snapshots.",
+  alternates: { canonical: "/airport-parking" }
 };
 
 export default function ParkingIndexPage() {

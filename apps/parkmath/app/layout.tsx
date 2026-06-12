@@ -16,7 +16,14 @@ export const metadata: Metadata = {
   description:
     "Current UK airport drop-off charges, parking costs and the free alternatives — every figure verified against official airport pages and date-stamped.",
   alternates: {
+    canonical: "/",
     types: { "application/rss+xml": "/news/feed.xml" }
+  },
+  openGraph: {
+    type: "website",
+    siteName: "ParkMath",
+    locale: "en_GB",
+    url: SITE_URL
   }
 };
 

@@ -6,8 +6,9 @@ import { itemListLd, JsonLd } from "@mathfamily/geo";
 import { FeeGrid, PageHeading } from "@mathfamily/ui";
 
 export const metadata: Metadata = {
-  title: "UK airport lounge prices compared — pre-book from-prices & Priority Pass",
-  description: "Pre-book from-prices for lounges at major UK airports, which lounges take Priority Pass, and break-even calculators for membership."
+  title: "UK airport lounge prices & Priority Pass, compared",
+  description: "Pre-book from-prices for lounges at major UK airports, which lounges take Priority Pass, and break-even calculators for membership.",
+  alternates: { canonical: "/airport-lounges" }
 };
 
 export default function LoungeIndexPage() {

@@ -28,7 +28,8 @@ export async function generateMetadata({ params }: { params: Promise<{ airport: 
   const m = parkingPageModel(data.record, 7);
   return {
     title: `${data.airport.name} parking prices 2026 — gate vs pre-book, verified`,
-    description: `${data.airport.name} parking compared for 3, 7 and 14 days. ${m.answer} Verified ${data.record.verifiedAt}.`
+    description: `${data.airport.name} parking compared for 3, 7 and 14 days. ${m.answer} Verified ${data.record.verifiedAt}.`,
+    alternates: { canonical: `/airport-parking/${airport}` }
   };
 }
 

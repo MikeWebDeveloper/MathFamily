@@ -27,7 +27,8 @@ export async function generateMetadata({ params }: { params: Promise<{ airport: 
   const cheapest = data.record.lounges.filter((l) => l.walkInPence !== null).sort((a, b) => a.walkInPence! - b.walkInPence!)[0];
   return {
     title: `${data.airport.name} lounges 2026 — prices & Priority Pass break-even`,
-    description: `${data.airport.name} lounge pre-book from-prices${cheapest ? ` from ${formatPence(cheapest.walkInPence!)}` : ""}, which take Priority Pass, and when membership beats paying per visit. Verified ${data.record.verifiedAt}.`
+    description: `${data.airport.name} lounge pre-book from-prices${cheapest ? ` from ${formatPence(cheapest.walkInPence!)}` : ""}, which take Priority Pass, and when membership beats paying per visit. Verified ${data.record.verifiedAt}.`,
+    alternates: { canonical: `/airport-lounges/${airport}` }
   };
 }
 

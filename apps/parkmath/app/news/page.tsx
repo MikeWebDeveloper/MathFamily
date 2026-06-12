@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "UK airport updates & news — drop-off, parking & lounge changes",
   description:
     "Dated, official-sourced updates to UK airport drop-off charges, parking, lounges and operations — verified and tracked by ParkMath.",
+  alternates: { canonical: "/news" },
 };
 
 export default function NewsHubPage() {

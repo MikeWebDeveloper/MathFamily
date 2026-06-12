@@ -14,7 +14,12 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const { id } = await params;
   const item = newsById(id);
   if (!item) return {};
-  return { title: `${item.title} — ParkMath update`, description: item.summary };
+  return {
+    title: `${item.title} — ParkMath update`,
+    description: item.summary,
+    alternates: { canonical: `/news/${id}` },
+    openGraph: { type: "article", publishedTime: item.publishedAt, modifiedTime: item.verifiedAt }
+  };
 }
 
 export default async function NewsItemPage({ params }: { params: Promise<{ id: string }> }) {

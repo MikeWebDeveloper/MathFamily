@@ -9,7 +9,8 @@ import { SortableFeeTable, type DropOffRow } from "@/components/sortable-fee-tab
 export const metadata: Metadata = {
   title: "UK airport drop-off charges 2026 — every airport compared",
   description:
-    "Current drop-off (kiss and fly) charges at every major UK airport: fee, time limit, penalty and the free alternative. Verified against official airport pages."
+    "Current drop-off (kiss and fly) charges at every major UK airport: fee, time limit, penalty and the free alternative. Verified against official airport pages.",
+  alternates: { canonical: "/drop-off-charges" }
 };
 
 export default function MasterTablePage() {
