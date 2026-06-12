@@ -9,5 +9,5 @@
     "typecheck": "turbo run typecheck",
     "dev": "turbo run dev"
   },
-  "devDependencies": { "turbo": "^2.5.0" }
+  "devDependencies": { "turbo": "^2.9.0" }
 }
