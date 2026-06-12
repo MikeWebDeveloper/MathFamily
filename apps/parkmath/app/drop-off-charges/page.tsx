@@ -3,7 +3,7 @@ import { loadAirports, loadDropOffDataset } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { datasetLd, itemListLd, JsonLd } from "@mathfamily/geo";
 import { FreshnessBadge, PageHeading } from "@mathfamily/ui";
-import { isPerEntryTariff } from "@/lib/content";
+import { dropOffIndexSummary, isPerEntryTariff } from "@/lib/content";
 import { SortableFeeTable, type DropOffRow } from "@/components/sortable-fee-table";
 
 export const metadata: Metadata = {
@@ -62,7 +62,11 @@ export default function MasterTablePage() {
       <header className="space-y-3">
         <PageHeading>UK airport drop-off charges, compared</PageHeading>
         <FreshnessBadge verifiedAt={latestVerified} />
+        <p className="text-lead text-ink">
+          {dropOffIndexSummary(records.map((r) => ({ name: airports.get(r.airportSlug)?.name ?? r.airportSlug, isFree: r.isFree, feePence: r.bands[0]?.totalPence ?? 0 })))}
+        </p>
       </header>
+      <h2 className="text-h2 font-semibold text-ink">Every UK airport, compared</h2>
       <SortableFeeTable rows={rows} />
     </article>
   );

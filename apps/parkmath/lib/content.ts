@@ -3,7 +3,7 @@ import type { DropOffRecord } from "@mathfamily/data";
 
 export function buildDropOffFaqs(record: DropOffRecord, airportName: string): { question: string; answer: string }[] {
   const faqs: { question: string; answer: string }[] = [
-    { question: `How much is the drop-off charge at ${airportName}?`, answer: record.feeSummary }
+    { question: `How much is the drop-off charge at ${airportName}?`, answer: `${record.feeSummary} (verified ${record.verifiedAt}, per the official ${airportName} page).` }
   ];
   if (record.paymentDeadline) {
     faqs.push({
@@ -22,6 +22,17 @@ export function buildDropOffFaqs(record: DropOffRecord, airportName: string): { 
     });
   }
   return faqs;
+}
+
+/** Answer-first summary for the drop-off index page: how many airports are free, and the
+ *  cheapest/most-expensive of those that charge. Pure + unit-tested. */
+export function dropOffIndexSummary(rows: { name: string; isFree: boolean; feePence: number }[]): string {
+  const freeCount = rows.filter((r) => r.isFree).length;
+  const paid = rows.filter((r) => !r.isFree).sort((a, b) => a.feePence - b.feePence);
+  if (paid.length === 0) return `All ${rows.length} major UK airports let you drop off free.`;
+  const cheapest = paid[0]!;
+  const dearest = paid[paid.length - 1]!;
+  return `${freeCount} of ${rows.length} major UK airports let you drop off free. Of those that charge, the cheapest is ${cheapest.name} at ${formatPence(cheapest.feePence)}; the most expensive is ${dearest.name} at ${formatPence(dearest.feePence)} (per drop-off, 2026).`;
 }
 
 export function trendNote(record: DropOffRecord): string | null {

@@ -44,7 +44,15 @@ export default function ParkingIndexPage() {
       <header className="space-y-3">
         <PageHeading>UK airport parking, compared honestly</PageHeading>
         <FreshnessBadge verifiedAt={latestVerified} />
+        <p className="text-lead text-ink">
+          {(() => {
+            const priced = rows.filter((r) => r.cheapest);
+            const min = priced.reduce((m, r) => (r.cheapest!.totalPence < m.totalPence ? { name: r.name, totalPence: r.cheapest!.totalPence } : m), { name: "", totalPence: Number.POSITIVE_INFINITY });
+            return min.name ? `Pre-booking beats the drive-up gate price at every UK airport we track. The cheapest 7-day pre-book is ${formatPence(min.totalPence)} at ${min.name}.` : "Compare gate vs pre-book parking prices at every major UK airport.";
+          })()}
+        </p>
       </header>
+      <h2 className="text-h2 font-semibold text-ink">Every airport, cheapest 7-day option</h2>
       <FeeGrid
         caption="7-day cheapest verified option per airport. Click through for all durations, gate prices and the full comparison."
         columns={["Airport", "Cheapest 7-day option", "From", "Verified"]}

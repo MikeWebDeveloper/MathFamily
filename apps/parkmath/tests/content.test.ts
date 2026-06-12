@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { DropOffRecord } from "@mathfamily/data";
-import { buildDropOffFaqs, isPerEntryTariff, trendNote } from "../lib/content";
+import { buildDropOffFaqs, dropOffIndexSummary, isPerEntryTariff, trendNote } from "../lib/content";
 
 const record: DropOffRecord = {
   airportSlug: "gatwick",
@@ -36,6 +36,27 @@ describe("buildDropOffFaqs", () => {
   it("omits optional questions when data is null", () => {
     const sparse = { ...record, paymentDeadline: null, freeAlternative: null };
     expect(buildDropOffFaqs(sparse, "X")).toHaveLength(2);
+  });
+  it("cites the verified date and official source in the fee answer", () => {
+    const faqs = buildDropOffFaqs(record, "London Gatwick");
+    expect(faqs[0]?.answer).toContain("verified 2026-06-10");
+    expect(faqs[0]?.answer).toContain("official London Gatwick");
+  });
+});
+
+describe("dropOffIndexSummary", () => {
+  it("summarises free count, cheapest paid and dearest", () => {
+    const s = dropOffIndexSummary([
+      { name: "Birmingham", isFree: true, feePence: 0 },
+      { name: "Inverness", isFree: true, feePence: 0 },
+      { name: "Bristol", isFree: false, feePence: 850 },
+      { name: "Gatwick", isFree: false, feePence: 1000 }
+    ]);
+    expect(s).toContain("2 of 4");
+    expect(s).toContain("Bristol");
+    expect(s).toContain("£8.50");
+    expect(s).toContain("Gatwick");
+    expect(s).toContain("£10");
   });
 });
 
