@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { loadBaggageDataset, type BaggageRecord } from "@mathfamily/data";
 import { breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
-import { AnswerLead, Callout, FaqAccordion, FeeGrid, FreshnessBadge, SourceCitation, SourcesBlock } from "@mathfamily/ui";
+import { AnswerLead, Callout, FaqAccordion, FeeGrid, FreshnessBadge, PageHeading, SourceCitation, SourcesBlock } from "@mathfamily/ui";
 import { baggageAnswer, feeRangeLabel } from "@/lib/baggage-content";
 
 export const dynamicParams = false;
@@ -71,7 +71,7 @@ export default async function AirlineBaggagePage({ params }: { params: Promise<{
       />
 
       <header className="space-y-3">
-        <h1 className="text-3xl font-bold text-ink">{record.airlineName} baggage fees: official published charges</h1>
+        <PageHeading>{record.airlineName} baggage fees: official published charges</PageHeading>
         <div className="flex flex-wrap items-center gap-3">
           <FreshnessBadge verifiedAt={record.verifiedAt} />
           <SourceCitation url={record.sourceUrl} label={`Official ${record.airlineName} fee page`} />

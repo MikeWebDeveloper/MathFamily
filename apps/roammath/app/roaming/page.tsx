@@ -3,7 +3,7 @@ import Link from "next/link";
 import { loadRoamingDataset, loadEsimDataset, NETWORKS } from "@mathfamily/data";
 import { roamingTripCost, formatPence } from "@mathfamily/engine";
 import { datasetLd, itemListLd, JsonLd } from "@mathfamily/geo";
-import { CountryFlag, FeeGrid, FreshnessBadge } from "@mathfamily/ui";
+import { CountryFlag, FeeGrid, FreshnessBadge, PageHeading } from "@mathfamily/ui";
 import { NETWORK_LABELS } from "@/lib/roaming-content";
 
 export const metadata: Metadata = {
@@ -88,7 +88,7 @@ export default function RoamingIndexPage() {
       />
 
       <header className="space-y-3">
-        <h1 className="text-3xl font-bold text-ink">UK mobile roaming charges, by destination</h1>
+        <PageHeading>UK mobile roaming charges, by destination</PageHeading>
         <FreshnessBadge verifiedAt={latestVerified} />
       </header>
 
@@ -102,7 +102,7 @@ export default function RoamingIndexPage() {
           <Link
             key={dest.countrySlug}
             href={`/roaming/${dest.countrySlug}`}
-            className="mf-press inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white px-3 py-1.5 text-sm font-medium text-ink transition-colors hover:border-brand-accent/40 hover:bg-brand-accent/5"
+            className="mf-press inline-flex min-h-11 items-center gap-2 rounded-full border border-ink/10 bg-white px-3 py-2 text-sm font-medium text-ink transition-colors hover:border-brand-accent/40 hover:bg-brand-accent/5"
           >
             <CountryFlag iso2={dest.iso2} size={18} />
             {dest.countryName}
@@ -113,6 +113,7 @@ export default function RoamingIndexPage() {
       <FeeGrid
         caption="Daily charge per network. 'included' = no extra cost. eSIM column = cheapest eligible bundle for a 7-day / 5GB trip."
         columns={["Destination", "EE", "O2", "Vodafone", "Three", "Best eSIM (5GB/7d)"]}
+        numericColumns={[1, 2, 3, 4, 5]}
         rows={rows}
       />
 

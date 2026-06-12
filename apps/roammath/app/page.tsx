@@ -2,7 +2,7 @@ import Link from "next/link";
 import { loadRoamingDataset, loadEsimDataset } from "@mathfamily/data";
 import { roamingTripCost, formatPence } from "@mathfamily/engine";
 import { webSiteLd, JsonLd } from "@mathfamily/geo";
-import { EmailCaptureSlot, FeeStat } from "@mathfamily/ui";
+import { CountryFlag, EmailCaptureSlot, StatStrip } from "@mathfamily/ui";
 import { FamilyLinks } from "@/components/family-links";
 import { NETWORK_LABELS } from "@/lib/roaming-content";
 
@@ -69,7 +69,7 @@ export default function HomePage() {
       <JsonLd data={webSiteLd({ name: "RoamMath", url: siteUrl })} />
 
       <section className="space-y-4">
-        <h1 className="text-4xl font-bold text-ink">
+        <h1 className="text-h1 font-bold tracking-tight text-balance text-ink">
           What does your phone cost{" "}
           <span className="text-brand-accent">abroad</span>?
         </h1>
@@ -80,38 +80,28 @@ export default function HomePage() {
         </p>
       </section>
 
-      <section className="grid gap-4 sm:grid-cols-3">
-        <FeeStat
-          label="Destinations tracked"
-          value={String(destinationCount)}
-          note="roaming charges per destination"
-        />
-        <FeeStat
-          label="Networks compared"
-          value="4 + 3"
-          note="EE, O2, Vodafone, Three + eSIM providers"
-        />
-        <FeeStat
-          label="Cheapest week in Spain"
-          value={spainStatValue}
-          note={spainStatNote}
-        />
+      <section>
+        <StatStrip stats={[
+          { label: "Destinations tracked", value: String(destinationCount), note: "roaming charges per destination" },
+          { label: "Networks compared", value: "4 + 3", note: "EE, O2, Vodafone, Three + eSIM providers" },
+          { label: "Cheapest week in Spain", value: spainStatValue, note: spainStatNote },
+        ]} />
       </section>
 
       <section>
         <h2 className="mb-4 text-xl font-semibold text-ink">40 destinations</h2>
-        <ul className="grid grid-cols-2 gap-2 text-sm sm:grid-cols-4">
+        <nav aria-label="Destinations" className="mf-reveal flex flex-wrap gap-2">
           {destinations.map((d) => (
-            <li key={d.countrySlug}>
-              <Link
-                href={`/roaming/${d.countrySlug}`}
-                className="font-medium text-brand-accent underline underline-offset-4"
-              >
-                {d.countryName}
-              </Link>
-            </li>
+            <Link
+              key={d.countrySlug}
+              href={`/roaming/${d.countrySlug}`}
+              className="mf-press inline-flex min-h-11 items-center gap-2 rounded-full border border-ink/10 bg-white px-3 py-2 text-sm font-medium text-ink transition-colors hover:border-brand-accent/40 hover:bg-brand-accent/5"
+            >
+              <CountryFlag iso2={d.iso2} size={18} />
+              {d.countryName}
+            </Link>
           ))}
-        </ul>
+        </nav>
       </section>
 
       <p className="flex flex-wrap gap-6">

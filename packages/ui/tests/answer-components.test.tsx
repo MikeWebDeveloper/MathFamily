@@ -15,6 +15,13 @@ describe("AnswerCard", () => {
     expect(container.querySelector("#mf-answer-anchor")).not.toBeNull();
     expect(container.querySelector(".mf-edge-shine")).not.toBeNull();
   });
+
+  it("AnswerCard renders a static value by default and a counted value when pence is given", () => {
+    const { rerender } = render(<AnswerCard label="X" value="£7" />);
+    expect(screen.getByText("£7")).toBeDefined();
+    rerender(<AnswerCard label="X" value="£7" pence={700} render={(p) => (p === null ? "—" : `£${(p/100).toFixed(0)}`)} />);
+    expect(screen.getByText("£7")).toBeDefined();
+  });
 });
 
 describe("VerifiedStamp", () => {

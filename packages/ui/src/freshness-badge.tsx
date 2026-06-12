@@ -1,3 +1,5 @@
+import { CheckTick } from "./check-tick";
+
 export function FreshnessBadge({
   verifiedAt,
   // keep in sync with STALE_AFTER_DAYS in @mathfamily/engine
@@ -20,9 +22,7 @@ export function FreshnessBadge({
           : "mf-fade-in inline-flex items-center gap-1.5 rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-positive ring-1 ring-positive/20"
       }
     >
-      <svg aria-hidden viewBox="0 0 12 12" className="h-3 w-3 shrink-0" fill="none">
-        <path d="M2.5 6.5 5 9l4.5-5.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="mf-tick" />
-      </svg>
+      <CheckTick />
       {stale ? `Last verified ${formatted}` : `Verified ${formatted}`}
     </span>
   );

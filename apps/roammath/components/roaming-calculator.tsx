@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { formatPence, roamingTripCost, type EsimBundleOption, type NetworkRoamingOption } from "@mathfamily/engine";
-import { AnimatedNumber, CaveatChip } from "@mathfamily/ui";
+import { AnimatedNumber, CaveatChip, RangeSlider } from "@mathfamily/ui";
 import { NETWORK_LABELS } from "@/lib/roaming-content";
 
 export function RoamingCalculator({
@@ -28,14 +28,14 @@ export function RoamingCalculator({
       <div className="mt-4 space-y-4">
         <label className="block text-sm text-ink-muted">
           Days: <strong className="mf-num text-ink">{days}</strong>
-          <input type="range" min={1} max={30} value={days} aria-valuetext={`${days} days`} onChange={(e) => setDays(Number(e.target.value))} className="mt-1 h-2 w-full cursor-pointer accent-brand-accent transition-shadow focus-visible:shadow-[0_0_0_4px_color-mix(in_srgb,var(--color-brand-accent)_25%,transparent)] active:shadow-[0_0_12px_color-mix(in_srgb,var(--color-brand-accent)_45%,transparent)]" />
+          <RangeSlider min={1} max={30} value={days} onChange={setDays} ariaLabel="Trip duration in days" ariaValuetext={`${days} days`} className="mt-1" />
         </label>
         <label className="block text-sm text-ink-muted">
           Data needed: <strong className="mf-num text-ink">{dataGb}GB</strong>
-          <input type="range" min={1} max={30} value={dataGb} aria-valuetext={`${dataGb} gigabytes`} onChange={(e) => setDataGb(Number(e.target.value))} className="mt-1 h-2 w-full cursor-pointer accent-brand-accent transition-shadow focus-visible:shadow-[0_0_0_4px_color-mix(in_srgb,var(--color-brand-accent)_25%,transparent)] active:shadow-[0_0_12px_color-mix(in_srgb,var(--color-brand-accent)_45%,transparent)]" />
+          <RangeSlider min={1} max={30} value={dataGb} onChange={setDataGb} ariaLabel="Data needed in gigabytes" ariaValuetext={`${dataGb} gigabytes`} className="mt-1" />
         </label>
       </div>
-      <div aria-live="polite" data-testid="roaming-result" className="mt-5 space-y-2 rounded-xl bg-surface p-4 text-sm">
+      <div aria-live="polite" data-testid="roaming-result" className="mf-fade-in mt-5 space-y-2 rounded-xl bg-surface p-4 text-sm">
         {r.networkCosts.map((n) => (
           <p key={n.network} className="flex justify-between text-ink-muted">
             <span>{NETWORK_LABELS[n.network] ?? n.network}</span>
@@ -52,7 +52,7 @@ export function RoamingCalculator({
             <span className="font-medium text-ink"><AnimatedNumber pence={r.esimChoice.totalPence} render={(p) => (p === null ? "—" : formatPence(p))} /></span>
           </p>
         ) : null}
-        <p className="mt-2 rounded-lg border-t border-ink/10 bg-brand-accent/[0.07] p-3 text-base font-bold text-brand">
+        <p className="mt-2 rounded-lg border-t border-ink/10 bg-brand-accent/[0.07] p-3 text-sm font-semibold text-brand">
           {r.verdict === "esim"
             ? `eSIM wins — saves ${formatPence(r.savingsPence)} vs the cheapest network charge.`
             : r.verdict === "network"

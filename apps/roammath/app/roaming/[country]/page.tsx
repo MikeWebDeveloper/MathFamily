@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { loadRoamingDataset, loadEsimDataset, NETWORKS, type RoamingDestination, type EsimCountry } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
-import { AnswerLead, CountryFlag, FaqAccordion, FeeGrid, FreshnessBadge, MiniAnswerBar, RegionMap, SourceCitation, SourcesBlock } from "@mathfamily/ui";
+import { AnswerLead, CountryFlag, FaqAccordion, FeeGrid, FreshnessBadge, MiniAnswerBar, PageHeading, RegionMap, SavesVerdict, SourceCitation, SourcesBlock } from "@mathfamily/ui";
 import { RoamingCalculator } from "@/components/roaming-calculator";
 import { AffiliateBlock } from "@/components/affiliate-block";
 import { buildRoamingFaqs, roamingPageModel, NETWORK_LABELS } from "@/lib/roaming-content";
@@ -95,16 +95,18 @@ export default async function CountryHubPage({ params }: { params: Promise<{ cou
         <CountryFlag
           iso2={destination.iso2}
           size={260}
-          className="pointer-events-none absolute -top-10 right-0 opacity-[0.06]"
+          className="pointer-events-none absolute -top-10 right-0 hidden opacity-[0.06] sm:block"
         />
         <div className="flex items-center gap-3">
           <CountryFlag iso2={destination.iso2} size={36} className="shrink-0 rounded-full shadow-sm" />
-          <h1 className="text-3xl font-bold text-ink">{destination.countryName} roaming charges: all four UK networks compared</h1>
+          <PageHeading>{destination.countryName} roaming charges: all four UK networks compared</PageHeading>
         </div>
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
           <FreshnessBadge verifiedAt={latestVerified} />
           {networkSources.slice(0, 1).map((s) => (
-            <SourceCitation key={s.network} url={s.sourceUrl} label={`${NETWORK_LABELS[s.network] ?? s.network} price guide`} />
+            <span key={s.network} className="hidden sm:inline-flex">
+              <SourceCitation url={s.sourceUrl} label={`${NETWORK_LABELS[s.network] ?? s.network} price guide`} />
+            </span>
           ))}
         </div>
       </header>
@@ -121,6 +123,19 @@ export default async function CountryHubPage({ params }: { params: Promise<{ cou
         countryName={destination.countryName}
       />
 
+      <SavesVerdict
+        amount={m.verdict === "esim" && m.savingsPence > 0 ? formatPence(m.savingsPence) : undefined}
+        verdict={
+          m.verdict === "esim" && m.savingsPence > 0 && m.esimChoice
+            ? `An eSIM (${m.esimChoice.provider}, ${m.esimChoice.bundleName}) saves ${formatPence(m.savingsPence)} vs the cheapest network daily pass for a 7-day trip.`
+            : m.verdict === "network" && m.cheapestNetwork?.included
+              ? `Your network already includes roaming in ${destination.countryName} — no daily charge applies (fair-use limits apply).`
+              : m.cheapestNetwork?.totalPence != null
+                ? `Your network's daily pass is the best option for a 7-day trip at ${formatPence(m.cheapestNetwork.totalPence)}.`
+                : `Compare options above to find the best price for your trip to ${destination.countryName}.`
+        }
+      />
+
       {esim ? (
         <AffiliateBlock slotId="esim" airportSlug={destination.countrySlug} officialUrl={esim.sourceUrl} />
       ) : null}
@@ -128,6 +143,7 @@ export default async function CountryHubPage({ params }: { params: Promise<{ cou
       <FeeGrid
         caption={`All four networks' ${destination.countryName} roaming charges (verified ${latestVerified}).`}
         columns={["Network", "Daily charge", "Pass / product name", "Fair-use note"]}
+        numericColumns={[1]}
         rows={destination.perNetwork.map((n) => [
           NETWORK_LABELS[n.network] ?? n.network,
           n.included ? "Included" : n.dailyPassPence !== null ? formatPence(n.dailyPassPence) + "/day" : "No standard pass",

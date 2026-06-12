@@ -3,7 +3,7 @@ import Link from "next/link";
 import { loadAirports, loadParkingDataset } from "@mathfamily/data";
 import { formatPence, compareParking } from "@mathfamily/engine";
 import { itemListLd, JsonLd } from "@mathfamily/geo";
-import { FeeGrid, FreshnessBadge } from "@mathfamily/ui";
+import { FeeGrid, FreshnessBadge, PageHeading } from "@mathfamily/ui";
 
 export const metadata: Metadata = {
   title: "UK airport parking compared — verified gate vs pre-book prices",
@@ -41,12 +41,13 @@ export default function ParkingIndexPage() {
         })}
       />
       <header className="space-y-3">
-        <h1 className="text-3xl font-bold text-ink">UK airport parking, compared honestly</h1>
+        <PageHeading>UK airport parking, compared honestly</PageHeading>
         <FreshnessBadge verifiedAt={latestVerified} />
       </header>
       <FeeGrid
         caption="7-day cheapest verified option per airport. Click through for all durations, gate prices and the full comparison."
         columns={["Airport", "Cheapest 7-day option", "From", "Verified"]}
+        numericColumns={[2]}
         rows={rows.map((r) => [
           <Link key="a" href={`/airport-parking/${r.slug}`} className="font-medium text-brand-accent underline-offset-4 hover:underline">
             {r.name}

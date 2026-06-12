@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { loadAirports, loadParkingDataset, type Airport, type ParkingRecord } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
-import { AnswerLead, FaqAccordion, FeeGrid, FreshnessBadge, SourceCitation, SourcesBlock, EmailCaptureSlot } from "@mathfamily/ui";
+import { AnswerLead, FaqAccordion, FeeGrid, FreshnessBadge, PageHeading, SavesVerdict, SourceCitation, SourcesBlock, EmailCaptureSlot } from "@mathfamily/ui";
 import { AffiliateBlock } from "@/components/affiliate-block";
 import { ParkingCalculator } from "@/components/parking-calculator";
 import { DURATION_SLUGS, buildParkingFaqs, parkingPageModel } from "@/lib/parking-content";
@@ -56,7 +56,7 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
       />
 
       <header className="space-y-3">
-        <h1 className="text-3xl font-bold text-ink">{airport.name} parking: gate vs pre-book</h1>
+        <PageHeading>{airport.name} parking: gate vs pre-book</PageHeading>
         <div className="flex flex-wrap items-center gap-3">
           <FreshnessBadge verifiedAt={record.verifiedAt} />
           <SourceCitation url={record.sourceUrl} label={`Official ${airport.name} parking`} />
@@ -75,6 +75,15 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
 
       <ParkingCalculator tariff={record} airportName={airport.name} buildDate={new Date().toISOString()} />
 
+      <SavesVerdict
+        amount={m7.savingsVsGatePence ? formatPence(m7.savingsVsGatePence) : undefined}
+        verdict={
+          m7.savingsVsGatePence && m7.cheapest
+            ? `Pre-booking saves ${formatPence(m7.savingsVsGatePence)} vs the drive-up gate price for 7 days (${m7.cheapest.name}).`
+            : `Compare options above to find the best price for your dates.`
+        }
+      />
+
       {m7.warnings.length > 0 ? (
         <ul className="space-y-1 text-xs text-ink-muted">
           {m7.warnings.map((w) => (
@@ -86,6 +95,7 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
       <FeeGrid
         caption={`All published ${airport.name} options by duration. Pre-book figures are dated snapshots from the official portal.`}
         columns={["Option", "3 days", "7 days", "14 days"]}
+        numericColumns={[1, 2, 3]}
         highlightRow={winnerIndex >= 0 ? winnerIndex : undefined}
         rows={record.products.map((p, i) => [
           i === winnerIndex ? (
