@@ -20,15 +20,20 @@ describe("buildAwinLink", () => {
 });
 
 describe("resolveSlot", () => {
-  it("returns the official fallback when no partner is active", () => {
+  it("parking-prebook resolves to the active Holiday Extras affiliate link", () => {
     const r = resolveSlot("parking-prebook", "gatwick", "https://www.gatwickairport.com/parking");
-    expect(r.kind).toBe("official");
-    expect(r.url).toBe("https://www.gatwickairport.com/parking");
-    expect(r.disclosureRequired).toBe(false);
+    expect(r.kind).toBe("affiliate");
+    expect(r.partnerName).toBe("Holiday Extras");
+    expect(r.disclosureRequired).toBe(true);
+    expect(r.url).toContain("awinmid=3496");
+    expect(r.url).toContain("awinaffid=2932035");
+    expect(r.url).toContain("clickref=parkmath-gatwick");
+    expect(r.url).not.toContain("ued=");
   });
-  it("never returns an affiliate link while all slots ship inactive", () => {
-    for (const slot of ["parking-prebook", "lounge-membership"] as const) {
-      expect(resolveSlot(slot, "manchester", "https://example.com").kind).toBe("official");
-    }
+  it("lounge-membership stays official while inactive", () => {
+    const r = resolveSlot("lounge-membership", "gatwick", "https://www.prioritypass.com");
+    expect(r.kind).toBe("official");
+    expect(r.url).toBe("https://www.prioritypass.com");
+    expect(r.disclosureRequired).toBe(false);
   });
 });
