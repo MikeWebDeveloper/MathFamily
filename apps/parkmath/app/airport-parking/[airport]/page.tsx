@@ -56,7 +56,7 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
       />
 
       <header className="space-y-3">
-        <h1 className="text-3xl font-bold text-ink">{airport.name} parking: gate vs pre-book</h1>
+        <h1 className="text-h1 font-bold tracking-tight text-balance text-ink">{airport.name} parking: gate vs pre-book</h1>
         <div className="flex flex-wrap items-center gap-3">
           <FreshnessBadge verifiedAt={record.verifiedAt} />
           <SourceCitation url={record.sourceUrl} label={`Official ${airport.name} parking`} />

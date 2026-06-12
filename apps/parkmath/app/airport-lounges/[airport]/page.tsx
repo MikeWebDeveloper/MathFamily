@@ -66,7 +66,7 @@ export default async function LoungePage({ params }: { params: Promise<{ airport
       ])} />
 
       <header className="space-y-3">
-        <h1 className="text-3xl font-bold text-ink">{airport.name} lounges: pay per visit or join?</h1>
+        <h1 className="text-h1 font-bold tracking-tight text-balance text-ink">{airport.name} lounges: pay per visit or join?</h1>
         <div className="flex flex-wrap items-center gap-3">
           <FreshnessBadge verifiedAt={record.verifiedAt} />
           <SourceCitation url={record.sourceUrl} label={`Official lounge pages`} />

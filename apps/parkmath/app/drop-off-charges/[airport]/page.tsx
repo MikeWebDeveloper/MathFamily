@@ -53,7 +53,7 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
       />
 
       <header className="space-y-3">
-        <h1 className="text-3xl font-bold text-ink">{airport.name} drop-off charge</h1>
+        <h1 className="text-h1 font-bold tracking-tight text-balance text-ink">{airport.name} drop-off charge</h1>
         <div className="flex flex-wrap items-center gap-3">
           <FreshnessBadge verifiedAt={record.verifiedAt} />
           <SourceCitation url={record.sourceUrl} label={`Official ${airport.name} page`} />
@@ -64,7 +64,7 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
         <div className="flex flex-wrap gap-2">
           {record.maxStayMinutes !== null ? <CaveatChip>Max stay {record.maxStayMinutes} min</CaveatChip> : null}
           {record.penaltyPence !== null ? <CaveatChip>{formatPence(record.penaltyPence)} penalty if unpaid</CaveatChip> : null}
-          {record.paymentDeadline ? <CaveatChip>Pay by {record.paymentDeadline}</CaveatChip> : null}
+          {record.paymentDeadline ? <CaveatChip>Pay before you leave</CaveatChip> : null}
         </div>
       ) : null}
 
@@ -86,7 +86,7 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
         <AnswerCard
           label="Current drop-off charge"
           value={record.isFree ? "Free" : formatPence(record.bands[0]?.totalPence ?? 0)}
-          note={record.isFree ? "No forecourt charge" : record.feeSummary}
+          note={record.isFree ? "No forecourt charge" : record.bands[0] ? `for up to ${record.bands[0].upToMinutes} min` : undefined}
           footer={
             <span className="inline-block rounded bg-white/90 px-1.5">
               <VerifiedStamp verifiedAt={record.verifiedAt} sourceUrl={record.sourceUrl} sourceLabel={`Official ${airport.name} page`} />
