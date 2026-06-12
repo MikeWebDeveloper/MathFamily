@@ -20,6 +20,21 @@ describe("SiteAnalytics", () => {
     expect(s).not.toBeNull();
     expect(s!.getAttribute("data-cf-beacon")).toContain("abc123");
   });
+  it("falls back to the cfToken prop when the env var is unset", () => {
+    vi.stubEnv("NEXT_PUBLIC_CF_BEACON_TOKEN", "");
+    vi.stubEnv("NEXT_PUBLIC_AWIN_PUBLISHER_ID", "");
+    const { container } = render(<SiteAnalytics cfToken="proptoken" />);
+    const s = container.querySelector('script[src*="cloudflareinsights"]');
+    expect(s).not.toBeNull();
+    expect(s!.getAttribute("data-cf-beacon")).toContain("proptoken");
+  });
+  it("lets the env var override the cfToken prop", () => {
+    vi.stubEnv("NEXT_PUBLIC_CF_BEACON_TOKEN", "envtoken");
+    vi.stubEnv("NEXT_PUBLIC_AWIN_PUBLISHER_ID", "");
+    const { container } = render(<SiteAnalytics cfToken="proptoken" />);
+    const s = container.querySelector('script[src*="cloudflareinsights"]');
+    expect(s!.getAttribute("data-cf-beacon")).toContain("envtoken");
+  });
   it("renders the AWIN MasterTag script when the publisher id is set", () => {
     vi.stubEnv("NEXT_PUBLIC_CF_BEACON_TOKEN", "");
     vi.stubEnv("NEXT_PUBLIC_AWIN_PUBLISHER_ID", "2932035");
