@@ -24,3 +24,4 @@ export * from "./check-tick";
 export * from "./ambient-backdrop";
 export * from "./line-glyphs";
 export * from "./range-slider";
+export * from "./page-heading";

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { loadBaggageDataset } from "@mathfamily/data";
 import { itemListLd, JsonLd } from "@mathfamily/geo";
-import { FeeGrid } from "@mathfamily/ui";
+import { FeeGrid, PageHeading } from "@mathfamily/ui";
 import { feeRangeLabel } from "@/lib/baggage-content";
 
 export const metadata: Metadata = {
@@ -36,7 +36,7 @@ export default function BaggageFeesIndexPage() {
       />
 
       <header className="space-y-3">
-        <h1 className="text-h1 font-bold tracking-tight text-balance text-ink">Airline baggage fees: 12 carriers compared</h1>
+        <PageHeading>Airline baggage fees: 12 carriers compared</PageHeading>
         <p className="text-ink-muted">
           Official published min–max bag charges for 12 UK-popular airlines, verified {lastUpdated}. Click an airline for the full fee breakdown.
         </p>

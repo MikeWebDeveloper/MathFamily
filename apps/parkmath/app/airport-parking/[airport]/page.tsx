@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { loadAirports, loadParkingDataset, type Airport, type ParkingRecord } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
-import { AnswerLead, FaqAccordion, FeeGrid, FreshnessBadge, SourceCitation, SourcesBlock, EmailCaptureSlot } from "@mathfamily/ui";
+import { AnswerLead, FaqAccordion, FeeGrid, FreshnessBadge, PageHeading, SourceCitation, SourcesBlock, EmailCaptureSlot } from "@mathfamily/ui";
 import { AffiliateBlock } from "@/components/affiliate-block";
 import { ParkingCalculator } from "@/components/parking-calculator";
 import { DURATION_SLUGS, buildParkingFaqs, parkingPageModel } from "@/lib/parking-content";
@@ -56,7 +56,7 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
       />
 
       <header className="space-y-3">
-        <h1 className="text-h1 font-bold tracking-tight text-balance text-ink">{airport.name} parking: gate vs pre-book</h1>
+        <PageHeading>{airport.name} parking: gate vs pre-book</PageHeading>
         <div className="flex flex-wrap items-center gap-3">
           <FreshnessBadge verifiedAt={record.verifiedAt} />
           <SourceCitation url={record.sourceUrl} label={`Official ${airport.name} parking`} />

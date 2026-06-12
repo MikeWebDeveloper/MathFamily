@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { loadAirports, loadLoungeDataset, loadParkingDataset, loadPriorityPass, type Airport, type LoungeRecord } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
-import { AnswerLead, FaqAccordion, FeeGrid, FreshnessBadge, SourceCitation, SourcesBlock } from "@mathfamily/ui";
+import { AnswerLead, FaqAccordion, FeeGrid, FreshnessBadge, PageHeading, SourceCitation, SourcesBlock } from "@mathfamily/ui";
 import { AffiliateBlock } from "@/components/affiliate-block";
 import { LoungeCalculator } from "@/components/lounge-calculator";
 
@@ -66,7 +66,7 @@ export default async function LoungePage({ params }: { params: Promise<{ airport
       ])} />
 
       <header className="space-y-3">
-        <h1 className="text-h1 font-bold tracking-tight text-balance text-ink">{airport.name} lounges: pay per visit or join?</h1>
+        <PageHeading>{airport.name} lounges: pay per visit or join?</PageHeading>
         <div className="flex flex-wrap items-center gap-3">
           <FreshnessBadge verifiedAt={record.verifiedAt} />
           <SourceCitation url={record.sourceUrl} label={`Official lounge pages`} />

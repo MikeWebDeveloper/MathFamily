@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { loadAirports, loadDropOffDataset, loadParkingDataset, loadLoungeDataset, type Airport, type DropOffRecord } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
-import { AnswerCard, AnswerLead, CaveatChip, Callout, FaqAccordion, FreshnessBadge, MiniAnswerBar, SourceCitation, SourcesBlock, EmailCaptureSlot, UkMap, VerifiedStamp } from "@mathfamily/ui";
+import { AnswerCard, AnswerLead, CaveatChip, Callout, FaqAccordion, FreshnessBadge, MiniAnswerBar, PageHeading, SourceCitation, SourcesBlock, EmailCaptureSlot, UkMap, VerifiedStamp } from "@mathfamily/ui";
 import { DropOffCalculator } from "@/components/drop-off-calculator";
 import { buildDropOffFaqs, isPerEntryTariff, trendNote } from "@/lib/content";
 
@@ -53,7 +53,7 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
       />
 
       <header className="space-y-3">
-        <h1 className="text-h1 font-bold tracking-tight text-balance text-ink">{airport.name} drop-off charge</h1>
+        <PageHeading>{airport.name} drop-off charge</PageHeading>
         <div className="flex flex-wrap items-center gap-3">
           <FreshnessBadge verifiedAt={record.verifiedAt} />
           <SourceCitation url={record.sourceUrl} label={`Official ${airport.name} page`} />
