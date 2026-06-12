@@ -45,6 +45,7 @@ export default function MasterTablePage() {
           description: `Drop-off fees, time limits, penalties and free alternatives at ${records.length} UK airports, verified against official airport pages.`,
           url: `${siteUrl}/drop-off-charges`,
           dateModified: latestVerified,
+          siteUrl,
           creatorName: "ParkMath"
         })}
       />

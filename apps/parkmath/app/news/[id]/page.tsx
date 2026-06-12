@@ -28,7 +28,7 @@ export default async function NewsItemPage({ params }: { params: Promise<{ id: s
 
   return (
     <article className="space-y-5">
-      <JsonLd data={newsArticleLd({ headline: item.title, description: item.summary, url, datePublished: item.publishedAt, dateModified: item.verifiedAt, sourceUrl: item.sourceUrl, publisherName: "ParkMath" })} />
+      <JsonLd data={newsArticleLd({ headline: item.title, description: item.summary, url, datePublished: item.publishedAt, dateModified: item.verifiedAt, sourceUrl: item.sourceUrl, siteUrl, imageUrl: `${siteUrl}/opengraph-image` })} />
       <JsonLd data={breadcrumbLd([
         { name: "Home", url: siteUrl }, { name: "Updates", url: `${siteUrl}/news` }, { name: item.title, url }
       ])} />
