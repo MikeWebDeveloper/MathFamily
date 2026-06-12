@@ -23,3 +23,4 @@ export * from "./animated-number";
 export * from "./check-tick";
 export * from "./ambient-backdrop";
 export * from "./line-glyphs";
+export * from "./range-slider";

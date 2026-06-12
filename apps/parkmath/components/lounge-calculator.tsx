@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { formatPence, loungeBreakEven, type MembershipTier } from "@mathfamily/engine";
+import { RangeSlider } from "@mathfamily/ui";
 
 export function LoungeCalculator({ walkInPence, tiers, airportName }: { walkInPence: number; tiers: MembershipTier[]; airportName: string }) {
   const [visits, setVisits] = useState(3);
@@ -15,8 +16,15 @@ export function LoungeCalculator({ walkInPence, tiers, airportName }: { walkInPe
     >
       <h2 className="text-lg font-semibold text-ink">How many lounge visits a year?</h2>
       <div className="mt-5 flex items-center gap-4">
-        <input type="range" min={1} max={20} value={visits} aria-valuetext={`${visits} visits`} aria-describedby="lounge-result"
-          onChange={(e) => setVisits(Number(e.target.value))} className="h-2 w-full cursor-pointer accent-brand-accent" />
+        <RangeSlider
+          min={1}
+          max={20}
+          value={visits}
+          onChange={setVisits}
+          ariaLabel="Lounge visits per year"
+          ariaValuetext={`${visits} visits`}
+          ariaDescribedby="lounge-result"
+        />
         <span className="mf-num w-16 shrink-0 text-right text-sm font-medium text-ink-muted">{visits}×</span>
       </div>
       <div id="lounge-result" aria-live="polite" data-testid="lounge-result" className="mt-5 space-y-2 rounded-xl bg-surface p-4 text-sm">
