@@ -59,3 +59,27 @@ export function itemListLd(input: { name: string; items: { name: string; url: st
     }))
   };
 }
+
+export function newsArticleLd(input: {
+  headline: string;
+  description: string;
+  url: string;
+  datePublished: string;
+  dateModified: string;
+  sourceUrl: string;
+  publisherName: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "NewsArticle" as const,
+    headline: input.headline,
+    description: input.description,
+    url: input.url,
+    mainEntityOfPage: input.url,
+    datePublished: input.datePublished,
+    dateModified: input.dateModified,
+    isBasedOn: input.sourceUrl,
+    isAccessibleForFree: true,
+    publisher: { "@type": "Organization" as const, name: input.publisherName }
+  };
+}

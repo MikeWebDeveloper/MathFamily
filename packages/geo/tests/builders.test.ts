@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { breadcrumbLd, datasetLd, faqPageLd, itemListLd, webSiteLd } from "../src/builders";
+import { breadcrumbLd, datasetLd, faqPageLd, itemListLd, webSiteLd, newsArticleLd } from "../src/builders";
 
 describe("faqPageLd", () => {
   it("builds a FAQPage with one Question per item", () => {
@@ -54,5 +54,23 @@ describe("itemListLd", () => {
     expect(ld["@type"]).toBe("ItemList");
     expect(ld.itemListElement).toHaveLength(2);
     expect(ld.itemListElement[1]).toMatchObject({ "@type": "ListItem", position: 2, name: "Short Stay — £90" });
+  });
+});
+
+describe("newsArticleLd", () => {
+  it("emits a schema.org NewsArticle with dates, publisher and source", () => {
+    const ld = newsArticleLd({
+      headline: "Heathrow drop-off rises to £7",
+      description: "Heathrow raised its forecourt drop-off charge to £7.",
+      url: "https://parkmath.co.uk/news/heathrow-dropoff-fee-jun-2026",
+      datePublished: "2026-06-01", dateModified: "2026-06-02",
+      sourceUrl: "https://www.heathrow.com/x", publisherName: "ParkMath"
+    }) as any;
+    expect(ld["@type"]).toBe("NewsArticle");
+    expect(ld.headline).toContain("Heathrow");
+    expect(ld.datePublished).toBe("2026-06-01");
+    expect(ld.dateModified).toBe("2026-06-02");
+    expect(ld.publisher.name).toBe("ParkMath");
+    expect(ld.isBasedOn).toBe("https://www.heathrow.com/x");
   });
 });

@@ -1,0 +1,126 @@
+{
+  "version": "1.1.0",
+  "lastUpdated": "2026-06-12",
+  "items": [
+    {
+      "id": "east-midlands-barrierless-anpr-may-2025",
+      "airportSlug": "east-midlands",
+      "category": "drop-off-zone",
+      "title": "East Midlands Airport drop-off goes barrierless (ANPR), pay by midnight next day",
+      "summary": "From 1 May 2025, East Midlands Airport removed the exit barriers at its Rapid Drop Off zone. Automatic number plate recognition (ANPR) cameras now capture vehicle registrations instead of taking payment on exit, and drivers have until midnight the following day to pay online or by phone. Charges are unchanged at £5 for the first 15 minutes, then £1 per minute up to a 30-minute maximum. Frequent users and taxi drivers can set up an auto-pay account, and the free Long Stay (mid-stay) car park remains as a no-cost alternative.",
+      "body": null,
+      "change": null,
+      "sourceUrl": "https://mediacentre.eastmidlandsairport.com/no-barriers-to-easy-drop-off-at-east-midlands-airport-from-today-may-1/",
+      "sourceLabel": "East Midlands Airport Media Centre",
+      "publishedAt": "2025-05-01",
+      "verifiedAt": "2026-06-12",
+      "supersedes": null
+    },
+    {
+      "id": "bristol-dropoff-fee-jan-2026",
+      "airportSlug": "bristol",
+      "category": "fee-change",
+      "title": "Bristol Airport raises Drop Off & Pick Up and Short Stay fees to £8.50 from 5 January 2026",
+      "summary": "From Monday 5 January 2026, Bristol Airport increased the 'Drop Off & Pick Up' car park fee from £7 to £8.50 for a 10-minute stay, and the 'Short Stay' car park from £7 to £8.50 for 15 minutes (and £9 to £10.50 for 15-30 minutes). Blue Badge holders' extended 40-minute drop-off stay also rises from £7 to £8.50. The airport attributes the change to its business rates bill more than doubling following the autumn budget. A free waiting zone (up to one hour) remains available.",
+      "body": null,
+      "change": {
+        "label": "Drop Off & Pick Up (10 min)",
+        "from": "£7",
+        "to": "£8.50"
+      },
+      "sourceUrl": "https://www.bristolairport.co.uk/corporate/news-and-media/news-and-media-centre/2025/12/changes-to-fees-for-drop-off-pick-up-and-short-stay-car-parks/",
+      "sourceLabel": "Bristol Airport — Newsroom (official)",
+      "publishedAt": "2026-01-02",
+      "verifiedAt": "2026-06-12",
+      "supersedes": null
+    },
+    {
+      "id": "luton-dropoff-zone-jun-2026",
+      "airportSlug": "luton",
+      "category": "drop-off-zone",
+      "title": "Luton drop-off zone: £7 for 10 minutes, barrier-free ANPR",
+      "summary": "London Luton Airport's official drop-off page confirms its Drop Off and Pick Up Zone, a 5-minute walk from the terminal, costs £7 for up to 10 minutes, then £1 per minute thereafter (max stay 30 minutes), via a cashless and barrier-free ANPR system paid online by midnight the following day. Free alternative: up to 2 hours free in the Long Stay Car Park.",
+      "body": null,
+      "change": null,
+      "sourceUrl": "https://www.london-luton.co.uk/to-and-from-lla/dropping-off",
+      "sourceLabel": "London Luton Airport - Passenger Drop Off and Pick Up (official)",
+      "publishedAt": "2026-06-12",
+      "verifiedAt": "2026-06-12",
+      "supersedes": null
+    },
+    {
+      "id": "manchester-barrierless-anpr-mar-2025",
+      "airportSlug": "manchester",
+      "category": "rule-change",
+      "title": "Manchester Airport switched pick-up/drop-off to a barrierless ANPR system",
+      "summary": "Manchester Airport replaced its barrier-based pick-up and drop-off zones with a barrierless, automatic number-plate recognition (ANPR) system that came into operation in late March 2025 on a phased basis. Cameras record vehicles entering the zones and drivers pay the charge by midnight the following day, online or by phone; existing charges were unchanged at launch.",
+      "body": null,
+      "change": null,
+      "sourceUrl": "https://mediacentre.manchesterairport.co.uk/barrierless-system-to-make-it-easier-to-pick-up-and-drop-off-at-manchester-airport/",
+      "sourceLabel": "Manchester Airport Media Centre",
+      "publishedAt": "2025-03-25",
+      "verifiedAt": "2026-06-12",
+      "supersedes": null
+    },
+    {
+      "id": "edinburgh-dropoff-fee-may-2025",
+      "airportSlug": "edinburgh",
+      "category": "fee-change",
+      "title": "Edinburgh Airport raises drop-off / pick-up charge by £2.50 to £8.50 from 18 May",
+      "summary": "Edinburgh Airport increased its pick-up and drop-off charge by £2.50, taking it to £8.50, effective 18 May, to help cover an extra £8 million business rates bill (a 142% rise). The free 30-minute drop-off/pick-up area remains available, with more spaces added.",
+      "body": null,
+      "change": {
+        "label": "Drop-off / pick-up",
+        "from": "£6",
+        "to": "£8.50"
+      },
+      "sourceUrl": "https://corporate.edinburghairport.com/drop-off-charge-increases",
+      "sourceLabel": "Edinburgh Airport — Corporate / Media Centre (official)",
+      "publishedAt": "2025-05-01",
+      "verifiedAt": "2026-06-12",
+      "supersedes": null
+    },
+    {
+      "id": "birmingham-barrierless-anpr-mar-2025",
+      "airportSlug": "birmingham",
+      "category": "drop-off-zone",
+      "title": "Birmingham Airport drop-off car parks went barrierless (ANPR) in March 2025",
+      "summary": "An official Birmingham Airport update announced that the Drop Off car park (18 March 2025) and Premium Set Down car park (20 March 2025) moved to a barrier-free Automatic Number Plate Recognition (ANPR) system. Drivers no longer pay at a barrier; payment must be made within 24 hours of exit via Post Pay online, an onsite pay machine, or a pre-registered AutoPay account, or a Parking Notice is issued.",
+      "body": null,
+      "change": null,
+      "sourceUrl": "https://www.birminghamairport.co.uk/important-updates-premium-set-down-and-drop-off-car-parks/",
+      "sourceLabel": "Birmingham Airport - New barrierless system for Premium Set Down and Drop Off car parks (official)",
+      "publishedAt": "2025-03-18",
+      "verifiedAt": "2026-06-12",
+      "supersedes": null
+    },
+    {
+      "id": "stansted-barrierless-anpr-jun-2026",
+      "airportSlug": "stansted",
+      "category": "drop-off-zone",
+      "title": "Stansted Express Set Down is now barrier-free ANPR; £100 PCN for non-payment",
+      "summary": "London Stansted Airport's official pick-up and drop-off page confirms the Express Set Down area now uses a barrier-free Automatic Number Plate Recognition (ANPR) system: drivers don't stop to pay and instead pay online (or by phone) by midnight the following day, with a 15-minute allocated period. Non-payment triggers a £100 Parking Charge Notice, reduced to £60 if paid within 14 days. Free drop-off remains available at the Mid Stay car park.",
+      "body": null,
+      "change": null,
+      "sourceUrl": "https://www.stanstedairport.com/parking/pick-up-and-drop-off/",
+      "sourceLabel": "London Stansted Airport - Pick Up & Drop Off (official)",
+      "publishedAt": "2026-06-12",
+      "verifiedAt": "2026-06-12",
+      "supersedes": null
+    },
+    {
+      "id": "heathrow-dropoff-fee-jan-2026",
+      "airportSlug": "heathrow",
+      "category": "drop-off-zone",
+      "title": "Heathrow terminal drop-off charge is £7 per entry",
+      "summary": "Heathrow's Terminal Drop-Off Charge (TDOC) is £7 each time a vehicle enters a terminal drop-off zone (forecourt). The charge applies via ANPR cameras and can be pre-paid or paid by midnight the following day; no pick-ups or waiting are permitted in the drop-off areas.",
+      "body": null,
+      "change": null,
+      "sourceUrl": "https://www.heathrow.com/transport-and-directions/terminal-drop-off-charge",
+      "sourceLabel": "Heathrow Airport official — Terminal Drop-Off Charge",
+      "publishedAt": "2026-01-01",
+      "verifiedAt": "2026-06-12",
+      "supersedes": null
+    }
+  ]
+}

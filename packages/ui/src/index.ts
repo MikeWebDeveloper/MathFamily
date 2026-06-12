@@ -29,3 +29,6 @@ export * from "./stat-strip";
 export * from "./saves-verdict";
 export * from "./iata-tile";
 export * from "./segmented-control";
+export * from "./site-analytics";
+export * from "./news-card";
+export * from "./latest-updates";

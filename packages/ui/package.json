@@ -11,6 +11,7 @@
   "peerDependencies": { "react": "*" },
   "devDependencies": {
     "@mathfamily/config": "workspace:*",
+    "@mathfamily/data": "workspace:*",
     "@testing-library/react": "^16.3.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",

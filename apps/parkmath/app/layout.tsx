@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
-import { Analytics } from "@vercel/analytics/react";
-import { AmbientBackdrop, ScrollProgress, ScrollReveal, SiteFooter, SiteHeader } from "@mathfamily/ui";
+import { AmbientBackdrop, ScrollProgress, ScrollReveal, SiteAnalytics, SiteFooter, SiteHeader } from "@mathfamily/ui";
 import "./globals.css";
 
 const plexSans = IBM_Plex_Sans({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-plex-sans" });
@@ -14,7 +13,10 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: "ParkMath — UK airport drop-off & parking costs, verified", template: "%s | ParkMath" },
   description:
-    "Current UK airport drop-off charges, parking costs and the free alternatives — every figure verified against official airport pages and date-stamped."
+    "Current UK airport drop-off charges, parking costs and the free alternatives — every figure verified against official airport pages and date-stamped.",
+  alternates: {
+    types: { "application/rss+xml": "/news/feed.xml" }
+  }
 };
 
 const NAV = [
@@ -37,7 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SiteHeader brandName="ParkMath" brandPrefix="Park" links={NAV} />
         <main className="mx-auto max-w-5xl px-4 py-8">{children}</main>
         <SiteFooter brandName="ParkMath" links={NAV} />
-        <Analytics />
+        <SiteAnalytics />
       </body>
     </html>
   );
