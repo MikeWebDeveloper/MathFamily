@@ -38,10 +38,10 @@ export default function HomePage() {
           className="pointer-events-none absolute -top-6 right-0 hidden h-[340px] text-brand lg:block"
         />
         <div className="relative space-y-5">
-          <h1 className="max-w-3xl text-4xl font-bold leading-tight tracking-tight text-ink sm:text-5xl">
-            What does it cost to <span className="text-brand-accent">drop someone off</span> at a UK airport?
+          <h1 className="max-w-3xl text-h1 font-bold tracking-tight text-balance text-ink">
+            What does it cost to <span className="text-brand-accent whitespace-nowrap">drop someone off</span> at a UK airport?
           </h1>
-          <p className="max-w-2xl text-lg text-ink-muted">
+          <p className="max-w-2xl text-base text-ink-muted sm:text-lg">
             Every UK airport&apos;s drop-off charge, time limit, penalty and the free alternative — verified against
             official airport pages and date-stamped.
           </p>
@@ -55,17 +55,17 @@ export default function HomePage() {
         <FeeStat label="Still free" value={String(freeCount)} note="Free at the forecourt" />
       </section>
 
-      <p>
-        <Link href="/drop-off-charges" className="text-base font-semibold text-brand-accent underline underline-offset-4">
+      <p className="flex flex-wrap gap-x-6 gap-y-2">
+        <Link href="/drop-off-charges" className="inline-flex min-h-11 items-center text-base font-semibold text-brand-accent underline underline-offset-4">
           Compare all airports in one table →
         </Link>
       </p>
 
-      <p className="flex flex-wrap gap-6">
-        <Link href="/airport-parking" className="text-base font-semibold text-brand-accent underline underline-offset-4">
+      <p className="flex flex-wrap gap-x-6 gap-y-2">
+        <Link href="/airport-parking" className="inline-flex min-h-11 items-center text-base font-semibold text-brand-accent underline underline-offset-4">
           Compare airport parking →
         </Link>
-        <Link href="/airport-lounges" className="text-base font-semibold text-brand-accent underline underline-offset-4">
+        <Link href="/airport-lounges" className="inline-flex min-h-11 items-center text-base font-semibold text-brand-accent underline underline-offset-4">
           Lounge or membership? →
         </Link>
       </p>

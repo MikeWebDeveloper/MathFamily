@@ -13,14 +13,19 @@ export function AirportSearch({ airports, feeBySlug }: { airports: Airport[]; fe
   return (
     <div>
       <label htmlFor="airport-search-input" className="sr-only">Search airports</label>
-      <input
-        id="airport-search-input"
-        type="search"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search your airport — e.g. Gatwick or LGW"
-        className="w-full rounded-card border border-ink/15 bg-white px-4 py-3.5 text-base shadow-sm outline-none transition focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/30"
-      />
+      <div className="relative">
+        <svg aria-hidden viewBox="0 0 20 20" className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-ink-muted" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+          <circle cx="9" cy="9" r="6" /><path d="m14 14 3 3" />
+        </svg>
+        <input
+          id="airport-search-input"
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search your airport — e.g. Gatwick or LGW"
+          className="w-full rounded-card border border-ink/15 bg-white py-3.5 pl-11 pr-4 text-base shadow-sm outline-none transition focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/30"
+        />
+      </div>
       <ul className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
         {matches.map((a) => (
           <li key={a.slug}>
