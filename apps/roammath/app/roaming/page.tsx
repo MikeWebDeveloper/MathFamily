@@ -3,7 +3,7 @@ import Link from "next/link";
 import { loadRoamingDataset, loadEsimDataset, NETWORKS } from "@mathfamily/data";
 import { roamingTripCost, formatPence } from "@mathfamily/engine";
 import { datasetLd, itemListLd, JsonLd } from "@mathfamily/geo";
-import { CountryFlag, FeeGrid, FreshnessBadge } from "@mathfamily/ui";
+import { CountryFlag, FeeGrid, FreshnessBadge, PageHeading } from "@mathfamily/ui";
 import { NETWORK_LABELS } from "@/lib/roaming-content";
 
 export const metadata: Metadata = {
@@ -88,7 +88,7 @@ export default function RoamingIndexPage() {
       />
 
       <header className="space-y-3">
-        <h1 className="text-3xl font-bold text-ink">UK mobile roaming charges, by destination</h1>
+        <PageHeading>UK mobile roaming charges, by destination</PageHeading>
         <FreshnessBadge verifiedAt={latestVerified} />
       </header>
 

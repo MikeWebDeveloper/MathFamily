@@ -3,7 +3,7 @@ import Link from "next/link";
 import { loadAirports, loadLoungeDataset } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { itemListLd, JsonLd } from "@mathfamily/geo";
-import { FeeGrid } from "@mathfamily/ui";
+import { FeeGrid, PageHeading } from "@mathfamily/ui";
 
 export const metadata: Metadata = {
   title: "UK airport lounge prices compared — pre-book from-prices & Priority Pass",
@@ -26,7 +26,7 @@ export default function LoungeIndexPage() {
         name: "UK airport lounges by cheapest pre-book from-price",
         items: rows.map((r) => ({ name: `${r.name} — ${r.from !== null ? `from ${formatPence(r.from)}` : "price on the day"}`, url: `${siteUrl}/airport-lounges/${r.slug}` }))
       })} />
-      <h1 className="text-3xl font-bold text-ink">UK airport lounges, compared</h1>
+      <PageHeading>UK airport lounges, compared</PageHeading>
       <FeeGrid
         caption="Cheapest verified pre-book from-price per airport."
         columns={["Airport", "Lounges", "From (pre-book)"]}

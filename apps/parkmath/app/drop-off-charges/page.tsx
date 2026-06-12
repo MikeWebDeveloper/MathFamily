@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { loadAirports, loadDropOffDataset } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { datasetLd, itemListLd, JsonLd } from "@mathfamily/geo";
-import { FreshnessBadge } from "@mathfamily/ui";
+import { FreshnessBadge, PageHeading } from "@mathfamily/ui";
 import { isPerEntryTariff } from "@/lib/content";
 import { SortableFeeTable, type DropOffRow } from "@/components/sortable-fee-table";
 
@@ -58,7 +58,7 @@ export default function MasterTablePage() {
         })}
       />
       <header className="space-y-3">
-        <h1 className="text-3xl font-bold text-ink">UK airport drop-off charges, compared</h1>
+        <PageHeading>UK airport drop-off charges, compared</PageHeading>
         <FreshnessBadge verifiedAt={latestVerified} />
       </header>
       <SortableFeeTable rows={rows} />

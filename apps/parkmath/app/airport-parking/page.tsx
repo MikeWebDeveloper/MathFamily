@@ -3,7 +3,7 @@ import Link from "next/link";
 import { loadAirports, loadParkingDataset } from "@mathfamily/data";
 import { formatPence, compareParking } from "@mathfamily/engine";
 import { itemListLd, JsonLd } from "@mathfamily/geo";
-import { FeeGrid, FreshnessBadge } from "@mathfamily/ui";
+import { FeeGrid, FreshnessBadge, PageHeading } from "@mathfamily/ui";
 
 export const metadata: Metadata = {
   title: "UK airport parking compared — verified gate vs pre-book prices",
@@ -41,7 +41,7 @@ export default function ParkingIndexPage() {
         })}
       />
       <header className="space-y-3">
-        <h1 className="text-3xl font-bold text-ink">UK airport parking, compared honestly</h1>
+        <PageHeading>UK airport parking, compared honestly</PageHeading>
         <FreshnessBadge verifiedAt={latestVerified} />
       </header>
       <FeeGrid
