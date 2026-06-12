@@ -82,7 +82,7 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
         ]}
       </AnswerLead>
 
-      <div className="grid items-start gap-5 sm:grid-cols-[1fr_220px]">
+      <div className="grid items-center gap-6 sm:grid-cols-[1fr_auto]">
         <AnswerCard
           label="Current drop-off charge"
           value={record.isFree ? "Free" : formatPence(record.bands[0]?.totalPence ?? 0)}
@@ -93,7 +93,7 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
             </span>
           }
         />
-        <UkMap markers={[{ lat: airport.lat, lng: airport.lng, active: true }]} className="hidden text-brand sm:block" />
+        <UkMap markers={[{ lat: airport.lat, lng: airport.lng, active: true }]} className="hidden h-[160px] w-auto self-center text-brand sm:block" />
       </div>
       <MiniAnswerBar
         summary={`${airport.iata} drop-off · ${record.isFree ? "Free" : record.feeSummary}`}
