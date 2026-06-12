@@ -1,7 +1,16 @@
 {
   "awin": { "publisherId": "2932035" },
   "partners": {
-    "holiday-extras": { "name": "Holiday Extras", "awinmid": "3496", "active": true, "landingUrl": "https://www.holidayextras.com/airport-parking.html" },
+    "holiday-extras": {
+      "name": "Holiday Extras", "awinmid": "3496", "active": true,
+      "landingUrl": "https://www.holidayextras.com/airport-parking.html",
+      "products": {
+        "parking":   { "url": "https://www.holidayextras.com/airport-parking.html",  "label": "parking"  },
+        "lounge":    { "url": "https://www.holidayextras.com/airport-lounges.html",   "label": "lounge"   },
+        "hotels":    { "url": "https://www.holidayextras.com/airport-hotels.html",    "label": "hotel"    },
+        "transfers": { "url": "https://www.holidayextras.com/airport-transfers.html", "label": "transfer" }
+      }
+    },
     "purple-parking": { "name": "Purple Parking", "awinmid": "12028", "active": false },
     "airparks": { "name": "Airparks", "awinmid": "3494", "active": false },
     "priority-pass": { "name": "Priority Pass", "awinmid": null, "active": false }
