@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { loadRoamingDataset, loadEsimDataset, NETWORKS, type RoamingDestination, type EsimCountry } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
-import { AnswerLead, CountryFlag, FaqAccordion, FeeGrid, FreshnessBadge, MiniAnswerBar, PageHeading, RegionMap, SourceCitation, SourcesBlock } from "@mathfamily/ui";
+import { AnswerLead, CountryFlag, FaqAccordion, FeeGrid, FreshnessBadge, MiniAnswerBar, PageHeading, RegionMap, SavesVerdict, SourceCitation, SourcesBlock } from "@mathfamily/ui";
 import { RoamingCalculator } from "@/components/roaming-calculator";
 import { AffiliateBlock } from "@/components/affiliate-block";
 import { buildRoamingFaqs, roamingPageModel, NETWORK_LABELS } from "@/lib/roaming-content";
@@ -121,6 +121,19 @@ export default async function CountryHubPage({ params }: { params: Promise<{ cou
         networks={destination.perNetwork}
         esims={esim?.bundles ?? []}
         countryName={destination.countryName}
+      />
+
+      <SavesVerdict
+        amount={m.verdict === "esim" && m.savingsPence > 0 ? formatPence(m.savingsPence) : undefined}
+        verdict={
+          m.verdict === "esim" && m.savingsPence > 0 && m.esimChoice
+            ? `An eSIM (${m.esimChoice.provider}, ${m.esimChoice.bundleName}) saves ${formatPence(m.savingsPence)} vs the cheapest network daily pass for a 7-day trip.`
+            : m.verdict === "network" && m.cheapestNetwork?.included
+              ? `Your network already includes roaming in ${destination.countryName} — no daily charge applies (fair-use limits apply).`
+              : m.cheapestNetwork?.totalPence != null
+                ? `Your network's daily pass is the best option for a 7-day trip at ${formatPence(m.cheapestNetwork.totalPence)}.`
+                : `Compare options above to find the best price for your trip to ${destination.countryName}.`
+        }
       />
 
       {esim ? (

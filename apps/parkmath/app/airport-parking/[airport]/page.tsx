@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { loadAirports, loadParkingDataset, type Airport, type ParkingRecord } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
-import { AnswerLead, FaqAccordion, FeeGrid, FreshnessBadge, PageHeading, SourceCitation, SourcesBlock, EmailCaptureSlot } from "@mathfamily/ui";
+import { AnswerLead, FaqAccordion, FeeGrid, FreshnessBadge, PageHeading, SavesVerdict, SourceCitation, SourcesBlock, EmailCaptureSlot } from "@mathfamily/ui";
 import { AffiliateBlock } from "@/components/affiliate-block";
 import { ParkingCalculator } from "@/components/parking-calculator";
 import { DURATION_SLUGS, buildParkingFaqs, parkingPageModel } from "@/lib/parking-content";
@@ -74,6 +74,15 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
       </AnswerLead>
 
       <ParkingCalculator tariff={record} airportName={airport.name} buildDate={new Date().toISOString()} />
+
+      <SavesVerdict
+        amount={m7.savingsVsGatePence ? formatPence(m7.savingsVsGatePence) : undefined}
+        verdict={
+          m7.savingsVsGatePence && m7.cheapest
+            ? `Pre-booking saves ${formatPence(m7.savingsVsGatePence)} vs the drive-up gate price for 7 days (${m7.cheapest.name}).`
+            : `Compare options above to find the best price for your dates.`
+        }
+      />
 
       {m7.warnings.length > 0 ? (
         <ul className="space-y-1 text-xs text-ink-muted">
