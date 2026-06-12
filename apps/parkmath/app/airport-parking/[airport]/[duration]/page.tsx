@@ -5,7 +5,7 @@ import { loadAirports, loadParkingDataset, type Airport, type ParkingRecord } fr
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
 import { AnswerLead, Callout, FaqAccordion, FeeGrid, FreshnessBadge, SourcesBlock } from "@mathfamily/ui";
-import { AffiliateBlock } from "@/components/affiliate-block";
+import { BookingOptions } from "@/components/booking-options";
 import { DURATION_SLUGS, buildParkingFaqs, durationFromSlug, parkingPageModel } from "@/lib/parking-content";
 
 export const dynamicParams = false;
@@ -104,7 +104,7 @@ export default async function DurationPage({
         </ul>
       ) : null}
 
-      <AffiliateBlock slotId="parking-prebook" airportSlug={airport.slug} officialUrl={record.sourceUrl} />
+      <BookingOptions airportName={airport.name} airportSlug={airport.slug} officialUrl={record.sourceUrl} />
 
       <section className="space-y-2">
         <h2 className="text-xl font-semibold text-ink">Frequently asked questions</h2>

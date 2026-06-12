@@ -5,7 +5,7 @@ import { loadAirports, loadParkingDataset, type Airport, type ParkingRecord } fr
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
 import { AnswerLead, FaqAccordion, FeeGrid, FreshnessBadge, PageHeading, SavesVerdict, SourceCitation, SourcesBlock, EmailCaptureSlot } from "@mathfamily/ui";
-import { AffiliateBlock } from "@/components/affiliate-block";
+import { BookingOptions } from "@/components/booking-options";
 import { ParkingCalculator } from "@/components/parking-calculator";
 import { DURATION_SLUGS, buildParkingFaqs, parkingPageModel } from "@/lib/parking-content";
 
@@ -113,7 +113,7 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
         ])}
       />
 
-      <AffiliateBlock slotId="parking-prebook" airportSlug={airport.slug} officialUrl={record.sourceUrl} />
+      <BookingOptions airportName={airport.name} airportSlug={airport.slug} officialUrl={record.sourceUrl} />
 
       <nav aria-label="Duration pages" className="flex gap-3 text-sm">
         {DURATION_SLUGS.map((s) => (

@@ -28,7 +28,7 @@ describe("resolveSlot", () => {
     expect(r.url).toContain("awinmid=3496");
     expect(r.url).toContain("awinaffid=2932035");
     expect(r.url).toContain("clickref=parkmath-gatwick");
-    expect(r.url).not.toContain("ued=");
+    expect(r.url).toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Fairport-parking.html");
   });
   it("lounge-membership stays official while inactive", () => {
     const r = resolveSlot("lounge-membership", "gatwick", "https://www.prioritypass.com");

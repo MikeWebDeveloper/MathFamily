@@ -14,6 +14,7 @@ interface PartnerConfig {
   name: string;
   awinmid: string | null;
   active: boolean;
+  landingUrl?: string;
 }
 
 interface SlotConfig {
@@ -56,7 +57,7 @@ export function resolveSlot(slotId: SlotId, airportSlug: string, officialUrl: st
       if (partner?.active && partner.awinmid) {
         return {
           kind: "affiliate",
-          url: buildAwinLink({ awinmid: partner.awinmid, publisherId: config.awin.publisherId, airportSlug }),
+          url: buildAwinLink({ awinmid: partner.awinmid, publisherId: config.awin.publisherId, airportSlug, ued: partner.landingUrl }),
           label: `Pre-book & compare prices with ${partner.name}`,
           partnerName: partner.name,
           disclosureRequired: true,
