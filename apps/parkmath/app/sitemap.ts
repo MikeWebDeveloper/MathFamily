@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { loadDropOffDataset, loadParkingDataset, loadLoungeDataset } from "@mathfamily/data";
+import { loadDropOffDataset, loadParkingDataset, loadLoungeDataset, recentNews, loadNewsDataset } from "@mathfamily/data";
 
 const DURATION_SLUGS = ["3-days", "7-days", "14-days"] as const;
 
@@ -49,6 +49,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(`${r.verifiedAt}T00:00:00Z`),
       changeFrequency: "monthly" as const,
       priority: 0.8
-    }))
+    })),
+    { url: `${base}/news`, changeFrequency: "daily" as const, priority: 0.9, lastModified: (() => {
+        const latest = recentNews(1)[0];
+        return latest ? new Date(`${latest.verifiedAt}T00:00:00Z`) : undefined;
+      })() },
+    ...recentNews().map((i) => ({
+      url: `${base}/news/${i.id}`,
+      lastModified: new Date(`${i.verifiedAt}T00:00:00Z`),
+      changeFrequency: "monthly" as const,
+      priority: 0.6
+    })),
   ];
 }
