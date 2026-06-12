@@ -5,7 +5,7 @@ import { loadAirports, loadLoungeDataset, loadParkingDataset, loadPriorityPass, 
 import { formatPence, loungeBreakEven } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
 import { AnswerLead, FaqAccordion, FeeGrid, FreshnessBadge, PageHeading, SavesVerdict, SourceCitation, SourcesBlock } from "@mathfamily/ui";
-import { AffiliateBlock } from "@/components/affiliate-block";
+import { HolidayExtrasCard } from "@/components/holiday-extras-card";
 import { LoungeCalculator } from "@/components/lounge-calculator";
 
 export const dynamicParams = false;
@@ -103,7 +103,7 @@ export default async function LoungePage({ params }: { params: Promise<{ airport
         />
       ) : null}
 
-      <AffiliateBlock slotId="lounge-membership" airportSlug={airport.slug} officialUrl={pp.sourceUrl} />
+      <HolidayExtrasCard product="lounge" surface="lounge" airportName={airport.name} airportSlug={airport.slug} />
 
       <section className="space-y-2">
         <h2 className="text-xl font-semibold text-ink">Frequently asked questions</h2>

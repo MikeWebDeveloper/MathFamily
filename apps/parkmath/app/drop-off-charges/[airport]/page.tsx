@@ -6,6 +6,7 @@ import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
 import { AnswerCard, AnswerLead, CaveatChip, Callout, FaqAccordion, FreshnessBadge, LatestUpdates, MiniAnswerBar, PageHeading, SourceCitation, SourcesBlock, EmailCaptureSlot, UkMap, VerifiedStamp } from "@mathfamily/ui";
 import { DropOffCalculator } from "@/components/drop-off-calculator";
+import { HolidayExtrasCard } from "@/components/holiday-extras-card";
 import { buildDropOffFaqs, isPerEntryTariff, trendNote } from "@/lib/content";
 
 export const dynamicParams = false;
@@ -130,6 +131,7 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
         </section>
       ) : null}
 
+      <HolidayExtrasCard product="parking" surface="dropoff" airportName={airport.name} airportSlug={airport.slug} extras={["hotels", "lounge", "transfers"]} />
       <section className="mf-reveal space-y-2">
         <h2 className="mf-underline-grow text-xl font-semibold text-ink">Frequently asked questions</h2>
         <FaqAccordion items={faqs} />
