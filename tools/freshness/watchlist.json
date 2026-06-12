@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-10",
+  "generatedAt": "2026-06-12",
   "entries": [
     {
       "url": "https://binaries.vodafone.co.uk/gbnnsauqav4t/3ynRZJ6BvgpyYyPmoIAHX0/ff9c9463c41c25d0cbf8f5d27f955afb/evo-paym-charges-guide.pdf",
@@ -9,9 +9,23 @@
       "watchable": true
     },
     {
+      "url": "https://cardiff-airport.com/latest-news/",
+      "refs": [
+        "news:cardiff"
+      ],
+      "watchable": true
+    },
+    {
       "url": "https://cardiff-airport.com/parking-cwl/drop-off-and-pick-up-cwl/",
       "refs": [
         "drop-off:cardiff"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://corporate.edinburghairport.com/news",
+      "refs": [
+        "news:edinburgh"
       ],
       "watchable": true
     },
@@ -40,6 +54,13 @@
       "watchable": true
     },
     {
+      "url": "https://exeter-airport.co.uk/news/",
+      "refs": [
+        "news:exeter"
+      ],
+      "watchable": true
+    },
+    {
       "url": "https://flywith.virginatlantic.com/gb/en/upgrades-and-extras/optional-service-and-travel-fees.html",
       "refs": [
         "baggage:virgin-atlantic"
@@ -47,9 +68,30 @@
       "watchable": true
     },
     {
+      "url": "https://londonsouthendairport.com/corporate/media-centre/",
+      "refs": [
+        "news:southend"
+      ],
+      "watchable": true
+    },
+    {
       "url": "https://londonsouthendairport.com/getting-to-and-from/pick-up-drop-off",
       "refs": [
         "drop-off:southend"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://mediacentre.eastmidlandsairport.com/",
+      "refs": [
+        "news:east-midlands"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://mediacentre.manchesterairport.co.uk/",
+      "refs": [
+        "news:manchester"
       ],
       "watchable": true
     },
@@ -71,6 +113,13 @@
       "url": "https://no1lounges.com/lounges-by-location/club-aspire-at-heathrow-t5/",
       "refs": [
         "lounges:heathrow"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.aberdeenairport.com/about-us/media-centre/",
+      "refs": [
+        "news:aberdeen"
       ],
       "watchable": true
     },
@@ -369,9 +418,23 @@
       "watchable": true
     },
     {
+      "url": "https://www.belfastairport.com/blog-news",
+      "refs": [
+        "news:belfast-international"
+      ],
+      "watchable": true
+    },
+    {
       "url": "https://www.belfastairport.com/car-parking/drop-off-zone",
       "refs": [
         "drop-off:belfast-international"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.belfastcityairport.com/News",
+      "refs": [
+        "news:belfast-city"
       ],
       "watchable": true
     },
@@ -386,6 +449,13 @@
       "url": "https://www.birminghamairport.co.uk/at-the-airport/lounges/",
       "refs": [
         "lounges:birmingham"
+      ],
+      "watchable": false
+    },
+    {
+      "url": "https://www.birminghamairport.co.uk/news/",
+      "refs": [
+        "news:birmingham"
       ],
       "watchable": false
     },
@@ -407,6 +477,20 @@
       "url": "https://www.bournemouthairport.com/car-parking/",
       "refs": [
         "drop-off:bournemouth"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.bournemouthairport.com/news/",
+      "refs": [
+        "news:bournemouth"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.bristolairport.co.uk/corporate/news-and-media/news-and-media-centre/",
+      "refs": [
+        "news:bristol"
       ],
       "watchable": true
     },
@@ -476,7 +560,8 @@
     {
       "url": "https://www.gatwickairport.com/transport-options/drop-off.html",
       "refs": [
-        "drop-off:gatwick"
+        "drop-off:gatwick",
+        "news:gatwick"
       ],
       "watchable": true
     },
@@ -491,6 +576,13 @@
       "url": "https://www.glasgowairport.com/at-the-airport/airport-services/upperdeck-lounge/",
       "refs": [
         "lounges:glasgow"
+      ],
+      "watchable": false
+    },
+    {
+      "url": "https://www.glasgowairport.com/media-centre/",
+      "refs": [
+        "news:glasgow"
       ],
       "watchable": false
     },
@@ -511,7 +603,15 @@
     {
       "url": "https://www.heathrow.com/transport-and-directions/terminal-drop-off-charge",
       "refs": [
-        "drop-off:heathrow"
+        "drop-off:heathrow",
+        "news:heathrow"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.hial.co.uk/inverness-airport",
+      "refs": [
+        "news:inverness"
       ],
       "watchable": true
     },
@@ -537,6 +637,20 @@
       "watchable": false
     },
     {
+      "url": "https://www.leedsbradfordairport.co.uk/the-latest",
+      "refs": [
+        "news:leeds-bradford"
+      ],
+      "watchable": false
+    },
+    {
+      "url": "https://www.liverpoolairport.com/media-centre",
+      "refs": [
+        "news:liverpool"
+      ],
+      "watchable": true
+    },
+    {
       "url": "https://www.liverpoolairport.com/parking/express-drop-off",
       "refs": [
         "drop-off:liverpool"
@@ -560,7 +674,8 @@
     {
       "url": "https://www.london-luton.co.uk/to-and-from-lla/dropping-off",
       "refs": [
-        "drop-off:luton"
+        "drop-off:luton",
+        "news:luton"
       ],
       "watchable": true
     },
@@ -600,6 +715,13 @@
       "watchable": true
     },
     {
+      "url": "https://www.newcastleairport.com/corporate/media-centre/latest-news/",
+      "refs": [
+        "news:newcastle"
+      ],
+      "watchable": true
+    },
+    {
       "url": "https://www.norwegian.com/en/booking/booking-information/optional-charges/",
       "refs": [
         "baggage:norwegian"
@@ -610,6 +732,13 @@
       "url": "https://www.norwichairport.co.uk/car-parking/",
       "refs": [
         "drop-off:norwich"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.norwichairport.co.uk/news/",
+      "refs": [
+        "news:norwich"
       ],
       "watchable": true
     },
@@ -635,6 +764,13 @@
       "watchable": true
     },
     {
+      "url": "https://www.southamptonairport.com/news/media-centre/",
+      "refs": [
+        "news:southampton"
+      ],
+      "watchable": true
+    },
+    {
       "url": "https://www.southamptonairport.com/to-from/pick-up-drop-off/",
       "refs": [
         "drop-off:southampton"
@@ -651,7 +787,15 @@
     {
       "url": "https://www.stanstedairport.com/parking/pick-up-and-drop-off/",
       "refs": [
-        "drop-off:stansted"
+        "drop-off:stansted",
+        "news:stansted"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.teessideinternational.com/news/",
+      "refs": [
+        "news:teesside"
       ],
       "watchable": true
     },

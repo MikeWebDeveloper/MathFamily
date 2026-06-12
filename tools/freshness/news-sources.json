@@ -1,0 +1,125 @@
+{
+  "generatedAt": "2026-06-12",
+  "sources": [
+    {
+      "airportSlug": "aberdeen",
+      "url": "https://www.aberdeenairport.com/about-us/media-centre/",
+      "label": "Aberdeen International Airport Media Centre"
+    },
+    {
+      "airportSlug": "belfast-city",
+      "url": "https://www.belfastcityairport.com/News",
+      "label": "Belfast City Airport newsroom (News - stories & updates)"
+    },
+    {
+      "airportSlug": "belfast-international",
+      "url": "https://www.belfastairport.com/blog-news",
+      "label": "Belfast International Airport newsroom (News / Blog)"
+    },
+    {
+      "airportSlug": "birmingham",
+      "url": "https://www.birminghamairport.co.uk/news/",
+      "label": "Birmingham Airport news"
+    },
+    {
+      "airportSlug": "bournemouth",
+      "url": "https://www.bournemouthairport.com/news/",
+      "label": "Bournemouth Airport newsroom (Airport News)"
+    },
+    {
+      "airportSlug": "bristol",
+      "url": "https://www.bristolairport.co.uk/corporate/news-and-media/news-and-media-centre/",
+      "label": "Bristol Airport news & media centre"
+    },
+    {
+      "airportSlug": "cardiff",
+      "url": "https://cardiff-airport.com/latest-news/",
+      "label": "Cardiff Airport latest news"
+    },
+    {
+      "airportSlug": "east-midlands",
+      "url": "https://mediacentre.eastmidlandsairport.com/",
+      "label": "East Midlands Airport media centre"
+    },
+    {
+      "airportSlug": "edinburgh",
+      "url": "https://corporate.edinburghairport.com/news",
+      "label": "Edinburgh Airport corporate news"
+    },
+    {
+      "airportSlug": "exeter",
+      "url": "https://exeter-airport.co.uk/news/",
+      "label": "Exeter Airport news"
+    },
+    {
+      "airportSlug": "gatwick",
+      "url": "https://www.gatwickairport.com/transport-options/drop-off.html",
+      "label": "London Gatwick drop-off"
+    },
+    {
+      "airportSlug": "glasgow",
+      "url": "https://www.glasgowairport.com/media-centre/",
+      "label": "Glasgow Airport Media Centre"
+    },
+    {
+      "airportSlug": "heathrow",
+      "url": "https://www.heathrow.com/transport-and-directions/terminal-drop-off-charge",
+      "label": "Heathrow Terminal Drop-Off Charge"
+    },
+    {
+      "airportSlug": "inverness",
+      "url": "https://www.hial.co.uk/inverness-airport",
+      "label": "Inverness Airport (HIAL) page with Latest News section"
+    },
+    {
+      "airportSlug": "leeds-bradford",
+      "url": "https://www.leedsbradfordairport.co.uk/the-latest",
+      "label": "Leeds Bradford Airport newsroom (The Latest)"
+    },
+    {
+      "airportSlug": "liverpool",
+      "url": "https://www.liverpoolairport.com/media-centre",
+      "label": "Liverpool John Lennon Airport media centre"
+    },
+    {
+      "airportSlug": "luton",
+      "url": "https://www.london-luton.co.uk/to-and-from-lla/dropping-off",
+      "label": "London Luton drop-off"
+    },
+    {
+      "airportSlug": "manchester",
+      "url": "https://mediacentre.manchesterairport.co.uk/",
+      "label": "Manchester Airport media centre"
+    },
+    {
+      "airportSlug": "newcastle",
+      "url": "https://www.newcastleairport.com/corporate/media-centre/latest-news/",
+      "label": "Newcastle Airport media centre latest news"
+    },
+    {
+      "airportSlug": "norwich",
+      "url": "https://www.norwichairport.co.uk/news/",
+      "label": "Norwich Airport news"
+    },
+    {
+      "airportSlug": "southampton",
+      "url": "https://www.southamptonairport.com/news/media-centre/",
+      "label": "Southampton Airport media centre (news / press releases)"
+    },
+    {
+      "airportSlug": "southend",
+      "url": "https://londonsouthendairport.com/corporate/media-centre/",
+      "label": "London Southend Airport press & media centre"
+    },
+    {
+      "airportSlug": "stansted",
+      "url": "https://www.stanstedairport.com/parking/pick-up-and-drop-off/",
+      "label": "London Stansted pick-up & drop-off"
+    },
+    {
+      "airportSlug": "teesside",
+      "url": "https://www.teessideinternational.com/news/",
+      "label": "Teesside International Airport news"
+    }
+  ]
+}

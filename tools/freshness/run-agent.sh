@@ -12,7 +12,12 @@ STAMP=$(date +%Y-%m-%d_%H%M)
 export FRESHNESS_RUN_ID="$STAMP"
 
 cd "$REPO"
-PROMPT="/freshness $*"
+MODE="${1:-}"
+case "$MODE" in
+  news)        shift; PROMPT="/news-watch check $*" ;;
+  news-sweep)  PROMPT="/news-watch sweep" ;;
+  *)           PROMPT="/freshness $*" ;;
+esac
 CMD=(claude -p "$PROMPT" --max-turns 200 --dangerously-skip-permissions)
 
 if [[ "${PRINT_CMD:-0}" == "1" ]]; then

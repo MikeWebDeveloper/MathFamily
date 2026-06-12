@@ -40,6 +40,12 @@ export const defaultFetcher: Fetcher = async (url) => {
   throw lastError instanceof Error ? lastError : new Error(String(lastError));
 };
 
+export const isNewsEntry = (e: WatchEntry) => e.refs.some((r) => r.startsWith("news:"));
+export const isCostEntry = (e: WatchEntry) => e.refs.some((r) => !r.startsWith("news:"));
+export function selectEntries(list: Watchlist, mode: "cost" | "news"): WatchEntry[] {
+  return list.entries.filter((e) => (mode === "news" ? isNewsEntry(e) : isCostEntry(e)));
+}
+
 export async function runWatchdog(list: Watchlist, state: HashState, fetcher: Fetcher, now: Date): Promise<WatchdogResult> {
   const today = now.toISOString().slice(0, 10);
   const result: WatchdogResult = { changed: [], errors: [] };
@@ -69,14 +75,17 @@ export async function runWatchdog(list: Watchlist, state: HashState, fetcher: Fe
   return result;
 }
 
-// CLI: reads watchlist.json + hashes.json, runs, persists state, prints JSON result.
+// CLI: reads watchlist.json + hashes.json (or news-hashes.json for --news), runs, persists state, prints JSON result.
 const isMain = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
 if (isMain) {
   const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-  const list = JSON.parse(readFileSync(join(root, "watchlist.json"), "utf8")) as Watchlist;
-  const state = JSON.parse(readFileSync(join(root, "hashes.json"), "utf8")) as HashState;
-  runWatchdog(list, state, defaultFetcher, new Date()).then((result) => {
-    writeFileSync(join(root, "hashes.json"), JSON.stringify(state, null, 2) + "\n");
+  const newsMode = process.argv.includes("--news");
+  const stateFile = newsMode ? "news-hashes.json" : "hashes.json";
+  const full = JSON.parse(readFileSync(join(root, "watchlist.json"), "utf8")) as Watchlist;
+  const partitioned = { ...full, entries: selectEntries(full, newsMode ? "news" : "cost") };
+  const state = JSON.parse(readFileSync(join(root, stateFile), "utf8")) as HashState;
+  runWatchdog(partitioned, state, defaultFetcher, new Date()).then((result) => {
+    writeFileSync(join(root, stateFile), JSON.stringify(state, null, 2) + "\n");
     console.log(JSON.stringify(result));
     process.exit(0);
   });
