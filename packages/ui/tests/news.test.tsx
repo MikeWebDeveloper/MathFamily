@@ -25,6 +25,14 @@ it("NewsCard shows title, dated summary, category and before→after, linked to 
   expect(screen.getByRole("link").getAttribute("href")).toBe("/news/heathrow-dropoff-fee-jun-2026");
 });
 
+it("NewsCard renders an h2 headline when headingLevel='h2', h3 by default", () => {
+  const { container, rerender } = render(<NewsCard item={item} href="/news/x" headingLevel="h2" />);
+  expect(container.querySelector("h2")).not.toBeNull();
+  expect(container.querySelector("h3")).toBeNull();
+  rerender(<NewsCard item={item} href="/news/x" />);
+  expect(container.querySelector("h3")).not.toBeNull();
+});
+
 it("LatestUpdates renders a heading and one card per item; nothing when empty", () => {
   const { container, rerender } = render(<LatestUpdates items={[item]} heading="Latest at Heathrow" />);
   expect(screen.getByRole("heading", { name: "Latest at Heathrow" })).toBeDefined();

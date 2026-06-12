@@ -45,7 +45,7 @@ export default function NewsHubPage() {
       ) : (
         <div className="space-y-3">
           {items.map((i) => (
-            <NewsCard key={i.id} item={i} href={`/news/${i.id}`} />
+            <NewsCard key={i.id} item={i} href={`/news/${i.id}`} headingLevel="h2" />
           ))}
         </div>
       )}
