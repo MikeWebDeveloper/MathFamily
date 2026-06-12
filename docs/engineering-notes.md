@@ -51,10 +51,13 @@ is active — disable MetaMask to reach it.)*
 analytics above. Cloudflare's *automatic* RUM injection does **not** fire on the Vercel origin
 (the beacon never appeared in the live HTML even with the zone proxied and RUM set to plain
 "Enable"), so it's installed **manually**: `<SiteAnalytics>` (`packages/ui/src/site-analytics.tsx`)
-renders the `beacon.min.js` tag, and ParkMath's layout passes the **public** site token via the
-`cfToken` prop (`apps/parkmath/app/layout.tsx`). `NEXT_PUBLIC_CF_BEACON_TOKEN` still overrides it
-if set in Vercel. No cookies → no consent banner. Confirmed live: the beacon tag is in the HTML
-and CSP-allowed (`script-src` includes `static.cloudflareinsights.com`).
+renders the `beacon.min.js` tag when `NEXT_PUBLIC_CF_BEACON_TOKEN` is set. That var is configured
+in **Vercel → math-family-parkmath → Environment Variables (Production)** — **not** committed to
+source. The token is public (it ships in the page HTML), but it's a 32-char high-entropy string,
+so committing it tripped GitGuardian (#33950301, a false positive); keeping it as a Vercel env var
+keeps the repo clean. `NEXT_PUBLIC_*` vars are build-time inlined, so changing it needs a redeploy.
+No cookies → no consent banner. Confirmed live: the beacon tag is in the HTML and CSP-allowed
+(`script-src` includes `static.cloudflareinsights.com`).
 
 > **Gotcha:** in Cloudflare → Web analytics → *Manage site*, RUM must be **"Enable"**, not
 > "Enable, excluding visitor data in the EU" — the latter suppresses the beacon for EU
