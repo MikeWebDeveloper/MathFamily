@@ -1,11 +1,13 @@
 {
+  "awin": { "publisherId": "2932035" },
   "partners": {
-    "holiday-extras": { "name": "Holiday Extras", "active": false },
-    "heathrow-official": { "name": "Heathrow Official Parking", "active": false },
-    "priority-pass": { "name": "Priority Pass", "active": false }
+    "holiday-extras": { "name": "Holiday Extras", "awinmid": "3496", "active": true },
+    "purple-parking": { "name": "Purple Parking", "awinmid": "12028", "active": false },
+    "airparks": { "name": "Airparks", "awinmid": "3494", "active": false },
+    "priority-pass": { "name": "Priority Pass", "awinmid": null, "active": false }
   },
   "slots": [
-    { "id": "parking-prebook", "partnerId": "holiday-extras", "deeplinkTemplate": "", "active": false },
-    { "id": "lounge-membership", "partnerId": "priority-pass", "deeplinkTemplate": "", "active": false }
+    { "id": "parking-prebook", "partnerIds": ["holiday-extras"], "active": true },
+    { "id": "lounge-membership", "partnerIds": ["priority-pass"], "active": false }
   ]
 }
