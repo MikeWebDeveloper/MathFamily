@@ -111,7 +111,7 @@
     {
       "id": "heathrow-dropoff-fee-jan-2026",
       "airportSlug": "heathrow",
-      "category": "fee-change",
+      "category": "drop-off-zone",
       "title": "Heathrow terminal drop-off charge is £7 per entry",
       "summary": "Heathrow's Terminal Drop-Off Charge (TDOC) is £7 each time a vehicle enters a terminal drop-off zone (forecourt). The charge applies via ANPR cameras and can be pre-paid or paid by midnight the following day; no pick-ups or waiting are permitted in the drop-off areas.",
       "body": null,
