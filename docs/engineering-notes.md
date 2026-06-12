@@ -47,3 +47,17 @@ src="https://<your-plausible-host>/js/script.js">` inside `<SiteAnalytics>` behi
 `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` env — no layout changes. Self-host via `docker compose`
 (Plausible CE + ClickHouse + Postgres) behind a reverse proxy, or a one-click Docker PaaS
 (Coolify/Dokploy). Decision deferred.
+
+## News-watch routine
+
+Gathers official airport updates into `packages/data/datasets/parkmath/news.json` via a PR.
+- Sources: `tools/freshness/news-sources.json` (curated official news/ops URLs), merged into
+  the shared `watchlist.json` as `news:<airport>` entries.
+- Agent: the `/news-watch` skill, run headless by `tools/freshness/run-agent.sh news-sweep`.
+- Cadence: weekly sweep via launchd. Install:
+  `cp docs/launchd/com.mathfamily.news-sweep.plist ~/Library/LaunchAgents/ && launchctl load ~/Library/LaunchAgents/com.mathfamily.news-sweep.plist`
+- Manual run: `tools/freshness/run-agent.sh news news:bristol` (targeted) or
+  `tools/freshness/run-agent.sh news-sweep` (full). Add `PRINT_CMD=1` to dry-run.
+- Output: a PR on `news/<run-id>` touching only `news.json`, with a NEEDS-HUMAN block. Review
+  and merge to publish.
+- Cost: extraction can use Gemini (`gemini-2.5-flash` via `tools/gemini-pick-model.sh`).
