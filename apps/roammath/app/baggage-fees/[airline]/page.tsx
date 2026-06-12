@@ -71,7 +71,7 @@ export default async function AirlineBaggagePage({ params }: { params: Promise<{
       />
 
       <header className="space-y-3">
-        <h1 className="text-3xl font-bold text-ink">{record.airlineName} baggage fees: official published charges</h1>
+        <h1 className="text-h1 font-bold tracking-tight text-balance text-ink">{record.airlineName} baggage fees: official published charges</h1>
         <div className="flex flex-wrap items-center gap-3">
           <FreshnessBadge verifiedAt={record.verifiedAt} />
           <SourceCitation url={record.sourceUrl} label={`Official ${record.airlineName} fee page`} />

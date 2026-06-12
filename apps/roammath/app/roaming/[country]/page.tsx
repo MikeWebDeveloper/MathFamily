@@ -95,16 +95,18 @@ export default async function CountryHubPage({ params }: { params: Promise<{ cou
         <CountryFlag
           iso2={destination.iso2}
           size={260}
-          className="pointer-events-none absolute -top-10 right-0 opacity-[0.06]"
+          className="pointer-events-none absolute -top-10 right-0 hidden opacity-[0.06] sm:block"
         />
         <div className="flex items-center gap-3">
           <CountryFlag iso2={destination.iso2} size={36} className="shrink-0 rounded-full shadow-sm" />
-          <h1 className="text-3xl font-bold text-ink">{destination.countryName} roaming charges: all four UK networks compared</h1>
+          <h1 className="text-h1 font-bold tracking-tight text-balance text-ink">{destination.countryName} roaming charges: all four UK networks compared</h1>
         </div>
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
           <FreshnessBadge verifiedAt={latestVerified} />
           {networkSources.slice(0, 1).map((s) => (
-            <SourceCitation key={s.network} url={s.sourceUrl} label={`${NETWORK_LABELS[s.network] ?? s.network} price guide`} />
+            <span key={s.network} className="hidden sm:inline-flex">
+              <SourceCitation url={s.sourceUrl} label={`${NETWORK_LABELS[s.network] ?? s.network} price guide`} />
+            </span>
           ))}
         </div>
       </header>
