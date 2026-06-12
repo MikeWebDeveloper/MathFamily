@@ -50,7 +50,7 @@ Targeted run for specific `news:<airport>` refs the watchdog flagged as changed.
 ### `sweep`
 Scheduled full pass:
 1. Run the watchdog to refresh fingerprints and get changed refs:
-   `pnpm --filter @mathfamily/freshness watchdog` → JSON `{ changed: [{url, refs}], errors }`.
+   `pnpm --filter @mathfamily/freshness-tools watchdog:news` → JSON `{ changed: [{url, refs}], errors }`.
 2. Extract the news refs: `refsWithPrefix(changed.flatMap(c => c.refs), "news:")`.
 3. If any, run the `check` flow above for those `news:<airport>` refs. If none changed, exit
    cleanly with "no news changes".

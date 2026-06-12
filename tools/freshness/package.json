@@ -7,7 +7,8 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "generate": "tsx src/generate-watchlist.ts",
-    "watchdog": "tsx src/watchdog.ts"
+    "watchdog": "tsx src/watchdog.ts",
+    "watchdog:news": "tsx src/watchdog.ts --news"
   },
   "dependencies": { "@mathfamily/data": "workspace:*" },
   "devDependencies": {
