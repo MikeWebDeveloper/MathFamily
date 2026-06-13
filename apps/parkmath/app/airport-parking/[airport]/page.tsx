@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { loadAirports, loadParkingDataset, type Airport, type ParkingRecord } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
-import { breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
+import { aggregateOfferLd, breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
 import { AnswerLead, FaqAccordion, FeeGrid, FreshnessBadge, PageHeading, SavesVerdict, SourceCitation, SourcesBlock, EmailCaptureSlot } from "@mathfamily/ui";
 import { BookingOptions } from "@/components/booking-options";
 import { ParkingCalculator } from "@/components/parking-calculator";
@@ -44,6 +44,12 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
   const sevenDayPrices = record.products.map((p) => p.prices.find((x) => x.days === 7)?.totalPence ?? Number.POSITIVE_INFINITY);
   const cheapestSevenDay = Math.min(...sevenDayPrices);
   const winnerIndex = Number.isFinite(cheapestSevenDay) ? sevenDayPrices.indexOf(cheapestSevenDay) : -1;
+  const validSevenDay = record.products
+    .map((p) => p.prices.find((x) => x.days === 7)?.totalPence)
+    .filter((p): p is number => p !== undefined);
+  const priceValidUntil = new Date(new Date(`${record.verifiedAt}T00:00:00Z`).getTime() + 60 * 86_400_000)
+    .toISOString()
+    .slice(0, 10);
 
   return (
     <article className="space-y-8">
@@ -55,6 +61,19 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
           { name: airport.name, url: `${siteUrl}/airport-parking/${airport.slug}` }
         ])}
       />
+      {validSevenDay.length > 0 ? (
+        <JsonLd
+          data={aggregateOfferLd({
+            name: `${airport.name} airport parking`,
+            description: `Gate vs pre-book parking at ${airport.name} for 3, 7 and 14 days — verified prices.`,
+            url: `${siteUrl}/airport-parking/${airport.slug}`,
+            lowPricePence: Math.min(...validSevenDay),
+            highPricePence: Math.max(...validSevenDay),
+            offerCount: validSevenDay.length,
+            priceValidUntil
+          })}
+        />
+      ) : null}
 
       <header className="space-y-3">
         <PageHeading>{airport.name} parking: gate vs pre-book</PageHeading>

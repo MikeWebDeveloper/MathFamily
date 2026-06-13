@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { breadcrumbLd, datasetLd, faqPageLd, itemListLd, webSiteLd, newsArticleLd, organizationLd } from "../src/builders";
+import { aggregateOfferLd, breadcrumbLd, datasetLd, faqPageLd, itemListLd, offerLd, webSiteLd, newsArticleLd, organizationLd } from "../src/builders";
 
 describe("faqPageLd", () => {
   it("builds a FAQPage with one Question per item", () => {
@@ -66,6 +66,51 @@ describe("itemListLd", () => {
     expect(ld["@type"]).toBe("ItemList");
     expect(ld.itemListElement).toHaveLength(2);
     expect(ld.itemListElement[1]).toMatchObject({ "@type": "ListItem", position: 2, name: "Short Stay — £90" });
+  });
+});
+
+describe("offerLd", () => {
+  it("builds a Product with a single Offer, converting pence to pounds", () => {
+    const ld = offerLd({
+      name: "Gatwick drop-off charge",
+      url: "https://example.com/drop-off-charges/gatwick",
+      pricePence: 600,
+      priceValidUntil: "2026-08-10"
+    }) as any;
+    expect(ld["@type"]).toBe("Product");
+    expect(ld.offers).toMatchObject({
+      "@type": "Offer",
+      price: "6.00",
+      priceCurrency: "GBP",
+      priceValidUntil: "2026-08-10",
+      availability: "https://schema.org/InStock",
+      url: "https://example.com/drop-off-charges/gatwick"
+    });
+  });
+});
+
+describe("aggregateOfferLd", () => {
+  it("builds a Product with an AggregateOffer spanning low/high prices", () => {
+    const ld = aggregateOfferLd({
+      name: "Heathrow airport parking",
+      description: "Gate vs pre-book parking at Heathrow",
+      url: "https://example.com/airport-parking/heathrow",
+      lowPricePence: 4200,
+      highPricePence: 9000,
+      offerCount: 5,
+      priceValidUntil: "2026-08-10"
+    }) as any;
+    expect(ld["@type"]).toBe("Product");
+    expect(ld.offers).toMatchObject({
+      "@type": "AggregateOffer",
+      lowPrice: "42.00",
+      highPrice: "90.00",
+      offerCount: 5,
+      priceCurrency: "GBP",
+      availability: "https://schema.org/InStock",
+      priceValidUntil: "2026-08-10",
+      url: "https://example.com/airport-parking/heathrow"
+    });
   });
 });
 

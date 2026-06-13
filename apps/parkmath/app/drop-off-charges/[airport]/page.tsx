@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { loadAirports, loadDropOffDataset, loadParkingDataset, loadLoungeDataset, newsForAirport, type Airport, type DropOffRecord } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
-import { breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
+import { breadcrumbLd, faqPageLd, JsonLd, offerLd } from "@mathfamily/geo";
 import { AnswerCard, AnswerLead, CaveatChip, Callout, FaqAccordion, FreshnessBadge, LatestUpdates, MiniAnswerBar, PageHeading, SourceCitation, SourcesBlock, EmailCaptureSlot, UkMap, VerifiedStamp } from "@mathfamily/ui";
 import { DropOffCalculator } from "@/components/drop-off-calculator";
 import { HolidayExtrasCard } from "@/components/holiday-extras-card";
@@ -44,6 +44,9 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
   const hasLounge = loadLoungeDataset().records.some((r) => r.airportSlug === slug);
   const latestNews = newsForAirport(airport.slug, 1)[0];
   const pageVerifiedAt = latestNews && latestNews.verifiedAt > record.verifiedAt ? latestNews.verifiedAt : record.verifiedAt;
+  const priceValidUntil = new Date(new Date(`${record.verifiedAt}T00:00:00Z`).getTime() + 60 * 86_400_000)
+    .toISOString()
+    .slice(0, 10);
 
   return (
     <article className="space-y-8">
@@ -55,6 +58,16 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
           { name: airport.name, url: `${siteUrl}/drop-off-charges/${airport.slug}` }
         ])}
       />
+      {!record.isFree && record.bands[0] ? (
+        <JsonLd
+          data={offerLd({
+            name: `${airport.name} drop-off charge`,
+            url: `${siteUrl}/drop-off-charges/${airport.slug}`,
+            pricePence: record.bands[0].totalPence,
+            priceValidUntil
+          })}
+        />
+      ) : null}
 
       <header className="space-y-3">
         <PageHeading>{airport.name} drop-off charge</PageHeading>
