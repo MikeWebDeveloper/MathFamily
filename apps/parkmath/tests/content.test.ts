@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { DropOffRecord, LoungeRecord, PriorityPassTier } from "@mathfamily/data";
-import { buildDropOffFaqs, buildLoungeFaqs, dropOffIndexSummary, isPerEntryTariff, trendNote } from "../lib/content";
+import { buildDropOffFaqs, buildLoungeFaqs, dropOffIndexSummary, freshnessDelta, isPerEntryTariff, paymentDeadlineChip, trendNote } from "../lib/content";
 
 const record: DropOffRecord = {
   airportSlug: "gatwick",
@@ -73,6 +73,29 @@ describe("trendNote", () => {
   it("frames a brand-new charge (prior year was free) without an up/down delta", () => {
     const newCharge = { ...record, priorYearFeePence: 0, bands: [{ upToMinutes: 5, totalPence: 800 }] };
     expect(trendNote(newCharge)).toBe("New charge for 2026 (£8)");
+  });
+});
+
+describe("paymentDeadlineChip", () => {
+  it("returns the real deadline, not generic copy", () => {
+    expect(paymentDeadlineChip({ paymentDeadline: "midnight on the day of your visit" } as any)).toBe("Pay by: midnight on the day of your visit");
+  });
+  it("returns null when there is no deadline", () => {
+    expect(paymentDeadlineChip({ paymentDeadline: null } as any)).toBeNull();
+  });
+});
+
+describe("freshnessDelta", () => {
+  const base = { isFree: false, bands: [{ totalPence: 600, upToMinutes: 10 }] };
+  it("'unchanged' when this year equals last", () => {
+    expect(freshnessDelta({ ...base, priorYearFeePence: 600 } as any)).toBe("Unchanged vs last year");
+  });
+  it("'up' when dearer than last year", () => {
+    expect(freshnessDelta({ ...base, priorYearFeePence: 500 } as any)).toBe("Up £1.00 vs last year");
+  });
+  it("null when no prior-year data or free", () => {
+    expect(freshnessDelta({ ...base, priorYearFeePence: null } as any)).toBeNull();
+    expect(freshnessDelta({ isFree: true, bands: [], priorYearFeePence: 500 } as any)).toBeNull();
   });
 });
 

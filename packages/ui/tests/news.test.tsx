@@ -33,6 +33,11 @@ it("NewsCard renders an h2 headline when headingLevel='h2', h3 by default", () =
   expect(container.querySelector("h3")).not.toBeNull();
 });
 
+it("shows the verified date when it differs from published", () => {
+  const { container } = render(<NewsCard item={item} href="/news/x" />);
+  expect(container.textContent).toMatch(/verified/i);
+});
+
 it("LatestUpdates renders a heading and one card per item; nothing when empty", () => {
   const { container, rerender } = render(<LatestUpdates items={[item]} heading="Latest at Heathrow" />);
   expect(screen.getByRole("heading", { name: "Latest at Heathrow" })).toBeDefined();

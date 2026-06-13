@@ -18,6 +18,9 @@ export function NewsCard({ item, href, headingLevel = "h3" }: { item: NewsItem; 
         <div className="flex items-center gap-2 text-xs">
           <span className="rounded-full bg-brand/5 px-2 py-0.5 font-semibold text-brand ring-1 ring-brand/10">{CATEGORY_LABEL[item.category]}</span>
           <time dateTime={item.publishedAt} className="text-ink-muted">{fmtDate(item.publishedAt)}</time>
+          {item.verifiedAt !== item.publishedAt ? (
+            <time dateTime={item.verifiedAt} className="text-ink-muted">verified {fmtDate(item.verifiedAt)}</time>
+          ) : null}
         </div>
         {headingLevel === "h2"
           ? <h2 className="mt-2 text-base font-semibold text-ink">{item.title}</h2>
