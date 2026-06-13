@@ -6,7 +6,7 @@ export function FaqAccordion({ items }: { items: { question: string; answer: str
     >
       {items.map((item, index) => (
         <details key={index} className="group">
-          <summary className="flex cursor-pointer items-center justify-between gap-4 p-5 font-medium text-ink transition-colors hover:bg-surface marker:content-none">
+          <summary className="flex min-h-11 cursor-pointer items-center justify-between gap-4 p-5 font-medium text-ink outline-none transition-colors hover:bg-surface focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-accent/50 marker:content-none">
             {item.question}
             <span aria-hidden className="shrink-0 text-ink-muted transition-transform duration-200 group-open:rotate-180">⌄</span>
           </summary>
