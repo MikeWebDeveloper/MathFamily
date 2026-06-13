@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { loadRoamingDataset, loadEsimDataset, NETWORKS, type RoamingDestination, type EsimCountry, type NetworkRoaming } from "@mathfamily/data";
-import { formatPence, roamingTripCost } from "@mathfamily/engine";
+import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
-import { AnswerLead, Callout, FaqAccordion, FreshnessBadge, SourcesBlock } from "@mathfamily/ui";
+import { FaqAccordion, FreshnessBadge, SourcesBlock } from "@mathfamily/ui";
 import { buildRoamingFaqs, NETWORK_LABELS } from "@/lib/roaming-content";
 import { resolveSlot } from "@/lib/partners";
+import { RoamingAnswer } from "@/components/roaming-answer";
 
 export const dynamicParams = false;
 
@@ -66,41 +67,6 @@ export default async function NetworkPage({
   const networkSource = networkSources.find((s) => s.network === networkSlug);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3001";
 
-  // Compute trip costs for this network only vs eSIM
-  const singleNetwork = [networkData];
-  const r7 = roamingTripCost(singleNetwork, esim?.bundles ?? [], 7, 5);
-
-  // Build answer for this specific network
-  let answerLead: string;
-  const facts: string[] = [];
-
-  if (networkData.included) {
-    answerLead = `${networkLabel} customers roam in ${destination.countryName} at no extra daily charge${networkData.fairUseNote ? ` (fair use: ${networkData.fairUseNote})` : ""}.`;
-    facts.push(`7 days: £0 — included in your plan`);
-    facts.push(`14 days: £0 — included in your plan`);
-    if (networkData.fairUseNote) {
-      facts.push(`Fair-use limit: ${networkData.fairUseNote}`);
-    }
-  } else if (networkData.dailyPassPence !== null) {
-    answerLead = `${networkLabel} charges ${formatPence(networkData.dailyPassPence)} per day for roaming in ${destination.countryName}${networkData.passName ? ` (${networkData.passName})` : ""}.`;
-    facts.push(`3 days: ${formatPence(networkData.dailyPassPence * 3)}`);
-    facts.push(`7 days: ${formatPence(networkData.dailyPassPence * 7)}`);
-    facts.push(`14 days: ${formatPence(networkData.dailyPassPence * 14)}`);
-    if (networkData.fairUseNote) {
-      facts.push(`Fair-use: ${networkData.fairUseNote}`);
-    }
-  } else {
-    answerLead = `${networkLabel} does not publish a standard daily roaming pass for ${destination.countryName} — charges apply per minute/MB at standard out-of-bundle rates. Check the official price guide.`;
-    facts.push(`No standard daily pass published`);
-    if (networkData.fairUseNote) facts.push(networkData.fairUseNote);
-  }
-
-  if (r7.esimChoice) {
-    facts.push(
-      `Best eSIM alternative: ${formatPence(r7.esimChoice.totalPence)} for 7 days (${r7.esimChoice.provider}, ${r7.esimChoice.bundleName})`
-    );
-  }
-
   // eSIM affiliate slot (Airalo inactive until AWIN approved — falls back to official site)
   const officialAiraloUrl = `https://www.airalo.com/${countrySlug}-esim`;
   const esimSlot = resolveSlot("esim", countrySlug, officialAiraloUrl);
@@ -117,6 +83,15 @@ export default async function NetworkPage({
       : []),
     ...(esim ? [{ label: "eSIM comparison (Airalo, Holafly, Saily)", url: esim.sourceUrl, verifiedAt: esim.verifiedAt }] : [])
   ];
+
+  // Build serializable NetworkRoamingOption from networkData
+  const networkOption = {
+    network: networkData.network,
+    included: networkData.included,
+    dailyPassPence: networkData.dailyPassPence,
+    passName: networkData.passName,
+    fairUseNote: networkData.fairUseNote,
+  };
 
   return (
     <article className="space-y-8">
@@ -137,31 +112,17 @@ export default async function NetworkPage({
         {networkSource && <FreshnessBadge verifiedAt={networkSource.verifiedAt} />}
       </header>
 
-      <AnswerLead answer={answerLead}>{facts}</AnswerLead>
-
-      {r7.esimChoice && networkData.dailyPassPence !== null && !networkData.included && (
-        <Callout
-          variant={r7.verdict === "esim" ? "free" : "info"}
-          title={
-            r7.verdict === "esim"
-              ? `eSIM saves ${formatPence(r7.savingsPence)} over 7 days`
-              : `${networkLabel} is cheaper for a 7-day trip`
-          }
-        >
-          {r7.verdict === "esim"
-            ? `A ${r7.esimChoice.provider} eSIM (${r7.esimChoice.bundleName}, ${formatPence(r7.esimChoice.totalPence)}) beats ${networkLabel}'s daily charge of ${formatPence(networkData.dailyPassPence * 7)} for 7 days. Snapshot from ${r7.esimChoice.snapshotDate} — check live prices.`
-            : `${networkLabel} daily charges (${formatPence(networkData.dailyPassPence * 7)} for 7 days) are cheaper than the best tracked eSIM (${r7.esimChoice.provider}, ${formatPence(r7.esimChoice.totalPence)}).`}
-          {" "}
-          {esimSlot.kind === "affiliate" ? (
-            <>
-              <a href={esimSlot.url} className="underline underline-offset-4">{esimSlot.label}</a>
-              <span className="text-xs text-ink-muted"> (We may earn commission)</span>
-            </>
-          ) : (
-            <a href={esimSlot.url} className="underline underline-offset-4">Check prices on the official site →</a>
-          )}
-        </Callout>
-      )}
+      {/* Reactive answer — hero + comparison + eSIM CTA all from a single useState/roamingTripCost call */}
+      <RoamingAnswer
+        networkOption={networkOption}
+        esimBundles={esim?.bundles ?? []}
+        networkLabel={networkLabel}
+        countryName={destination.countryName}
+        countrySlug={countrySlug}
+        esimSlot={esimSlot}
+        defaultDays={7}
+        defaultDataGb={5}
+      />
 
       {pageFaqs.length > 0 && (
         <section className="space-y-2">
