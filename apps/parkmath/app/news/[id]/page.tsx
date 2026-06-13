@@ -49,7 +49,7 @@ export default async function NewsItemPage({ params }: { params: Promise<{ id: s
       </header>
 
       {item.change ? (
-        <div className="mf-edge rounded-card bg-white p-5" style={{ boxShadow: "var(--shadow-card)" }}>
+        <div className="mf-edge rounded-card bg-card p-5" style={{ boxShadow: "var(--shadow-card)" }}>
           <p className="text-xs font-semibold uppercase tracking-wider text-ink-muted">{item.change.label}</p>
           <p className="mf-num mt-1 text-2xl font-bold text-ink">
             <span className="text-ink-muted line-through">{item.change.from}</span> <span aria-hidden>→</span> {item.change.to}

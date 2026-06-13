@@ -29,7 +29,7 @@ export function FeeGrid({
     "mf-winner-row bg-brand-accent/[0.07] font-semibold odd:bg-brand-accent/[0.07] even:bg-brand-accent/[0.07]";
 
   return (
-    <div className="mf-edge overflow-hidden rounded-card bg-white" style={{ boxShadow: "var(--shadow-card)" }}>
+    <div className="mf-edge overflow-hidden rounded-card bg-card" style={{ boxShadow: "var(--shadow-card)" }}>
       {caption ? <p className="px-4 pt-4 text-xs text-ink-muted sm:px-5">{caption}</p> : null}
 
       {/* md+ : the precise instrument table */}
@@ -46,7 +46,7 @@ export function FeeGrid({
             {rows.map((cells, i) => (
               <tr
                 key={i}
-                className={`border-b border-ink/5 transition-[background-color,box-shadow] duration-150 odd:bg-white even:bg-surface/40 hover:bg-brand-accent/[0.06] hover:shadow-[inset_2px_0_0_0_var(--color-brand-accent)] ${
+                className={`border-b border-ink/5 transition-[background-color,box-shadow] duration-150 odd:bg-card even:bg-surface/40 hover:bg-brand-accent/[0.06] hover:shadow-[inset_2px_0_0_0_var(--color-brand-accent)] ${
                   i === highlightRow ? winnerRow : ""
                 }`}
               >

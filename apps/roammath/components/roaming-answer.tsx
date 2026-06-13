@@ -76,7 +76,7 @@ export function RoamingAnswerDisplay({
     <section aria-label={`${networkLabel} roaming in ${countryName} answer`} className="space-y-4">
       {/* Sliders */}
       <div
-        className="rounded-card border border-ink/10 bg-white p-6"
+        className="rounded-card border border-ink/10 bg-card p-6"
         style={{ boxShadow: "var(--shadow-card)" }}
       >
         <h2 className="text-lg font-semibold text-ink">Your trip</h2>
@@ -187,7 +187,7 @@ export function RoamingAnswerDisplay({
 
         {/* eSIM CTA — shown only when esimChoice exists AND not included network */}
         {showEsimCta ? (
-          <div data-testid="esim-cta" className="rounded-card border border-ink/10 bg-white p-4">
+          <div data-testid="esim-cta" className="rounded-card border border-ink/10 bg-card p-4">
             {esimSlot.kind === "affiliate" ? (
               <>
                 <p className="mb-2 text-xs text-ink-muted" data-testid="affiliate-disclosure">

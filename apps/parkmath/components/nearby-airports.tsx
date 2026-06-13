@@ -41,7 +41,7 @@ export function NearbyAirports({ airports, feeBySlug }: { airports: Airport[]; f
       <button
         type="button"
         onClick={locate}
-        className="mf-press inline-flex min-h-11 items-center gap-2 rounded-card border border-ink/15 bg-white px-4 text-sm font-medium text-ink-muted outline-none transition hover:border-brand-accent/40 hover:text-brand-accent focus-visible:ring-2 focus-visible:ring-brand-accent/40"
+        className="mf-press inline-flex min-h-11 items-center gap-2 rounded-card border border-ink/15 bg-card px-4 text-sm font-medium text-ink-muted outline-none transition hover:border-brand-accent/40 hover:text-brand-accent focus-visible:ring-2 focus-visible:ring-brand-accent/40"
       >
         <svg aria-hidden width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
           <path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z" />
@@ -61,7 +61,7 @@ export function NearbyAirports({ airports, feeBySlug }: { airports: Airport[]; f
             <li key={r.slug}>
               <a
                 href={`/drop-off-charges/${r.slug}`}
-                className="mf-sheen mf-press flex items-center justify-between gap-2 rounded-card border border-ink/10 bg-white p-3 outline-none transition hover:border-brand-accent/40 focus-visible:ring-2 focus-visible:ring-brand-accent/40"
+                className="mf-sheen mf-press flex items-center justify-between gap-2 rounded-card border border-ink/10 bg-card p-3 outline-none transition hover:border-brand-accent/40 focus-visible:ring-2 focus-visible:ring-brand-accent/40"
                 style={{ boxShadow: "var(--shadow-card)" }}
               >
                 <span className="min-w-0">

@@ -1,7 +1,7 @@
 export function FaqAccordion({ items }: { items: { question: string; answer: string }[] }) {
   return (
     <div
-      className="divide-y divide-ink/10 overflow-hidden rounded-card border border-ink/10 bg-white"
+      className="divide-y divide-ink/10 overflow-hidden rounded-card border border-ink/10 bg-card"
       style={{ boxShadow: "var(--shadow-card)" }}
     >
       {items.map((item, index) => (

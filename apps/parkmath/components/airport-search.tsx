@@ -23,7 +23,7 @@ export function AirportSearch({ airports, feeBySlug }: { airports: Airport[]; fe
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search your airport — e.g. Gatwick or LGW"
-          className="w-full rounded-card border border-ink/15 bg-white py-3.5 pl-11 pr-4 text-base shadow-sm outline-none transition focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/30"
+          className="w-full rounded-card border border-ink/15 bg-card py-3.5 pl-11 pr-4 text-base shadow-sm outline-none transition focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/30"
         />
       </div>
       <ul className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -31,7 +31,7 @@ export function AirportSearch({ airports, feeBySlug }: { airports: Airport[]; fe
           <li key={a.slug}>
             <a
               href={`/drop-off-charges/${a.slug}`}
-              className="mf-sheen mf-press group flex h-full flex-col justify-between gap-1 rounded-card border border-ink/10 bg-white p-3.5 outline-none transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-accent/40 focus-visible:ring-2 focus-visible:ring-brand-accent/40"
+              className="mf-sheen mf-press group flex h-full flex-col justify-between gap-1 rounded-card border border-ink/10 bg-card p-3.5 outline-none transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-accent/40 focus-visible:ring-2 focus-visible:ring-brand-accent/40"
               style={{ boxShadow: "var(--shadow-card)" }}
             >
               <span className="text-sm font-semibold text-ink transition-colors group-hover:text-brand-accent">{a.name}</span>
@@ -56,7 +56,7 @@ export function AirportSearch({ airports, feeBySlug }: { airports: Airport[]; fe
           <button
             type="button"
             onClick={() => setQuery("")}
-            className="mt-1 inline-flex min-h-9 items-center rounded-full border border-ink/15 bg-white px-4 text-xs font-medium text-ink-muted transition hover:border-brand-accent/40 hover:text-brand-accent"
+            className="mt-1 inline-flex min-h-9 items-center rounded-full border border-ink/15 bg-card px-4 text-xs font-medium text-ink-muted transition hover:border-brand-accent/40 hover:text-brand-accent"
           >
             Clear search
           </button>
