@@ -95,6 +95,11 @@ export function trendNote(record: DropOffRecord): string | null {
   return `${direction} ${formatPence(Math.abs(diff))} vs 2025 (${formatPence(record.priorYearFeePence)} → ${formatPence(current)})`;
 }
 
+/** The payment-deadline caveat text, driven by the real data (never generic copy). */
+export function paymentDeadlineChip(record: Pick<DropOffRecord, "paymentDeadline">): string | null {
+  return record.paymentDeadline ? `Pay by: ${record.paymentDeadline}` : null;
+}
+
 export function isPerEntryTariff(record: DropOffRecord): boolean {
   const first = record.bands[0];
   return !record.isFree && record.bands.length === 1 && first !== undefined && first.upToMinutes <= 1;
