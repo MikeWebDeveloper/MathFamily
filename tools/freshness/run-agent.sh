@@ -4,6 +4,9 @@
 #   run-agent.sh sweep [--full] [--no-pr]
 #   run-agent.sh news <refs...> [--no-pr]
 #   run-agent.sh news-sweep [--no-pr]
+#   run-agent.sh awin-digest        # marketing: weekly AWIN digest
+#   run-agent.sh content-factory    # marketing: weekly social queue + email digest
+#   run-agent.sh forum-scout        # marketing: draft forum replies from tools/social/forum-leads.md
 #   PRINT_CMD=1 run-agent.sh ...   # print the claude command instead of running it (no side effects)
 set -euo pipefail
 
@@ -13,9 +16,12 @@ REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
 MODE="${1:-}"
 case "$MODE" in
-  news)        shift; PROMPT="/news-watch check $*" ;;
-  news-sweep)  shift; PROMPT="/news-watch sweep $*" ;;
-  *)           PROMPT="/freshness $*" ;;
+  news)            shift; PROMPT="/news-watch check $*" ;;
+  news-sweep)      shift; PROMPT="/news-watch sweep $*" ;;
+  awin-digest)     PROMPT="/awin-digest" ;;       # marketing: weekly AWIN digest → docs/reports/
+  content-factory) PROMPT="/content-factory" ;;   # marketing: weekly social queue + email digest → tools/social/
+  forum-scout)     PROMPT="/forum-scout" ;;       # marketing: draft forum replies from tools/social/forum-leads.md
+  *)               PROMPT="/freshness $*" ;;
 esac
 CMD=(claude -p "$PROMPT" --max-turns 200 --dangerously-skip-permissions)
 

@@ -1,0 +1,7 @@
+# Generated review artifacts — produced by the content-factory / forum-scout skills,
+# reviewed locally and pasted into Postiz/MailerLite. Transient; not committed.
+queue-*.json
+email-digest-*.md
+forum-drafts-*.md
+# Your local lead scratchpad — paste F5Bot alerts / thread URLs here.
+forum-leads.md
