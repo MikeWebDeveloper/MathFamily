@@ -17,4 +17,9 @@ describe("NearbyAirports", () => {
     expect(html).toMatch(/stays in your browser/i);
     expect(html).not.toContain('href="/drop-off-charges/');
   });
+
+  it("renders a polite live-region for status announcements", () => {
+    const html = renderToStaticMarkup(<NearbyAirports airports={airports} />);
+    expect(html).toContain('aria-live="polite"');
+  });
 });
