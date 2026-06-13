@@ -10,7 +10,8 @@ const manchester: ParkingTariff = {
       name: "Multi-Storey (drive-up)",
       prices: [
         { days: 3, totalPence: 13500 },
-        { days: 7, totalPence: 31500 }
+        { days: 7, totalPence: 31500 },
+        { days: 14, totalPence: 63000 }
       ],
       snapshotDate: null
     },
@@ -19,7 +20,8 @@ const manchester: ParkingTariff = {
       name: "JetParks 1 (pre-book)",
       prices: [
         { days: 3, totalPence: 2400 },
-        { days: 7, totalPence: 4200 }
+        { days: 7, totalPence: 4200 },
+        { days: 14, totalPence: 8000 }
       ],
       snapshotDate: "2026-06-01"
     }
@@ -38,9 +40,25 @@ describe("compareParking", () => {
     expect(c.savingsVsGatePence).toBe(31500 - 4200);
   });
   it("skips products that don't quote the requested duration", () => {
-    const c = compareParking(manchester, 14, NOW);
+    const tariffWithoutFourteen: ParkingTariff = {
+      ...manchester,
+      products: manchester.products.map((p) => ({
+        ...p,
+        prices: p.prices.filter((pr) => pr.days !== 14)
+      }))
+    };
+    const c = compareParking(tariffWithoutFourteen, 14, NOW);
     expect(c.options).toHaveLength(0);
     expect(c.warnings.map((w) => w.code)).toContain("DURATION_NOT_COVERED");
+  });
+
+  it("returns correctly ranked options for 14 days — covered-duration path", () => {
+    const c = compareParking(manchester, 14, NOW);
+    expect(c.options).toHaveLength(2);
+    expect(c.options[0]).toMatchObject({ name: "JetParks 1 (pre-book)", totalPence: 8000 });
+    expect(c.options[1]).toMatchObject({ totalPence: 63000 });
+    expect(c.savingsVsGatePence).toBe(63000 - 8000);
+    expect(c.cheapest?.name).toBe("JetParks 1 (pre-book)");
   });
   it("flags pre-book prices as snapshots", () => {
     const c = compareParking(manchester, 3, NOW);

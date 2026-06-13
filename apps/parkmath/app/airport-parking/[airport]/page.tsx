@@ -4,9 +4,8 @@ import { notFound } from "next/navigation";
 import { loadAirports, loadParkingDataset, type Airport, type ParkingRecord } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { aggregateOfferLd, breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
-import { AnswerLead, FaqAccordion, FeeGrid, FreshnessBadge, PageHeading, SavesVerdict, SourceCitation, SourcesBlock, EmailCaptureSlot } from "@mathfamily/ui";
-import { BookingOptions } from "@/components/booking-options";
-import { ParkingCalculator } from "@/components/parking-calculator";
+import { FaqAccordion, FeeGrid, FreshnessBadge, PageHeading, SourceCitation, SourcesBlock, EmailCaptureSlot } from "@mathfamily/ui";
+import { ParkingAnswer } from "@/components/parking-answer";
 import { DURATION_SLUGS, buildParkingFaqs, parkingPageModel } from "@/lib/parking-content";
 
 export const dynamicParams = false;
@@ -38,6 +37,15 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
   const data = getData(slug);
   if (!data) notFound();
   const { airport, record } = data;
+
+  // Pre-compute the model for each covered duration (3, 7, 14 days) — passed to the
+  // client component as serializable props so the page stays fully static.
+  const coveredDays = [3, 7, 14] as const;
+  const entries = coveredDays
+    .map((days) => ({ days, model: parkingPageModel(record, days) }))
+    .filter((e) => e.model.options.length > 0);
+
+  // Fallback to the 7-day model for metadata / JSON-LD / FAQs even if it's not "covered"
   const m7 = parkingPageModel(record, 7);
   const faqs = buildParkingFaqs(record, airport.name, 7);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
@@ -83,25 +91,15 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
         </div>
       </header>
 
-      <AnswerLead answer={m7.answer}>
-        {DURATION_SLUGS.map((s) => {
-          const days = Number(s.split("-")[0]);
-          const m = parkingPageModel(record, days);
-          return m.cheapest
-            ? `${days} days: from ${formatPence(m.cheapest.totalPence)} (${m.cheapest.name})`
-            : `${days} days: see official site`;
-        })}
-      </AnswerLead>
-
-      <ParkingCalculator tariff={record} airportName={airport.name} buildDate={new Date().toISOString()} />
-
-      <SavesVerdict
-        amount={m7.savingsVsGatePence ? formatPence(m7.savingsVsGatePence) : undefined}
-        verdict={
-          m7.savingsVsGatePence && m7.cheapest
-            ? `Pre-booking saves ${formatPence(m7.savingsVsGatePence)} vs the drive-up gate price for 7 days (${m7.cheapest.name}).`
-            : `Compare options above to find the best price for your dates.`
-        }
+      {/* Reactive answer-first block: duration control + hero + saves + option cards + booking CTA.
+          All parts read the same pre-computed model so they can never disagree. SSR renders at
+          defaultDays=7 (crawlable, JS-off correct). No CLS on hydration (same default). */}
+      <ParkingAnswer
+        entries={entries}
+        defaultDays={7}
+        slug={airport.slug}
+        airportName={airport.name}
+        officialUrl={record.sourceUrl}
       />
 
       {m7.gate && m7.cheapest ? (
@@ -116,14 +114,7 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
         />
       ) : null}
 
-      {m7.warnings.length > 0 ? (
-        <ul className="space-y-1 text-xs text-ink-muted">
-          {m7.warnings.map((w) => (
-            <li key={w.code}>{w.message}</li>
-          ))}
-        </ul>
-      ) : null}
-
+      {/* All-durations reference grid — kept as a static, always-visible summary table. */}
       <FeeGrid
         caption={`All published ${airport.name} options by duration. Pre-book figures are dated snapshots from the official portal.`}
         columns={["Option", "3 days", "7 days", "14 days"]}
@@ -144,8 +135,6 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
           })
         ])}
       />
-
-      <BookingOptions airportName={airport.name} airportSlug={airport.slug} officialUrl={record.sourceUrl} />
 
       <nav aria-label="Duration pages" className="flex gap-3 text-sm">
         {DURATION_SLUGS.map((s) => (
