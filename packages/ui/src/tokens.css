@@ -175,6 +175,33 @@
   to { transform: rotate(25deg) translateX(320%); opacity: 0; }
 }
 
+/* ── Slow occasional glint: ambient sweep on nav tiles, fired by GlintController.
+   Visible only on dark surfaces (the primary nav tiles are navy). Tunable via
+   --mf-glint-dur / --mf-glint-opacity. ── */
+.mf-glint {
+  position: relative;
+  overflow: hidden;
+}
+.mf-glint__sweep {
+  position: absolute;
+  top: -150%;
+  left: -60%;
+  width: 55%;
+  height: 400%;
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / var(--mf-glint-opacity, 0.14)), transparent);
+  transform: rotate(25deg) translateX(-180%);
+  opacity: 0;
+  pointer-events: none;
+}
+.mf-glint.is-glinting .mf-glint__sweep {
+  animation: mf-glint-sweep var(--mf-glint-dur, 1.8s) ease-in-out;
+}
+@keyframes mf-glint-sweep {
+  0% { transform: rotate(25deg) translateX(-180%); opacity: 0; }
+  12% { opacity: 1; }
+  100% { transform: rotate(25deg) translateX(360%); opacity: 0; }
+}
+
 /* ── Press state for touch ── */
 .mf-press {
   transition: transform 120ms ease;
@@ -301,6 +328,7 @@ a:hover .mf-logo-tile {
     animation: none;
   }
   .mf-skeleton { animation: none; }
+  .mf-glint__sweep { display: none; }
   .mf-reveal {
     opacity: 1;
     transform: none;
