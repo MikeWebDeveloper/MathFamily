@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env bash
 # Freshness agent runner. Usage:
 #   run-agent.sh check <refs...> [--no-pr]
 #   run-agent.sh sweep [--full] [--no-pr]
@@ -15,7 +15,7 @@ cd "$REPO"
 MODE="${1:-}"
 case "$MODE" in
   news)        shift; PROMPT="/news-watch check $*" ;;
-  news-sweep)  PROMPT="/news-watch sweep" ;;
+  news-sweep)  shift; PROMPT="/news-watch sweep $*" ;;
   *)           PROMPT="/freshness $*" ;;
 esac
 CMD=(claude -p "$PROMPT" --max-turns 200 --dangerously-skip-permissions)
