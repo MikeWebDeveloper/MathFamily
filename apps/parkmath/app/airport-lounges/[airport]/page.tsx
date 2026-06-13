@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { loadAirports, loadLoungeDataset, loadParkingDataset, loadPriorityPass, type Airport, type LoungeRecord } from "@mathfamily/data";
-import { formatPence, loungeBreakEven } from "@mathfamily/engine";
+import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
-import { AnswerLead, FaqAccordion, FeeGrid, FreshnessBadge, PageHeading, SavesVerdict, SourceCitation, SourcesBlock } from "@mathfamily/ui";
+import { FaqAccordion, FeeGrid, FreshnessBadge, PageHeading, SourceCitation, SourcesBlock } from "@mathfamily/ui";
 import { HolidayExtrasCard } from "@/components/holiday-extras-card";
-import { LoungeCalculator } from "@/components/lounge-calculator";
+import { LoungeAnswer } from "@/components/lounge-answer";
 import { buildLoungeFaqs } from "@/lib/content";
 
 export const dynamicParams = false;
@@ -41,7 +41,6 @@ export default async function LoungePage({ params }: { params: Promise<{ airport
   const pp = loadPriorityPass();
   const priced = record.lounges.filter((l) => l.walkInPence !== null);
   const cheapest = [...priced].sort((a, b) => a.walkInPence! - b.walkInPence!)[0];
-  const loungeResult = cheapest ? loungeBreakEven(cheapest.walkInPence!, 3, pp.tiers) : null;
   const hasParking = loadParkingDataset().records.some((r) => r.airportSlug === airport.slug);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
   const faqs = buildLoungeFaqs(record, airport.name, pp.tiers);
@@ -63,32 +62,19 @@ export default async function LoungePage({ params }: { params: Promise<{ airport
         </div>
       </header>
 
-      <AnswerLead
-        answer={
-          cheapest
-            ? `A lounge visit at ${airport.name} costs from ${formatPence(cheapest.walkInPence!)} (operator pre-book price — walk-up rates can be higher) — frequent flyers may pay less with a membership.`
-            : `${airport.name} lounge walk-in prices aren't published online — memberships may still beat on-the-day rates.`
-        }
-      >
-        {record.lounges.map((l) => `${l.name}: ${l.walkInPence !== null ? formatPence(l.walkInPence) : "price on the day"}${l.priorityPass ? " · Priority Pass" : ""}`)}
-      </AnswerLead>
-
       <FeeGrid
         caption={`${airport.name} lounges, verified ${record.verifiedAt}.`}
         columns={["Lounge", "From (pre-book)", "Priority Pass"]}
         rows={record.lounges.map((l) => [l.name, l.walkInPence !== null ? formatPence(l.walkInPence) : "—", l.priorityPass ? "Yes" : "No"])}
       />
 
-      {cheapest ? <LoungeCalculator walkInPence={cheapest.walkInPence!} tiers={pp.tiers} airportName={airport.name} /> : null}
-
-      {loungeResult ? (
-        <SavesVerdict
-          amount={loungeResult.verdict === "membership" && loungeResult.savingsPence > 0 ? formatPence(loungeResult.savingsPence) : undefined}
-          verdict={
-            loungeResult.verdict === "membership" && loungeResult.savingsPence > 0
-              ? `A ${loungeResult.best?.tier} membership saves ${formatPence(loungeResult.savingsPence)}/year vs paying per visit at 3 visits — adjust the slider to match your travel frequency.`
-              : `At 3 visits/year, paying per visit (${formatPence(loungeResult.payAsYouGoPence)}/yr) beats membership — use the calculator above.`
-          }
+      {/* Single reactive component: owns visits state, computes everything from one loungeBreakEven call */}
+      {cheapest ? (
+        <LoungeAnswer
+          walkInPence={cheapest.walkInPence!}
+          tiers={pp.tiers}
+          airportName={airport.name}
+          defaultVisits={3}
         />
       ) : null}
 

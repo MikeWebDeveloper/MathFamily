@@ -31,4 +31,21 @@ describe("loungeBreakEven", () => {
     expect(() => loungeBreakEven(3500, -3, tiers)).not.toThrow();
     expect(loungeBreakEven(3500, -3, tiers).visitsPerYear).toBe(1);
   });
+
+  // Break-even boundary tests — below (payg wins) and above (membership wins)
+  it("below break-even: payg wins at 3 visits/year", () => {
+    // payg=3500*3=10500; Standard=6900+3*2400=14100; SP=22900; Prestige=45900 → payg cheapest
+    const r = loungeBreakEven(3500, 3, tiers);
+    expect(r.verdict).toBe("payg");
+    expect(r.payAsYouGoPence).toBe(10500);
+    expect(r.savingsPence).toBe(0);
+  });
+
+  it("above break-even: membership wins at 12 visits/year", () => {
+    // payg=42000; Standard=6900+12*2400=35700; SP=22900+2*2400=27700; Prestige=45900 → SP cheapest
+    const r = loungeBreakEven(3500, 12, tiers);
+    expect(r.verdict).toBe("membership");
+    expect(r.best?.tier).toBe("Standard Plus");
+    expect(r.savingsPence).toBe(42000 - 27700); // 14300
+  });
 });
