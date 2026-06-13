@@ -1,10 +1,12 @@
-import Link from "next/link";
 import { loadAirports, loadDropOffDataset } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { webSiteLd, JsonLd } from "@mathfamily/geo";
-import { EmailCaptureSlot, RunwayDivider, StatStrip, UkMap } from "@mathfamily/ui";
+import { EmailCaptureSlot, RunwayDivider, StatStrip, UkMap, NavTileGrid } from "@mathfamily/ui";
 import { AirportSearch } from "@/components/airport-search";
+import { NearbyAirports } from "@/components/nearby-airports";
+import { DealsStrip } from "@/components/deals-strip";
 import { FamilyLinks } from "@/components/family-links";
+import { CarIcon, ParkingIcon, LoungeIcon, PriceIndexIcon, NewsIcon, DataIcon } from "@/components/tile-icons";
 
 export default function HomePage() {
   const airports = loadAirports();
@@ -29,8 +31,19 @@ export default function HomePage() {
     feeBySlug[r.airportSlug] = r.isFree ? "Free" : `${formatPence(r.bands[0]?.totalPence ?? 0)} drop-off`;
   }
 
+  const primaryTiles = [
+    { href: "/drop-off-charges", title: "Drop-off charges", descriptor: "Compare every UK airport in one table", icon: <CarIcon /> },
+    { href: "/airport-parking", title: "Airport parking", descriptor: "Gate price vs pre-book — what you save", icon: <ParkingIcon /> },
+    { href: "/airport-lounges", title: "Airport lounges", descriptor: "Pay-per-visit or membership break-even", icon: <LoungeIcon /> },
+  ];
+  const secondaryTiles = [
+    { href: "/parking-price-index-2026", title: "Price index 2026", icon: <PriceIndexIcon /> },
+    { href: "/news", title: "Travel news", icon: <NewsIcon /> },
+    { href: "/data/drop-off-charges.csv", title: "Open data (CSV)", icon: <DataIcon />, download: true },
+  ];
+
   return (
-    <div className="space-y-14">
+    <div className="space-y-12">
       <JsonLd data={webSiteLd({ name: "ParkMath", url: siteUrl })} />
       <section className="relative">
         <UkMap
@@ -46,6 +59,7 @@ export default function HomePage() {
             official airport pages and date-stamped.
           </p>
           <AirportSearch airports={airports} feeBySlug={feeBySlug} />
+          <NearbyAirports airports={airports} feeBySlug={feeBySlug} />
         </div>
       </section>
 
@@ -57,20 +71,13 @@ export default function HomePage() {
         ]} />
       </section>
 
-      <p className="flex flex-wrap gap-x-6 gap-y-2">
-        <Link href="/drop-off-charges" className="inline-flex min-h-11 items-center text-base font-semibold text-brand-accent underline underline-offset-4">
-          Compare all airports in one table →
-        </Link>
-      </p>
+      <section className="space-y-4">
+        <h2 className="mf-reveal text-h2 font-semibold text-ink">Where do you want to start?</h2>
+        <NavTileGrid tiles={primaryTiles} variant="primary" />
+        <NavTileGrid tiles={secondaryTiles} variant="secondary" />
+      </section>
 
-      <p className="flex flex-wrap gap-x-6 gap-y-2">
-        <Link href="/airport-parking" className="inline-flex min-h-11 items-center text-base font-semibold text-brand-accent underline underline-offset-4">
-          Compare airport parking →
-        </Link>
-        <Link href="/airport-lounges" className="inline-flex min-h-11 items-center text-base font-semibold text-brand-accent underline underline-offset-4">
-          Lounge or membership? →
-        </Link>
-      </p>
+      <DealsStrip />
 
       <RunwayDivider className="h-2 w-full text-brand/15" />
 
