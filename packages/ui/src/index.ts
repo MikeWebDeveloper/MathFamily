@@ -33,3 +33,4 @@ export * from "./site-analytics";
 export * from "./news-card";
 export * from "./latest-updates";
 export * from "./glint-controller";
+export * from "./nav-tile";
