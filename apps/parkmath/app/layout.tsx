@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
-import { AmbientBackdrop, ScrollProgress, ScrollReveal, SiteAnalytics, SiteFooter, SiteHeader } from "@mathfamily/ui";
+import { AmbientBackdrop, GlintController, ScrollProgress, ScrollReveal, SiteAnalytics, SiteFooter, SiteHeader } from "@mathfamily/ui";
 import { organizationLd, JsonLd } from "@mathfamily/geo";
 import "./globals.css";
 
@@ -45,6 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </noscript>
         <ScrollProgress />
         <ScrollReveal />
+        <GlintController />
         <AmbientBackdrop />
         <SiteHeader brandName="ParkMath" brandPrefix="Park" links={NAV} />
         <main id="main" className="mx-auto max-w-5xl px-4 py-8">{children}</main>
