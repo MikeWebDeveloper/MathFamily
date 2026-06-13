@@ -6,6 +6,7 @@ import { formatPence, roamingTripCost } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
 import { AnswerLead, Callout, FaqAccordion, FreshnessBadge, SourcesBlock } from "@mathfamily/ui";
 import { buildRoamingFaqs, NETWORK_LABELS } from "@/lib/roaming-content";
+import { resolveSlot } from "@/lib/partners";
 
 export const dynamicParams = false;
 
@@ -100,6 +101,10 @@ export default async function NetworkPage({
     );
   }
 
+  // eSIM affiliate slot (Airalo inactive until AWIN approved — falls back to official site)
+  const officialAiraloUrl = `https://www.airalo.com/${countrySlug}-esim`;
+  const esimSlot = resolveSlot("esim", countrySlug, officialAiraloUrl);
+
   // FAQ: just this network's question + eSIM question
   const allFaqs = buildRoamingFaqs(destination, esim, 7);
   const thisNetworkFaq = allFaqs.find((f) => f.question.includes(networkLabel));
@@ -146,6 +151,15 @@ export default async function NetworkPage({
           {r7.verdict === "esim"
             ? `A ${r7.esimChoice.provider} eSIM (${r7.esimChoice.bundleName}, ${formatPence(r7.esimChoice.totalPence)}) beats ${networkLabel}'s daily charge of ${formatPence(networkData.dailyPassPence * 7)} for 7 days. Snapshot from ${r7.esimChoice.snapshotDate} — check live prices.`
             : `${networkLabel} daily charges (${formatPence(networkData.dailyPassPence * 7)} for 7 days) are cheaper than the best tracked eSIM (${r7.esimChoice.provider}, ${formatPence(r7.esimChoice.totalPence)}).`}
+          {" "}
+          {esimSlot.kind === "affiliate" ? (
+            <>
+              <a href={esimSlot.url} className="underline underline-offset-4">{esimSlot.label}</a>
+              <span className="text-xs text-ink-muted"> (We may earn commission)</span>
+            </>
+          ) : (
+            <a href={esimSlot.url} className="underline underline-offset-4">Check prices on the official site →</a>
+          )}
         </Callout>
       )}
 
