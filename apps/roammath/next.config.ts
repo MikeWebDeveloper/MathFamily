@@ -14,6 +14,7 @@ const csp = [
 ].join("; ");
 
 const nextConfig: NextConfig = {
+  reactCompiler: true,
   transpilePackages: ["@mathfamily/ui", "@mathfamily/engine", "@mathfamily/data", "@mathfamily/geo"],
   async headers() {
     return [
