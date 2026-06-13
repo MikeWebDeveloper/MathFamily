@@ -35,3 +35,4 @@ export * from "./latest-updates";
 export * from "./glint-controller";
 export * from "./nav-tile";
 export * from "./live-region";
+export * from "./open-data-band";

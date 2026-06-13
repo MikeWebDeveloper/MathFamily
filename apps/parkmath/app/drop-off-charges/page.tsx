@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { loadAirports, loadDropOffDataset } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
-import { datasetLd, itemListLd, JsonLd } from "@mathfamily/geo";
-import { FreshnessBadge, PageHeading } from "@mathfamily/ui";
+import { breadcrumbLd, datasetLd, itemListLd, JsonLd } from "@mathfamily/geo";
+import { FreshnessBadge, OpenDataBand, PageHeading } from "@mathfamily/ui";
 import { dropOffIndexSummary, isPerEntryTariff } from "@/lib/content";
 import { SortableFeeTable, type DropOffRow } from "@/components/sortable-fee-table";
 
@@ -42,6 +42,12 @@ export default function MasterTablePage() {
   return (
     <article className="space-y-6">
       <JsonLd
+        data={breadcrumbLd([
+          { name: "Home", url: siteUrl },
+          { name: "Drop-off charges", url: `${siteUrl}/drop-off-charges` }
+        ])}
+      />
+      <JsonLd
         data={datasetLd({
           name: "UK airport drop-off charges",
           description: `Drop-off fees, time limits, penalties and free alternatives at ${records.length} UK airports, verified against official airport pages.`,
@@ -67,6 +73,10 @@ export default function MasterTablePage() {
           {dropOffIndexSummary(records.map((r) => ({ name: airports.get(r.airportSlug)?.name ?? r.airportSlug, isFree: r.isFree, feePence: r.bands[0]?.totalPence ?? 0 })))}
         </p>
       </header>
+      <OpenDataBand
+        downloads={[{ href: "/data/drop-off-charges.csv", label: "Drop-off charges (CSV)" }]}
+        citation={`ParkMath, "UK airport drop-off charges", verified ${latestVerified}, parkmath.co.uk`}
+      />
       <h2 className="text-h2 font-semibold text-ink">Every UK airport, compared</h2>
       <SortableFeeTable rows={rows} />
     </article>

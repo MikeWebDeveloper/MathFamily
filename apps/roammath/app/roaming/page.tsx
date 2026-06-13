@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { loadRoamingDataset, loadEsimDataset, NETWORKS } from "@mathfamily/data";
 import { roamingTripCost, formatPence } from "@mathfamily/engine";
-import { datasetLd, itemListLd, JsonLd } from "@mathfamily/geo";
+import { breadcrumbLd, datasetLd, itemListLd, JsonLd } from "@mathfamily/geo";
 import { CountryFlag, FeeGrid, FreshnessBadge, PageHeading } from "@mathfamily/ui";
 import { NETWORK_LABELS } from "@/lib/roaming-content";
 
@@ -70,6 +70,12 @@ export default function RoamingIndexPage() {
 
   return (
     <article className="space-y-6">
+      <JsonLd
+        data={breadcrumbLd([
+          { name: "Home", url: siteUrl },
+          { name: "Roaming charges", url: `${siteUrl}/roaming` }
+        ])}
+      />
       <JsonLd
         data={datasetLd({
           name: "UK mobile roaming charges by destination",

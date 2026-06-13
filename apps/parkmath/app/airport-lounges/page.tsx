@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { loadAirports, loadLoungeDataset } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
-import { itemListLd, JsonLd } from "@mathfamily/geo";
+import { breadcrumbLd, itemListLd, JsonLd } from "@mathfamily/geo";
 import { FeeGrid, PageHeading } from "@mathfamily/ui";
 
 export const metadata: Metadata = {
@@ -23,6 +23,12 @@ export default function LoungeIndexPage() {
 
   return (
     <article className="space-y-6">
+      <JsonLd
+        data={breadcrumbLd([
+          { name: "Home", url: siteUrl },
+          { name: "Airport lounges", url: `${siteUrl}/airport-lounges` }
+        ])}
+      />
       <JsonLd data={itemListLd({
         name: "UK airport lounges by cheapest pre-book from-price",
         items: rows.map((r) => ({ name: `${r.name} — ${r.from !== null ? `from ${formatPence(r.from)}` : "price on the day"}`, url: `${siteUrl}/airport-lounges/${r.slug}` }))

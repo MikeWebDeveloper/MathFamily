@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { loadAirports, loadParkingDataset } from "@mathfamily/data";
 import { formatPence, compareParking } from "@mathfamily/engine";
-import { itemListLd, JsonLd } from "@mathfamily/geo";
+import { breadcrumbLd, itemListLd, JsonLd } from "@mathfamily/geo";
 import { FeeGrid, FreshnessBadge, PageHeading } from "@mathfamily/ui";
 
 export const metadata: Metadata = {
@@ -30,6 +30,12 @@ export default function ParkingIndexPage() {
 
   return (
     <article className="space-y-6">
+      <JsonLd
+        data={breadcrumbLd([
+          { name: "Home", url: siteUrl },
+          { name: "Airport parking", url: `${siteUrl}/airport-parking` }
+        ])}
+      />
       <JsonLd
         data={itemListLd({
           name: "Cheapest 7-day airport parking (verified)",
