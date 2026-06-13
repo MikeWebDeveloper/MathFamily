@@ -36,3 +36,4 @@ export * from "./glint-controller";
 export * from "./nav-tile";
 export * from "./live-region";
 export * from "./open-data-band";
+export * from "./theme-toggle";
