@@ -95,6 +95,16 @@ export function trendNote(record: DropOffRecord): string | null {
   return `${direction} ${formatPence(Math.abs(diff))} vs 2025 (${formatPence(record.priorYearFeePence)} → ${formatPence(current)})`;
 }
 
+/** A short confidence delta vs last year, or null when not comparable. */
+export function freshnessDelta(record: Pick<DropOffRecord, "isFree" | "bands" | "priorYearFeePence">): string | null {
+  const current = record.bands[0]?.totalPence;
+  if (record.isFree || current === undefined || record.priorYearFeePence === null) return null;
+  const diff = current - record.priorYearFeePence;
+  if (diff === 0) return "Unchanged vs last year";
+  const fmt = (p: number) => `£${(p / 100).toFixed(2)}`;
+  return diff > 0 ? `Up ${fmt(diff)} vs last year` : `Down ${fmt(-diff)} vs last year`;
+}
+
 /** The payment-deadline caveat text, driven by the real data (never generic copy). */
 export function paymentDeadlineChip(record: Pick<DropOffRecord, "paymentDeadline">): string | null {
   return record.paymentDeadline ? `Pay by: ${record.paymentDeadline}` : null;

@@ -22,6 +22,7 @@ export default function MasterTablePage() {
     (a, b) => (b.bands[0]?.totalPence ?? 0) - (a.bands[0]?.totalPence ?? 0)
   );
   const latestVerified = records.map((r) => r.verifiedAt).sort().at(-1) ?? dataset.lastUpdated;
+  const oldestVerified = records.map((r) => r.verifiedAt).sort()[0];
 
   const rows: DropOffRow[] = records.map((r) => {
     const airport = airports.get(r.airportSlug);
@@ -61,7 +62,7 @@ export default function MasterTablePage() {
       />
       <header className="space-y-3">
         <PageHeading>UK airport drop-off charges, compared</PageHeading>
-        <FreshnessBadge verifiedAt={latestVerified} />
+        <FreshnessBadge verifiedAt={latestVerified} oldestRowDate={oldestVerified} />
         <p className="text-lead text-ink">
           {dropOffIndexSummary(records.map((r) => ({ name: airports.get(r.airportSlug)?.name ?? r.airportSlug, isFree: r.isFree, feePence: r.bands[0]?.totalPence ?? 0 })))}
         </p>

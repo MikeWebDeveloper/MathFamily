@@ -22,6 +22,15 @@ describe("FreshnessBadge", () => {
     render(<FreshnessBadge verifiedAt="2026-01-01" now={new Date("2026-06-10T12:00:00Z")} />);
     expect(screen.getByText(/^Last verified 1 Jan 2026$/)).toBeDefined();
   });
+  it("renders a delta label when provided", () => {
+    const { container } = render(<FreshnessBadge verifiedAt="2026-06-01" deltaLabel="Unchanged vs last year" />);
+    expect(container.textContent).toContain("Unchanged vs last year");
+  });
+  it("renders a data range when oldestRowDate differs", () => {
+    const { container } = render(<FreshnessBadge verifiedAt="2026-06-01" oldestRowDate="2026-01-15" />);
+    expect(container.textContent).toMatch(/2026/);
+    expect(container.textContent?.toLowerCase()).toContain("data from");
+  });
 });
 
 describe("EmailCaptureSlot", () => {

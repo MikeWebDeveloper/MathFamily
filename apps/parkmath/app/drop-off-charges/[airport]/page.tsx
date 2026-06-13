@@ -7,7 +7,7 @@ import { breadcrumbLd, faqPageLd, JsonLd, offerLd } from "@mathfamily/geo";
 import { AnswerCard, AnswerLead, CaveatChip, Callout, FaqAccordion, FreshnessBadge, LatestUpdates, MiniAnswerBar, PageHeading, SourceCitation, SourcesBlock, EmailCaptureSlot, UkMap, VerifiedStamp } from "@mathfamily/ui";
 import { DropOffCalculator } from "@/components/drop-off-calculator";
 import { HolidayExtrasCard } from "@/components/holiday-extras-card";
-import { buildDropOffFaqs, isPerEntryTariff, paymentDeadlineChip, trendNote } from "@/lib/content";
+import { buildDropOffFaqs, freshnessDelta, isPerEntryTariff, paymentDeadlineChip, trendNote } from "@/lib/content";
 
 export const dynamicParams = false;
 
@@ -72,7 +72,7 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
       <header className="space-y-3">
         <PageHeading>{airport.name} drop-off charge</PageHeading>
         <div className="flex flex-wrap items-center gap-3">
-          <FreshnessBadge verifiedAt={pageVerifiedAt} />
+          <FreshnessBadge verifiedAt={pageVerifiedAt} deltaLabel={freshnessDelta(record) ?? undefined} />
           <SourceCitation url={record.sourceUrl} label={`Official ${airport.name} page`} />
         </div>
       </header>
