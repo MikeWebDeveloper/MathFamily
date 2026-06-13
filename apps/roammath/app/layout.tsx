@@ -25,7 +25,11 @@ const NAV = [
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en-GB" className={`${plexSans.variable} ${plexMono.variable}`}>
-      <body className="relative bg-white font-sans text-ink antialiased">
+      <head>
+        {/* No-flash theme script: runs before first paint to avoid white flash in dark mode */}
+        <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light'){document.documentElement.dataset.theme=t;}else if(window.matchMedia('(prefers-color-scheme: dark)').matches){document.documentElement.dataset.theme='dark';}}catch(e){}})();` }} />
+      </head>
+      <body className="relative bg-surface font-sans text-ink antialiased">
         <noscript>
           <style>{`.mf-reveal{opacity:1;transform:none;transition:none}`}</style>
         </noscript>
