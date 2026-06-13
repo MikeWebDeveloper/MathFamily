@@ -47,6 +47,7 @@ const news = read("news.json").map((r) => r.id).filter(Boolean);
 const urls = [
   ...new Set([
     BASE,
+    `${BASE}/parking-price-index-2026`,
     `${BASE}/drop-off-charges`,
     `${BASE}/airport-parking`,
     `${BASE}/airport-lounges`,

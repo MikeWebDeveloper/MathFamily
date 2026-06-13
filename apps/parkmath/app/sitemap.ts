@@ -21,6 +21,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     { url: base, changeFrequency: "weekly" as const, priority: 1, lastModified: latestModified },
+    { url: `${base}/parking-price-index-2026`, changeFrequency: "monthly" as const, priority: 0.8, lastModified: latestModified },
     { url: `${base}/drop-off-charges`, changeFrequency: "weekly" as const, priority: 0.9, lastModified: latestModified },
     ...dropOffRecords.map((r) => ({
       url: `${base}/drop-off-charges/${r.airportSlug}`,
