@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildAwinLink, resolveHeProduct, resolveSlot } from "../lib/partners";
+import { activeSlotPartnerName, buildAwinLink, resolveHeProduct, resolveSlot } from "../lib/partners";
 
 describe("buildAwinLink", () => {
   it("builds a bare cread.php link with clickref and no ued", () => {
@@ -50,5 +50,14 @@ describe("resolveHeProduct", () => {
     expect(r!.url).toContain("awinmid=3496");
     expect(r!.url).toContain("clickref=parkmath-gatwick-lounge");
     expect(r!.url).toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Fairport-lounges.html");
+  });
+});
+
+describe("activeSlotPartnerName", () => {
+  it("returns the active parking partner's name", () => {
+    expect(activeSlotPartnerName("parking-prebook")).toBe("Holiday Extras");
+  });
+  it("returns null for an inactive slot", () => {
+    expect(activeSlotPartnerName("lounge-membership")).toBeNull();
   });
 });

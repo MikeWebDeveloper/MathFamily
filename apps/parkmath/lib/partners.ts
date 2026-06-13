@@ -73,6 +73,19 @@ export function resolveHeProduct(
   };
 }
 
+/** Name of the first active partner for an active slot, or null. Surfaces without an
+ *  airport in context (e.g. the home deals strip) use this to decide affiliate framing;
+ *  the tracked link is still built per-airport elsewhere via resolveSlot/buildAwinLink. */
+export function activeSlotPartnerName(slotId: SlotId): string | null {
+  const slot = config.slots.find((s) => s.id === slotId);
+  if (!slot?.active) return null;
+  for (const partnerId of slot.partnerIds) {
+    const partner = config.partners[partnerId];
+    if (partner?.active && partner.awinmid) return partner.name;
+  }
+  return null;
+}
+
 /** Resolve a slot to either the first active AWIN partner (affiliate mode) or the official fallback
  *  link. Signature/shape unchanged so the page call sites need no edits. */
 export function resolveSlot(slotId: SlotId, airportSlug: string, officialUrl: string): ResolvedSlot {
