@@ -25,6 +25,14 @@ export function parkingPageModel(record: ParkingRecord, days: number): ParkingPa
   return { ...comparison, answer };
 }
 
+/** Returns the subset of covered durations (3, 7, 14) for which the record has at least one
+ *  priced product. Uncovered durations are excluded so the UI never shows "No published price". */
+export function coveredParkingDurations(record: ParkingRecord): number[] {
+  return [3, 7, 14].filter((days) =>
+    record.products.some((p) => p.prices.some((pr) => pr.days === days))
+  );
+}
+
 export function buildParkingFaqs(record: ParkingRecord, airportName: string, days: number): { question: string; answer: string }[] {
   const model = parkingPageModel(record, days);
   const faqs: { question: string; answer: string }[] = [];
