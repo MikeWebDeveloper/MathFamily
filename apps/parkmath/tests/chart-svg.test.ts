@@ -30,4 +30,12 @@ describe("parkingChartSvg", () => {
     });
     expect(svg).toContain("£0.00");
   });
+  it("does not claim a £0 saving when gate equals pre-book", () => {
+    const svg = parkingChartSvg({
+      airportName: "Manchester", iata: "MAN",
+      gatePence: 5000, prebookPence: 5000, prebookName: "JetParks", verifiedAt: "2026-06-10"
+    });
+    expect(svg).not.toContain("Save £0.00");
+    expect(svg).toContain("Same price as pre-booking");
+  });
 });

@@ -39,7 +39,7 @@ export function parkingChartSvg(input: {
   <rect x="80" y="438" width="${prebookW}" height="62" rx="8" fill="#16a34a"/>
   <text x="${80 + prebookW + 20}" y="480" ${font} font-size="34" font-weight="700" fill="#0f172a">${gbp(input.prebookPence)}</text>
 
-  <text x="80" y="566" ${font} font-size="40" font-weight="700" fill="#16a34a">Save ${gbp(saving)} by pre-booking</text>
+  <text x="80" y="566" ${font} font-size="40" font-weight="700" fill="#16a34a">${saving > 0 ? `Save ${gbp(saving)} by pre-booking` : "Same price as pre-booking"}</text>
   <text x="1120" y="598" text-anchor="end" ${font} font-size="28" font-weight="700" fill="#0ea5a4">parkmath.co.uk</text>
 </svg>`;
 }
