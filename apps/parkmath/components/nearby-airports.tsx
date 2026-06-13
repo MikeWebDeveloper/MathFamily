@@ -52,7 +52,7 @@ export function NearbyAirports({ airports, feeBySlug }: { airports: Airport[]; f
       <p className="mt-1.5 text-xs text-ink-muted/80">Your location stays in your browser — we don&apos;t send or store it.</p>
 
       {status === "error" ? (
-        <p role="alert" className="mt-2 text-xs text-warning">Couldn&apos;t get your location — search above instead.</p>
+        <p className="mt-2 text-xs text-warning">Couldn&apos;t get your location — search above instead.</p>
       ) : null}
 
       {status === "ready" && results.length > 0 ? (

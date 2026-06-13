@@ -19,4 +19,8 @@ describe("LiveRegion", () => {
     const el = container.firstElementChild as HTMLElement;
     expect(el.getAttribute("role")).toBe("alert");
   });
+  it("renders nothing for an empty message", () => {
+    const { container } = render(<LiveRegion message="" />);
+    expect(container.firstChild).toBeNull();
+  });
 });

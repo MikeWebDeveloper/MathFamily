@@ -9,7 +9,8 @@ export function LiveRegion({
   variant?: "polite" | "alert";
   className?: string;
 }) {
-  const common = `sr-only ${className ?? ""}`;
+  if (!message) return null;
+  const common = ["sr-only", className].filter(Boolean).join(" ");
   if (variant === "alert") {
     return <div role="alert" aria-atomic="true" className={common}>{message}</div>;
   }

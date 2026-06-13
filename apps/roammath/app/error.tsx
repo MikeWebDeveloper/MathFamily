@@ -15,7 +15,7 @@ export default function Error({ reset }: { error: Error & { digest?: string }; r
         <button
           type="button"
           onClick={reset}
-          className="rounded-card bg-brand px-4 py-2 font-semibold text-white transition-colors hover:bg-brand/90"
+          className="rounded-card bg-brand px-4 py-2 font-semibold text-white transition-colors hover:bg-brand/90 outline-none focus-visible:ring-2 focus-visible:ring-brand-accent/50"
         >
           Try again
         </button>
