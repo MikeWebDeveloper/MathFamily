@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { loadBaggageDataset } from "@mathfamily/data";
-import { itemListLd, JsonLd } from "@mathfamily/geo";
+import { breadcrumbLd, itemListLd, JsonLd } from "@mathfamily/geo";
 import { FeeGrid, PageHeading } from "@mathfamily/ui";
 import { feeRangeLabel } from "@/lib/baggage-content";
 
@@ -17,6 +17,12 @@ export default function BaggageFeesIndexPage() {
 
   return (
     <article className="space-y-8">
+      <JsonLd
+        data={breadcrumbLd([
+          { name: "Home", url: siteUrl },
+          { name: "Baggage fees", url: `${siteUrl}/baggage-fees` }
+        ])}
+      />
       <JsonLd
         data={itemListLd({
           name: "UK airline baggage fees 2026",

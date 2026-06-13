@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { loadAirports, loadDropOffDataset, loadParkingDataset } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
-import { datasetLd, JsonLd } from "@mathfamily/geo";
-import { AnswerLead, Callout, FreshnessBadge, PageHeading, SourcesBlock } from "@mathfamily/ui";
+import { breadcrumbLd, datasetLd, itemListLd, JsonLd } from "@mathfamily/geo";
+import { AnswerLead, Callout, FreshnessBadge, OpenDataBand, PageHeading, SourcesBlock } from "@mathfamily/ui";
 import { dropOffIndexSummary, trendNote } from "@/lib/content";
 import { parkingPageModel } from "@/lib/parking-content";
 
@@ -62,6 +62,21 @@ export default function PriceIndexPage() {
   return (
     <article className="space-y-8">
       <JsonLd
+        data={breadcrumbLd([
+          { name: "Home", url: siteUrl },
+          { name: "Parking Price Index 2026", url: `${siteUrl}/parking-price-index-2026` }
+        ])}
+      />
+      <JsonLd
+        data={itemListLd({
+          name: "UK airport parking & drop-off price index 2026 — key sections",
+          items: [
+            { name: "Every UK airport drop-off charge, compared", url: `${siteUrl}/drop-off-charges` },
+            { name: "Every UK airport parking comparison (gate vs pre-book)", url: `${siteUrl}/airport-parking` }
+          ]
+        })}
+      />
+      <JsonLd
         data={datasetLd({
           name: "UK airport parking & drop-off price index 2026",
           description: `Drop-off charges and pre-book parking prices at ${dropOff.length} UK airports, verified against official sources and date-stamped.`,
@@ -103,18 +118,13 @@ export default function PriceIndexPage() {
         </section>
       ) : null}
 
-      <Callout variant="info" title="Download the data (free, no sign-up)">
-        Every figure here is published as open data with its official source and verification date —
-        cite or republish it freely.
-        <span className="mt-2 flex flex-wrap gap-4 text-sm font-medium">
-          <a href="/data/drop-off-charges.csv" download className="text-brand-accent underline underline-offset-4">
-            Drop-off charges (CSV) →
-          </a>
-          <a href="/data/parking-tariffs.csv" download className="text-brand-accent underline underline-offset-4">
-            Parking tariffs (CSV) →
-          </a>
-        </span>
-      </Callout>
+      <OpenDataBand
+        downloads={[
+          { href: "/data/drop-off-charges.csv", label: "Drop-off charges (CSV)" },
+          { href: "/data/parking-tariffs.csv", label: "Parking tariffs (CSV)" }
+        ]}
+        citation={`ParkMath, "UK Airport Parking & Drop-off Price Index 2026", verified ${latestVerified}, parkmath.co.uk`}
+      />
 
       <section className="space-y-2">
         <h2 className="text-h2 font-semibold text-ink">The full tables</h2>
