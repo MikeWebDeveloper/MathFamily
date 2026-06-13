@@ -5,7 +5,9 @@ export function FeeGrid({
   rows,
   caption,
   highlightRow,
-  numericColumns
+  numericColumns,
+  rowHref,
+  highlightColumn,
 }: {
   columns: string[];
   rows: ReactNode[][];
@@ -13,8 +15,14 @@ export function FeeGrid({
   highlightRow?: number;
   /** 0-based column indices holding numeric data. Omitted ⇒ every column > 0 is numeric (back-compat). */
   numericColumns?: number[];
+  /** Optional per-row URL factory. When provided, each card becomes a whole-card link and the
+   *  table name cell becomes an anchor. Rows where the factory returns undefined are not linked. */
+  rowHref?: (rowIndex: number) => string | undefined;
+  /** 0-based column index to tint with .mf-col-hi (brand-accent 6% background). */
+  highlightColumn?: number;
 }) {
   const isNumeric = (j: number) => (numericColumns ? numericColumns.includes(j) : j > 0);
+  const colHi = (j: number) => (j === highlightColumn ? " mf-col-hi" : "");
   const numCell = "px-3 py-3 text-right text-sm font-medium text-ink mf-num sm:px-5 sm:py-3.5";
   const proseCell = "px-3 py-3 text-left text-sm text-ink-muted sm:px-5 sm:py-3.5";
   const winnerRow =
@@ -44,9 +52,13 @@ export function FeeGrid({
               >
                 {cells.map((cell, j) =>
                   j === 0 ? (
-                    <th key={j} scope="row" className="px-5 py-3.5 font-semibold text-ink">{cell}</th>
+                    <th key={j} scope="row" className="px-5 py-3.5 font-semibold text-ink">
+                      {rowHref?.(i) ? (
+                        <a href={rowHref(i)!} className="mf-press text-ink no-underline outline-none hover:text-brand-accent focus-visible:ring-2 focus-visible:ring-brand-accent/40">{cell}</a>
+                      ) : cell}
+                    </th>
                   ) : (
-                    <td key={j} className={isNumeric(j) ? numCell : proseCell}>{cell}</td>
+                    <td key={j} className={`${isNumeric(j) ? numCell : proseCell}${colHi(j)}`}>{cell}</td>
                   )
                 )}
               </tr>
@@ -61,10 +73,14 @@ export function FeeGrid({
           <div
             key={i}
             data-testid="fee-grid-card"
-            className={`px-4 py-3.5 ${i === highlightRow ? winnerRow : ""}`}
+            className={`px-4 py-3.5${rowHref?.(i) ? " relative" : ""} ${i === highlightRow ? winnerRow : ""}`}
           >
             <div className="flex items-baseline justify-between gap-3">
-              <span className="font-semibold text-ink">{cells[0]}</span>
+              {rowHref?.(i) ? (
+                <a href={rowHref(i)!} className="mf-row-link font-semibold text-ink">{cells[0]}</a>
+              ) : (
+                <span className="font-semibold text-ink">{cells[0]}</span>
+              )}
               {(() => {
                 const heroIdx = cells.findIndex((_, j) => j > 0 && isNumeric(j));
                 return heroIdx > 0 ? <span className="mf-num shrink-0 text-base font-semibold text-ink">{cells[heroIdx]}</span> : null;

@@ -347,3 +347,18 @@ a:hover .mf-logo-tile {
     transition: none;
   }
 }
+
+/* ── Whole-card click target: a single real link whose ::after covers its
+   positioned ancestor. Put `.mf-row-link` on the <a>, `relative` on the card. ── */
+.mf-row-link {
+  text-decoration: none;
+  color: inherit;
+}
+.mf-row-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+/* ── Highlight column tint (FeeGrid highlightColumn prop) ── */
+.mf-col-hi { background: color-mix(in srgb, var(--color-brand-accent) 6%, transparent); }

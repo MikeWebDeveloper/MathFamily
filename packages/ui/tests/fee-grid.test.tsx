@@ -50,4 +50,26 @@ describe("FeeGrid responsive + column typing", () => {
     const cards = container.querySelectorAll('[data-testid="fee-grid-card"]');
     expect(cards[1]!.className).toContain("mf-winner-row");
   });
+
+  it("rowHref makes each card a single covering link and the table name a link", () => {
+    const { container } = render(
+      <FeeGrid
+        columns={["Airport", "Fee"]}
+        rows={[["Gatwick", "£6"], ["Luton", "£5"]]}
+        rowHref={(i) => `/a/${i}`}
+      />,
+    );
+    // mobile cards: one .mf-row-link per row, card is relative
+    const cardLinks = container.querySelectorAll('[data-testid="fee-grid-card"] a.mf-row-link');
+    expect(cardLinks.length).toBe(2);
+    expect((cardLinks[0] as HTMLAnchorElement).getAttribute("href")).toBe("/a/0");
+    // desktop table: first-cell name is a link
+    expect(container.querySelector('table th[scope="row"] a')).not.toBeNull();
+  });
+  it("highlightColumn tints that column's cells", () => {
+    const { container } = render(
+      <FeeGrid columns={["Airport", "Fee"]} rows={[["Gatwick", "£6"]]} highlightColumn={1} />,
+    );
+    expect(container.querySelector("td.mf-col-hi")).not.toBeNull();
+  });
 });
