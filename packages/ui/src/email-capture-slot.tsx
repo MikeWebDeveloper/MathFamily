@@ -11,9 +11,9 @@ export function EmailCaptureSlot({ formAction, hook }: { formAction?: string; ho
           name="fields[email]"
           required
           placeholder="you@example.com"
-          className="w-full rounded-lg border border-ink/20 px-3 py-2 text-sm"
+          className="w-full rounded-lg border border-ink/20 px-3 py-2 text-sm outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/30"
         />
-        <button type="submit" className="rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-white">
+        <button type="submit" className="mf-press inline-flex min-h-11 items-center rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-white outline-none focus-visible:ring-2 focus-visible:ring-brand-accent/50">
           Notify me
         </button>
       </div>

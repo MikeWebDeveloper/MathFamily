@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { Airport } from "@mathfamily/data";
 import { nearestAirports } from "@mathfamily/engine";
+import { LiveRegion } from "@mathfamily/ui";
 
 type Status = "idle" | "locating" | "ready" | "error";
 type Near = { slug: string; name: string; miles: number };
@@ -28,8 +29,15 @@ export function NearbyAirports({ airports, feeBySlug }: { airports: Airport[]; f
     );
   }
 
+  const announcement =
+    status === "locating" ? "Finding your location…"
+    : status === "ready" ? `${results.length} airports found near you`
+    : status === "error" ? "Couldn't get your location — search above instead"
+    : "";
+
   return (
     <div className="mt-3">
+      <LiveRegion message={announcement} variant={status === "error" ? "alert" : "polite"} />
       <button
         type="button"
         onClick={locate}

@@ -9,7 +9,7 @@ export default function Error({ reset }: { error: Error & { digest?: string }; r
       <PageHeading>Something went wrong</PageHeading>
       <p className="text-lead text-ink-muted">
         We hit an unexpected error loading this page. Your data is safe — try again, or head back to compare
-        airport drop-off, parking and lounge costs.
+        international roaming costs and baggage fees.
       </p>
       <div className="flex flex-wrap items-center gap-4 text-sm font-medium">
         <button

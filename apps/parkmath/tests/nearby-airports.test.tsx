@@ -17,4 +17,11 @@ describe("NearbyAirports", () => {
     expect(html).toMatch(/stays in your browser/i);
     expect(html).not.toContain('href="/drop-off-charges/');
   });
+
+  it("does not render a live-region node when idle (no empty sr-only node)", () => {
+    // LiveRegion now returns null for an empty message, so the idle state
+    // must not emit a bare aria-live node (Fix 1: empty-guard).
+    const html = renderToStaticMarkup(<NearbyAirports airports={airports} />);
+    expect(html).not.toContain('aria-live=');
+  });
 });
