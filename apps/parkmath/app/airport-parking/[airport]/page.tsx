@@ -104,6 +104,18 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
         }
       />
 
+      {m7.gate && m7.cheapest ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={`/charts/${airport.slug}.svg`}
+          alt={`${airport.name} airport parking: drive-up gate vs cheapest pre-book price for 7 days`}
+          width={1200}
+          height={630}
+          loading="lazy"
+          className="mf-edge w-full max-w-2xl rounded-card"
+        />
+      ) : null}
+
       {m7.warnings.length > 0 ? (
         <ul className="space-y-1 text-xs text-ink-muted">
           {m7.warnings.map((w) => (
