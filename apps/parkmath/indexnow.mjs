@@ -1,0 +1,85 @@
+#!/usr/bin/env node
+/**
+ * IndexNow submission. After a PRODUCTION build, pings Bing/Yandex/Seznam/Naver with
+ * ParkMath's URLs so new/changed pages get crawled fast (Bing's index feeds ChatGPT Search).
+ *
+ * Wired into the build script (`next build && node indexnow.mjs`). It no-ops unless
+ * NEXT_PUBLIC_SITE_URL is a real production origin, so local/CI/preview builds never submit.
+ * It also never throws — a failed ping must not break a deploy.
+ *
+ * The key is PUBLIC by design: it is also served at /<KEY>.txt, which is how IndexNow verifies
+ * ownership. It is NOT a secret and is intentionally committed (no env var needed).
+ * Set INDEXNOW_DRY_RUN=1 to print the payload without submitting.
+ */
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const KEY = "c3007763a3af309b550dc00e70ed6b68"; // must match apps/parkmath/public/<KEY>.txt
+const BASE = process.env.NEXT_PUBLIC_SITE_URL;
+const DRY_RUN = process.env.INDEXNOW_DRY_RUN === "1";
+
+if (!BASE || BASE.includes("localhost")) {
+  console.log("IndexNow: skipped (NEXT_PUBLIC_SITE_URL is not a production URL).");
+  process.exit(0);
+}
+
+const DATA = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "packages", "data", "datasets", "parkmath");
+const DURATIONS = ["3-days", "7-days", "14-days"];
+
+function read(file) {
+  try {
+    const json = JSON.parse(readFileSync(join(DATA, file), "utf8"));
+    if (Array.isArray(json)) return json;
+    return json.records ?? json.items ?? [];
+  } catch (e) {
+    console.warn(`IndexNow: could not read ${file} — ${e.message}`);
+    return [];
+  }
+}
+
+const slugs = (file) => read(file).map((r) => r.airportSlug).filter(Boolean);
+const dropOff = slugs("drop-off-fees.json");
+const parking = slugs("parking-tariffs.json");
+const lounges = slugs("lounges.json");
+const news = read("news.json").map((r) => r.id).filter(Boolean);
+
+const urls = [
+  ...new Set([
+    BASE,
+    `${BASE}/drop-off-charges`,
+    `${BASE}/airport-parking`,
+    `${BASE}/airport-lounges`,
+    `${BASE}/news`,
+    ...dropOff.map((s) => `${BASE}/drop-off-charges/${s}`),
+    ...parking.map((s) => `${BASE}/airport-parking/${s}`),
+    ...parking.flatMap((s) => DURATIONS.map((d) => `${BASE}/airport-parking/${s}/${d}`)),
+    ...lounges.map((s) => `${BASE}/airport-lounges/${s}`),
+    ...news.map((id) => `${BASE}/news/${id}`)
+  ])
+].slice(0, 10000); // IndexNow caps at 10k URLs per request
+
+if (DRY_RUN) {
+  console.log(`IndexNow DRY RUN — ${urls.length} URLs:`);
+  for (const u of urls) console.log(`  ${u}`);
+  process.exit(0);
+}
+
+const body = JSON.stringify({
+  host: new URL(BASE).hostname,
+  key: KEY,
+  keyLocation: `${BASE}/${KEY}.txt`,
+  urlList: urls
+});
+
+try {
+  const res = await fetch("https://api.indexnow.org/indexnow", {
+    method: "POST",
+    headers: { "Content-Type": "application/json; charset=utf-8" },
+    body
+  });
+  console.log(`IndexNow: ${res.status} ${res.statusText} — submitted ${urls.length} URLs to ${new URL(BASE).hostname}`);
+} catch (e) {
+  console.warn(`IndexNow: submission failed (non-fatal, build continues) — ${e.message}`);
+}
+process.exit(0);
