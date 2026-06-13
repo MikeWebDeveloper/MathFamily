@@ -7,6 +7,7 @@ import { breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
 import { AnswerLead, FaqAccordion, FeeGrid, FreshnessBadge, PageHeading, SavesVerdict, SourceCitation, SourcesBlock } from "@mathfamily/ui";
 import { HolidayExtrasCard } from "@/components/holiday-extras-card";
 import { LoungeCalculator } from "@/components/lounge-calculator";
+import { buildLoungeFaqs } from "@/lib/content";
 
 export const dynamicParams = false;
 
@@ -43,20 +44,7 @@ export default async function LoungePage({ params }: { params: Promise<{ airport
   const loungeResult = cheapest ? loungeBreakEven(cheapest.walkInPence!, 3, pp.tiers) : null;
   const hasParking = loadParkingDataset().records.some((r) => r.airportSlug === airport.slug);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-  const faqs = [
-    {
-      question: `How much does an airport lounge cost at ${airport.name}?`,
-      answer: cheapest
-        ? `Operator pre-book prices start at ${formatPence(cheapest.walkInPence!)} (${cheapest.name}), verified ${record.verifiedAt}.`
-        : `Walk-in prices are not published for ${airport.name} lounges — check the official pages.`
-    },
-    {
-      question: `Which ${airport.name} lounges accept Priority Pass?`,
-      answer: record.lounges.some((l) => l.priorityPass)
-        ? record.lounges.filter((l) => l.priorityPass).map((l) => l.name).join(", ")
-        : "None of the tracked lounges currently list Priority Pass access."
-    }
-  ];
+  const faqs = buildLoungeFaqs(record, airport.name, pp.tiers);
 
   return (
     <article className="space-y-8">

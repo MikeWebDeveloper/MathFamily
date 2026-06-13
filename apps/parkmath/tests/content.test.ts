@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { DropOffRecord } from "@mathfamily/data";
-import { buildDropOffFaqs, dropOffIndexSummary, isPerEntryTariff, trendNote } from "../lib/content";
+import type { DropOffRecord, LoungeRecord, PriorityPassTier } from "@mathfamily/data";
+import { buildDropOffFaqs, buildLoungeFaqs, dropOffIndexSummary, isPerEntryTariff, trendNote } from "../lib/content";
 
 const record: DropOffRecord = {
   airportSlug: "gatwick",
@@ -83,5 +83,45 @@ describe("isPerEntryTariff", () => {
   it("false for duration-banded and free records", () => {
     expect(isPerEntryTariff(record)).toBe(false);
     expect(isPerEntryTariff({ ...record, isFree: true, bands: [] })).toBe(false);
+  });
+});
+
+const loungeRecord: LoungeRecord = {
+  airportSlug: "manchester",
+  lounges: [
+    { name: "Escape Lounge T1", walkInPence: 2750, priorityPass: true, notes: "Pre-booking recommended; Priority Pass accepted pre-booking only." },
+    { name: "1903 Lounge", walkInPence: 3500, priorityPass: false, notes: null }
+  ],
+  sourceUrl: "https://www.manchesterairport.co.uk/lounges",
+  verifiedAt: "2026-06-09"
+};
+const ppTiers: PriorityPassTier[] = [
+  { tier: "Standard", annualFeePence: 9900, includedVisits: 0, perVisitPence: 3500 },
+  { tier: "Standard Plus", annualFeePence: 24900, includedVisits: 10, perVisitPence: 3500 }
+];
+
+describe("buildLoungeFaqs", () => {
+  it("leads with the cost question using the cheapest pre-book price", () => {
+    const faqs = buildLoungeFaqs(loungeRecord, "Manchester", ppTiers);
+    expect(faqs[0]?.question).toBe("How much does an airport lounge cost at Manchester?");
+    expect(faqs[0]?.answer).toContain("£27.50");
+  });
+  it("lists the Priority Pass lounges by name", () => {
+    const pp = buildLoungeFaqs(loungeRecord, "Manchester", ppTiers).find((f) => f.question.includes("Priority Pass"));
+    expect(pp?.answer).toContain("Escape Lounge T1");
+  });
+  it("surfaces per-lounge notes, only where notes exist", () => {
+    const notesFaqs = buildLoungeFaqs(loungeRecord, "Manchester", ppTiers).filter((f) => f.question.startsWith("What should I know"));
+    expect(notesFaqs).toHaveLength(1);
+    expect(notesFaqs[0]?.answer).toContain("Pre-booking recommended");
+  });
+  it("includes a membership break-even question when a price exists", () => {
+    expect(buildLoungeFaqs(loungeRecord, "Manchester", ppTiers).some((f) => f.question.toLowerCase().includes("worth it"))).toBe(true);
+  });
+  it("handles airports with no published prices and skips the break-even question", () => {
+    const sparse: LoungeRecord = { ...loungeRecord, lounges: [{ name: "Aspire", walkInPence: null, priorityPass: false, notes: null }] };
+    const faqs = buildLoungeFaqs(sparse, "Leeds Bradford", ppTiers);
+    expect(faqs[0]?.answer).toContain("aren't published");
+    expect(faqs.some((f) => f.question.toLowerCase().includes("worth it"))).toBe(false);
   });
 });

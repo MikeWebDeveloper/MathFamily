@@ -1,5 +1,5 @@
-import { formatPence } from "@mathfamily/engine";
-import type { DropOffRecord } from "@mathfamily/data";
+import { formatPence, loungeBreakEven } from "@mathfamily/engine";
+import type { DropOffRecord, LoungeRecord, PriorityPassTier } from "@mathfamily/data";
 
 export function buildDropOffFaqs(record: DropOffRecord, airportName: string): { question: string; answer: string }[] {
   const faqs: { question: string; answer: string }[] = [
@@ -21,6 +21,56 @@ export function buildDropOffFaqs(record: DropOffRecord, airportName: string): { 
       answer: `Use the ${record.freeAlternative.name} — free for ${record.freeAlternative.minutesFree} minutes. ${record.freeAlternative.details}`
     });
   }
+  return faqs;
+}
+
+/** Unique, data-driven lounge FAQs. Surfaces each lounge's `notes` (operator/Priority Pass
+ *  caveats) plus a membership break-even verdict, instead of two generic templated questions. */
+export function buildLoungeFaqs(
+  record: LoungeRecord,
+  airportName: string,
+  ppTiers: PriorityPassTier[]
+): { question: string; answer: string }[] {
+  const priced = record.lounges.filter((l) => l.walkInPence !== null);
+  const cheapest = [...priced].sort((a, b) => a.walkInPence! - b.walkInPence!)[0];
+  const ppLounges = record.lounges.filter((l) => l.priorityPass);
+  const faqs: { question: string; answer: string }[] = [];
+
+  faqs.push({
+    question: `How much does an airport lounge cost at ${airportName}?`,
+    answer: cheapest
+      ? `Operator pre-book prices start at ${formatPence(cheapest.walkInPence!)} (${cheapest.name}), verified ${record.verifiedAt}. Walk-up rates on the day can be higher.`
+      : `Walk-in prices aren't published for ${airportName} lounges — check the official lounge pages (verified ${record.verifiedAt}).`
+  });
+
+  faqs.push({
+    question: `Which ${airportName} lounges accept Priority Pass?`,
+    answer: ppLounges.length
+      ? `${ppLounges.map((l) => l.name).join(", ")} accept Priority Pass at ${airportName}.`
+      : `None of the tracked ${airportName} lounges currently list Priority Pass access.`
+  });
+
+  for (const lounge of record.lounges) {
+    if (lounge.notes && lounge.notes.trim()) {
+      const price = lounge.walkInPence !== null ? ` Pre-book from ${formatPence(lounge.walkInPence)}.` : "";
+      faqs.push({
+        question: `What should I know before visiting ${lounge.name} at ${airportName}?`,
+        answer: `${lounge.notes}${price}`
+      });
+    }
+  }
+
+  if (cheapest) {
+    const result = loungeBreakEven(cheapest.walkInPence!, 3, ppTiers);
+    faqs.push({
+      question: `Is a Priority Pass membership worth it at ${airportName}?`,
+      answer:
+        result.verdict === "membership" && result.savingsPence > 0
+          ? `For frequent flyers, yes: at 3 visits a year a ${result.best?.tier} membership saves ${formatPence(result.savingsPence)} versus paying ${formatPence(cheapest.walkInPence!)} per visit (${cheapest.name}). Occasional visitors are better off paying on the day.`
+          : `At 3 visits a year, paying per visit (${formatPence(result.payAsYouGoPence)}/year) beats membership at ${airportName} — it only pays off if you visit more often.`
+    });
+  }
+
   return faqs;
 }
 
