@@ -23,7 +23,7 @@ export function SegmentedControl<T extends string>({
           role="radio"
           aria-checked={o.value === value}
           onClick={() => onChange(o.value)}
-          className={`min-h-9 rounded-full px-3 transition-colors ${o.value === value ? "bg-white text-brand shadow-sm" : "text-ink-muted hover:text-ink"}`}
+          className={`mf-press inline-flex min-h-11 items-center rounded-full px-3.5 outline-none transition-colors focus-visible:ring-2 focus-visible:ring-brand-accent/50 ${o.value === value ? "bg-white text-brand shadow-sm" : "text-ink-muted hover:text-ink"}`}
         >
           {o.label}
         </button>
