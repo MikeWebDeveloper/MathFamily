@@ -38,3 +38,4 @@ export * from "./live-region";
 export * from "./open-data-band";
 export * from "./theme-toggle";
 export * from "./compiled-byline";
+export * from "./answer-passage";
