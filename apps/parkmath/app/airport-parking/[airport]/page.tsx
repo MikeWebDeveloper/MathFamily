@@ -65,7 +65,7 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
     .slice(0, 10);
 
   return (
-    <article className="space-y-8">
+    <article className="space-y-6">
       <JsonLd data={faqPageLd(faqs)} />
       <JsonLd
         data={breadcrumbLd([
@@ -88,6 +88,7 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
         />
       ) : null}
 
+      {/* Above the fold — NO mf-reveal: header + LCP hero must render instantly */}
       <header className="space-y-3">
         <PageHeading>{airport.name} parking: gate vs pre-book</PageHeading>
         <div className="flex flex-wrap items-center gap-3">
@@ -107,10 +108,15 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
         officialUrl={record.sourceUrl}
       />
 
+      {/* ── Below-the-fold sections — scroll-reveal with gentle stagger ── */}
+
       {m7.gate && m7.cheapest ? (
         /* Chart SVG uses literal light colours — wrap in a fixed-light plate so it reads as
            an intentional chart card in both light and dark mode, not a broken bright island. */
-        <div className="w-full max-w-2xl rounded-card bg-white p-3" style={{ colorScheme: "light" }}>
+        <div
+          className="mf-reveal w-full max-w-2xl rounded-card bg-white p-3"
+          style={{ colorScheme: "light", "--mf-delay": "0ms" } as React.CSSProperties}
+        >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={`/charts/${airport.slug}.svg`}
@@ -124,28 +130,34 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
       ) : null}
 
       {/* All-durations reference grid — kept as a static, always-visible summary table. */}
-      <FeeGrid
-        caption={`All published ${airport.name} options by duration. Pre-book figures are dated snapshots from the official portal.`}
-        columns={["Option", "3 days", "7 days", "14 days"]}
-        numericColumns={[1, 2, 3]}
-        highlightRow={winnerIndex >= 0 ? winnerIndex : undefined}
-        rows={record.products.map((p, i) => [
-          i === winnerIndex ? (
-            <span key="w" className="inline-flex items-center gap-2">
-              {p.name}
-              <span className="rounded-full bg-brand-accent/15 px-2 py-0.5 text-[11px] font-bold text-brand-accent">Cheapest 7-day</span>
-            </span>
-          ) : (
-            p.name
-          ),
-          ...[3, 7, 14].map((d) => {
-            const price = p.prices.find((x) => x.days === d);
-            return price ? formatPence(price.totalPence) : "—";
-          })
-        ])}
-      />
+      <div className="mf-reveal" style={{ "--mf-delay": "40ms" } as React.CSSProperties}>
+        <FeeGrid
+          caption={`All published ${airport.name} options by duration. Pre-book figures are dated snapshots from the official portal.`}
+          columns={["Option", "3 days", "7 days", "14 days"]}
+          numericColumns={[1, 2, 3]}
+          highlightRow={winnerIndex >= 0 ? winnerIndex : undefined}
+          rows={record.products.map((p, i) => [
+            i === winnerIndex ? (
+              <span key="w" className="inline-flex items-center gap-2">
+                {p.name}
+                <span className="rounded-full bg-brand-accent/15 px-2 py-0.5 text-[11px] font-bold text-brand-accent">Cheapest 7-day</span>
+              </span>
+            ) : (
+              p.name
+            ),
+            ...[3, 7, 14].map((d) => {
+              const price = p.prices.find((x) => x.days === d);
+              return price ? formatPence(price.totalPence) : "—";
+            })
+          ])}
+        />
+      </div>
 
-      <nav aria-label="Duration pages" className="flex gap-3 text-sm">
+      <nav
+        aria-label="Duration pages"
+        className="mf-reveal flex gap-3 text-sm"
+        style={{ "--mf-delay": "80ms" } as React.CSSProperties}
+      >
         {DURATION_SLUGS.map((s) => (
           <Link key={s} href={`/airport-parking/${airport.slug}/${s}`} className="font-medium text-brand-accent underline underline-offset-4">
             {s.replace("-", " ")} guide →
@@ -153,23 +165,31 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
         ))}
       </nav>
 
-      <section className="space-y-2">
-        <h2 className="text-xl font-semibold text-ink">Frequently asked questions</h2>
+      <section
+        id="faq"
+        className="mf-reveal space-y-3 scroll-mt-20"
+        style={{ "--mf-delay": "0ms" } as React.CSSProperties}
+      >
+        <h2 className="mf-underline-grow text-xl font-semibold text-ink">Frequently asked questions</h2>
         <FaqAccordion items={faqs} />
       </section>
 
-      <p className="text-sm">
+      <p className="mf-reveal text-sm" style={{ "--mf-delay": "0ms" } as React.CSSProperties}>
         <Link href={`/drop-off-charges/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
           Just dropping someone off at {airport.name}? See the drop-off charge →
         </Link>
       </p>
 
-      <EmailCaptureSlot formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION} hook={`Get notified when ${airport.name} parking prices change`} />
+      <div className="mf-reveal" style={{ "--mf-delay": "0ms" } as React.CSSProperties}>
+        <EmailCaptureSlot formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION} hook={`Get notified when ${airport.name} parking prices change`} />
+      </div>
 
-      <SourcesBlock
-        sources={[{ label: `Official ${airport.name} parking pages`, url: record.sourceUrl, verifiedAt: record.verifiedAt }]}
-        method="Gate tariffs are the airport's official published prices. Pre-book figures are dated quote snapshots taken on the airport's own booking portal — never scraped from third-party aggregators."
-      />
+      <div className="mf-reveal" style={{ "--mf-delay": "40ms" } as React.CSSProperties}>
+        <SourcesBlock
+          sources={[{ label: `Official ${airport.name} parking pages`, url: record.sourceUrl, verifiedAt: record.verifiedAt }]}
+          method="Gate tariffs are the airport's official published prices. Pre-book figures are dated quote snapshots taken on the airport's own booking portal — never scraped from third-party aggregators."
+        />
+      </div>
     </article>
   );
 }
