@@ -3,7 +3,7 @@ import { resolveSlot, type SlotId } from "@/lib/partners";
 export function AffiliateBlock({ slotId, airportSlug, officialUrl }: { slotId: SlotId; airportSlug: string; officialUrl: string }) {
   const slot = resolveSlot(slotId, airportSlug, officialUrl);
   return (
-    <div className="rounded-card border border-brand-accent/30 bg-blue-50 p-4">
+    <div className="rounded-card border border-brand-accent/30 bg-blue-50 dark:bg-brand-accent/[0.08] dark:border-brand-accent/20 p-4">
       <a
         href={slot.url}
         rel={slot.kind === "affiliate" ? "sponsored noopener noreferrer" : "noopener noreferrer"}

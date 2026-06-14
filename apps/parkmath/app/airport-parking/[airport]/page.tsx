@@ -108,15 +108,19 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
       />
 
       {m7.gate && m7.cheapest ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={`/charts/${airport.slug}.svg`}
-          alt={`${airport.name} airport parking: drive-up gate vs cheapest pre-book price for 7 days`}
-          width={1200}
-          height={630}
-          loading="lazy"
-          className="mf-edge w-full max-w-2xl rounded-card"
-        />
+        /* Chart SVG uses literal light colours — wrap in a fixed-light plate so it reads as
+           an intentional chart card in both light and dark mode, not a broken bright island. */
+        <div className="w-full max-w-2xl rounded-card bg-white p-3" style={{ colorScheme: "light" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={`/charts/${airport.slug}.svg`}
+            alt={`${airport.name} airport parking: drive-up gate vs cheapest pre-book price for 7 days`}
+            width={1200}
+            height={630}
+            loading="lazy"
+            className="w-full rounded"
+          />
+        </div>
       ) : null}
 
       {/* All-durations reference grid — kept as a static, always-visible summary table. */}

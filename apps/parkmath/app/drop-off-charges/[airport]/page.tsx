@@ -105,7 +105,7 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
           value={record.isFree ? "Free" : formatPence(record.bands[0]?.totalPence ?? 0)}
           note={record.isFree ? "No forecourt charge" : record.bands[0] ? `for up to ${record.bands[0].upToMinutes} min` : undefined}
           footer={
-            <span className="inline-block rounded bg-white/90 px-1.5">
+            <span className="inline-block rounded bg-white/90 dark:bg-card/90 px-1.5">
               <VerifiedStamp verifiedAt={record.verifiedAt} sourceUrl={record.sourceUrl} sourceLabel={`Official ${airport.name} page`} />
             </span>
           }
