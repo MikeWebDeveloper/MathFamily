@@ -417,3 +417,17 @@ a:hover .mf-logo-tile {
 
 /* ── Highlight column tint (FeeGrid highlightColumn prop) ── */
 .mf-col-hi { background: color-mix(in srgb, var(--color-brand-accent) 6%, transparent); }
+
+/* ── Smooth in-page scrolling — gated to users who are OK with motion ──
+   scroll-margin-top gives anchor-linked headings breathing room below the
+   sticky header (~64px nav + 16px clearance = 80px = scroll-mt-20). */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Anchor targets across the site get scroll-margin so they don't hide under the nav */
+[id] {
+  scroll-margin-top: 5rem; /* 80px — matches sticky header height */
+}
