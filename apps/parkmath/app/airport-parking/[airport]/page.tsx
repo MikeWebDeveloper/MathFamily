@@ -6,7 +6,7 @@ import { formatPence } from "@mathfamily/engine";
 import { aggregateOfferLd, breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
 import { FaqAccordion, FeeGrid, FreshnessBadge, PageHeading, SourceCitation, SourcesBlock, EmailCaptureSlot } from "@mathfamily/ui";
 import { ParkingAnswer } from "@/components/parking-answer";
-import { DURATION_SLUGS, buildParkingFaqs, parkingPageModel } from "@/lib/parking-content";
+import { DURATION_SLUGS, buildParkingFaqs, coveredParkingDurations, parkingPageModel } from "@/lib/parking-content";
 
 export const dynamicParams = false;
 
@@ -40,10 +40,15 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
 
   // Pre-compute the model for each covered duration (3, 7, 14 days) — passed to the
   // client component as serializable props so the page stays fully static.
-  const coveredDays = [3, 7, 14] as const;
-  const entries = coveredDays
-    .map((days) => ({ days, model: parkingPageModel(record, days) }))
-    .filter((e) => e.model.options.length > 0);
+  // coveredParkingDurations() is the single source of truth for which durations have data.
+  const entries = coveredParkingDurations(record).map((days) => ({
+    days,
+    model: parkingPageModel(record, days),
+  }));
+
+  // Clamp the default selected duration to one that actually has data.
+  // Prefer 7 days (the canonical "hero" duration), fall back to the first covered duration.
+  const defaultDays = entries.some((e) => e.days === 7) ? 7 : (entries[0]?.days ?? 7);
 
   // Fallback to the 7-day model for metadata / JSON-LD / FAQs even if it's not "covered"
   const m7 = parkingPageModel(record, 7);
@@ -96,7 +101,7 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
           defaultDays=7 (crawlable, JS-off correct). No CLS on hydration (same default). */}
       <ParkingAnswer
         entries={entries}
-        defaultDays={7}
+        defaultDays={defaultDays}
         slug={airport.slug}
         airportName={airport.name}
         officialUrl={record.sourceUrl}

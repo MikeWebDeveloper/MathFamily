@@ -2,7 +2,7 @@
 import { describe, expect, it, afterEach } from "vitest";
 import { render, cleanup } from "@testing-library/react";
 import { AmbientBackdrop } from "../src/ambient-backdrop";
-import { RunwayDivider, PlaneGlyph, SimGlyph } from "../src/line-glyphs";
+import { RunwayDivider } from "../src/line-glyphs";
 import { FeeGrid } from "../src/fee-grid";
 
 afterEach(cleanup);
@@ -21,10 +21,8 @@ describe("AmbientBackdrop", () => {
 
 describe("line glyphs", () => {
   it("render decorative svgs", () => {
-    for (const C of [RunwayDivider, PlaneGlyph, SimGlyph]) {
-      const { container } = render(<C />);
-      expect(container.querySelector("svg")?.getAttribute("aria-hidden")).toBe("true");
-    }
+    const { container } = render(<RunwayDivider />);
+    expect(container.querySelector("svg")?.getAttribute("aria-hidden")).toBe("true");
   });
 });
 

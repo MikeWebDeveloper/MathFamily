@@ -32,7 +32,13 @@ export function ParkingAnswer({
   airportName: string;
   officialUrl: string;
 }) {
-  const [selectedDays, setSelectedDays] = useState<DurationStr>(String(defaultDays) as DurationStr);
+  // Clamp: if the requested defaultDays has no entry (e.g. an airport with no 7-day data),
+  // fall back to the first covered duration so the segmented control and result stay in sync.
+  const coveredDayValues = entries.map((e) => e.days);
+  const effectiveDefault = coveredDayValues.includes(defaultDays)
+    ? defaultDays
+    : (coveredDayValues[0] ?? defaultDays);
+  const [selectedDays, setSelectedDays] = useState<DurationStr>(String(effectiveDefault) as DurationStr);
 
   const currentEntry = entries.find((e) => String(e.days) === selectedDays) ?? entries[0];
   const m = currentEntry!.model;

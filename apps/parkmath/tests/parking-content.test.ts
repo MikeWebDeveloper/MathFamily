@@ -85,6 +85,28 @@ describe("coveredParkingDurations", () => {
   });
 });
 
+describe("coveredParkingDurations → page entries clamp", () => {
+  it("page-level defaultDays clamp: prefers 7 when covered", () => {
+    const covered = coveredParkingDurations(record);
+    const defaultDays = covered.includes(7) ? 7 : (covered[0] ?? 7);
+    expect(defaultDays).toBe(7);
+  });
+
+  it("page-level defaultDays clamp: falls back to first when 7 is absent", () => {
+    const partial: ParkingRecord = {
+      ...record,
+      products: record.products.map((p) => ({
+        ...p,
+        prices: p.prices.filter((pr) => pr.days !== 7),
+      })),
+    };
+    const covered = coveredParkingDurations(partial);
+    const defaultDays = covered.includes(7) ? 7 : (covered[0] ?? 7);
+    expect(defaultDays).toBe(3); // first covered duration
+    expect(covered).not.toContain(7);
+  });
+});
+
 describe("buildParkingFaqs", () => {
   it("includes cheapest + gate-vs-prebook questions", () => {
     const faqs = buildParkingFaqs(record, "Manchester", 7);
