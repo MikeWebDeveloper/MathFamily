@@ -7,7 +7,7 @@ import { AirportSearch } from "@/components/airport-search";
 import { NearbyAirports } from "@/components/nearby-airports";
 import { AffiliateExtras } from "@/components/affiliate-extras";
 import { FamilyLinks } from "@/components/family-links";
-import { CarIcon, ParkingIcon, LoungeIcon, PriceIndexIcon, NewsIcon, DataIcon } from "@/components/tile-icons";
+import { CarIcon, ParkingIcon, LoungeIcon, PriceIndexIcon, NewsIcon, DataIcon, GlobeIcon } from "@/components/tile-icons";
 
 export default function HomePage() {
   const airports = loadAirports();
@@ -36,9 +36,10 @@ export default function HomePage() {
     { href: "/drop-off-charges", title: "Drop-off charges", descriptor: "Compare every UK airport in one table", icon: <CarIcon /> },
     { href: "/airport-parking", title: "Airport parking", descriptor: "Gate price vs pre-book — what you save", icon: <ParkingIcon /> },
     { href: "/airport-lounges", title: "Airport lounges", descriptor: "Pay-per-visit or membership break-even", icon: <LoungeIcon /> },
+    { href: "/parking-price-index-2026", title: "Price index & data", descriptor: "Track UK airport price trends + open data", icon: <PriceIndexIcon /> },
   ];
   const secondaryTiles = [
-    { href: "/parking-price-index-2026", title: "Price index 2026", icon: <PriceIndexIcon /> },
+    { href: "/abroad", title: "Going abroad by car", icon: <GlobeIcon /> },
     { href: "/news", title: "Travel news", icon: <NewsIcon /> },
     { href: "/data/drop-off-charges.csv", title: "Open data (CSV)", icon: <DataIcon />, download: true },
   ];
