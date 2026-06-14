@@ -10,7 +10,7 @@ export function faqPageLd(items: { question: string; answer: string }[]) {
   };
 }
 
-export function organizationLd(input: { siteUrl: string; name: string; logoUrl: string; sameAs?: string[] }) {
+export function organizationLd(input: { siteUrl: string; name: string; logoUrl: string; sameAs?: string[]; founder?: { name: string; jobTitle: string; sameAs?: string[] } }) {
   return {
     "@context": "https://schema.org",
     "@type": "Organization" as const,
@@ -18,7 +18,8 @@ export function organizationLd(input: { siteUrl: string; name: string; logoUrl: 
     name: input.name,
     url: input.siteUrl,
     logo: { "@type": "ImageObject" as const, url: input.logoUrl },
-    ...(input.sameAs && input.sameAs.length ? { sameAs: input.sameAs } : {})
+    ...(input.sameAs && input.sameAs.length ? { sameAs: input.sameAs } : {}),
+    ...(input.founder ? { founder: { "@type": "Person" as const, "@id": `${input.siteUrl}/#person`, name: input.founder.name, jobTitle: input.founder.jobTitle, ...(input.founder.sameAs?.length ? { sameAs: input.founder.sameAs } : {}) } } : {})
   };
 }
 
@@ -140,8 +141,13 @@ export function newsArticleLd(input: {
   siteUrl: string;
   imageUrl: string;
   publisherName?: string;
+  authorName?: string;
+  authorJobTitle?: string;
 }) {
   const org = { "@type": "Organization" as const, "@id": `${input.siteUrl}/#organization`, name: input.publisherName ?? "ParkMath" };
+  const author = input.authorName
+    ? { "@type": "Person" as const, "@id": `${input.siteUrl}/#person`, name: input.authorName, jobTitle: input.authorJobTitle }
+    : org;
   return {
     "@context": "https://schema.org",
     "@type": "NewsArticle" as const,
@@ -154,7 +160,29 @@ export function newsArticleLd(input: {
     dateModified: input.dateModified,
     isBasedOn: input.sourceUrl,
     isAccessibleForFree: true,
-    author: org,
+    author,
     publisher: org
+  };
+}
+
+export function personLd(input: { siteUrl: string; name: string; jobTitle: string; sameAs?: string[]; url?: string }) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Person" as const,
+    "@id": `${input.siteUrl}/#person`,
+    name: input.name,
+    jobTitle: input.jobTitle,
+    url: input.url ?? input.siteUrl,
+    worksFor: { "@type": "Organization" as const, "@id": `${input.siteUrl}/#organization` },
+    ...(input.sameAs && input.sameAs.length ? { sameAs: input.sameAs } : {})
+  };
+}
+
+export function speakableLd(input: { url: string; cssSelectors?: string[] }) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebPage" as const,
+    url: input.url,
+    speakable: { "@type": "SpeakableSpecification" as const, cssSelector: input.cssSelectors ?? ["h1", ".mf-speakable"] }
   };
 }
