@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import type { ParkingRecord } from "@mathfamily/data";
 import { ParkingAnswer } from "../components/parking-answer";
-import { parkingPageModel } from "../lib/parking-content";
+import { coveredParkingDurations, parkingPageModel } from "../lib/parking-content";
 
 const record: ParkingRecord = {
   airportSlug: "manchester",
@@ -45,6 +45,53 @@ const html = renderToStaticMarkup(
     officialUrl="https://www.manchesterairport.co.uk/parking/"
   />
 );
+
+// Record that only has 3-day and 14-day prices (no 7-day data).
+const recordNo7: ParkingRecord = {
+  ...record,
+  products: record.products.map((p) => ({
+    ...p,
+    prices: p.prices.filter((pr) => pr.days !== 7),
+  })),
+};
+const entriesNo7 = coveredParkingDurations(recordNo7).map((days) => ({
+  days,
+  model: parkingPageModel(recordNo7, days),
+}));
+
+describe("ParkingAnswer clamp: defaultDays=7 but 7 not in entries", () => {
+  it("falls back to the first covered duration (3 days) instead of showing stale 7-day data", () => {
+    // entriesNo7 covers [3, 14] — requesting defaultDays=7 must clamp to 3.
+    const htmlNo7 = renderToStaticMarkup(
+      <ParkingAnswer
+        entries={entriesNo7}
+        defaultDays={7}
+        slug="manchester"
+        airportName="Manchester"
+        officialUrl="https://www.manchesterairport.co.uk/parking/"
+      />
+    );
+    // Should render the 3-day answer (£24.00), not the 7-day one (£42.00).
+    expect(htmlNo7).toContain("£24");
+    expect(htmlNo7).not.toContain("7-day");
+  });
+
+  it("segmented control only shows covered durations when 7 is absent", () => {
+    const htmlNo7 = renderToStaticMarkup(
+      <ParkingAnswer
+        entries={entriesNo7}
+        defaultDays={7}
+        slug="manchester"
+        airportName="Manchester"
+        officialUrl="https://www.manchesterairport.co.uk/parking/"
+      />
+    );
+    expect(htmlNo7).toContain("3 days");
+    expect(htmlNo7).toContain("14 days");
+    // 7 days must NOT appear as a control option since it has no entry.
+    expect(htmlNo7).not.toContain("7 days");
+  });
+});
 
 describe("ParkingAnswer SSR at defaultDays=7", () => {
   it("renders the 7-day hero answer", () => {
