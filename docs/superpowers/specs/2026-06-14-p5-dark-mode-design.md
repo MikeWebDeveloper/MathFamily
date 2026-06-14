@@ -50,6 +50,20 @@ colour is never the only signal — small.
 - Per-component pixel polish in dark beyond AA legibility on the core pages.
 - Dark variants of OG images / charts (SVGs render on their own bg).
 
+## P5b — done 2026-06-14 (branch `design-upgrade-p5b`)
+- **Fixed `--color-surface-muted`**: `OpenDataBand` used `bg-surface-muted` but the token was
+  defined nowhere → in Tailwind v4 the utility generated no fill (transparent panel in both themes).
+  Added `--color-surface-muted` to `@theme` (`#f1f5f9`) and the dark override (`#172033`); verified
+  in the built CSS (utility + both values present) and live in dark (panel now `rgb(23,32,51)`,
+  ink-muted on it = 6.3:1, AA). Evidence: `docs/design-audit/dark-mode/p5b-opendataband-dark.png`.
+- **Regression test** in `packages/ui/tests/tokens.test.ts`: every neutral surface/ink token must be
+  defined in both `@theme` and the `[data-theme="dark"]` override (guards the undefined-token /
+  light-island class of bug). Audited all custom colour utilities — `surface-muted` was the only gap.
+- New P4b components (`AnswerPassage`, `CompiledByline`, RoamMath `OpenDataBand`) confirmed dark-safe
+  (token-only classes: `text-ink`/`text-ink-muted`/`text-brand-accent`, all dark-defined).
+- **Dark OG images: assessed N/A.** OG images are static raster/SVG with their own fixed background;
+  crawlers/social cards don't apply the viewer's theme, so there is no "dark variant" to ship.
+
 ## Acceptance
 - **Light mode unchanged** (default; `bg-card`===white). Toggling to dark flips the whole UI with no
   white "islands" on the core pages (home, a drop-off/parking/lounge/roaming answer page, an index

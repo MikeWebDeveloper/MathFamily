@@ -8,6 +8,7 @@
   --color-positive: #16a34a;
   --color-warning: #b45309;
   --color-surface: #f8fafc;
+  --color-surface-muted: #f1f5f9;
   --color-card: #ffffff;
   --color-ink: #0f172a;
   --color-ink-muted: #475569;
@@ -50,6 +51,7 @@
    ──────────────────────────────────────────────────────────────────────── */
 [data-theme="dark"] {
   --color-surface: #0f172a;
+  --color-surface-muted: #172033;
   --color-card: #1e293b;
   --color-ink: #e2e8f0;
   --color-ink-muted: #94a3b8;
