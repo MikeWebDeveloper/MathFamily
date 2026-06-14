@@ -69,7 +69,7 @@ export function BookingOptions({
             </a>
           </div>
 
-          <div className="rounded-card border border-ink/10 bg-white p-4">
+          <div className="rounded-card border border-ink/10 bg-card p-4">
             <div className="flex items-center justify-between gap-2">
               <h3 className="font-semibold text-ink">Book direct with the airport</h3>
               <span className="rounded border border-ink-muted/40 px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-wide text-ink-muted">Official site</span>
@@ -86,7 +86,7 @@ export function BookingOptions({
           </div>
         </>
       ) : (
-        <div className="rounded-card border border-ink/10 bg-white p-4">
+        <div className="rounded-card border border-ink/10 bg-card p-4">
           <div className="flex items-center justify-between gap-2">
             <h3 className="font-semibold text-ink">Book direct with the airport</h3>
             <span className="rounded border border-ink-muted/40 px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-wide text-ink-muted">Official site</span>

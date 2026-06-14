@@ -36,8 +36,12 @@ const NAV = [
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-GB" className={`${plexSans.variable} ${plexMono.variable}`}>
-      <body className="relative bg-white font-sans text-ink antialiased">
+    <html lang="en-GB" suppressHydrationWarning className={`${plexSans.variable} ${plexMono.variable}`}>
+      <head>
+        {/* No-flash theme script: runs before first paint to avoid white flash in dark mode */}
+        <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light'){document.documentElement.dataset.theme=t;}else if(window.matchMedia('(prefers-color-scheme: dark)').matches){document.documentElement.dataset.theme='dark';}}catch(e){}})();` }} />
+      </head>
+      <body className="relative bg-surface font-sans text-ink antialiased">
         <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded focus:bg-brand-accent focus:px-3 focus:py-2 focus:text-sm focus:font-semibold focus:text-white">Skip to content</a>
         <JsonLd data={organizationLd({ siteUrl: SITE_URL, name: "ParkMath", logoUrl: `${SITE_URL}/opengraph-image` })} />
         <noscript>

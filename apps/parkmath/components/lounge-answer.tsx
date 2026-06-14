@@ -31,7 +31,7 @@ export function LoungeAnswer({ walkInPence, tiers, airportName, defaultVisits = 
     <section aria-label={`${airportName} lounge break-even calculator`} className="space-y-4">
       {/* Visits slider */}
       <div
-        className="rounded-card border border-ink/10 bg-white p-6"
+        className="rounded-card border border-ink/10 bg-card p-6"
         style={{ boxShadow: "var(--shadow-card)" }}
       >
         <h2 className="text-lg font-semibold text-ink">How many lounge visits a year?</h2>

@@ -30,7 +30,7 @@ export function DropOffCalculator({
   return (
     <section
       aria-label={`${airportName} drop-off cost calculator`}
-      className="mf-edge rounded-card bg-white p-6"
+      className="mf-edge rounded-card bg-card p-6"
       style={{ boxShadow: "var(--shadow-card)" }}
     >
       <h2 className="text-lg font-semibold text-ink">How long will you stop?</h2>

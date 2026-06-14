@@ -21,7 +21,7 @@ export function DealsStrip() {
       </div>
       <a
         href="/airport-parking"
-        className="mf-press mt-3 inline-flex min-h-11 items-center gap-1 rounded-card border border-brand-accent/40 bg-white px-4 text-sm font-semibold text-brand-accent outline-none transition hover:border-brand-accent focus-visible:ring-2 focus-visible:ring-brand-accent/40 sm:mt-0"
+        className="mf-press mt-3 inline-flex min-h-11 items-center gap-1 rounded-card border border-brand-accent/40 bg-card px-4 text-sm font-semibold text-brand-accent outline-none transition hover:border-brand-accent focus-visible:ring-2 focus-visible:ring-brand-accent/40 sm:mt-0"
       >
         Compare parking{partner ? " *" : ""} <span aria-hidden>→</span>
       </a>
