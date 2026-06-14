@@ -131,7 +131,7 @@ export function RoamingAnswerDisplay({
                 ) : null}
                 <span className="min-w-0">{networkLabel} daily pass</span>
               </span>
-              <span className="mf-num shrink-0 text-lg font-bold text-brand">
+              <span className="mf-num shrink-0 text-lg font-bold text-brand-strong">
                 {result.cheapestNetwork?.totalPence != null
                   ? formatPence(result.cheapestNetwork.totalPence)
                   : "No standard pass"}
@@ -156,7 +156,7 @@ export function RoamingAnswerDisplay({
                   Best eSIM ({result.esimChoice.provider}, {result.esimChoice.bundleName})
                 </span>
               </span>
-              <span className="mf-num shrink-0 text-lg font-bold text-brand">
+              <span className="mf-num shrink-0 text-lg font-bold text-brand-strong">
                 {formatPence(result.esimChoice.totalPence)}
               </span>
             </div>
@@ -165,7 +165,7 @@ export function RoamingAnswerDisplay({
 
         {/* Verdict summary */}
         {!networkOption.included ? (
-          <p className="rounded-lg border border-ink/10 bg-surface px-4 py-3 text-sm font-semibold text-brand">
+          <p className="rounded-lg border border-ink/10 bg-surface px-4 py-3 text-sm font-semibold text-brand-strong">
             {result.verdict === "esim" && result.esimChoice
               ? `eSIM saves ${formatPence(result.savingsPence)} vs ${networkLabel} daily charges for ${days} day${days !== 1 ? "s" : ""}.`
               : result.verdict === "network" && result.cheapestNetwork?.totalPence != null

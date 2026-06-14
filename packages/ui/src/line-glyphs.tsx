@@ -1,5 +1,6 @@
 /** Brand line-art accents — decorative, never photos. Stroke-based, currentColor,
- *  aria-hidden. Use at low opacity (e.g. className="text-brand/15"). */
+ *  aria-hidden. Use at low opacity (e.g. className="text-brand-strong/15" — the
+ *  dark-adaptive brand foreground, so the accent stays visible in dark mode). */
 
 /** Runway-dash section divider (ParkMath flavour). */
 export function RunwayDivider({ className }: { className?: string }) {

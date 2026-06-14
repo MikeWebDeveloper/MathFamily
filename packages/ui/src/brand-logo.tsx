@@ -31,7 +31,7 @@ export function BrandLogo({ prefix }: { prefix: string }) {
     <span className={`inline-flex items-center gap-2 ${animate ? "mf-logo-animate" : ""}`}>
       <MathGlyph />
       <span className="text-lg font-bold tracking-tight">
-        <span className="text-brand">{prefix}</span>
+        <span className="text-brand-strong">{prefix}</span>
         <span className="text-ink">Math</span>
       </span>
     </span>

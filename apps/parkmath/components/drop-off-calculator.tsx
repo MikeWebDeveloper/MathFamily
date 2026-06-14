@@ -47,7 +47,7 @@ export function DropOffCalculator({
         <span className="mf-num w-20 shrink-0 text-right text-sm font-medium text-ink-muted">{minutes} min</span>
       </div>
       <div className="mf-fade-in mt-5 rounded-xl bg-surface p-4">
-        <p id="calc-result" data-testid="calculator-result" aria-live="polite" className="text-4xl font-bold text-brand">
+        <p id="calc-result" data-testid="calculator-result" aria-live="polite" className="text-4xl font-bold text-brand-strong">
           <AnimatedNumber pence={quote.costPence} render={(p) => (p === null ? "Beyond published tariff" : formatPence(p))} />
         </p>
       </div>
