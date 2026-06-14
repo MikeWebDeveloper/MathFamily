@@ -3,8 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { loadRoamingDataset, loadEsimDataset, NETWORKS, type RoamingDestination, type EsimCountry } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
-import { breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
-import { AnswerLead, CountryFlag, FaqAccordion, FeeGrid, FreshnessBadge, MiniAnswerBar, PageHeading, RegionMap, SavesVerdict, SourceCitation, SourcesBlock } from "@mathfamily/ui";
+import { breadcrumbLd, faqPageLd, JsonLd, speakableLd } from "@mathfamily/geo";
+import { AnswerLead, AnswerPassage, CountryFlag, FaqAccordion, FeeGrid, FreshnessBadge, MiniAnswerBar, PageHeading, RegionMap, SavesVerdict, SourceCitation, SourcesBlock } from "@mathfamily/ui";
 import { RoamingCalculator } from "@/components/roaming-calculator";
 import { AffiliateBlock } from "@/components/affiliate-block";
 import { buildRoamingFaqs, roamingPageModel, NETWORK_LABELS } from "@/lib/roaming-content";
@@ -90,6 +90,7 @@ export default async function CountryHubPage({ params }: { params: Promise<{ cou
           { name: destination.countryName, url: `${siteUrl}/roaming/${destination.countrySlug}` }
         ])}
       />
+      <JsonLd data={speakableLd({ url: `${siteUrl}/roaming/${destination.countrySlug}` })} />
 
       <header className="relative space-y-3">
         <CountryFlag
@@ -116,6 +117,12 @@ export default async function CountryHubPage({ params }: { params: Promise<{ cou
       </div>
       <RegionMap iso2={destination.iso2} className="mx-auto -my-2 hidden w-full max-w-xl text-ink sm:block" />
       <MiniAnswerBar summary={miniSummary} verified />
+
+      <AnswerPassage question={`How much is roaming in ${destination.countryName}?`}>
+        {m.answer}{esim && esim.bundles.length > 0
+          ? <> An eSIM is available as an alternative — prices start from {formatPence(Math.min(...esim.bundles.map((b) => b.totalPence)))} (see comparison below). All figures are verified against official network price guides and provider store pages.</>
+          : <> All figures are taken directly from the official UK network price guides and verified against published sources.</>}
+      </AnswerPassage>
 
       <RoamingCalculator
         networks={destination.perNetwork}

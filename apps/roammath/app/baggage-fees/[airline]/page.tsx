@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { loadBaggageDataset, type BaggageRecord } from "@mathfamily/data";
-import { breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
-import { AnswerLead, Callout, FaqAccordion, FeeGrid, FreshnessBadge, PageHeading, SourceCitation, SourcesBlock } from "@mathfamily/ui";
+import { breadcrumbLd, faqPageLd, JsonLd, speakableLd } from "@mathfamily/geo";
+import { AnswerLead, AnswerPassage, Callout, FaqAccordion, FeeGrid, FreshnessBadge, PageHeading, SourceCitation, SourcesBlock } from "@mathfamily/ui";
 import { baggageAnswer, feeRangeLabel } from "@/lib/baggage-content";
 
 export const dynamicParams = false;
@@ -69,6 +69,7 @@ export default async function AirlineBaggagePage({ params }: { params: Promise<{
           { name: record.airlineName, url: `${siteUrl}/baggage-fees/${record.airlineSlug}` }
         ])}
       />
+      <JsonLd data={speakableLd({ url: `${siteUrl}/baggage-fees/${record.airlineSlug}` })} />
 
       <header className="space-y-3">
         <PageHeading>{record.airlineName} baggage fees: official published charges</PageHeading>
@@ -79,6 +80,14 @@ export default async function AirlineBaggagePage({ params }: { params: Promise<{
       </header>
 
       <AnswerLead answer={baggageAnswer(record)}>{facts}</AnswerLead>
+
+      <AnswerPassage question={`What are ${record.airlineName}'s baggage fees?`}>
+        {cabin && checked && cabin !== checked
+          ? <>{record.airlineName} publishes official bag fees of {feeRangeLabel(cabin)} for a {cabin.item.toLowerCase()} and {feeRangeLabel(checked)} for {checked.item.toLowerCase()}.{record.dynamicPricingNote ? <> Prices vary by route and booking date — exact figures depend on when and where you fly.</> : <> These are the official published ranges; exact prices vary by route and booking date.</>} Verify on the {record.airlineName} fee page before purchasing.</>
+          : cabin
+            ? <>{record.airlineName} publishes a fee of {feeRangeLabel(cabin)} for a {cabin.item.toLowerCase()}. This is the official published range taken from the airline's own fee schedule — exact charges vary by route, booking channel and travel date.{record.dynamicPricingNote ? <> Prices are set dynamically; the range above reflects the minimum and maximum currently published.</> : <> Always verify on the {record.airlineName} official fee page before you book.</>}</>
+            : <>{record.airlineName} bag fees are shown in the official published table below. Ranges reflect the airline's own published minimum and maximum charges — exact prices vary by route, booking channel and travel date. Always verify on the {record.airlineName} official fee page before purchasing.</>}
+      </AnswerPassage>
 
       <FeeGrid
         caption={`${record.airlineName} baggage fees (verified ${record.verifiedAt}). Ranges reflect official published min–max charges.`}

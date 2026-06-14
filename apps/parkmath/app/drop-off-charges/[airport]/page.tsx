@@ -3,8 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { loadAirports, loadDropOffDataset, loadParkingDataset, loadLoungeDataset, newsForAirport, type Airport, type DropOffRecord } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
-import { breadcrumbLd, faqPageLd, JsonLd, offerLd } from "@mathfamily/geo";
-import { AnswerCard, AnswerLead, CaveatChip, Callout, FaqAccordion, FreshnessBadge, LatestUpdates, MiniAnswerBar, PageHeading, SourceCitation, SourcesBlock, EmailCaptureSlot, UkMap, VerifiedStamp } from "@mathfamily/ui";
+import { breadcrumbLd, faqPageLd, JsonLd, offerLd, speakableLd } from "@mathfamily/geo";
+import { AnswerCard, AnswerLead, AnswerPassage, CaveatChip, Callout, FaqAccordion, FreshnessBadge, LatestUpdates, MiniAnswerBar, PageHeading, SourceCitation, SourcesBlock, EmailCaptureSlot, UkMap, VerifiedStamp } from "@mathfamily/ui";
 import { DropOffCalculator } from "@/components/drop-off-calculator";
 import { HolidayExtrasCard } from "@/components/holiday-extras-card";
 import { buildDropOffFaqs, freshnessDelta, isPerEntryTariff, paymentDeadlineChip, trendNote } from "@/lib/content";
@@ -68,6 +68,7 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
           })}
         />
       ) : null}
+      <JsonLd data={speakableLd({ url: `${siteUrl}/drop-off-charges/${airport.slug}` })} />
 
       <header className="space-y-3">
         <PageHeading>{airport.name} drop-off charge</PageHeading>
@@ -116,6 +117,12 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
         summary={`${airport.iata} drop-off · ${record.isFree ? "Free" : record.feeSummary}`}
         verified
       />
+
+      <AnswerPassage question={`What does it cost to drop someone off at ${airport.name}?`}>
+        {record.isFree
+          ? <>Dropping off at {airport.name} is free at the forecourt — no charge applies when using the designated drop-off zone. This is an official, date-stamped snapshot read directly from the airport's published page and verified {record.verifiedAt}.{record.freeAlternative ? <> The {record.freeAlternative.name} also provides free waiting for up to {record.freeAlternative.minutesFree} minutes.</> : " Always check the airport's own page for any changes before you travel."}</>
+          : <>{airport.name} levies a charge to use the drop-off forecourt: {record.feeSummary.charAt(0).toLowerCase()}{record.feeSummary.slice(1)}{record.bands[0] ? <> ({formatPence(record.bands[0].totalPence)} for up to {record.bands[0].upToMinutes} minutes)</> : ""}{record.penaltyPence !== null ? <>; unpaid visits incur a {formatPence(record.penaltyPence)} penalty charge</> : ""}. {record.freeAlternative ? <>A free alternative, {record.freeAlternative.name}, is available for {record.freeAlternative.minutesFree} minutes.</> : <>No published free-forecourt alternative is available.</>} All figures are official, date-stamped snapshots read from the airport's own published page and verified {record.verifiedAt}.</>}
+      </AnswerPassage>
 
       {trend ? <p className="text-sm font-medium text-warning">{trend}</p> : null}
 
