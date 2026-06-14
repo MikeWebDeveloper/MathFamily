@@ -28,3 +28,20 @@ it("defines a single-glow winner utility distinct from the static winner ring", 
 it("defines a reduced-motion-safe skeleton shimmer", () => {
   expect(css).toContain(".mf-skeleton");
 });
+
+describe("surface/ink colour tokens have light + dark definitions", () => {
+  // Extract the @theme {…} block and the [data-theme="dark"] {…} override ruleset.
+  // (Can't slice on the first `[data-theme="dark"]` — that's the @custom-variant on line 2.)
+  const lightThemeBlock = css.match(/@theme\s*\{([\s\S]*?)\n\}/)?.[1] ?? "";
+  const darkBlock = css.match(/\[data-theme="dark"\]\s*\{([\s\S]*?)\n\}/)?.[1] ?? "";
+
+  // Guards the OpenDataBand `bg-surface-muted` bug: a utility referencing an
+  // undefined token renders no fill, and a token without a dark override leaks
+  // its light value into dark mode (a "light island").
+  it("defines every neutral surface/ink token in both the base @theme and the dark override", () => {
+    for (const t of ["surface", "surface-muted", "card", "ink", "ink-muted"]) {
+      expect(lightThemeBlock, `--color-${t} (light @theme)`).toMatch(new RegExp(`--color-${t}:\\s*#`));
+      expect(darkBlock, `--color-${t} (dark override)`).toMatch(new RegExp(`--color-${t}:\\s*#`));
+    }
+  });
+});
