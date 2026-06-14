@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
 
 const styles = {
-  free: { wrap: "border-positive/25 bg-green-50", dot: "bg-positive", glow: "0 0 0 1px rgb(22 163 74 / 0.06), var(--shadow-card)" },
-  warning: { wrap: "border-warning/25 bg-amber-50", dot: "bg-warning", glow: "0 0 0 1px rgb(180 83 9 / 0.06), var(--shadow-card)" },
-  info: { wrap: "border-brand-accent/25 bg-blue-50", dot: "bg-brand-accent", glow: "0 0 0 1px rgb(37 99 235 / 0.06), var(--shadow-card)" }
+  free: { wrap: "border-positive/25 bg-green-50 dark:bg-positive/[0.08] dark:border-positive/20", dot: "bg-positive", glow: "0 0 0 1px rgb(22 163 74 / 0.06), var(--shadow-card)" },
+  warning: { wrap: "border-warning/25 bg-amber-50 dark:bg-warning/[0.08] dark:border-warning/20", dot: "bg-warning", glow: "0 0 0 1px rgb(180 83 9 / 0.06), var(--shadow-card)" },
+  info: { wrap: "border-brand-accent/25 bg-blue-50 dark:bg-brand-accent/[0.08] dark:border-brand-accent/20", dot: "bg-brand-accent", glow: "0 0 0 1px rgb(37 99 235 / 0.06), var(--shadow-card)" }
 } as const;
 
 export function Callout({ variant, title, children }: { variant: keyof typeof styles; title: string; children: ReactNode }) {

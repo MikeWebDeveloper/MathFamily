@@ -38,7 +38,7 @@ export function BookingOptions({
 
       {hasAffiliate ? (
         <>
-          <div className="rounded-card border border-brand-accent/30 bg-blue-50 p-4">
+          <div className="rounded-card border border-brand-accent/30 bg-blue-50 dark:bg-brand-accent/[0.08] dark:border-brand-accent/20 p-4">
             <div className="flex items-center justify-between gap-2">
               <h3 className="font-semibold text-ink">Pre-book &amp; save with {he.partnerName}</h3>
               <span className="rounded border border-ink-muted/40 px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Ad</span>
