@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { loadBaggageDataset } from "@mathfamily/data";
-import { breadcrumbLd, itemListLd, JsonLd } from "@mathfamily/geo";
-import { FeeGrid, PageHeading } from "@mathfamily/ui";
+import { breadcrumbLd, datasetLd, itemListLd, JsonLd } from "@mathfamily/geo";
+import { FeeGrid, OpenDataBand, PageHeading } from "@mathfamily/ui";
 import { feeRangeLabel } from "@/lib/baggage-content";
 
 export const metadata: Metadata = {
@@ -22,6 +22,16 @@ export default function BaggageFeesIndexPage() {
           { name: "Home", url: siteUrl },
           { name: "Baggage fees", url: `${siteUrl}/baggage-fees` }
         ])}
+      />
+      <JsonLd
+        data={datasetLd({
+          name: "UK airline baggage fees 2026",
+          description: "Cabin and checked bag fees for 12 UK-popular airlines — official published min–max ranges, date-stamped.",
+          url: `${siteUrl}/baggage-fees`,
+          dateModified: lastUpdated,
+          siteUrl,
+          creatorName: "RoamMath"
+        })}
       />
       <JsonLd
         data={itemListLd({
@@ -81,6 +91,11 @@ export default function BaggageFeesIndexPage() {
           ))}
         </ul>
       </nav>
+
+      <OpenDataBand
+        downloads={[{ href: "/data/baggage-fees.csv", label: "Baggage fees (CSV)" }]}
+        citation={`RoamMath, "UK airline baggage fees 2026", verified ${lastUpdated}, roammath.co.uk`}
+      />
     </article>
   );
 }

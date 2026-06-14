@@ -3,7 +3,7 @@ import Link from "next/link";
 import { loadRoamingDataset, loadEsimDataset, NETWORKS } from "@mathfamily/data";
 import { roamingTripCost, formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, datasetLd, itemListLd, JsonLd } from "@mathfamily/geo";
-import { CountryFlag, FeeGrid, FreshnessBadge, PageHeading } from "@mathfamily/ui";
+import { CountryFlag, FeeGrid, FreshnessBadge, OpenDataBand, PageHeading } from "@mathfamily/ui";
 import { NETWORK_LABELS } from "@/lib/roaming-content";
 
 export const metadata: Metadata = {
@@ -128,6 +128,11 @@ export default function RoamingIndexPage() {
         Network sources verified {latestVerified}. eSIM prices are dated snapshots — check providers for live prices.
         {" "}† converted from the provider&apos;s USD price at an indicative rate.
       </p>
+
+      <OpenDataBand
+        downloads={[{ href: "/data/roaming-charges.csv", label: "Roaming charges (CSV)" }]}
+        citation={`RoamMath, "UK mobile roaming charges by destination", verified ${latestVerified}, roammath.co.uk`}
+      />
     </article>
   );
 }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { aggregateOfferLd, breadcrumbLd, datasetLd, faqPageLd, itemListLd, offerLd, webSiteLd, newsArticleLd, organizationLd } from "../src/builders";
+import { aggregateOfferLd, breadcrumbLd, datasetLd, faqPageLd, itemListLd, offerLd, webSiteLd, newsArticleLd, organizationLd, personLd, speakableLd } from "../src/builders";
 
 describe("faqPageLd", () => {
   it("builds a FAQPage with one Question per item", () => {
@@ -133,5 +133,72 @@ describe("newsArticleLd", () => {
     expect(ld.image).toEqual(["https://www.parkmath.co.uk/opengraph-image"]);
     expect(ld.author).toEqual({ "@type": "Organization", "@id": "https://www.parkmath.co.uk/#organization", name: "ParkMath" });
     expect(ld.publisher).toEqual({ "@type": "Organization", "@id": "https://www.parkmath.co.uk/#organization", name: "ParkMath" });
+  });
+});
+
+describe("personLd", () => {
+  it("emits a Person with @id, name, jobTitle and worksFor the org @id, no sameAs when none given", () => {
+    const p = personLd({ siteUrl: "https://parkmath.co.uk", name: "Michal Latal", jobTitle: "Founder & editor" });
+    expect(p["@type"]).toBe("Person");
+    expect(p["@id"]).toBe("https://parkmath.co.uk/#person");
+    expect(p.name).toBe("Michal Latal");
+    expect(p.jobTitle).toBe("Founder & editor");
+    expect(p.worksFor["@id"]).toBe("https://parkmath.co.uk/#organization");
+    expect("sameAs" in p).toBe(false);
+  });
+  it("includes sameAs only when non-empty", () => {
+    const p = personLd({ siteUrl: "https://x.co", name: "A", jobTitle: "B", sameAs: ["https://x.co/a"] });
+    expect(p.sameAs).toEqual(["https://x.co/a"]);
+  });
+});
+
+describe("speakableLd", () => {
+  it("emits a WebPage with a SpeakableSpecification of cssSelectors", () => {
+    const s = speakableLd({ url: "https://x.co/p" });
+    expect(s["@type"]).toBe("WebPage");
+    expect(s.url).toBe("https://x.co/p");
+    expect(s.speakable["@type"]).toBe("SpeakableSpecification");
+    expect(s.speakable.cssSelector).toEqual(["h1", ".mf-speakable"]);
+  });
+  it("accepts custom selectors", () => {
+    const s = speakableLd({ url: "https://x.co/p", cssSelectors: ["#a"] });
+    expect(s.speakable.cssSelector).toEqual(["#a"]);
+  });
+});
+
+describe("organizationLd founder", () => {
+  it("includes founder Person when provided", () => {
+    const org = organizationLd({
+      siteUrl: "https://parkmath.co.uk", name: "ParkMath", logoUrl: "https://parkmath.co.uk/logo",
+      founder: { name: "Michal Latal", jobTitle: "Founder & editor" }
+    });
+    expect(org.founder!["@type"]).toBe("Person");
+    expect(org.founder!["@id"]).toBe("https://parkmath.co.uk/#person");
+    expect(org.founder!.name).toBe("Michal Latal");
+  });
+  it("omits founder when not provided", () => {
+    const org = organizationLd({ siteUrl: "https://x.co", name: "X", logoUrl: "https://x.co/l" });
+    expect("founder" in org).toBe(false);
+  });
+});
+
+describe("newsArticleLd author", () => {
+  it("uses a Person author when authorName given, org stays publisher", () => {
+    const a = newsArticleLd({
+      headline: "H", description: "D", url: "https://parkmath.co.uk/news/x", datePublished: "2026-01-01",
+      dateModified: "2026-01-02", sourceUrl: "https://src", siteUrl: "https://parkmath.co.uk",
+      imageUrl: "https://img", authorName: "Michal Latal", authorJobTitle: "Founder & editor"
+    });
+    expect(a.author["@type"]).toBe("Person");
+    expect(a.author["@id"]).toBe("https://parkmath.co.uk/#person");
+    expect(a.author.name).toBe("Michal Latal");
+    expect(a.publisher["@type"]).toBe("Organization");
+  });
+  it("falls back to org author when no authorName", () => {
+    const a = newsArticleLd({
+      headline: "H", description: "D", url: "u", datePublished: "p", dateModified: "m",
+      sourceUrl: "s", siteUrl: "https://x.co", imageUrl: "i"
+    });
+    expect(a.author["@type"]).toBe("Organization");
   });
 });

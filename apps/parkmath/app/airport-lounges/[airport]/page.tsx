@@ -3,8 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { loadAirports, loadLoungeDataset, loadParkingDataset, loadPriorityPass, type Airport, type LoungeRecord } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
-import { breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
-import { FaqAccordion, FeeGrid, FreshnessBadge, PageHeading, SourceCitation, SourcesBlock } from "@mathfamily/ui";
+import { breadcrumbLd, faqPageLd, JsonLd, speakableLd } from "@mathfamily/geo";
+import { AnswerPassage, FaqAccordion, FeeGrid, FreshnessBadge, PageHeading, SourceCitation, SourcesBlock } from "@mathfamily/ui";
 import { HolidayExtrasCard } from "@/components/holiday-extras-card";
 import { LoungeAnswer } from "@/components/lounge-answer";
 import { buildLoungeFaqs } from "@/lib/content";
@@ -53,6 +53,7 @@ export default async function LoungePage({ params }: { params: Promise<{ airport
         { name: "Airport lounges", url: `${siteUrl}/airport-lounges` },
         { name: airport.name, url: `${siteUrl}/airport-lounges/${airport.slug}` }
       ])} />
+      <JsonLd data={speakableLd({ url: `${siteUrl}/airport-lounges/${airport.slug}` })} />
 
       <header className="space-y-3">
         <PageHeading>{airport.name} lounges: pay per visit or join?</PageHeading>
@@ -77,6 +78,12 @@ export default async function LoungePage({ params }: { params: Promise<{ airport
           defaultVisits={3}
         />
       ) : null}
+
+      <AnswerPassage question={`How much is a lounge at ${airport.name}?`}>
+        {cheapest
+          ? <>Pre-book lounge access at {airport.name} starts from {formatPence(cheapest.walkInPence!)} ({cheapest.name}), based on official operator pricing verified {record.verifiedAt}. Walk-up rates on the day may be higher. {priced.length > 1 ? `${priced.length} lounges publish pre-book prices at this airport. ` : ""}A Priority Pass membership can reduce the cost per visit for frequent travellers — compare the break-even calculator above.</>
+          : <>Walk-in prices are not currently published for {airport.name} lounges (verified {record.verifiedAt}). Check the official lounge pages directly for current rates before booking.</>}
+      </AnswerPassage>
 
       <HolidayExtrasCard product="lounge" surface="lounge" airportName={airport.name} airportSlug={airport.slug} />
 

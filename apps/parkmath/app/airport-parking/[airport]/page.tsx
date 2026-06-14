@@ -3,8 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { loadAirports, loadParkingDataset, type Airport, type ParkingRecord } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
-import { aggregateOfferLd, breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
-import { FaqAccordion, FeeGrid, FreshnessBadge, PageHeading, SourceCitation, SourcesBlock, EmailCaptureSlot } from "@mathfamily/ui";
+import { aggregateOfferLd, breadcrumbLd, faqPageLd, JsonLd, speakableLd } from "@mathfamily/geo";
+import { AnswerPassage, FaqAccordion, FeeGrid, FreshnessBadge, PageHeading, SourceCitation, SourcesBlock, EmailCaptureSlot } from "@mathfamily/ui";
 import { ParkingAnswer } from "@/components/parking-answer";
 import { DURATION_SLUGS, buildParkingFaqs, coveredParkingDurations, parkingPageModel } from "@/lib/parking-content";
 
@@ -74,6 +74,7 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
           { name: airport.name, url: `${siteUrl}/airport-parking/${airport.slug}` }
         ])}
       />
+      <JsonLd data={speakableLd({ url: `${siteUrl}/airport-parking/${airport.slug}` })} />
       {validSevenDay.length > 0 ? (
         <JsonLd
           data={aggregateOfferLd({
@@ -107,6 +108,12 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
         airportName={airport.name}
         officialUrl={record.sourceUrl}
       />
+
+      <AnswerPassage question={`How much is parking at ${airport.name}?`}>
+        {m7.cheapest
+          ? <>For a 7-day stay, {m7.cheapest.name} is the cheapest verified option at {formatPence(m7.cheapest.totalPence)}{m7.gate && m7.savingsVsGatePence ? <>, saving {formatPence(m7.savingsVsGatePence)} against the drive-up gate price of {formatPence(m7.gate.totalPence)}</> : ""}. These are official, date-stamped snapshots taken directly from the airport's own booking portal — not estimates from third-party sites. Always confirm prices on the official portal before travelling.</>
+          : <>No pre-book prices are published for {airport.name} parking across all durations — check the official booking portal for current gate and pre-book rates before your trip.</>}
+      </AnswerPassage>
 
       {/* ── Below-the-fold sections — scroll-reveal with gentle stagger ── */}
 
