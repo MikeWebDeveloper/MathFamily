@@ -56,14 +56,17 @@ The `breadcrumbLd` builder already has a test in `packages/geo/tests/builders.te
 
 ---
 
-## Deferred (P4b follow-up)
+## Deferred (P4b follow-up) — ✅ SHIPPED 2026-06-14 (branch `design-upgrade-p4b`)
 
-- **Dataset / Speakable schema** — defer; needs content strategy for `speakable` CSS selectors
-- **Product + Offer** per-page schema — defer; each airport detail page is a separate task
-- **Per-page 40–75-word answer rewrites** — content work, out of scope for this slice
-- **Named-Person entity graph** — not built; authorship kept at brand/Organization level only (no fabricated persons)
-- **RoamMath open-data band** — roammath does not yet have `/data/*.csv` routes; defer until open-data export is added for roaming/baggage datasets
-- **`organizationLd` publisher on non-NewsArticle pages** — the Organization `@id` is already referenced by `datasetLd.creator`; adding a top-level `publisher` property on WebPage/Dataset is a minor enhancement deferred to P4b
+- ✅ **Speakable schema** — new `speakableLd` builder (`WebPage` + `SpeakableSpecification` targeting `["h1", ".mf-speakable"]`), wired on the 5 core answer pages (parking hub, lounge, drop-off, roaming country, baggage airline). The answer passages carry `.mf-speakable`.
+- ✅ **Per-page 40–75-word answer passages** — new shared `AnswerPassage` (question-form H2 + `.mf-speakable` paragraph). Factual passages built from each page's already-verified figures (no invented numbers, no marketing %), placed just after the answer-first hero so it stays the LCP.
+- ✅ **Named-Person entity graph** — `personLd` builder + `Organization.founder` (site-wide via both layouts) + `NewsArticle.author` = Person (Michal Latal, "Founder & editor", **no fabricated `sameAs`**). Visible `CompiledByline` on news articles. RoamMath layout now also emits `organizationLd` (previously had none).
+- ✅ **RoamMath open-data export** — new `/data/roaming-charges.csv` + `/data/baggage-fees.csv` static routes (testable `roamingCsv()`/`baggageCsv()` row builders), `OpenDataBand` on both index pages, and `datasetLd` added to the baggage index (its Dataset claim previously pointed at no downloadable file).
+
+### Still open (P4c / later)
+- **Product + Offer** per-page schema is present where it matters (`offerLd` on drop-off detail, `aggregateOfferLd` on parking detail). Lounge/baggage detail single-Offer coverage is a minor future enhancement.
+- **Dataset schema** on the parkmath `/data/*.csv` raw routes themselves — Dataset JSON-LD lives on the HTML index pages that link the CSVs (correct placement); no change needed.
+- Dark-variant OG images; cross-brand "going abroad by car" combined-cost answer (ParkMath↔RoamMath).
 
 ---
 
