@@ -187,6 +187,12 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
         </Link>
       </p>
 
+      <p className="mf-reveal text-sm" style={{ "--mf-delay": "0ms" } as React.CSSProperties}>
+        <Link href={`/abroad/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
+          Going abroad from {airport.name}? See parking + roaming + baggage together →
+        </Link>
+      </p>
+
       <div className="mf-reveal" style={{ "--mf-delay": "0ms" } as React.CSSProperties}>
         <EmailCaptureSlot formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION} hook={`Get notified when ${airport.name} parking prices change`} />
       </div>
