@@ -60,3 +60,25 @@ export function DataIcon() {
     </svg>
   );
 }
+export function HotelIcon() {
+  return (
+    <svg {...base}>
+      <rect x="3" y="7" width="18" height="14" rx="2" />
+      <path d="M3 11h18" />
+      <path d="M8 7V5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2" />
+      <path d="M8 15h2M14 15h2" />
+    </svg>
+  );
+}
+export function TransferIcon() {
+  return (
+    <svg {...base}>
+      <path d="M3 8l4-4 4 4" />
+      <path d="M7 4v9" />
+      <path d="M21 16l-4 4-4-4" />
+      <path d="M17 20v-9" />
+      <path d="M7 13a5 5 0 0 0 5 5" />
+      <path d="M17 11a5 5 0 0 0-5-5" />
+    </svg>
+  );
+}
