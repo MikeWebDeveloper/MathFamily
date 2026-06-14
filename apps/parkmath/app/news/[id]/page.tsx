@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { loadNewsDataset, newsById, loadAirports } from "@mathfamily/data";
 import { newsArticleLd, breadcrumbLd, JsonLd } from "@mathfamily/geo";
-import { PageHeading, SourceCitation } from "@mathfamily/ui";
+import { CompiledByline, PageHeading, SourceCitation } from "@mathfamily/ui";
 
 export const dynamicParams = false;
 export function generateStaticParams() {
@@ -33,7 +33,7 @@ export default async function NewsItemPage({ params }: { params: Promise<{ id: s
 
   return (
     <article className="space-y-5">
-      <JsonLd data={newsArticleLd({ headline: item.title, description: item.summary, url, datePublished: item.publishedAt, dateModified: item.verifiedAt, sourceUrl: item.sourceUrl, siteUrl, imageUrl: `${siteUrl}/opengraph-image` })} />
+      <JsonLd data={newsArticleLd({ headline: item.title, description: item.summary, url, datePublished: item.publishedAt, dateModified: item.verifiedAt, sourceUrl: item.sourceUrl, siteUrl, imageUrl: `${siteUrl}/opengraph-image`, authorName: "Michal Latal", authorJobTitle: "Founder & editor" })} />
       <JsonLd data={breadcrumbLd([
         { name: "Home", url: siteUrl }, { name: "Updates", url: `${siteUrl}/news` }, { name: item.title, url }
       ])} />
@@ -46,6 +46,7 @@ export default async function NewsItemPage({ params }: { params: Promise<{ id: s
         <PageHeading>{item.title}</PageHeading>
         <p className="text-lead text-ink">{item.summary}</p>
         <SourceCitation url={item.sourceUrl} label={item.sourceLabel} />
+        <CompiledByline name="Michal Latal" verifiedAt={fmt(item.verifiedAt)} />
       </header>
 
       {item.change ? (
