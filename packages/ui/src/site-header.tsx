@@ -22,7 +22,7 @@ export function SiteHeader({
       <div className="mx-auto flex max-w-5xl items-center justify-between gap-2 px-4 py-3">
         <a href="/" aria-label={`${brandName} home`} className="shrink-0 transition-opacity hover:opacity-80">
           {brandPrefix ? <BrandLogo prefix={brandPrefix} /> : (
-            <span className="text-lg font-bold tracking-tight text-brand">{brandName}</span>
+            <span className="text-lg font-bold tracking-tight text-brand-strong">{brandName}</span>
           )}
         </a>
 
