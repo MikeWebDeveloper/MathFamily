@@ -127,7 +127,10 @@ export function resolveSlot(slotId: SlotId, airportSlug: string, officialUrl: st
 
 /** ISO `YYYY-MM-DD` → Holiday Extras' `DD/MM/YY`. */
 export function formatHeDate(iso: string): string {
-  const [y, m, d] = iso.split("-");
+  const parts = iso.split("-");
+  const y = parts[0] ?? "";
+  const m = parts[1] ?? "";
+  const d = parts[2] ?? "";
   return `${d}/${m}/${y.slice(2)}`;
 }
 
