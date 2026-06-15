@@ -191,3 +191,12 @@ export function buildParkingSearchUrl(args: {
   }
   return null;
 }
+
+/** Validate a search date range against today (all ISO `YYYY-MM-DD`). Returns an error message
+ *  or null when valid. Pure — the caller passes `todayIso` so it stays deterministic/testable. */
+export function validateSearchDates(dropOff: string, returnDate: string, todayIso: string): string | null {
+  if (!dropOff || !returnDate) return "Pick both dates";
+  if (dropOff < todayIso) return "Drop-off can't be in the past";
+  if (returnDate <= dropOff) return "Return must be after drop-off";
+  return null;
+}

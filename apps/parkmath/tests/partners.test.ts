@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { activeSlotPartnerName, buildAwinLink, buildParkingSearchUrl, composeParkingUed, formatHeDate, resolveHeProduct, resolveSlot } from "../lib/partners";
+import { activeSlotPartnerName, buildAwinLink, buildParkingSearchUrl, composeParkingUed, formatHeDate, resolveHeProduct, resolveSlot, validateSearchDates } from "../lib/partners";
 
 describe("buildAwinLink", () => {
   it("builds a bare cread.php link with clickref and no ued", () => {
@@ -125,5 +125,23 @@ describe("buildParkingSearchUrl", () => {
     const r = buildParkingSearchUrl({ airportSlug: "manchester", dropOff: "2026-12-07", returnDate: "2026-12-12" });
     expect(r!.datePrefilled).toBe(false);
     expect(r!.url).toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Fmanchester-airport-parking.html");
+  });
+});
+
+describe("validateSearchDates", () => {
+  const today = "2026-06-15";
+  it("returns null for a valid future range", () => {
+    expect(validateSearchDates("2026-12-07", "2026-12-12", today)).toBeNull();
+  });
+  it("requires both dates", () => {
+    expect(validateSearchDates("", "2026-12-12", today)).toBe("Pick both dates");
+    expect(validateSearchDates("2026-12-07", "", today)).toBe("Pick both dates");
+  });
+  it("rejects a drop-off in the past", () => {
+    expect(validateSearchDates("2026-06-14", "2026-12-12", today)).toBe("Drop-off can't be in the past");
+  });
+  it("rejects a return on or before drop-off", () => {
+    expect(validateSearchDates("2026-12-12", "2026-12-07", today)).toBe("Return must be after drop-off");
+    expect(validateSearchDates("2026-12-12", "2026-12-12", today)).toBe("Return must be after drop-off");
   });
 });
