@@ -154,3 +154,40 @@ export function composeParkingUed(
   }
   return { ued: ap.urlPattern.replace(/\{slug\}/g, slug), datePrefilled: false };
 }
+
+/** Build a tracked AWIN deep link for a parking search: resolves the active parking partner
+ *  (single best HE-group brand for the airport — currently Holiday Extras), composes the `ued`
+ *  via the fallback ladder, and tags the click with a `-search` surface suffix. Returns null only
+ *  if the parking slot is inactive or has no active partner. */
+export function buildParkingSearchUrl(args: {
+  airportSlug: string;
+  dropOff?: string;
+  returnDate?: string;
+}): { url: string; partnerName: string; datePrefilled: boolean } | null {
+  const slot = config.slots.find((s) => s.id === "parking-prebook");
+  if (!slot?.active) return null;
+  for (const partnerId of slot.partnerIds) {
+    const partner = config.partners[partnerId];
+    if (partner?.active && partner.awinmid) {
+      const { ued, datePrefilled } = composeParkingUed(
+        partner.airportParking,
+        args.airportSlug,
+        args.dropOff,
+        args.returnDate,
+        partner.landingUrl,
+      );
+      return {
+        url: buildAwinLink({
+          awinmid: partner.awinmid,
+          publisherId: config.awin.publisherId,
+          airportSlug: args.airportSlug,
+          ued,
+          clickrefSuffix: "search",
+        }),
+        partnerName: partner.name,
+        datePrefilled,
+      };
+    }
+  }
+  return null;
+}

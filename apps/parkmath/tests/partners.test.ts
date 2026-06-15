@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { activeSlotPartnerName, buildAwinLink, composeParkingUed, formatHeDate, resolveHeProduct, resolveSlot } from "../lib/partners";
+import { activeSlotPartnerName, buildAwinLink, buildParkingSearchUrl, composeParkingUed, formatHeDate, resolveHeProduct, resolveSlot } from "../lib/partners";
 
 describe("buildAwinLink", () => {
   it("builds a bare cread.php link with clickref and no ued", () => {
@@ -105,5 +105,25 @@ describe("composeParkingUed", () => {
   it("falls back to the generic landing url when no config is given", () => {
     const r = composeParkingUed(undefined, "gatwick", undefined, undefined, "https://www.holidayextras.com/airport-parking.html");
     expect(r.ued).toBe("https://www.holidayextras.com/airport-parking.html");
+  });
+});
+
+describe("buildParkingSearchUrl", () => {
+  it("builds a tracked link to the airport-specific HE page with a -search clickref", () => {
+    const r = buildParkingSearchUrl({ airportSlug: "gatwick" });
+    expect(r).not.toBeNull();
+    expect(r!.partnerName).toBe("Holiday Extras");
+    expect(r!.datePrefilled).toBe(false);
+    expect(r!.url).toContain("https://www.awin1.com/cread.php?");
+    expect(r!.url).toContain("awinmid=3496");
+    expect(r!.url).toContain("awinaffid=2932035");
+    expect(r!.url).toContain("clickref=parkmath-gatwick-search");
+    expect(r!.url).toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Fgatwick-airport-parking.html");
+  });
+
+  it("stays on the airport page (no dates) while datePrefill is off, even if dates are passed", () => {
+    const r = buildParkingSearchUrl({ airportSlug: "manchester", dropOff: "2026-12-07", returnDate: "2026-12-12" });
+    expect(r!.datePrefilled).toBe(false);
+    expect(r!.url).toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Fmanchester-airport-parking.html");
   });
 });
