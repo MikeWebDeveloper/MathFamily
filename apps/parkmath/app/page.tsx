@@ -5,6 +5,7 @@ import { webSiteLd, JsonLd } from "@mathfamily/geo";
 import { EmailCaptureSlot, FreshnessBadge, NavTileGrid, RunwayDivider, Sparkline, TrendChip, UkMap } from "@mathfamily/ui";
 import { AirportBentoSearch, type AirportTile } from "@/components/airport-bento-search";
 import { HomeAnswerHero } from "@/components/home-answer-hero";
+import { ParkingSearch } from "@/components/parking-search";
 import { NearbyAirports } from "@/components/nearby-airports";
 import { AffiliateExtras } from "@/components/affiliate-extras";
 import { FamilyLinks } from "@/components/family-links";
@@ -93,6 +94,9 @@ export default function HomePage() {
           </p>
         </div>
       </section>
+
+      {/* ── 1b. FIND PARKING — affiliate search handoff (airport + dates) ── */}
+      <ParkingSearch airports={airports.map((a) => ({ slug: a.slug, name: a.name, iata: a.iata }))} />
 
       {/* ── 2. BENTO — the answer is the biggest thing on screen ── */}
       <section className="grid grid-cols-1 gap-4 lg:grid-cols-3">

@@ -3,7 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { BookingOptions } from "../components/booking-options";
 
 const html = renderToStaticMarkup(
-  <BookingOptions airportName="Gatwick" airportSlug="gatwick" officialUrl="https://www.gatwickairport.com/parking" />
+  <BookingOptions airportName="Gatwick" airportSlug="gatwick" officialUrl="https://www.gatwickairport.com/parking" iata="LGW" />
 );
 
 const htmlWithPrice = renderToStaticMarkup(
@@ -13,6 +13,7 @@ const htmlWithPrice = renderToStaticMarkup(
     officialUrl="https://www.gatwickairport.com/parking"
     price={4200}
     days={7}
+    iata="LGW"
   />
 );
 
@@ -24,17 +25,24 @@ describe("BookingOptions", () => {
     expect(html).not.toContain('href="https://www.gatwickairport.com/parking" rel="sponsored');
   });
 
-  it("renders the Holiday Extras route with Ad, benefits, compliant discount + deep link", () => {
+  it("renders the Holiday Extras route with Ad, benefits, compliant discount + airport-specific deep link", () => {
     expect(html).toContain(">Ad<");
     expect(html).toContain("Free cancellation (cancel to arrival)");
     expect(html).toContain("up to 25% at Gatwick");
     expect(html).toContain("Discount applied automatically");
     expect(html).toContain("https://www.awin1.com/cread.php?");
     expect(html).toContain("awinmid=3496");
-    expect(html).toContain("clickref=parkmath-gatwick");
-    expect(html).toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Fairport-parking.html");
+    expect(html).toContain("clickref=parkmath-gatwick-search");
+    expect(html).toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Fgatwick-airport-parking.html");
+    expect(html).not.toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Fairport-parking.html");
     expect(html).toContain("Book my parking");
     expect(html).toContain('rel="sponsored noopener noreferrer"');
+  });
+
+  it("renders drop-off and return date inputs inside the affiliate card", () => {
+    expect(html).toContain('type="date"');
+    expect(html).toContain("Drop-off");
+    expect(html).toContain("Return");
   });
 
   it("keeps the ranking commission-blind and avoids non-compliant copy", () => {
@@ -76,5 +84,9 @@ describe("BookingOptions", () => {
   it("does not show price string when price/days are omitted", () => {
     // baseline html without price should not include "from £"
     expect(html).not.toContain("from £");
+  });
+
+  it("sets a min on the date inputs (no past dates on mobile pickers)", () => {
+    expect(html).toContain('min=');
   });
 });

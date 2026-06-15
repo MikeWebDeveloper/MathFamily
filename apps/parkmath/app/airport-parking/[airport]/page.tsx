@@ -107,6 +107,7 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
         slug={airport.slug}
         airportName={airport.name}
         officialUrl={record.sourceUrl}
+        iata={airport.iata}
       />
 
       <AnswerPassage question={`How much is parking at ${airport.name}?`}>
