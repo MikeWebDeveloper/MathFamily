@@ -83,4 +83,4 @@ Gathers official airport updates into `packages/data/datasets/parkmath/news.json
   `tools/freshness/run-agent.sh news-sweep` (full). Add `PRINT_CMD=1` to dry-run.
 - Output: a PR on `news/<run-id>` touching only `news.json`, with a NEEDS-HUMAN block. Review
   and merge to publish.
-- Cost: extraction can use Gemini (`gemini-2.5-flash` via `tools/gemini-pick-model.sh`).
+- Cost: extraction runs on Claude (use a cheap model like Haiku for the bulk page read).

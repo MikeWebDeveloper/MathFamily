@@ -27,10 +27,9 @@ edits cost datasets or code — `news.json` only.
 Targeted run for specific `news:<airport>` refs the watchdog flagged as changed.
 1. For each ref `news:<airport>`, look up its URL in `tools/freshness/news-sources.json`.
 2. Fetch the page (transport ladder: direct → `https://r.jina.ai/<url>` → Wayback). For the
-   **page-reading + extraction**, prefer cheap Gemini: set the model via
-   `export GRAPHIFY_GEMINI_MODEL="$(tools/gemini-pick-model.sh)"` and have Gemini read the
-   fetched text and propose candidate updates — you (Claude) own the trust judgement and the
-   final JSON. (If Gemini is unavailable, do the extraction yourself.)
+   **page-reading + extraction**, read the fetched text yourself (Claude) and propose
+   candidate updates — you own both the extraction and the trust judgement and the final
+   JSON. If you dispatch a subagent for the bulk read, use a cheap model like Haiku.
 3. For each genuine, in-scope, officially-stated update, build a candidate object:
    `{ airportSlug, category, title, summary (answer-first), change|null, sourceUrl,
       sourceLabel, publishedAt }`. Quote the official page in your PR description as evidence.
