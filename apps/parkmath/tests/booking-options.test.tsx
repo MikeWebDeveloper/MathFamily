@@ -84,4 +84,8 @@ describe("BookingOptions", () => {
     // baseline html without price should not include "from £"
     expect(html).not.toContain("from £");
   });
+
+  it("sets a min on the date inputs (no past dates on mobile pickers)", () => {
+    expect(html).toContain('min=');
+  });
 });

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { buildParkingSearchUrl } from "../lib/partners";
+import { buildParkingSearchUrl, validateSearchDates } from "../lib/partners";
 
 export function BookingOptions({
   airportName,
@@ -21,13 +21,17 @@ export function BookingOptions({
   const [dropOff, setDropOff] = useState("");
   const [returnDate, setReturnDate] = useState("");
 
+  const today = new Date().toISOString().slice(0, 10);
+  const dateError = dropOff && returnDate ? validateSearchDates(dropOff, returnDate, today) : null;
+  const datesValid = !!dropOff && !!returnDate && !dateError;
+
   // Airport-specific affiliate link; dates enhance the href on the client when datePrefill is on,
   // otherwise it stays on the airport page (reliable baseline). Falls back to the official link only
   // if the parking slot is somehow inactive.
   const link = buildParkingSearchUrl({
     airportSlug,
-    dropOff: dropOff || undefined,
-    returnDate: returnDate || undefined,
+    dropOff: datesValid ? dropOff : undefined,
+    returnDate: datesValid ? returnDate : undefined,
   });
   const hasAffiliate = link !== null;
   const affiliateHref = link?.url ?? officialUrl;
@@ -66,6 +70,7 @@ export function BookingOptions({
                   type="date"
                   value={dropOff}
                   onChange={(e) => setDropOff(e.target.value)}
+                  min={today}
                   className={`mt-1 ${dateField}`}
                 />
               </label>
@@ -75,10 +80,15 @@ export function BookingOptions({
                   type="date"
                   value={returnDate}
                   onChange={(e) => setReturnDate(e.target.value)}
+                  min={dropOff || today}
                   className={`mt-1 ${dateField}`}
                 />
               </label>
             </div>
+
+            {dateError ? (
+              <p role="alert" className="mt-2 text-xs font-medium text-red-600 dark:text-red-400">{dateError}</p>
+            ) : null}
 
             <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm text-ink">
               <li>✓ Free cancellation (cancel to arrival)</li>

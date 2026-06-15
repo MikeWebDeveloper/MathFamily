@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { buildParkingSearchUrl } from "../lib/partners";
+import { buildParkingSearchUrl, validateSearchDates } from "../lib/partners";
 
 export interface SearchAirport {
   slug: string;
@@ -29,8 +29,15 @@ export function ParkingSearch({ airports }: { airports: SearchAirport[] }) {
   }, [airports]);
 
   const matched = index.get(airportText.trim().toLowerCase());
+  const today = new Date().toISOString().slice(0, 10);
+  const dateError = dropOff && returnDate ? validateSearchDates(dropOff, returnDate, today) : null;
+  const datesValid = !!dropOff && !!returnDate && !dateError;
   const link = matched
-    ? buildParkingSearchUrl({ airportSlug: matched.slug, dropOff: dropOff || undefined, returnDate: returnDate || undefined })
+    ? buildParkingSearchUrl({
+        airportSlug: matched.slug,
+        dropOff: datesValid ? dropOff : undefined,
+        returnDate: datesValid ? returnDate : undefined,
+      })
     : null;
   const isAffiliate = link !== null;
   const href = link?.url ?? "/airport-parking";
@@ -64,12 +71,12 @@ export function ParkingSearch({ airports }: { airports: SearchAirport[] }) {
 
         <label className="block text-xs font-medium text-ink-muted">
           Drop-off
-          <input type="date" value={dropOff} onChange={(e) => setDropOff(e.target.value)} className={`mt-1 ${field}`} aria-label="Drop-off date" />
+          <input type="date" value={dropOff} onChange={(e) => setDropOff(e.target.value)} min={today} className={`mt-1 ${field}`} aria-label="Drop-off date" />
         </label>
 
         <label className="block text-xs font-medium text-ink-muted">
           Return
-          <input type="date" value={returnDate} onChange={(e) => setReturnDate(e.target.value)} className={`mt-1 ${field}`} aria-label="Return date" />
+          <input type="date" value={returnDate} onChange={(e) => setReturnDate(e.target.value)} min={dropOff || today} className={`mt-1 ${field}`} aria-label="Return date" />
         </label>
 
         <a
@@ -81,9 +88,13 @@ export function ParkingSearch({ airports }: { airports: SearchAirport[] }) {
         </a>
       </form>
 
+      {dateError ? (
+        <p role="alert" className="text-xs font-medium text-red-600 dark:text-red-400">{dateError}</p>
+      ) : null}
+
       <p className="text-xs text-ink-muted">
         <span className="mr-1 rounded border border-ink-muted/40 px-1 py-0.5 text-[10px] font-semibold uppercase tracking-wide">Ad</span>
-        Opens our travel partner (Holiday Extras) with your search ready — we may earn commission, at no extra cost to you.
+        Opens our travel partner ({link?.partnerName ?? "Holiday Extras"}) with your search ready — we may earn commission, at no extra cost to you.
       </p>
     </section>
   );

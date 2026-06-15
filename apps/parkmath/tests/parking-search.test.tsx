@@ -33,4 +33,8 @@ describe("ParkingSearch", () => {
     expect(html).toContain("Ad");
     expect(html).toContain("commission");
   });
+
+  it("sets a min on the date inputs (no past dates on mobile pickers)", () => {
+    expect(html).toContain('min=');
+  });
 });
