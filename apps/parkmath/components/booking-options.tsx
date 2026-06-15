@@ -1,6 +1,7 @@
-import { resolveSlot, type SlotId } from "../lib/partners";
+"use client";
 
-const PARKING_SLOT: SlotId = "parking-prebook";
+import { useState } from "react";
+import { buildParkingSearchUrl } from "../lib/partners";
 
 export function BookingOptions({
   airportName,
@@ -17,8 +18,20 @@ export function BookingOptions({
   /** Optional: duration in days, shown beside the price figure. */
   days?: number;
 }) {
-  const he = resolveSlot(PARKING_SLOT, airportSlug, officialUrl);
-  const hasAffiliate = he.kind === "affiliate";
+  const [dropOff, setDropOff] = useState("");
+  const [returnDate, setReturnDate] = useState("");
+
+  // Airport-specific affiliate link; dates enhance the href on the client when datePrefill is on,
+  // otherwise it stays on the airport page (reliable baseline). Falls back to the official link only
+  // if the parking slot is somehow inactive.
+  const link = buildParkingSearchUrl({
+    airportSlug,
+    dropOff: dropOff || undefined,
+    returnDate: returnDate || undefined,
+  });
+  const hasAffiliate = link !== null;
+  const affiliateHref = link?.url ?? officialUrl;
+  const partnerName = link?.partnerName ?? "Holiday Extras";
 
   const priceStr =
     price !== undefined && days !== undefined
@@ -26,6 +39,8 @@ export function BookingOptions({
       : price !== undefined
         ? `from £${(price / 100).toFixed(2)}`
         : null;
+
+  const dateField = "min-h-11 w-full rounded-card border border-ink/15 bg-card px-3 text-sm text-ink";
 
   return (
     <section aria-label="Your booking options" className="space-y-4 rounded-card border border-ink/10 bg-surface p-4">
@@ -40,10 +55,32 @@ export function BookingOptions({
         <>
           <div className="rounded-card border border-brand-accent/30 bg-blue-50 dark:bg-brand-accent/[0.08] dark:border-brand-accent/20 p-4">
             <div className="flex items-center justify-between gap-2">
-              <h3 className="font-semibold text-ink">Pre-book &amp; save with {he.partnerName}</h3>
+              <h3 className="font-semibold text-ink">Pre-book &amp; save with {partnerName}</h3>
               <span className="rounded border border-ink-muted/40 px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Ad</span>
             </div>
-            <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-ink">
+
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              <label className="block text-xs font-medium text-ink-muted">
+                Drop-off
+                <input
+                  type="date"
+                  value={dropOff}
+                  onChange={(e) => setDropOff(e.target.value)}
+                  className={`mt-1 ${dateField}`}
+                />
+              </label>
+              <label className="block text-xs font-medium text-ink-muted">
+                Return
+                <input
+                  type="date"
+                  value={returnDate}
+                  onChange={(e) => setReturnDate(e.target.value)}
+                  className={`mt-1 ${dateField}`}
+                />
+              </label>
+            </div>
+
+            <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm text-ink">
               <li>✓ Free cancellation (cancel to arrival)</li>
               <li>✓ No code needed</li>
               <li>✓ Best Price Guaranteed</li>
@@ -60,10 +97,10 @@ export function BookingOptions({
               we show as cheapest.
             </p>
             <a
-              href={he.url}
+              href={affiliateHref}
               rel="sponsored noopener noreferrer"
               target="_blank"
-              className="mt-3 inline-block rounded-card bg-brand-accent px-4 py-2 text-sm font-semibold text-white"
+              className="mt-3 inline-block min-h-11 rounded-card bg-brand-accent px-4 py-2 text-sm font-semibold text-white"
             >
               Book my parking{priceStr ? ` — ${priceStr}` : ""} — free cancellation ↗
             </a>
@@ -79,7 +116,7 @@ export function BookingOptions({
               href={officialUrl}
               rel="noopener noreferrer"
               target="_blank"
-              className="mt-3 inline-block rounded-card border border-brand-accent px-4 py-2 text-sm font-semibold text-brand-accent"
+              className="mt-3 inline-block min-h-11 rounded-card border border-brand-accent px-4 py-2 text-sm font-semibold text-brand-accent"
             >
               Go to airport site ▸
             </a>
@@ -96,7 +133,7 @@ export function BookingOptions({
             href={officialUrl}
             rel="noopener noreferrer"
             target="_blank"
-            className="mt-3 inline-block rounded-card border border-brand-accent px-4 py-2 text-sm font-semibold text-brand-accent"
+            className="mt-3 inline-block min-h-11 rounded-card border border-brand-accent px-4 py-2 text-sm font-semibold text-brand-accent"
           >
             Go to airport site ▸
           </a>
