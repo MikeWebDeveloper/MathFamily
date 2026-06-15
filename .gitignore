@@ -9,3 +9,15 @@ test-results/
 playwright-report/
 *.tsbuildinfo
 .playwright-mcp/
+
+# generated knowledge graph (regenerable via `graphify update .`)
+graphify-out/
+
+# local agent / tooling config (personal, not shared)
+.agents/
+.codex/
+.superpowers/
+.claude/settings.json
+.claude/settings.local.json
+.claude/launch.json
+.claude/commands/
