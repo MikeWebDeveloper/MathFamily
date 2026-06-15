@@ -144,11 +144,12 @@ export function composeParkingUed(
   returnDate?: string,
   fallbackLandingUrl?: string,
 ): { ued: string; datePrefilled: boolean } {
+  const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
   if (!ap) {
     return { ued: fallbackLandingUrl ?? "https://www.holidayextras.com/airport-parking.html", datePrefilled: false };
   }
   const slug = ap.slugOverrides[airportSlug] ?? airportSlug;
-  if (ap.datePrefill && ap.dateUrlTemplate && dropOff && returnDate) {
+  if (ap.datePrefill && ap.dateUrlTemplate && dropOff && returnDate && ISO_DATE.test(dropOff) && ISO_DATE.test(returnDate)) {
     const ued = ap.dateUrlTemplate
       .replace(/\{slug\}/g, slug)
       .replace(/\{dropOff\}/g, formatHeDate(dropOff))
@@ -167,7 +168,8 @@ export function buildParkingSearchUrl(args: {
   dropOff?: string;
   returnDate?: string;
 }): { url: string; partnerName: string; datePrefilled: boolean } | null {
-  const slot = config.slots.find((s) => s.id === "parking-prebook");
+  const parkingSlotId: SlotId = "parking-prebook";
+  const slot = config.slots.find((s) => s.id === parkingSlotId);
   if (!slot?.active) return null;
   for (const partnerId of slot.partnerIds) {
     const partner = config.partners[partnerId];

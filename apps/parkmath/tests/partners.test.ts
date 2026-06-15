@@ -72,7 +72,7 @@ describe("formatHeDate", () => {
 describe("composeParkingUed", () => {
   const ap = {
     urlPattern: "https://www.holidayextras.com/{slug}-airport-parking.html",
-    slugOverrides: { "london-city": "london-city-airport" },
+    slugOverrides: { "londoncity": "london-city" },
     datePrefill: false as boolean,
     dateUrlTemplate: null as string | null,
   };
@@ -84,8 +84,8 @@ describe("composeParkingUed", () => {
   });
 
   it("applies a slug override", () => {
-    const r = composeParkingUed(ap, "london-city");
-    expect(r.ued).toBe("https://www.holidayextras.com/london-city-airport-airport-parking.html");
+    const r = composeParkingUed(ap, "londoncity");
+    expect(r.ued).toBe("https://www.holidayextras.com/london-city-airport-parking.html");
   });
 
   it("uses the dated template when datePrefill is on and both dates are present", () => {
@@ -105,6 +105,13 @@ describe("composeParkingUed", () => {
   it("falls back to the generic landing url when no config is given", () => {
     const r = composeParkingUed(undefined, "gatwick", undefined, undefined, "https://www.holidayextras.com/airport-parking.html");
     expect(r.ued).toBe("https://www.holidayextras.com/airport-parking.html");
+  });
+
+  it("falls back to the airport page when datePrefill is on but a date is malformed", () => {
+    const dated = { ...ap, datePrefill: true, dateUrlTemplate: "https://x/{slug}?a={dropOff}&b={returnDate}" };
+    const r = composeParkingUed(dated, "gatwick", "07/12/2026", "2026-12-12");
+    expect(r.datePrefilled).toBe(false);
+    expect(r.ued).toBe("https://www.holidayextras.com/gatwick-airport-parking.html");
   });
 });
 
@@ -132,6 +139,9 @@ describe("validateSearchDates", () => {
   const today = "2026-06-15";
   it("returns null for a valid future range", () => {
     expect(validateSearchDates("2026-12-07", "2026-12-12", today)).toBeNull();
+  });
+  it("allows a drop-off today", () => {
+    expect(validateSearchDates("2026-06-15", "2026-12-12", today)).toBeNull();
   });
   it("requires both dates", () => {
     expect(validateSearchDates("", "2026-12-12", today)).toBe("Pick both dates");
