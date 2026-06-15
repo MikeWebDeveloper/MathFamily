@@ -13,8 +13,8 @@
       "airportParking": {
         "urlPattern": "https://www.holidayextras.com/{slug}-airport-parking.html",
         "slugOverrides": {},
-        "datePrefill": false,
-        "dateUrlTemplate": null
+        "datePrefill": true,
+        "dateUrlTemplate": "https://www.holidayextras.com/static/?selectProduct=cp&#/categories?lang=en&adults=2&depart={iata}&in={returnDate}&out={dropOff}&park_from=12:00&park_to=13:00&children=0&infants=0&redirectReferal=carpark&from_categories=true"
       }
     },
     "purple-parking": { "name": "Purple Parking", "awinmid": "12028", "active": false },

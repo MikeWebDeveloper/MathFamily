@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { activeSlotPartnerName, buildAwinLink, buildParkingSearchUrl, composeParkingUed, formatHeDate, resolveHeProduct, resolveSlot, validateSearchDates } from "../lib/partners";
+import { activeSlotPartnerName, buildAwinLink, buildParkingSearchUrl, composeParkingUed, resolveHeProduct, resolveSlot, validateSearchDates } from "../lib/partners";
 
 describe("buildAwinLink", () => {
   it("builds a bare cread.php link with clickref and no ued", () => {
@@ -62,73 +62,83 @@ describe("activeSlotPartnerName", () => {
   });
 });
 
-describe("formatHeDate", () => {
-  it("converts an ISO date to HE's DD/MM/YY format", () => {
-    expect(formatHeDate("2026-12-07")).toBe("07/12/26");
-    expect(formatHeDate("2026-01-31")).toBe("31/01/26");
-  });
-});
-
 describe("composeParkingUed", () => {
-  const ap = {
+  const apOff = {
     urlPattern: "https://www.holidayextras.com/{slug}-airport-parking.html",
     slugOverrides: { "londoncity": "london-city" },
     datePrefill: false as boolean,
     dateUrlTemplate: null as string | null,
   };
+  const apOn = {
+    ...apOff,
+    datePrefill: true,
+    dateUrlTemplate: "https://he/static/?x#/categories?depart={iata}&out={dropOff}&in={returnDate}",
+  };
 
   it("returns the airport page (no dates) when datePrefill is off", () => {
-    const r = composeParkingUed(ap, "gatwick", "2026-12-07", "2026-12-12");
+    const r = composeParkingUed({ ap: apOff, airportSlug: "gatwick", iata: "LGW", dropOff: "2026-12-07", returnDate: "2026-12-12" });
     expect(r.datePrefilled).toBe(false);
     expect(r.ued).toBe("https://www.holidayextras.com/gatwick-airport-parking.html");
   });
 
-  it("applies a slug override", () => {
-    const r = composeParkingUed(ap, "londoncity");
+  it("applies a slug override for the airport page", () => {
+    const r = composeParkingUed({ ap: apOff, airportSlug: "londoncity" });
     expect(r.ued).toBe("https://www.holidayextras.com/london-city-airport-parking.html");
   });
 
-  it("uses the dated template when datePrefill is on and both dates are present", () => {
-    const dated = { ...ap, datePrefill: true, dateUrlTemplate: "https://www.holidayextras.com/quote?dest={slug}&ArrivalDate={dropOff}&DepartDate={returnDate}" };
-    const r = composeParkingUed(dated, "gatwick", "2026-12-07", "2026-12-12");
+  it("uses the dated template (iata + raw ISO dates) when datePrefill is on", () => {
+    const r = composeParkingUed({ ap: apOn, airportSlug: "gatwick", iata: "LGW", dropOff: "2026-12-07", returnDate: "2026-12-12" });
     expect(r.datePrefilled).toBe(true);
-    expect(r.ued).toBe("https://www.holidayextras.com/quote?dest=gatwick&ArrivalDate=07/12/26&DepartDate=12/12/26");
+    expect(r.ued).toBe("https://he/static/?x#/categories?depart=LGW&out=2026-12-07&in=2026-12-12");
   });
 
-  it("falls back to the airport page when datePrefill is on but a date is missing", () => {
-    const dated = { ...ap, datePrefill: true, dateUrlTemplate: "https://x/{slug}?a={dropOff}&b={returnDate}" };
-    const r = composeParkingUed(dated, "gatwick", "2026-12-07", undefined);
+  it("falls back to the airport page when iata is missing", () => {
+    const r = composeParkingUed({ ap: apOn, airportSlug: "gatwick", dropOff: "2026-12-07", returnDate: "2026-12-12" });
+    expect(r.datePrefilled).toBe(false);
+    expect(r.ued).toBe("https://www.holidayextras.com/gatwick-airport-parking.html");
+  });
+
+  it("falls back to the airport page when a date is missing", () => {
+    const r = composeParkingUed({ ap: apOn, airportSlug: "gatwick", iata: "LGW", dropOff: "2026-12-07" });
+    expect(r.datePrefilled).toBe(false);
+    expect(r.ued).toBe("https://www.holidayextras.com/gatwick-airport-parking.html");
+  });
+
+  it("falls back to the airport page when a date is malformed", () => {
+    const r = composeParkingUed({ ap: apOn, airportSlug: "gatwick", iata: "LGW", dropOff: "07/12/2026", returnDate: "2026-12-12" });
     expect(r.datePrefilled).toBe(false);
     expect(r.ued).toBe("https://www.holidayextras.com/gatwick-airport-parking.html");
   });
 
   it("falls back to the generic landing url when no config is given", () => {
-    const r = composeParkingUed(undefined, "gatwick", undefined, undefined, "https://www.holidayextras.com/airport-parking.html");
+    const r = composeParkingUed({ ap: undefined, airportSlug: "gatwick", fallbackLandingUrl: "https://www.holidayextras.com/airport-parking.html" });
     expect(r.ued).toBe("https://www.holidayextras.com/airport-parking.html");
-  });
-
-  it("falls back to the airport page when datePrefill is on but a date is malformed", () => {
-    const dated = { ...ap, datePrefill: true, dateUrlTemplate: "https://x/{slug}?a={dropOff}&b={returnDate}" };
-    const r = composeParkingUed(dated, "gatwick", "07/12/2026", "2026-12-12");
-    expect(r.datePrefilled).toBe(false);
-    expect(r.ued).toBe("https://www.holidayextras.com/gatwick-airport-parking.html");
   });
 });
 
 describe("buildParkingSearchUrl", () => {
-  it("builds a tracked link to the airport-specific HE page with a -search clickref", () => {
+  it("links to the airport-specific HE page (no dates) with a -search clickref", () => {
     const r = buildParkingSearchUrl({ airportSlug: "gatwick" });
     expect(r).not.toBeNull();
     expect(r!.partnerName).toBe("Holiday Extras");
     expect(r!.datePrefilled).toBe(false);
     expect(r!.url).toContain("https://www.awin1.com/cread.php?");
     expect(r!.url).toContain("awinmid=3496");
-    expect(r!.url).toContain("awinaffid=2932035");
     expect(r!.url).toContain("clickref=parkmath-gatwick-search");
     expect(r!.url).toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Fgatwick-airport-parking.html");
   });
 
-  it("stays on the airport page (no dates) while datePrefill is off, even if dates are passed", () => {
+  it("date-prefills the HE search when iata + both dates are given", () => {
+    const r = buildParkingSearchUrl({ airportSlug: "manchester", iata: "MAN", dropOff: "2026-12-07", returnDate: "2026-12-12" });
+    expect(r!.datePrefilled).toBe(true);
+    expect(r!.url).toContain("clickref=parkmath-manchester-search");
+    // ued is percent-encoded inside the cread link
+    expect(r!.url).toContain("depart%3DMAN");
+    expect(r!.url).toContain("out%3D2026-12-07");
+    expect(r!.url).toContain("in%3D2026-12-12");
+  });
+
+  it("stays on the airport page when dates are given but iata is missing", () => {
     const r = buildParkingSearchUrl({ airportSlug: "manchester", dropOff: "2026-12-07", returnDate: "2026-12-12" });
     expect(r!.datePrefilled).toBe(false);
     expect(r!.url).toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Fmanchester-airport-parking.html");

@@ -25,12 +25,15 @@ export function ParkingAnswer({
   slug,
   airportName,
   officialUrl,
+  iata,
 }: {
   entries: ParkingAnswerEntry[];
   defaultDays?: number;
   slug: string;
   airportName: string;
   officialUrl: string;
+  /** Optional: IATA code for the airport, forwarded to BookingOptions for HE date-prefill. */
+  iata?: string;
 }) {
   // Clamp: if the requested defaultDays has no entry (e.g. an airport with no 7-day data),
   // fall back to the first covered duration so the segmented control and result stay in sync.
@@ -110,6 +113,7 @@ export function ParkingAnswer({
           officialUrl={officialUrl}
           price={m.cheapest?.totalPence}
           days={currentEntry!.days}
+          iata={iata}
         />
       </div>
     </section>

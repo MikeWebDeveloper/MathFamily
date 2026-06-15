@@ -125,35 +125,28 @@ export function resolveSlot(slotId: SlotId, airportSlug: string, officialUrl: st
   };
 }
 
-/** ISO `YYYY-MM-DD` → Holiday Extras' `DD/MM/YY`. */
-export function formatHeDate(iso: string): string {
-  const parts = iso.split("-");
-  const y = parts[0] ?? "";
-  const m = parts[1] ?? "";
-  const d = parts[2] ?? "";
-  return `${d}/${m}/${y.slice(2)}`;
-}
-
-/** Resolve the `ued` destination for a parking search, applying the fallback ladder:
- *  dated template (if enabled + both dates) → airport page → generic landing. Pure: takes config
- *  explicitly so the dated path is testable without flipping the live `datePrefill` flag. */
-export function composeParkingUed(
-  ap: HeAirportParkingConfig | undefined,
-  airportSlug: string,
-  dropOff?: string,
-  returnDate?: string,
-  fallbackLandingUrl?: string,
-): { ued: string; datePrefilled: boolean } {
-  const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+/** Resolve the `ued` destination for a parking search via the fallback ladder:
+ *  dated template (datePrefill on + template set + iata + both valid ISO dates) → airport page → generic landing.
+ *  Pure: config passed explicitly. Dates are raw ISO (HE's dated URL uses YYYY-MM-DD). */
+export function composeParkingUed(args: {
+  ap: HeAirportParkingConfig | undefined;
+  airportSlug: string;
+  iata?: string;
+  dropOff?: string;
+  returnDate?: string;
+  fallbackLandingUrl?: string;
+}): { ued: string; datePrefilled: boolean } {
+  const { ap, airportSlug, iata, dropOff, returnDate, fallbackLandingUrl } = args;
   if (!ap) {
     return { ued: fallbackLandingUrl ?? "https://www.holidayextras.com/airport-parking.html", datePrefilled: false };
   }
+  const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
   const slug = ap.slugOverrides[airportSlug] ?? airportSlug;
-  if (ap.datePrefill && ap.dateUrlTemplate && dropOff && returnDate && ISO_DATE.test(dropOff) && ISO_DATE.test(returnDate)) {
+  if (ap.datePrefill && ap.dateUrlTemplate && iata && dropOff && returnDate && ISO_DATE.test(dropOff) && ISO_DATE.test(returnDate)) {
     const ued = ap.dateUrlTemplate
-      .replace(/\{slug\}/g, slug)
-      .replace(/\{dropOff\}/g, formatHeDate(dropOff))
-      .replace(/\{returnDate\}/g, formatHeDate(returnDate));
+      .replace(/\{iata\}/g, iata)
+      .replace(/\{dropOff\}/g, dropOff)
+      .replace(/\{returnDate\}/g, returnDate);
     return { ued, datePrefilled: true };
   }
   return { ued: ap.urlPattern.replace(/\{slug\}/g, slug), datePrefilled: false };
@@ -165,6 +158,7 @@ export function composeParkingUed(
  *  if the parking slot is inactive or has no active partner. */
 export function buildParkingSearchUrl(args: {
   airportSlug: string;
+  iata?: string;
   dropOff?: string;
   returnDate?: string;
 }): { url: string; partnerName: string; datePrefilled: boolean } | null {
@@ -174,13 +168,14 @@ export function buildParkingSearchUrl(args: {
   for (const partnerId of slot.partnerIds) {
     const partner = config.partners[partnerId];
     if (partner?.active && partner.awinmid) {
-      const { ued, datePrefilled } = composeParkingUed(
-        partner.airportParking,
-        args.airportSlug,
-        args.dropOff,
-        args.returnDate,
-        partner.landingUrl,
-      );
+      const { ued, datePrefilled } = composeParkingUed({
+        ap: partner.airportParking,
+        airportSlug: args.airportSlug,
+        iata: args.iata,
+        dropOff: args.dropOff,
+        returnDate: args.returnDate,
+        fallbackLandingUrl: partner.landingUrl,
+      });
       return {
         url: buildAwinLink({
           awinmid: partner.awinmid,

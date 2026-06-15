@@ -3,7 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { BookingOptions } from "../components/booking-options";
 
 const html = renderToStaticMarkup(
-  <BookingOptions airportName="Gatwick" airportSlug="gatwick" officialUrl="https://www.gatwickairport.com/parking" />
+  <BookingOptions airportName="Gatwick" airportSlug="gatwick" officialUrl="https://www.gatwickairport.com/parking" iata="LGW" />
 );
 
 const htmlWithPrice = renderToStaticMarkup(
@@ -13,6 +13,7 @@ const htmlWithPrice = renderToStaticMarkup(
     officialUrl="https://www.gatwickairport.com/parking"
     price={4200}
     days={7}
+    iata="LGW"
   />
 );
 

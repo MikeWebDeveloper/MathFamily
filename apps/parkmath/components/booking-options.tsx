@@ -9,6 +9,7 @@ export function BookingOptions({
   officialUrl,
   price,
   days,
+  iata,
 }: {
   airportName: string;
   airportSlug: string;
@@ -17,6 +18,8 @@ export function BookingOptions({
   price?: number;
   /** Optional: duration in days, shown beside the price figure. */
   days?: number;
+  /** Optional: IATA code for the airport, used for HE date-prefill deep links. */
+  iata?: string;
 }) {
   const [dropOff, setDropOff] = useState("");
   const [returnDate, setReturnDate] = useState("");
@@ -30,6 +33,7 @@ export function BookingOptions({
   // if the parking slot is somehow inactive.
   const link = buildParkingSearchUrl({
     airportSlug,
+    iata,
     dropOff: datesValid ? dropOff : undefined,
     returnDate: datesValid ? returnDate : undefined,
   });

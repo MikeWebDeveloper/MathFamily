@@ -35,6 +35,7 @@ export function ParkingSearch({ airports }: { airports: SearchAirport[] }) {
   const link = matched
     ? buildParkingSearchUrl({
         airportSlug: matched.slug,
+        iata: matched.iata,
         dropOff: datesValid ? dropOff : undefined,
         returnDate: datesValid ? returnDate : undefined,
       })
