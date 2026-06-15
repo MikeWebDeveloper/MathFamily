@@ -11,12 +11,24 @@ export interface ResolvedSlot {
   disclosureRequired: boolean;
 }
 
+export interface HeAirportParkingConfig {
+  /** Airport-page URL with a `{slug}` placeholder, e.g. ".../{slug}-airport-parking.html". */
+  urlPattern: string;
+  /** Map our airport slug → HE's page slug, for airports whose HE URL differs. */
+  slugOverrides: Record<string, string>;
+  /** When false, dates are ignored and we deep-link to the airport page (reliable baseline). */
+  datePrefill: boolean;
+  /** Dated-search URL with `{slug}`/`{dropOff}`/`{returnDate}` placeholders, or null until confirmed. */
+  dateUrlTemplate: string | null;
+}
+
 interface PartnerConfig {
   name: string;
   awinmid: string | null;
   active: boolean;
   landingUrl?: string;
   products?: Record<string, { url: string; label: string }>;
+  airportParking?: HeAirportParkingConfig;
 }
 
 interface SlotConfig {
@@ -111,4 +123,34 @@ export function resolveSlot(slotId: SlotId, airportSlug: string, officialUrl: st
     partnerName: null,
     disclosureRequired: false,
   };
+}
+
+/** ISO `YYYY-MM-DD` → Holiday Extras' `DD/MM/YY`. */
+export function formatHeDate(iso: string): string {
+  const [y, m, d] = iso.split("-");
+  return `${d}/${m}/${y.slice(2)}`;
+}
+
+/** Resolve the `ued` destination for a parking search, applying the fallback ladder:
+ *  dated template (if enabled + both dates) → airport page → generic landing. Pure: takes config
+ *  explicitly so the dated path is testable without flipping the live `datePrefill` flag. */
+export function composeParkingUed(
+  ap: HeAirportParkingConfig | undefined,
+  airportSlug: string,
+  dropOff?: string,
+  returnDate?: string,
+  fallbackLandingUrl?: string,
+): { ued: string; datePrefilled: boolean } {
+  if (!ap) {
+    return { ued: fallbackLandingUrl ?? "https://www.holidayextras.com/airport-parking.html", datePrefilled: false };
+  }
+  const slug = ap.slugOverrides[airportSlug] ?? airportSlug;
+  if (ap.datePrefill && ap.dateUrlTemplate && dropOff && returnDate) {
+    const ued = ap.dateUrlTemplate
+      .replace(/\{slug\}/g, slug)
+      .replace(/\{dropOff\}/g, formatHeDate(dropOff))
+      .replace(/\{returnDate\}/g, formatHeDate(returnDate));
+    return { ued, datePrefilled: true };
+  }
+  return { ued: ap.urlPattern.replace(/\{slug\}/g, slug), datePrefilled: false };
 }

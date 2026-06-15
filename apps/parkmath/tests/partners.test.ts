@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { activeSlotPartnerName, buildAwinLink, resolveHeProduct, resolveSlot } from "../lib/partners";
+import { activeSlotPartnerName, buildAwinLink, composeParkingUed, formatHeDate, resolveHeProduct, resolveSlot } from "../lib/partners";
 
 describe("buildAwinLink", () => {
   it("builds a bare cread.php link with clickref and no ued", () => {
@@ -59,5 +59,51 @@ describe("activeSlotPartnerName", () => {
   });
   it("returns null for an inactive slot", () => {
     expect(activeSlotPartnerName("lounge-membership")).toBeNull();
+  });
+});
+
+describe("formatHeDate", () => {
+  it("converts an ISO date to HE's DD/MM/YY format", () => {
+    expect(formatHeDate("2026-12-07")).toBe("07/12/26");
+    expect(formatHeDate("2026-01-31")).toBe("31/01/26");
+  });
+});
+
+describe("composeParkingUed", () => {
+  const ap = {
+    urlPattern: "https://www.holidayextras.com/{slug}-airport-parking.html",
+    slugOverrides: { "london-city": "london-city-airport" },
+    datePrefill: false as boolean,
+    dateUrlTemplate: null as string | null,
+  };
+
+  it("returns the airport page (no dates) when datePrefill is off", () => {
+    const r = composeParkingUed(ap, "gatwick", "2026-12-07", "2026-12-12");
+    expect(r.datePrefilled).toBe(false);
+    expect(r.ued).toBe("https://www.holidayextras.com/gatwick-airport-parking.html");
+  });
+
+  it("applies a slug override", () => {
+    const r = composeParkingUed(ap, "london-city");
+    expect(r.ued).toBe("https://www.holidayextras.com/london-city-airport-airport-parking.html");
+  });
+
+  it("uses the dated template when datePrefill is on and both dates are present", () => {
+    const dated = { ...ap, datePrefill: true, dateUrlTemplate: "https://www.holidayextras.com/quote?dest={slug}&ArrivalDate={dropOff}&DepartDate={returnDate}" };
+    const r = composeParkingUed(dated, "gatwick", "2026-12-07", "2026-12-12");
+    expect(r.datePrefilled).toBe(true);
+    expect(r.ued).toBe("https://www.holidayextras.com/quote?dest=gatwick&ArrivalDate=07/12/26&DepartDate=12/12/26");
+  });
+
+  it("falls back to the airport page when datePrefill is on but a date is missing", () => {
+    const dated = { ...ap, datePrefill: true, dateUrlTemplate: "https://x/{slug}?a={dropOff}&b={returnDate}" };
+    const r = composeParkingUed(dated, "gatwick", "2026-12-07", undefined);
+    expect(r.datePrefilled).toBe(false);
+    expect(r.ued).toBe("https://www.holidayextras.com/gatwick-airport-parking.html");
+  });
+
+  it("falls back to the generic landing url when no config is given", () => {
+    const r = composeParkingUed(undefined, "gatwick", undefined, undefined, "https://www.holidayextras.com/airport-parking.html");
+    expect(r.ued).toBe("https://www.holidayextras.com/airport-parking.html");
   });
 });
