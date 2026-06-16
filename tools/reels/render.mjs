@@ -8,7 +8,8 @@ import { fileURLToPath } from "node:url";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = process.env.RENDER_DIR || here;
-const scriptPath = process.argv[2];
+// Tolerate the `pnpm run render -- <path>` form, which forwards a literal "--" as an arg.
+const scriptPath = process.argv.slice(2).find((a) => a !== "--");
 if (!scriptPath) { console.error("usage: node render.mjs <reelscript.json>"); process.exit(1); }
 
 const script = JSON.parse(readFileSync(scriptPath, "utf8"));
