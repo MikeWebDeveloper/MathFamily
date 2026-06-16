@@ -31,6 +31,11 @@ jobs:
 
       - run: pnpm turbo run test
 
+      # tools/* are plain Node ESM helpers (not turbo packages); run their node:test suites directly.
+      # Glob form is required — the bare-directory form (node --test tools/watchdog/) is a no-op on Node 22.
+      - name: tools unit tests (watchdog + awin)
+        run: node --test tools/watchdog/*.test.mjs tools/awin/*.test.mjs
+
       # Build catches Next.js/route regressions. The esbuild deadlock noted in
       # docs/engineering-notes.md is specific to the TB4 APFS volume — CI runs on
       # Ubuntu, so it builds cleanly. NEXT_PUBLIC_* vars fall back to localhost.

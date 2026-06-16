@@ -5,3 +5,8 @@ email-digest-*.md
 forum-drafts-*.md
 # Your local lead scratchpad — paste F5Bot alerts / thread URLs here.
 forum-leads.md
+# Content ledger — append-only local memory (what's generated/posted) for attribution + cross-run
+# dedupe. Persists locally across runs; see ledger.example.jsonl for the shape.
+ledger.jsonl
+# Loop-digest output the generator reads to bias format selection (derived; local).
+recommendations.json

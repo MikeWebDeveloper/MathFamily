@@ -32,7 +32,7 @@ describe("BookingOptions", () => {
     expect(html).toContain("https://www.awin1.com/cread.php?");
     expect(html).toContain("awinmid=3496");
     expect(html).toContain("clickref=parkmath-gatwick");
-    expect(html).toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Fairport-parking.html");
+    expect(html).toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Fgatwick-airport-parking.html");
     expect(html).toContain("Book my parking");
     expect(html).toContain('rel="sponsored noopener noreferrer"');
   });
