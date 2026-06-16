@@ -78,7 +78,7 @@ export function LoungeAnswer({ walkInPence, tiers, airportName, defaultVisits = 
               ) : null}
               Pay as you go
             </span>
-            <span className="mf-num shrink-0 text-lg font-bold text-brand">
+            <span className="mf-num shrink-0 text-lg font-bold text-brand-strong">
               {formatPence(r.payAsYouGoPence)}/yr
             </span>
           </div>
@@ -103,7 +103,7 @@ export function LoungeAnswer({ walkInPence, tiers, airportName, defaultVisits = 
                   ) : null}
                   Priority Pass {t.tier}
                 </span>
-                <span className={`mf-num shrink-0 text-lg font-bold ${isBest ? "text-brand" : "text-ink-muted"}`}>
+                <span className={`mf-num shrink-0 text-lg font-bold ${isBest ? "text-brand-strong" : "text-ink-muted"}`}>
                   {formatPence(t.totalPence)}/yr
                 </span>
               </div>

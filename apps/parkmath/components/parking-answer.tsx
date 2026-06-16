@@ -86,7 +86,7 @@ export function ParkingAnswer({
                   ) : null}
                   <span className="min-w-0">{o.name}</span>
                 </span>
-                <span className="mf-num shrink-0 text-lg font-bold text-brand">{formatPence(o.totalPence)}</span>
+                <span className="mf-num shrink-0 text-lg font-bold text-brand-strong">{formatPence(o.totalPence)}</span>
               </div>
             ))}
           </div>

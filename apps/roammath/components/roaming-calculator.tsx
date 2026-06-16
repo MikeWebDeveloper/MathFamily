@@ -52,7 +52,7 @@ export function RoamingCalculator({
             <span className="font-medium text-ink"><AnimatedNumber pence={r.esimChoice.totalPence} render={(p) => (p === null ? "—" : formatPence(p))} /></span>
           </p>
         ) : null}
-        <p className="mt-2 rounded-lg border-t border-ink/10 bg-brand-accent/[0.07] p-3 text-sm font-semibold text-brand">
+        <p className="mt-2 rounded-lg border-t border-ink/10 bg-brand-accent/[0.07] p-3 text-sm font-semibold text-brand-strong">
           {r.verdict === "esim"
             ? `eSIM wins — saves ${formatPence(r.savingsPence)} vs the cheapest network charge.`
             : r.verdict === "network"

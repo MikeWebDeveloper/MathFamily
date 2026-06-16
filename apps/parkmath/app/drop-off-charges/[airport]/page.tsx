@@ -114,7 +114,7 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
             </span>
           }
         />
-        <UkMap markers={[{ lat: airport.lat, lng: airport.lng, active: true }]} className="hidden h-[160px] w-auto self-center text-brand sm:block" />
+        <UkMap markers={[{ lat: airport.lat, lng: airport.lng, active: true }]} className="hidden h-[160px] w-auto self-center text-brand-strong sm:block" />
       </div>
       <MiniAnswerBar
         summary={`${airport.iata} drop-off · ${record.isFree ? "Free" : record.feeSummary}`}

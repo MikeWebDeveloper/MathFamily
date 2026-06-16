@@ -13,6 +13,13 @@
   --color-ink: #0f172a;
   --color-ink-muted: #475569;
 
+  /* Brand as a readable FOREGROUND (text / numbers / chips sitting on a surface).
+     Stays the brand colour in light; lightens in dark so brand-navy never goes
+     invisible on a dark surface. Derived from --color-brand so RoamMath's teal
+     override carries through. Use this for brand-coloured TEXT; keep bg-brand /
+     the navy hero card on the raw --color-brand. */
+  --color-brand-strong: var(--color-brand);
+
   /* Typography: IBM Plex Sans (UI) + IBM Plex Mono (verified numbers) */
   --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
@@ -37,6 +44,13 @@
   --shadow-card: 0 1px 2px rgb(15 23 42 / 0.06), 0 8px 24px -6px rgb(15 23 42 / 0.08);
   --shadow-raised: 0 2px 4px rgb(15 23 42 / 0.08), 0 16px 36px -8px rgb(15 23 42 / 0.16);
   --shadow-hero: 0 8px 28px -6px rgb(10 37 64 / 0.45);
+
+  /* Modern feature surfaces — a friendlier 20px radius + softer, more diffuse
+     elevation for bento tiles and the command search. Dense tables/inputs stay
+     at --radius-card (12px). Exposed as `rounded-feature` / used via inline var. */
+  --radius-feature: 1.25rem; /* 20px */
+  --shadow-soft: 0 2px 8px -2px rgb(15 23 42 / 0.06), 0 14px 36px -10px rgb(15 23 42 / 0.12);
+  --shadow-soft-hover: 0 4px 12px -2px rgb(15 23 42 / 0.08), 0 22px 48px -12px rgb(15 23 42 / 0.18);
 }
 
 /* ── Dark mode token overrides ──────────────────────────────────────────────
@@ -57,10 +71,15 @@
   --color-ink-muted: #94a3b8;
   --color-positive: #4ade80;
   --color-warning: #fbbf24;
+  /* Lighten brand-as-foreground so navy/teal text reads on dark surfaces
+     (≈5.7:1 on --color-card). bg-brand and the navy hero card keep raw brand. */
+  --color-brand-strong: color-mix(in srgb, var(--color-brand) 42%, white);
   /* shadows are invisible on dark — use a subtle inset light ring */
   --shadow-card: 0 0 0 1px rgb(148 163 184 / 0.12), 0 2px 8px -2px rgb(0 0 0 / 0.4);
   --shadow-raised: 0 0 0 1px rgb(148 163 184 / 0.15), 0 4px 16px -4px rgb(0 0 0 / 0.5);
   --shadow-hero: 0 0 0 1px rgb(148 163 184 / 0.18), 0 8px 28px -6px rgb(0 0 0 / 0.6);
+  --shadow-soft: 0 0 0 1px rgb(148 163 184 / 0.12), 0 8px 28px -8px rgb(0 0 0 / 0.5);
+  --shadow-soft-hover: 0 0 0 1px rgb(148 163 184 / 0.16), 0 12px 36px -10px rgb(0 0 0 / 0.6);
 }
 
 /* ── Dark overrides for decorative classes using hardcoded rgb(15 23 42 / α) ──
@@ -142,6 +161,30 @@
     var(--shadow-card);
 }
 @media (prefers-reduced-motion: reduce) { .mf-glow-winner { box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--color-brand-accent) 60%, transparent), var(--shadow-card); } }
+
+/* ── Modern feature surface: 20px radius + diffuse soft shadow.
+   For bento tiles and the command search. Combine with .mf-edge for the lit
+   hairline (its ::before inherits this radius). Dense tables keep .rounded-card. ── */
+.mf-card-lg {
+  border-radius: var(--radius-feature);
+  background: var(--color-card);
+  box-shadow: var(--shadow-soft);
+}
+/* Soft hover lift for clickable feature tiles — transform/shadow only, pointer
+   devices only, disabled under reduced motion (content never depends on it). */
+.mf-soft-lift {
+  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 180ms ease;
+}
+@media (hover: hover) {
+  .mf-soft-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-soft-hover);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mf-soft-lift { transition: none; }
+  .mf-soft-lift:hover { transform: none; }
+}
 
 /* ── Gradient hairline edge: card looks lit from above ──
    Mutually exclusive with .mf-edge-shine (both render via ::before). */
