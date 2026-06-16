@@ -36,13 +36,14 @@ def main() -> int:
     with open(script_path) as f:
         script = json.load(f)
     out_dir = os.path.dirname(os.path.abspath(script_path))
-    out_wav = os.path.join(out_dir, "voice.wav")
+    base = os.path.splitext(os.path.basename(script_path))[0]  # per-reel name, e.g. parkmath-gatwick
+    out_wav = os.path.join(out_dir, base + ".wav")
     engine = os.environ.get("REELS_TTS", "kokoro")
     synth(engine, script["narration"], out_wav)
     timing = {"engine": engine, "audioDurationMs": wav_duration_ms(out_wav)}
-    with open(os.path.join(out_dir, "timing.json"), "w") as f:
+    with open(os.path.join(out_dir, base + ".timing.json"), "w") as f:
         json.dump(timing, f)
-    print(f"voice.wav ({timing['audioDurationMs']}ms) + timing.json written to {out_dir}")
+    print(f"{base}.wav ({timing['audioDurationMs']}ms) + {base}.timing.json written to {out_dir}")
     return 0
 
 if __name__ == "__main__":

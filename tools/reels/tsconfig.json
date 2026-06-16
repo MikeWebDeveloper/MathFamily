@@ -1,1 +1,1 @@
-{ "extends": "@mathfamily/config/tsconfig.base.json", "compilerOptions": { "allowJs": true }, "include": ["src", "tests", "render.mjs", "remotion.config.ts"] }
+{ "extends": "@mathfamily/config/tsconfig.base.json", "compilerOptions": { "allowJs": true }, "include": ["src", "tests", "render.mjs", "still.mjs", "remotion.config.ts"] }
