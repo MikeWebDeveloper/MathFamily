@@ -251,12 +251,18 @@ importers:
       '@remotion/bundler':
         specifier: ^4.0.0
         version: 4.0.477(@swc/helpers@0.5.15)(lightningcss@1.32.0)(postcss@8.5.15)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@remotion/captions':
+        specifier: ^4.0.477
+        version: 4.0.477
       '@remotion/cli':
         specifier: ^4.0.0
         version: 4.0.477(@swc/helpers@0.5.15)(lightningcss@1.32.0)(postcss@8.5.15)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@remotion/google-fonts':
         specifier: ^4.0.477
         version: 4.0.477(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@remotion/install-whisper-cpp':
+        specifier: ^4.0.477
+        version: 4.0.477
       '@remotion/renderer':
         specifier: ^4.0.0
         version: 4.0.477(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -1124,6 +1130,9 @@ packages:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
 
+  '@remotion/captions@4.0.477':
+    resolution: {integrity: sha512-tqMnqn7XBUqHe5jDYjJNzUdGk5dr/NqbB2iNDOI+8vZndSNtl6/mpIf48IX0U+y9wPwvjElbXPOpluWXw+i9Zg==}
+
   '@remotion/cli@4.0.477':
     resolution: {integrity: sha512-Owf4TZUxPJhvO81eS/TEtM1n+4QL3NUlc3FNXkU2MA4b8ucQCH/VaTRKiHGJG83bFhk3+OVmfl8F/YZox5pSdw==}
     hasBin: true
@@ -1172,6 +1181,9 @@ packages:
 
   '@remotion/google-fonts@4.0.477':
     resolution: {integrity: sha512-f0fx3yJYBICiEj7yaa7ktA95kYj+WkqfPSAuZIlwByHXMcMh8MH/ujvfS5xeqKv7WWOXnb7aq6qu1xO6mt46Fg==}
+
+  '@remotion/install-whisper-cpp@4.0.477':
+    resolution: {integrity: sha512-RsP4hHofQ8u9b5EUDmmfNoBawwWE67SxNp3JKBptoPcVrii6GOB3+kMpPl+AylDSy0kljRc1CS/Kik2LTlBWZA==}
 
   '@remotion/licensing@4.0.477':
     resolution: {integrity: sha512-Ayor3/+CyXkyYUvzxEFcTVWe46+ld1i9jyrmZY9OqO77gCQ3khOAivjNsI/4foFgnfb7aRNvcCBYr1D9iZLn/w==}
@@ -3491,6 +3503,8 @@ snapshots:
       react-dom: 19.2.7(react@19.2.7)
       remotion: 4.0.477(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
 
+  '@remotion/captions@4.0.477': {}
+
   '@remotion/cli@4.0.477(@swc/helpers@0.5.15)(lightningcss@1.32.0)(postcss@8.5.15)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
       '@remotion/bundler': 4.0.477(@swc/helpers@0.5.15)(lightningcss@1.32.0)(postcss@8.5.15)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -3551,6 +3565,10 @@ snapshots:
     transitivePeerDependencies:
       - react
       - react-dom
+
+  '@remotion/install-whisper-cpp@4.0.477':
+    dependencies:
+      '@remotion/captions': 4.0.477
 
   '@remotion/licensing@4.0.477': {}
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build every reel in a review folder: voice-over (Kokoro/MLX) -> MP4 -> PNG still.
+# Build every reel in a review folder: voice-over (Kokoro/MLX) -> captions -> MP4 -> PNG still.
 # Usage: REELS_DATE=2026-06-16 tools/reels/build-week.sh
 # Env: REELS_PYTHON (default ~/reels-venv312/bin/python), REELS_TTS (default kokoro).
 set -euo pipefail
@@ -12,9 +12,10 @@ export REELS_TTS="${REELS_TTS:-kokoro}"
 
 shopt -s nullglob
 for f in "$DIR"/parkmath-*.json; do
-  case "$f" in *.timing.json) continue ;; esac
+  case "$f" in *.timing.json|*.captions.json) continue ;; esac
   echo "=== $(basename "$f") ==="
   "$PY" "$ROOT/tools/reels/tts/synth.py" "$f"
+  node "$ROOT/tools/reels/transcribe.mjs" "$f"
   node "$ROOT/tools/reels/render.mjs" "$f"
   node "$ROOT/tools/reels/still.mjs" "$f"
 done

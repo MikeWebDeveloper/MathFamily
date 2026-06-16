@@ -23,7 +23,7 @@ export const RemotionRoot: React.FC = () => (
     fps={FPS}
     width={1080}
     height={1920}
-    defaultProps={{ script: placeholder, audioDurationMs: 6000, audioSrc: undefined }}
+    defaultProps={{ script: placeholder, audioDurationMs: 6000, audioSrc: undefined, captions: [] }}
     calculateMetadata={({ props }) => {
       return { durationInFrames: Math.max(1, Math.round((props.audioDurationMs / 1000) * FPS)) };
     }}

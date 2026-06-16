@@ -5,8 +5,9 @@ import { buildTimeline, type TimedScene } from "../timeline";
 import { THEME, SANS, MONO, type BrandTheme } from "./theme";
 import { BrandBackdrop, Wordmark, ProgressBar, Ticket, Stamp, Pill, Glyph } from "./graphics";
 import { Skyline, Barrier } from "./illustrations";
+import { Captions, type Caption } from "./Captions";
 
-export type ReelProps = { script: ReelScript; audioDurationMs: number; audioSrc?: string };
+export type ReelProps = { script: ReelScript; audioDurationMs: number; audioSrc?: string; captions?: Caption[] };
 
 const msToFrames = (ms: number, fps: number) => Math.round((ms / 1000) * fps);
 const BRAND_NAME: Record<ReelScript["brand"], string> = { parkmath: "ParkMath", roammath: "RoamMath" };
@@ -106,7 +107,7 @@ const SceneView: React.FC<{ scene: TimedScene; script: ReelScript; theme: BrandT
   );
 };
 
-export const Reel: React.FC<ReelProps> = ({ script, audioDurationMs, audioSrc }) => {
+export const Reel: React.FC<ReelProps> = ({ script, audioDurationMs, audioSrc, captions }) => {
   const { fps, durationInFrames } = useVideoConfig();
   const frame = useCurrentFrame();
   const theme = THEME[script.brand];
@@ -122,6 +123,7 @@ export const Reel: React.FC<ReelProps> = ({ script, audioDurationMs, audioSrc })
           <SceneView scene={scene} script={script} theme={theme} />
         </Sequence>
       ))}
+      {captions && captions.length ? <Captions captions={captions} highlight={theme.accentBright} /> : null}
       <ProgressBar theme={theme} progress={frame / Math.max(1, durationInFrames)} />
     </AbsoluteFill>
   );
