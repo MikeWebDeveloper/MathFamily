@@ -7,11 +7,16 @@ function isEligible(r: DropOffRecord): boolean {
   return !r.isFree && r.bands.length > 0 && r.freeAlternative !== null;
 }
 
+/** Eligible drop-off records (charge a fee + have a free alternative), highest first-band fee first. */
+export function eligibleShockFeeRecords(records: DropOffRecord[]): DropOffRecord[] {
+  return records.filter(isEligible).sort((a, b) => b.bands[0]!.totalPence - a.bands[0]!.totalPence);
+}
+
 /** The biggest first-band fee makes the best "shock". Throws if nothing is eligible. */
 export function pickShockFeeRecord(records: DropOffRecord[]): DropOffRecord {
-  const eligible = records.filter(isEligible);
+  const eligible = eligibleShockFeeRecords(records);
   if (eligible.length === 0) throw new Error("no eligible drop-off record for a shock-fee reel");
-  return eligible.reduce((a, b) => (b.bands[0]!.totalPence > a.bands[0]!.totalPence ? b : a));
+  return eligible[0]!;
 }
 
 /** Per-minute rate, the integer pence figure shown on screen (≥1 so we never say "0p"). */

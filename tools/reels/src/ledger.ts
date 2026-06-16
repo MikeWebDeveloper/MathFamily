@@ -78,10 +78,13 @@ export function appendEntries(path: string, entries: LedgerEntry[]): void {
   appendFileSync(path, entries.map((e) => JSON.stringify(e)).join("\n") + "\n");
 }
 
-/** Slugs generated within the last `days` days (relative to `now`) — for cross-run dedupe. */
-export function recentSlugs(entries: LedgerEntry[], days: number, now: string): Set<string> {
+/** Ledger entries generated within the last `days` days (relative to `now`). */
+export function recentEntries(entries: LedgerEntry[], days: number, now: string): LedgerEntry[] {
   const cutoff = new Date(`${now}T00:00:00Z`).getTime() - days * 86_400_000;
-  return new Set(
-    entries.filter((e) => new Date(`${e.date}T00:00:00Z`).getTime() >= cutoff).map((e) => e.slug)
-  );
+  return entries.filter((e) => new Date(`${e.date}T00:00:00Z`).getTime() >= cutoff);
+}
+
+/** Slugs generated within the last `days` days — for cross-run dedupe. */
+export function recentSlugs(entries: LedgerEntry[], days: number, now: string): Set<string> {
+  return new Set(recentEntries(entries, days, now).map((e) => e.slug));
 }

@@ -2,47 +2,66 @@ import { loadAirports, loadDropOffDataset, loadParkingDataset, recentNews } from
 import type { Airport } from "@mathfamily/data";
 import { ReelScriptSchema } from "./schema";
 import type { ReelScript } from "./schema";
-import { pickShockFeeRecord, buildShockFeeReel } from "./formats/shock-fee";
+import { eligibleShockFeeRecords, buildShockFeeReel } from "./formats/shock-fee";
 import { gatePrebookSaving, buildHowToReel } from "./formats/how-to";
 import { buildNewsReel } from "./formats/news";
 
 const bySlug = (airports: Airport[]) => new Map(airports.map((a) => [a.slug, a]));
 const DURATIONS = [7, 14, 3];
+const DEFAULT_ORDER = ["shock-fee", "how-to", "news"];
 
-/** Produce up to `count` reels rotating shock-fee → how-to → news, skipping any slot that
- *  has no verified data (never fabricate to fill a slot — content-factory hard rule).
- *  `excludeSlugs` seeds the used set so recently-covered airports (from the ledger) aren't repeated. */
-export function buildWeeklyBatch(count = 5, excludeSlugs: Set<string> = new Set()): ReelScript[] {
+/** Produce up to `count` reels, round-robin across formats so the feed stays varied. Skips any slot
+ *  with no verified data (never fabricate). `excludeSlugs` (recent ledger slugs) + within-run dedupe
+ *  prevent repeats; `preferFormats` (from the loop digest) reorders which format leads. */
+export function buildWeeklyBatch(
+  count = 5,
+  excludeSlugs: Set<string> = new Set(),
+  preferFormats: string[] = []
+): ReelScript[] {
   const airports = bySlug(loadAirports());
-  const out: ReelScript[] = [];
   const usedSlugs = new Set<string>(excludeSlugs);
 
-  // shock-fee: highest fee not already used
-  try {
-    const recs = loadDropOffDataset().records.filter((r) => !usedSlugs.has(r.airportSlug));
-    const rec = pickShockFeeRecord(recs);
-    const air = airports.get(rec.airportSlug);
-    if (air) { out.push(buildShockFeeReel(rec, air)); usedSlugs.add(rec.airportSlug); }
-  } catch { /* no eligible record — skip the slot, never fabricate */ }
+  // Pre-build every candidate reel per format (cheap, pure builders), best-first within each format.
+  const candidates: Record<string, ReelScript[]> = {
+    "shock-fee": eligibleShockFeeRecords(loadDropOffDataset().records)
+      .map((r) => {
+        const a = airports.get(r.airportSlug);
+        return a ? buildShockFeeReel(r, a) : null;
+      })
+      .filter((x): x is ReelScript => x !== null),
+    "how-to": loadParkingDataset()
+      .records.map((r) => {
+        const a = airports.get(r.airportSlug);
+        const days = DURATIONS.find((d) => gatePrebookSaving(r, d) !== null);
+        return a && days ? buildHowToReel(r, a, days) : null;
+      })
+      .filter((x): x is ReelScript => x !== null),
+    news: recentNews(10)
+      .filter((i) => i.change)
+      .map((i) => buildNewsReel(i, i.airportSlug ? airports.get(i.airportSlug) ?? null : null))
+  };
 
-  // how-to: first airport+duration with a real saving
-  for (const rec of loadParkingDataset().records) {
-    if (out.length >= count) break;
-    if (usedSlugs.has(rec.airportSlug)) continue;
-    const air = airports.get(rec.airportSlug);
-    const days = DURATIONS.find((d) => gatePrebookSaving(rec, d) !== null);
-    if (air && days) { out.push(buildHowToReel(rec, air, days)); usedSlugs.add(rec.airportSlug); }
+  const order = [
+    ...preferFormats.filter((f) => candidates[f]),
+    ...DEFAULT_ORDER.filter((f) => !preferFormats.includes(f))
+  ];
+
+  const out: ReelScript[] = [];
+  let progressed = true;
+  while (out.length < count && progressed) {
+    progressed = false;
+    for (const f of order) {
+      if (out.length >= count) break;
+      const list = candidates[f]!;
+      while (list.length) {
+        const reel = list.shift()!;
+        if (usedSlugs.has(reel.slug)) continue;
+        out.push(reel);
+        usedSlugs.add(reel.slug);
+        progressed = true;
+        break;
+      }
+    }
   }
-
-  // news: recent items with a quantified change (skip airports already used this run / recently)
-  for (const item of recentNews(10)) {
-    if (out.length >= count) break;
-    if (!item.change) continue;
-    if (item.airportSlug && usedSlugs.has(item.airportSlug)) continue;
-    const air = item.airportSlug ? airports.get(item.airportSlug) ?? null : null;
-    out.push(buildNewsReel(item, air));
-    if (item.airportSlug) usedSlugs.add(item.airportSlug);
-  }
-
   return out.slice(0, count).map((s) => ReelScriptSchema.parse(s));
 }

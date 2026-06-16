@@ -7,6 +7,7 @@
     "test": "vitest run tests",
     "typecheck": "tsc --noEmit",
     "generate": "tsx src/cli.ts",
+    "digest": "tsx src/digest-cli.ts",
     "render": "node render.mjs",
     "studio": "remotion studio"
   },
