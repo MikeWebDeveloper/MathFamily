@@ -9,6 +9,7 @@ describe("SiteAnalytics", () => {
   it("renders nothing when no analytics env vars are set", () => {
     vi.stubEnv("NEXT_PUBLIC_CF_BEACON_TOKEN", "");
     vi.stubEnv("NEXT_PUBLIC_AWIN_PUBLISHER_ID", "");
+    vi.stubEnv("NEXT_PUBLIC_PLAUSIBLE_DOMAIN", "");
     const { container } = render(<SiteAnalytics />);
     expect(container.innerHTML).toBe("");
   });
@@ -27,5 +28,24 @@ describe("SiteAnalytics", () => {
     const s = container.querySelector('script[src*="dwin1.com"]');
     expect(s).not.toBeNull();
     expect(s!.getAttribute("src")).toBe("https://www.dwin1.com/2932035.js");
+  });
+  it("renders the Plausible beacon (default cloud host) when the domain is set", () => {
+    vi.stubEnv("NEXT_PUBLIC_CF_BEACON_TOKEN", "");
+    vi.stubEnv("NEXT_PUBLIC_AWIN_PUBLISHER_ID", "");
+    vi.stubEnv("NEXT_PUBLIC_PLAUSIBLE_DOMAIN", "parkmath.co.uk");
+    vi.stubEnv("NEXT_PUBLIC_PLAUSIBLE_HOST", "");
+    const { container } = render(<SiteAnalytics />);
+    const s = container.querySelector('script[data-domain="parkmath.co.uk"]');
+    expect(s).not.toBeNull();
+    expect(s!.getAttribute("src")).toBe("https://plausible.io/js/script.outbound-links.tagged-events.js");
+  });
+  it("uses a self-hosted Plausible host (trailing slash trimmed) when configured", () => {
+    vi.stubEnv("NEXT_PUBLIC_CF_BEACON_TOKEN", "");
+    vi.stubEnv("NEXT_PUBLIC_AWIN_PUBLISHER_ID", "");
+    vi.stubEnv("NEXT_PUBLIC_PLAUSIBLE_DOMAIN", "parkmath.co.uk");
+    vi.stubEnv("NEXT_PUBLIC_PLAUSIBLE_HOST", "https://plausible.parkmath.co.uk/");
+    const { container } = render(<SiteAnalytics />);
+    const s = container.querySelector('script[data-domain="parkmath.co.uk"]');
+    expect(s!.getAttribute("src")).toBe("https://plausible.parkmath.co.uk/js/script.outbound-links.tagged-events.js");
   });
 });
