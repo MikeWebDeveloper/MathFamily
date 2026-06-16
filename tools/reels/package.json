@@ -13,6 +13,7 @@
   "dependencies": {
     "@mathfamily/data": "workspace:*",
     "@mathfamily/engine": "workspace:*",
+    "zod": "^4.0.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "remotion": "^4.0.0",
