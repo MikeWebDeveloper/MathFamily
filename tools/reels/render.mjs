@@ -7,6 +7,7 @@ import { dirname, basename, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const here = dirname(fileURLToPath(import.meta.url));
+const root = process.env.RENDER_DIR || here;
 const scriptPath = process.argv[2];
 if (!scriptPath) { console.error("usage: node render.mjs <reelscript.json>"); process.exit(1); }
 
@@ -14,7 +15,7 @@ const script = JSON.parse(readFileSync(scriptPath, "utf8"));
 const reviewDir = dirname(scriptPath);
 const timing = JSON.parse(readFileSync(join(reviewDir, "timing.json"), "utf8"));
 
-const entry = join(here, "src", "index.ts");
+const entry = join(root, "src", "index.ts");
 const outDir = join(here, "out", basename(reviewDir));
 mkdirSync(outDir, { recursive: true });
 const outPath = join(outDir, `${script.brand}-${script.slug}.mp4`);

@@ -3,7 +3,7 @@ import type { ReelScript } from "../schema";
 import { buildTimeline } from "../timeline";
 import { THEME, MONO, SANS } from "./theme";
 
-export interface ReelProps { script: ReelScript; audioDurationMs: number; audioSrc?: string }
+export type ReelProps = { script: ReelScript; audioDurationMs: number; audioSrc?: string };
 
 const msToFrames = (ms: number, fps: number) => Math.round((ms / 1000) * fps);
 

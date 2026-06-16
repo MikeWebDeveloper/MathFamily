@@ -14,4 +14,4 @@ pnpm --filter @mathfamily/reels render -- <slug>      # → out/<date>/<slug>.mp
 ## Render environment (IMPORTANT)
 Remotion bundles with esbuild, which **deadlocks on `/Volumes/TB4 Workstation`**
 (see `docs/engineering-notes.md`). Render from an internal-disk checkout or in CI.
-`RENDER_DIR=/Users/<you>/reels-render pnpm ... render` overrides the bundle dir.
+`RENDER_DIR=/Users/<you>/reels-render` — bundle/render from an internal-disk copy of the package (sidesteps the TB4 esbuild deadlock); output still lands in `tools/reels/out/`.

@@ -1,5 +1,6 @@
 import { loadAirports, loadDropOffDataset, loadParkingDataset, recentNews } from "@mathfamily/data";
 import type { Airport } from "@mathfamily/data";
+import { ReelScriptSchema } from "./schema";
 import type { ReelScript } from "./schema";
 import { pickShockFeeRecord, buildShockFeeReel } from "./formats/shock-fee";
 import { gatePrebookSaving, buildHowToReel } from "./formats/how-to";
@@ -40,5 +41,5 @@ export function buildWeeklyBatch(count = 5): ReelScript[] {
     out.push(buildNewsReel(item, air));
   }
 
-  return out.slice(0, count);
+  return out.slice(0, count).map((s) => ReelScriptSchema.parse(s));
 }

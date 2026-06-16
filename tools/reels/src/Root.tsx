@@ -18,16 +18,14 @@ const placeholder: ReelScript = {
 export const RemotionRoot: React.FC = () => (
   <Composition
     id="Reel"
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    component={Reel as any}
+    component={Reel}
     durationInFrames={FPS * 6}
     fps={FPS}
     width={1080}
     height={1920}
-    defaultProps={{ script: placeholder, audioDurationMs: 6000, audioSrc: undefined } as ReelProps}
+    defaultProps={{ script: placeholder, audioDurationMs: 6000, audioSrc: undefined }}
     calculateMetadata={({ props }) => {
-      const p = props as unknown as ReelProps;
-      return { durationInFrames: Math.max(1, Math.round((p.audioDurationMs / 1000) * FPS)) };
+      return { durationInFrames: Math.max(1, Math.round((props.audioDurationMs / 1000) * FPS)) };
     }}
   />
 );
