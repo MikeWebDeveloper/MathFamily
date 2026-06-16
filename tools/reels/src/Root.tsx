@@ -1,11 +1,29 @@
 import { Composition } from "remotion";
+import { Reel, type ReelProps } from "./scenes/Reel";
+import type { ReelScript } from "./schema";
 
-const Hello: React.FC = () => (
-  <div style={{ flex: 1, background: "#0A2540", color: "white", fontSize: 120, display: "flex", alignItems: "center", justifyContent: "center" }}>
-    ParkMath
-  </div>
-);
+const FPS = 30;
+const placeholder: ReelScript = {
+  version: "1", brand: "parkmath", format: "shock-fee", slug: "preview",
+  figures: [{ id: "fee", label: "Fee", pence: 700 }],
+  scenes: [
+    { kind: "intro", onScreenText: "Preview", figureIds: [], durationHintMs: 1500 },
+    { kind: "stat", onScreenText: "£7", figureIds: ["fee"], durationHintMs: 2500 },
+    { kind: "cta", onScreenText: "parkmath.co.uk", figureIds: [], durationHintMs: 1500 }
+  ],
+  narration: "Preview. parkmath.co.uk.", captions: ["Preview"], cta: "parkmath.co.uk",
+  sourceUrl: "https://example.com", verifiedAt: "2026-06-16"
+};
 
 export const RemotionRoot: React.FC = () => (
-  <Composition id="Hello" component={Hello} durationInFrames={30} fps={30} width={1080} height={1920} />
+  <Composition
+    id="Reel"
+    component={Reel}
+    durationInFrames={FPS * 6}
+    fps={FPS}
+    width={1080}
+    height={1920}
+    defaultProps={{ script: placeholder, audioDurationMs: 6000, audioSrc: undefined } as ReelProps}
+    calculateMetadata={({ props }) => ({ durationInFrames: Math.max(1, Math.round((props.audioDurationMs / 1000) * FPS)) })}
+  />
 );
