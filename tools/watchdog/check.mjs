@@ -9,7 +9,7 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import {
-  DEFAULT_BASE_URL, recordsOf, enumerateRoutes, expectedDeeplinks, destinationUrls, validateDeeplink, classifyResults, formatReport,
+  DEFAULT_BASE_URL, recordsOf, enumerateRoutes, activePartners, expectedDeeplinks, destinationUrls, validateDeeplink, classifyResults, formatReport,
 } from "./lib.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
@@ -73,7 +73,7 @@ async function main() {
 
   // 1) Structural deeplink validation (no network).
   const airportSlugs = recordsOf(airports).map((a) => a.slug);
-  const activeMids = new Set(expectedDeeplinks({ partnersJson, airportSlugs: ["_"] }).map((l) => new URL(l.url).searchParams.get("awinmid")));
+  const activeMids = new Set(activePartners(partnersJson).map((p) => p.awinmid));
   const publisherId = partnersJson.awin.publisherId;
   const deeplinkProblems = [];
   for (const l of expectedDeeplinks({ partnersJson, airportSlugs })) {
