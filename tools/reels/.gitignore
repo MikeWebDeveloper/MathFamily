@@ -1,0 +1,5 @@
+out/
+review/
+*.wav
+*.mp4
+timing.json
