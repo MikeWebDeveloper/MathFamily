@@ -24,7 +24,8 @@ const recoPath = join(repoRoot, "tools", "social", "recommendations.json");
 loadEnvFile(join(pkgRoot, "analytics.env"));
 
 const entries = recentEntries(readLedger(ledgerPath), days, date);
-const { source, rows } = await fetchReach(days);
+const campaigns = entries.map((e) => e.utmCampaign);
+const { source, rows } = await fetchReach(days, campaigns);
 const d = buildDigest(entries, rows);
 
 mkdirSync(reportDir, { recursive: true });
@@ -43,7 +44,7 @@ const report = [
   "",
   d.recommendation,
   source === "none"
-    ? "\n> No analytics source configured. Set `PLAUSIBLE_*` (preferred) or `CF_API_TOKEN`+`CF_ACCOUNT_TAG`+`CF_SITE_TAG` — see `tools/reels/analytics.env.example` — and re-run."
+    ? "\n> No analytics source configured. Set `UMAMI_*` (preferred — UTM grain) or `PLAUSIBLE_*` or `CF_API_TOKEN`+`CF_ACCOUNT_TAG`+`CF_SITE_TAG` — see `tools/reels/analytics.env.example` — and re-run."
     : ""
 ].join("\n");
 writeFileSync(join(reportDir, `loop-${date}.md`), report + "\n");

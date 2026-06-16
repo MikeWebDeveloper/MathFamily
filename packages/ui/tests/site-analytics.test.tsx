@@ -10,6 +10,8 @@ describe("SiteAnalytics", () => {
     vi.stubEnv("NEXT_PUBLIC_CF_BEACON_TOKEN", "");
     vi.stubEnv("NEXT_PUBLIC_AWIN_PUBLISHER_ID", "");
     vi.stubEnv("NEXT_PUBLIC_PLAUSIBLE_DOMAIN", "");
+    vi.stubEnv("NEXT_PUBLIC_UMAMI_HOST", "");
+    vi.stubEnv("NEXT_PUBLIC_UMAMI_WEBSITE_ID", "");
     const { container } = render(<SiteAnalytics />);
     expect(container.innerHTML).toBe("");
   });
@@ -47,5 +49,26 @@ describe("SiteAnalytics", () => {
     const { container } = render(<SiteAnalytics />);
     const s = container.querySelector('script[data-domain="parkmath.co.uk"]');
     expect(s!.getAttribute("src")).toBe("https://plausible.parkmath.co.uk/js/script.outbound-links.tagged-events.js");
+  });
+  it("renders the Umami beacon (trailing slash trimmed) when host + website id are set", () => {
+    vi.stubEnv("NEXT_PUBLIC_CF_BEACON_TOKEN", "");
+    vi.stubEnv("NEXT_PUBLIC_AWIN_PUBLISHER_ID", "");
+    vi.stubEnv("NEXT_PUBLIC_PLAUSIBLE_DOMAIN", "");
+    vi.stubEnv("NEXT_PUBLIC_UMAMI_HOST", "https://umami.parkmath.co.uk/");
+    vi.stubEnv("NEXT_PUBLIC_UMAMI_WEBSITE_ID", "b282893d-c200-4589-948f-873f61c14bb4");
+    const { container } = render(<SiteAnalytics />);
+    const s = container.querySelector("script[data-website-id]");
+    expect(s).not.toBeNull();
+    expect(s!.getAttribute("src")).toBe("https://umami.parkmath.co.uk/script.js");
+    expect(s!.getAttribute("data-website-id")).toBe("b282893d-c200-4589-948f-873f61c14bb4");
+  });
+  it("does not render the Umami beacon when only the host is set (no website id)", () => {
+    vi.stubEnv("NEXT_PUBLIC_CF_BEACON_TOKEN", "");
+    vi.stubEnv("NEXT_PUBLIC_AWIN_PUBLISHER_ID", "");
+    vi.stubEnv("NEXT_PUBLIC_PLAUSIBLE_DOMAIN", "");
+    vi.stubEnv("NEXT_PUBLIC_UMAMI_HOST", "https://umami.parkmath.co.uk");
+    vi.stubEnv("NEXT_PUBLIC_UMAMI_WEBSITE_ID", "");
+    const { container } = render(<SiteAnalytics />);
+    expect(container.querySelector("script[data-website-id]")).toBeNull();
   });
 });

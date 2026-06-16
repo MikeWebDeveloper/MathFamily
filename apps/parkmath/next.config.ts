@@ -6,13 +6,18 @@ const plausibleHost = process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN
   ? ` ${(process.env.NEXT_PUBLIC_PLAUSIBLE_HOST || "https://plausible.io").replace(/\/+$/, "")}`
   : "";
 
+// Allowlist the self-hosted Umami host (beacon load + /api/send POST) when configured. Inert until set.
+const umamiHost = process.env.NEXT_PUBLIC_UMAMI_HOST
+  ? ` ${process.env.NEXT_PUBLIC_UMAMI_HOST.replace(/\/+$/, "")}`
+  : "";
+
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://www.dwin1.com${plausibleHost}`,
+  `script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://www.dwin1.com${plausibleHost}${umamiHost}`,
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com",
   "img-src 'self' data: https:",
-  `connect-src 'self' https://cloudflareinsights.com https://static.cloudflareinsights.com${plausibleHost}`,
+  `connect-src 'self' https://cloudflareinsights.com https://static.cloudflareinsights.com${plausibleHost}${umamiHost}`,
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "object-src 'none'",
