@@ -106,6 +106,7 @@ test("activePartners returns only active+mid partners with their destinations", 
 
 test("destinationUrls is the distinct set of ued targets, never awin1.com", () => {
   const urls = destinationUrls(PARTNERS);
+  assert.equal(urls.length, 2); // deduped: landingUrl === products.parking.url, so 2 distinct not 3
   assert.deepEqual(new Set(urls), new Set(["https://he.test/parking", "https://he.test/lounge"]));
   assert.ok(urls.every((u) => !u.includes("awin1.com")));
 });
@@ -116,6 +117,14 @@ test("expectedDeeplinks = activePartners × airports × destinations, all struct
   assert.equal(links.length, 1 * 2 * 3);
   const opts = { activeMids: new Set(["3496"]), publisherId: "2932035" };
   for (const l of links) assert.deepEqual(validateDeeplink(l.url, { ...opts, expectedUed: l.expectedUed }), []);
+  // surface:null (the bare landingUrl link) must emit no clickref suffix
+  const bare = links.find((l) => l.surface === null && l.airport === "heathrow");
+  assert.equal(new URL(bare.url).searchParams.get("clickref"), "parkmath-heathrow");
+});
+
+test("validateDeeplink accepts slugs containing digits (e.g. terminal4)", () => {
+  const withDigits = buildAwinLink({ awinmid: "3496", publisherId: "2932035", airportSlug: "terminal4" });
+  assert.deepEqual(validateDeeplink(withDigits, VALID_OPTS), []);
 });
 
 test("classifyResults aggregates page/destination/deeplink failures", () => {
@@ -137,11 +146,15 @@ test("classifyResults ok=true when nothing fails", () => {
   assert.equal(summary.failures.length, 0);
 });
 
-test("formatReport lists each failure with its type", () => {
+test("formatReport renders page, destination, and deeplink failure branches", () => {
   const summary = classifyResults({
-    pageResults: [{ path: "/news", ok: false, detail: "503" }], destResults: [], deeplinkProblems: [],
+    pageResults: [{ path: "/news", ok: false, detail: "503" }],
+    destResults: [{ url: "https://he.test/parking", ok: false, detail: "HTTP 404" }],
+    deeplinkProblems: [{ url: "https://www.awin1.com/cread.php?x", problems: ["bad clickref: WRONG"] }],
   });
   const md = formatReport({ date: "2026-06-16", summary });
   assert.ok(md.includes("# 🔴 ParkMath watchdog — 2026-06-16"));
   assert.ok(md.includes("`/news`") && md.includes("503"));
+  assert.ok(md.includes("**affiliate destination**") && md.includes("https://he.test/parking"));
+  assert.ok(md.includes("**deeplink**") && md.includes("bad clickref: WRONG"));
 });
