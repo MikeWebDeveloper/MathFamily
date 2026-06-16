@@ -93,6 +93,15 @@ Use `node`/`tsx` to read these (top-level wrappers differ: news is `{items}`, fe
    - **no affiliate/merchant link or tracking param anywhere** in either file;
    - every `text` figure traces to a real dataset value.
 
+## Content ledger (shared memory — cross-run dedupe + attribution)
+- **Before picking angles, read `tools/social/ledger.jsonl`** (append-only JSONL; may not exist yet — see
+  `ledger.example.jsonl` for the shape). Avoid airports covered in the **last ~14 days**, including by the
+  **reel-factory** (which writes here too) — spread coverage, don't repeat what reels just covered.
+- **After generating, append one line per post** to `tools/social/ledger.jsonl`:
+  `{"id":"parkmath-<platform>-<airport>-<YYYYMMDD>","date":"<YYYY-MM-DD>","brand":"parkmath","format":"post","slug":"<airport>","hook":"<first line>","utmCampaign":"<airport>-<YYYYMM>","landingUrl":"https://parkmath.co.uk/<path>?utm_source=<platform>&utm_medium=social&utm_campaign=<airport>-<YYYYMM>","status":"generated"}`
+- The `landingUrl` is the first-party link to use in the post / link-in-bio for attribution — **never** an
+  affiliate link. The ledger is gitignored (local memory); do not commit it.
+
 ## OUTPUT (two committed review-files)
 
 ### `tools/social/queue-<YYYY-MM-DD>.json` (today's date)

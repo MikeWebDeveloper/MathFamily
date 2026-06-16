@@ -18,11 +18,14 @@ Read-only on datasets; **never** modifies code, ranking, or any dataset; **never
 - **Review only — nothing auto-publishes.** Do not post, DM, or call any publishing API.
 
 ## Steps
-1. `REELS_DATE=$(date +%F) pnpm --filter @mathfamily/reels generate` → writes validated ReelScripts.
-2. For each script: `REELS_TTS=vibevoice python tools/reels/tts/synth.py <script.json>` → `voice.wav` + `timing.json`.
-3. For each script: `pnpm --filter @mathfamily/reels render -- <script.json>` (from the proven render path — see `tools/reels/README.md`; use internal disk / CI if local bundling hangs).
-4. (Optional) Generate an on-brand cover per reel via the Canva MCP (see `tools/reels/README.md`).
-5. Report the review folder path, the reels produced (`format:slug`), and any slot skipped for lack of verified data. Nothing is published.
+The whole batch (voice → captions → MP4 → PNG still) runs in one command:
+`REELS_DATE=$(date +%F) tools/reels/build-week.sh` (British Kokoro voice via Apple MLX — see `tools/reels/tts/README.md`).
+
+Under the hood:
+1. `REELS_DATE=$(date +%F) pnpm --filter @mathfamily/reels generate` writes validated ReelScripts to `tools/reels/review/<date>/`, **appends each to the content ledger** (`tools/social/ledger.jsonl`) with a first-party **UTM landing URL**, and **skips airports covered in the last 14 days** (cross-run dedupe; tune with `REELS_DEDUPE_DAYS`).
+2. Per reel (build-week.sh does this): `synth.py` (Kokoro) → `<slug>.wav` + timing; `transcribe.mjs` → captions; `render.mjs` → MP4 (h264/yuv420p/bt709, loudnorm −14 LUFS, opt-in music via `REELS_MUSIC`); `still.mjs` → PNG.
+3. (Optional) On-brand cover per reel via the Canva MCP (see `tools/reels/README.md`).
+4. Report the review folder, the reels produced (`format:slug`), the **UTM landing URL per reel** (the link to drop in the post / link-in-bio), and any slot skipped for lack of verified data. Nothing is published.
 
 ## Output
-`tools/reels/review/<date>/` — one `<brand>-<slug>.json` + `voice.wav` + `timing.json` per reel, and `tools/reels/out/<date>/<brand>-<slug>.mp4`. All gitignored (transient, reviewed locally).
+`tools/reels/out/<date>/` — `<brand>-<slug>.mp4` + `.png` per reel. Scripts/audio/captions live in `tools/reels/review/<date>/`. Every reel is recorded in `tools/social/ledger.jsonl` (id, hook, UTM campaign, landing URL, status) — the single source of truth for attribution + dedupe. All gitignored (transient/local).

@@ -10,11 +10,12 @@ const bySlug = (airports: Airport[]) => new Map(airports.map((a) => [a.slug, a])
 const DURATIONS = [7, 14, 3];
 
 /** Produce up to `count` reels rotating shock-fee → how-to → news, skipping any slot that
- *  has no verified data (never fabricate to fill a slot — content-factory hard rule). */
-export function buildWeeklyBatch(count = 5): ReelScript[] {
+ *  has no verified data (never fabricate to fill a slot — content-factory hard rule).
+ *  `excludeSlugs` seeds the used set so recently-covered airports (from the ledger) aren't repeated. */
+export function buildWeeklyBatch(count = 5, excludeSlugs: Set<string> = new Set()): ReelScript[] {
   const airports = bySlug(loadAirports());
   const out: ReelScript[] = [];
-  const usedSlugs = new Set<string>();
+  const usedSlugs = new Set<string>(excludeSlugs);
 
   // shock-fee: highest fee not already used
   try {
@@ -33,12 +34,14 @@ export function buildWeeklyBatch(count = 5): ReelScript[] {
     if (air && days) { out.push(buildHowToReel(rec, air, days)); usedSlugs.add(rec.airportSlug); }
   }
 
-  // news: recent items with a quantified change
+  // news: recent items with a quantified change (skip airports already used this run / recently)
   for (const item of recentNews(10)) {
     if (out.length >= count) break;
     if (!item.change) continue;
+    if (item.airportSlug && usedSlugs.has(item.airportSlug)) continue;
     const air = item.airportSlug ? airports.get(item.airportSlug) ?? null : null;
     out.push(buildNewsReel(item, air));
+    if (item.airportSlug) usedSlugs.add(item.airportSlug);
   }
 
   return out.slice(0, count).map((s) => ReelScriptSchema.parse(s));
