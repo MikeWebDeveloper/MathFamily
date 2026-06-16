@@ -8,6 +8,7 @@ import { HomeAnswerHero } from "@/components/home-answer-hero";
 import { NearbyAirports } from "@/components/nearby-airports";
 import { AffiliateExtras } from "@/components/affiliate-extras";
 import { FamilyLinks } from "@/components/family-links";
+import { dearestDropOff } from "@/lib/content";
 import { CarIcon, ParkingIcon, LoungeIcon, PriceIndexIcon, NewsIcon, DataIcon, GlobeIcon } from "@/components/tile-icons";
 
 export default function HomePage() {
@@ -19,19 +20,13 @@ export default function HomePage() {
   const airportsBySlug = new Map(airports.map((a) => [a.slug, a]));
   const recordBySlug = new Map(records.map((r) => [r.airportSlug, r]));
 
-  // The hero answer: the single most expensive drop-off band across the dataset.
-  let maxBandPence = 0;
-  let dearestName = "";
-  let dearestMinutes = 0;
-  for (const r of charging) {
-    for (const b of r.bands) {
-      if (b.totalPence > maxBandPence) {
-        maxBandPence = b.totalPence;
-        dearestName = airportsBySlug.get(r.airportSlug)?.name ?? r.airportSlug;
-        dearestMinutes = b.upToMinutes;
-      }
-    }
-  }
+  // The hero answer: the airport with the highest HEADLINE drop-off charge (bands[0]) — the standard
+  // drop-off fee, NOT a long-stay tier or overstay penalty. (See dearestDropOff: it must match the
+  // table/trendNote, which also key off bands[0], so e.g. Bristol's £60/120-min tier never headlines.)
+  const dearest = dearestDropOff(records);
+  const maxBandPence = dearest?.pence ?? 0;
+  const dearestName = dearest ? airportsBySlug.get(dearest.airportSlug)?.name ?? dearest.airportSlug : "";
+  const dearestMinutes = dearest?.upToMinutes ?? 0;
 
   // Biggest verified year-on-year rise — honest, only from real priorYearFeePence.
   let biggestRise: { name: string; prior: number; current: number } | null = null;
