@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { DropOffRecord, LoungeRecord, PriorityPassTier } from "@mathfamily/data";
-import { buildDropOffFaqs, buildLoungeFaqs, dropOffIndexSummary, freshnessDelta, isPerEntryTariff, paymentDeadlineChip, trendNote } from "../lib/content";
+import { buildDropOffFaqs, buildLoungeFaqs, dearestDropOff, dropOffIndexSummary, freshnessDelta, isPerEntryTariff, paymentDeadlineChip, trendNote } from "../lib/content";
 
 const record: DropOffRecord = {
   airportSlug: "gatwick",
@@ -57,6 +57,24 @@ describe("dropOffIndexSummary", () => {
     expect(s).toContain("£8.50");
     expect(s).toContain("Gatwick");
     expect(s).toContain("£10");
+  });
+});
+
+describe("dearestDropOff", () => {
+  const mk = (slug: string, isFree: boolean, bands: { upToMinutes: number; totalPence: number }[]) =>
+    ({ airportSlug: slug, isFree, bands }) as Pick<DropOffRecord, "airportSlug" | "isFree" | "bands">;
+  it("ranks by the headline band (bands[0]), ignoring long-stay tiers / overstay bands", () => {
+    // Bristol's £60/120-min tier must NOT win — its headline (bands[0]) is £8.50; Gatwick £10 wins.
+    const d = dearestDropOff([
+      mk("bristol", false, [{ upToMinutes: 10, totalPence: 850 }, { upToMinutes: 60, totalPence: 3000 }, { upToMinutes: 120, totalPence: 6000 }]),
+      mk("gatwick", false, [{ upToMinutes: 10, totalPence: 1000 }]),
+      mk("stansted", false, [{ upToMinutes: 15, totalPence: 1000 }, { upToMinutes: 30, totalPence: 2800 }]),
+      mk("inverness", true, [])
+    ]);
+    expect(d).toEqual({ airportSlug: "gatwick", pence: 1000, upToMinutes: 10 });
+  });
+  it("returns null when every airport is free", () => {
+    expect(dearestDropOff([mk("x", true, [])])).toBeNull();
   });
 });
 

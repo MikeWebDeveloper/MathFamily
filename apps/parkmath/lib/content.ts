@@ -85,6 +85,25 @@ export function dropOffIndexSummary(rows: { name: string; isFree: boolean; feePe
   return `${freeCount} of ${rows.length} major UK airports let you drop off free. Of those that charge, the cheapest is ${cheapest.name} at ${formatPence(cheapest.feePence)}; the most expensive is ${dearest.name} at ${formatPence(dearest.feePence)} (per drop-off, 2026).`;
 }
 
+/** The airport with the highest HEADLINE drop-off charge — the first/standard band (`bands[0]`),
+ *  NOT a long-stay tier or overstay penalty. Mirrors how the table, trendNote and feeBySlug all
+ *  rank (always `bands[0]`), so the home hero can't accidentally headline a 2-hour tariff (e.g.
+ *  Bristol's £60/120-min band) instead of the real drop-off fee. Returns null when nothing charges. */
+export function dearestDropOff(
+  records: Pick<DropOffRecord, "airportSlug" | "isFree" | "bands">[]
+): { airportSlug: string; pence: number; upToMinutes: number } | null {
+  let best: { airportSlug: string; pence: number; upToMinutes: number } | null = null;
+  for (const r of records) {
+    if (r.isFree) continue;
+    const headline = r.bands[0];
+    if (!headline) continue;
+    if (best === null || headline.totalPence > best.pence) {
+      best = { airportSlug: r.airportSlug, pence: headline.totalPence, upToMinutes: headline.upToMinutes };
+    }
+  }
+  return best;
+}
+
 export function trendNote(record: DropOffRecord): string | null {
   const current = record.bands[0]?.totalPence;
   if (record.isFree || current === undefined || record.priorYearFeePence === null) return null;
