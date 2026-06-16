@@ -18,6 +18,7 @@ describe("news builder", () => {
     expect(() => ReelScriptSchema.parse(script)).not.toThrow();
     expect(script.format).toBe("news");
     expect(script.narration).toContain("£6");
+    expect(script.narration).toContain("Quietly"); // calm-authority voice (Route B)
     expect(script.narration).toContain("parkmath.co.uk");
   });
   it("throws on a news item with no quantified change (nothing to show)", () => {

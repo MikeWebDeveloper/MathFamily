@@ -26,7 +26,9 @@ describe("shock-fee builder", () => {
     expect(() => ReelScriptSchema.parse(script)).not.toThrow();
     expect(script.format).toBe("shock-fee");
     expect(script.figures.find((f) => f.id === "fee")?.pence).toBe(700);
+    expect(script.figures.find((f) => f.id === "perMinute")?.pence).toBe(47); // round(700/15)
     expect(script.narration).toContain("£7");
+    expect(script.narration).toContain("47p a minute"); // the per-minute reframe (Route A)
     expect(script.narration).toContain("Mid Stay car park");
     expect(script.narration).toContain("parkmath.co.uk");
   });

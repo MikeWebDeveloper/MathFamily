@@ -26,6 +26,7 @@ describe("how-to builder", () => {
     expect(script.format).toBe("how-to");
     expect(script.figures.find((f) => f.id === "saving")?.pence).toBe(5000);
     expect(script.narration).toContain("£50");
+    expect(script.narration).toContain("Same tarmac"); // the sticky payoff line (Route C)
     expect(script.narration).toContain("parkmath.co.uk");
   });
 });
