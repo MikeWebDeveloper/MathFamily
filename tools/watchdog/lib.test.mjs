@@ -1,5 +1,5 @@
 // Unit tests for the watchdog's pure logic. Zero deps — Node's built-in runner.
-// Run: node --test tools/watchdog/
+// Run: node --test tools/watchdog/*.test.mjs
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {

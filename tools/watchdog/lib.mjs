@@ -1,5 +1,5 @@
 // Pure logic for the ParkMath site + deeplink watchdog — no network, no secrets, no deps.
-// Unit-tested in lib.test.mjs (run: node --test tools/watchdog/). The runner (check.mjs) does the
+// Unit-tested in lib.test.mjs (run: node --test tools/watchdog/*.test.mjs). The runner (check.mjs) does the
 // actual fetching; everything here is deterministic and safe to call anywhere.
 
 export const DEFAULT_BASE_URL = "https://parkmath.co.uk";
