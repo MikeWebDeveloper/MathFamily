@@ -4,6 +4,7 @@ import type { ReelScript } from "../schema";
 import { buildTimeline, type TimedScene } from "../timeline";
 import { THEME, SANS, MONO, type BrandTheme } from "./theme";
 import { BrandBackdrop, Wordmark, ProgressBar, Ticket, Stamp, Pill, Glyph } from "./graphics";
+import { Skyline, Barrier } from "./illustrations";
 
 export type ReelProps = { script: ReelScript; audioDurationMs: number; audioSrc?: string };
 
@@ -59,9 +60,10 @@ const SceneView: React.FC<{ scene: TimedScene; script: ReelScript; theme: BrandT
 
   if (scene.kind === "alternative") {
     const isFree = /free/i.test(scene.onScreenText);
+    const lift = interpolate(spring({ frame: frame - 6, fps, config: { damping: 200 } }), [0, 1], [0, -72]);
     return (
-      <div style={{ ...center, gap: 40 }}>
-        <div style={enter}><Glyph name="tick" size={120} color={theme.good} /></div>
+      <div style={{ ...center, gap: 28 }}>
+        <Barrier theme={theme} liftDeg={lift} />
         {isFree ? <div style={enter}><Stamp theme={theme} label="Free" /></div> : null}
         <div style={{ fontFamily: SANS, fontWeight: 700, fontSize: 76, color: theme.good, lineHeight: 1.1, ...enter }}>{scene.onScreenText}</div>
       </div>
@@ -89,12 +91,18 @@ const SceneView: React.FC<{ scene: TimedScene; script: ReelScript; theme: BrandT
     );
   }
 
-  // intro
+  // intro — a paper plane flies across while the question lands
+  const durFrames = msToFrames(scene.endMs - scene.startMs, fps);
+  const flyX = interpolate(frame, [0, durFrames], [-280, 1080 + 280]);
   return (
-    <div style={{ ...center, gap: 48 }}>
-      <div style={enter}><Glyph name="plane" size={130} color={theme.accentBright} /></div>
-      <div style={{ fontFamily: SANS, fontWeight: 700, fontSize: 72, color: "#fff", lineHeight: 1.15, ...enter }}>{scene.onScreenText}</div>
-    </div>
+    <>
+      <div style={{ position: "absolute", top: 360, left: flyX, transform: "rotate(8deg)" }}>
+        <Glyph name="plane" size={150} color={theme.accentBright} />
+      </div>
+      <div style={{ ...center }}>
+        <div style={{ fontFamily: SANS, fontWeight: 700, fontSize: 72, color: "#fff", lineHeight: 1.15, ...enter }}>{scene.onScreenText}</div>
+      </div>
+    </>
   );
 };
 
@@ -106,6 +114,7 @@ export const Reel: React.FC<ReelProps> = ({ script, audioDurationMs, audioSrc })
   return (
     <AbsoluteFill style={{ fontFamily: SANS }}>
       <BrandBackdrop theme={theme} />
+      <Skyline theme={theme} />
       {audioSrc ? <Audio src={staticFile(audioSrc)} /> : null}
       <div style={{ position: "absolute", top: 70, left: 70 }}><Wordmark theme={theme} name={BRAND_NAME[script.brand]} /></div>
       {timed.map((scene, i) => (
