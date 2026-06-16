@@ -7,6 +7,7 @@
 #   run-agent.sh awin-digest        # marketing: weekly AWIN digest
 #   run-agent.sh content-factory    # marketing: weekly social queue + email digest
 #   run-agent.sh forum-scout        # marketing: draft forum replies from tools/social/forum-leads.md
+#   run-agent.sh reel-factory       # marketing: weekly reel batch (script + VO + MP4) for review
 #   PRINT_CMD=1 run-agent.sh ...   # print the claude command instead of running it (no side effects)
 set -euo pipefail
 
@@ -21,6 +22,7 @@ case "$MODE" in
   awin-digest)     PROMPT="/awin-digest" ;;       # marketing: weekly AWIN digest → docs/reports/
   content-factory) PROMPT="/content-factory" ;;   # marketing: weekly social queue + email digest → tools/social/
   forum-scout)     PROMPT="/forum-scout" ;;       # marketing: draft forum replies from tools/social/forum-leads.md
+  reel-factory)    PROMPT="/reel-factory" ;;       # marketing: weekly reel batch → tools/reels/review/
   *)               PROMPT="/freshness $*" ;;
 esac
 CMD=(claude -p "$PROMPT" --max-turns 200 --dangerously-skip-permissions)
