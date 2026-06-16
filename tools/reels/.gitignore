@@ -1,0 +1,8 @@
+out/
+review/
+.whisper/
+*.wav
+*.mp4
+*.captions.json
+timing.json
+analytics.env

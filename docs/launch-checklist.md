@@ -6,6 +6,7 @@ When parkmath.co.uk (+ .uk / maths twins) exists and DNS points at Vercel:
 2. Verify robots.txt serves WITHOUT the preview `x-robots-tag: noindex` header.
 3. Google Search Console: verify domain property, submit `https://parkmath.co.uk/sitemap.xml`.
 4. Bing Webmaster Tools: verify, submit sitemap, enable IndexNow (Bing feeds ChatGPT Search).
+   - **Cloudflare Crawler Hints** (preferred IndexNow path while Bing verification is pending): Cloudflare dash → **Cache → Configuration → Crawler Hints → enable** (free, one click). Since the site is proxied through Cloudflare, CF submits IndexNow signals as a *trusted* submitter, sidestepping the `403 UserForbiddedToAccessSite` that the custom `apps/parkmath/indexnow.mjs` ping hits before Bing site-verification. Keep both — the script also fans out to Yandex/Seznam/Naver; CF covers Bing.
 5. Set `NEXT_PUBLIC_MAILERLITE_FORM_ACTION` once the MailerLite account + group exist.
 6. Activate affiliate slots only after Ltd + Awin approval: fill `deeplinkTemplate`, set `active: true` in `apps/parkmath/lib/partners.json` (disclosure renders automatically).
 7. Analytics: confirm Vercel Analytics events; create a GA4/analytics segment for AI-referral traffic (chatgpt.com, perplexity.ai, copilot.microsoft.com referrers).
@@ -24,6 +25,7 @@ When roammath.co.uk (+ .uk / maths twins) exists and DNS points at Vercel:
 3. Verify robots.txt serves WITHOUT the preview `x-robots-tag: noindex` header.
 4. Google Search Console: verify domain property, submit `https://roammath.co.uk/sitemap.xml`.
 5. Bing Webmaster Tools: verify, submit sitemap, enable IndexNow (Bing feeds ChatGPT Search).
+   - **Cloudflare Crawler Hints** (preferred IndexNow path while Bing verification is pending): Cloudflare dash → **Cache → Configuration → Crawler Hints → enable**. CF submits IndexNow signals as a trusted submitter, sidestepping the Bing `403` the custom ping hits before site-verification (see ParkMath checklist item 4 for the full rationale).
 6. Set `NEXT_PUBLIC_MAILERLITE_FORM_ACTION` once the MailerLite account + group (RoamMath segment) exist.
 7. Activate eSIM affiliate slots only after Ltd + Awin/affiliate-network approval: fill `deeplinkTemplate`, set `active: true` in `apps/roammath/lib/partners.json` (disclosure renders automatically).
 8. **Family cross-links:** set `NEXT_PUBLIC_PARKMATH_URL=https://parkmath.co.uk` on RoamMath's Vercel environment and `NEXT_PUBLIC_ROAMMATH_URL=https://roammath.co.uk` on ParkMath's — both apps render the family-links block only when the env var exists.

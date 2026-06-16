@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { activeSlotPartnerName, buildAwinLink, resolveHeProduct, resolveSlot } from "../lib/partners";
+import { activeSlotPartnerName, buildAwinLink, heAirportParkingUrl, resolveHeProduct, resolveSlot } from "../lib/partners";
 
 describe("buildAwinLink", () => {
   it("builds a bare cread.php link with clickref and no ued", () => {
@@ -32,7 +32,7 @@ describe("resolveSlot", () => {
     expect(r.url).toContain("awinmid=3496");
     expect(r.url).toContain("awinaffid=2932035");
     expect(r.url).toContain("clickref=parkmath-gatwick");
-    expect(r.url).toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Fairport-parking.html");
+    expect(r.url).toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Fgatwick-airport-parking.html");
   });
   it("lounge-membership stays official while inactive", () => {
     const r = resolveSlot("lounge-membership", "gatwick", "https://www.prioritypass.com");
@@ -50,6 +50,25 @@ describe("resolveHeProduct", () => {
     expect(r!.url).toContain("awinmid=3496");
     expect(r!.url).toContain("clickref=parkmath-gatwick-lounge");
     expect(r!.url).toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Fairport-lounges.html");
+  });
+  it("parking deep-links to the airport's own HE page (verified per-airport URL)", () => {
+    const r = resolveHeProduct("parking", "gatwick", "dropoff");
+    expect(r!.url).toContain("clickref=parkmath-gatwick-dropoff");
+    expect(r!.url).toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Fgatwick-airport-parking.html");
+  });
+  it("parking falls back to the generic page off-airport (slug 'home')", () => {
+    const r = resolveHeProduct("parking", "home", "home");
+    expect(r!.url).toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Fairport-parking.html");
+  });
+});
+
+describe("heAirportParkingUrl", () => {
+  it("builds the verified per-airport HE parking URL", () => {
+    expect(heAirportParkingUrl("heathrow")).toBe("https://www.holidayextras.com/heathrow-airport-parking.html");
+  });
+  it("returns null for non-airport contexts (fall back to generic)", () => {
+    expect(heAirportParkingUrl("home")).toBeNull();
+    expect(heAirportParkingUrl("")).toBeNull();
   });
 });
 

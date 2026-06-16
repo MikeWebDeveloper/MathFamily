@@ -50,6 +50,14 @@ export function buildAwinLink(args: {
   return `https://www.awin1.com/cread.php?${params.toString()}`;
 }
 
+/** Holiday Extras' verified per-airport parking page (`/<slug>-airport-parking.html`). Returns null
+ *  for non-airport contexts (e.g. the home page, slug "home") so callers fall back to the generic
+ *  category page. Our airport slugs match HE's URL slugs (verified live for all dataset airports). */
+export function heAirportParkingUrl(airportSlug: string): string | null {
+  if (!airportSlug || airportSlug === "home") return null;
+  return `https://www.holidayextras.com/${airportSlug}-airport-parking.html`;
+}
+
 /** Resolve a Holiday Extras product to a tracked deep link, or null when HE is inactive or the
  *  product has no configured URL. `clickrefSuffix` distinguishes the surface (e.g. "dropoff", "lounge",
  *  "dropoff-hotels"). */
@@ -66,7 +74,8 @@ export function resolveHeProduct(
       awinmid: partner.awinmid,
       publisherId: config.awin.publisherId,
       airportSlug,
-      ued: entry.url,
+      // Parking deep-links to the airport's own HE page; other products use the generic category page.
+      ued: product === "parking" ? heAirportParkingUrl(airportSlug) ?? entry.url : entry.url,
       clickrefSuffix,
     }),
     productLabel: entry.label,
@@ -96,7 +105,7 @@ export function resolveSlot(slotId: SlotId, airportSlug: string, officialUrl: st
       if (partner?.active && partner.awinmid) {
         return {
           kind: "affiliate",
-          url: buildAwinLink({ awinmid: partner.awinmid, publisherId: config.awin.publisherId, airportSlug, ued: partner.landingUrl }),
+          url: buildAwinLink({ awinmid: partner.awinmid, publisherId: config.awin.publisherId, airportSlug, ued: slotId === "parking-prebook" ? heAirportParkingUrl(airportSlug) ?? partner.landingUrl : partner.landingUrl }),
           label: `Pre-book & compare prices with ${partner.name}`,
           partnerName: partner.name,
           disclosureRequired: true,

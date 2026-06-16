@@ -16,7 +16,7 @@ describe("HolidayExtrasCard", () => {
     expect(dropoff).toContain("https://www.awin1.com/cread.php?");
     expect(dropoff).toContain("awinmid=3496");
     expect(dropoff).toContain("clickref=parkmath-gatwick-dropoff");
-    expect(dropoff).toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Fairport-parking.html");
+    expect(dropoff).toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Fgatwick-airport-parking.html");
     expect(dropoff).toContain("Also from Holiday Extras");
     expect(dropoff).toContain("clickref=parkmath-gatwick-dropoff-hotels");
     expect(dropoff).toContain('rel="sponsored noopener noreferrer"');

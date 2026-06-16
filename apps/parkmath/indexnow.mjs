@@ -47,6 +47,7 @@ const news = read("news.json").map((r) => r.id).filter(Boolean);
 const urls = [
   ...new Set([
     BASE,
+    `${BASE}/llms.txt`,
     `${BASE}/parking-price-index-2026`,
     `${BASE}/drop-off-charges`,
     `${BASE}/airport-parking`,
@@ -73,14 +74,48 @@ const body = JSON.stringify({
   urlList: urls
 });
 
+const TIMEOUT_MS = 10_000;
+
+async function submitOnce() {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
+  try {
+    const res = await fetch("https://api.indexnow.org/indexnow", {
+      method: "POST",
+      headers: { "Content-Type": "application/json; charset=utf-8" },
+      body,
+      signal: controller.signal
+    });
+    clearTimeout(timer);
+    return res;
+  } catch (e) {
+    clearTimeout(timer);
+    throw e;
+  }
+}
+
 try {
-  const res = await fetch("https://api.indexnow.org/indexnow", {
-    method: "POST",
-    headers: { "Content-Type": "application/json; charset=utf-8" },
-    body
-  });
-  console.log(`IndexNow: ${res.status} ${res.statusText} — submitted ${urls.length} URLs to ${new URL(BASE).hostname}`);
+  let res;
+  try {
+    res = await submitOnce();
+  } catch (e) {
+    // Network error or timeout — retry once
+    console.warn(`IndexNow: transient error on first attempt, retrying — ${e.message}`);
+    res = await submitOnce();
+  }
+
+  if (res.ok) {
+    console.log(`IndexNow: ${res.status} ${res.statusText} — submitted ${urls.length} URLs to ${new URL(BASE).hostname}`);
+  } else {
+    // Do NOT retry on 4xx/5xx — log clearly so Vercel build logs surface the failure
+    const errBody = await res.text().catch(() => "(could not read response body)");
+    console.warn(
+      `IndexNow: WARNING — submission rejected (non-fatal, build continues)\n` +
+      `  status : ${res.status} ${res.statusText}\n` +
+      `  body   : ${errBody.trim()}`
+    );
+  }
 } catch (e) {
-  console.warn(`IndexNow: submission failed (non-fatal, build continues) — ${e.message}`);
+  console.warn(`IndexNow: submission failed after retry (non-fatal, build continues) — ${e.message}`);
 }
 process.exit(0);

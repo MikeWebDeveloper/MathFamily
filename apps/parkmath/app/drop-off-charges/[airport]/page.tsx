@@ -62,9 +62,12 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
         <JsonLd
           data={offerLd({
             name: `${airport.name} drop-off charge`,
+            description: `${airport.name} drop-off forecourt charge — ${record.feeSummary}. Official, date-stamped price verified ${record.verifiedAt}.`,
+            image: `${siteUrl}/drop-off-charges/${airport.slug}/opengraph-image`,
             url: `${siteUrl}/drop-off-charges/${airport.slug}`,
             pricePence: record.bands[0].totalPence,
-            priceValidUntil
+            priceValidUntil,
+            brand: airport.name
           })}
         />
       ) : null}

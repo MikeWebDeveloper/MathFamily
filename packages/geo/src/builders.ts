@@ -81,9 +81,12 @@ function poundsFromPence(pence: number): string {
 /** Product + single Offer — for a one-price page (e.g. a drop-off charge). */
 export function offerLd(input: {
   name: string;
+  description: string;
+  image: string;
   url: string;
   pricePence: number;
   priceValidUntil: string;
+  brand?: string;
   availability?: string;
   priceCurrency?: string;
 }) {
@@ -91,6 +94,9 @@ export function offerLd(input: {
     "@context": "https://schema.org",
     "@type": "Product" as const,
     name: input.name,
+    description: input.description,
+    image: [input.image],
+    ...(input.brand ? { brand: { "@type": "Brand" as const, name: input.brand } } : {}),
     offers: {
       "@type": "Offer" as const,
       price: poundsFromPence(input.pricePence),
@@ -106,11 +112,13 @@ export function offerLd(input: {
 export function aggregateOfferLd(input: {
   name: string;
   description: string;
+  image: string;
   url: string;
   lowPricePence: number;
   highPricePence: number;
   offerCount: number;
   priceValidUntil: string;
+  brand?: string;
   priceCurrency?: string;
 }) {
   return {
@@ -118,6 +126,8 @@ export function aggregateOfferLd(input: {
     "@type": "Product" as const,
     name: input.name,
     description: input.description,
+    image: [input.image],
+    ...(input.brand ? { brand: { "@type": "Brand" as const, name: input.brand } } : {}),
     offers: {
       "@type": "AggregateOffer" as const,
       lowPrice: poundsFromPence(input.lowPricePence),

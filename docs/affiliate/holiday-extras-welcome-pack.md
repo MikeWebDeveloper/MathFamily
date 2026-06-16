@@ -25,6 +25,7 @@
 - **Images/logos** (promote HE only, audited): `drive.google.com/drive/folders/1VoI-6oxb8BZeCN9ObrY9M8GLX9v-nbaJ`
 - **Brand guide:** `brand.holidayextras.com`
 - **Deep-link (ued) targets:** holidayextras.com/airport-parking.html · /airport-hotels.html · /airport-lounges.html · /airport-transfers.html · /airport-taxi.html · /car-hire.html
+- **Per-airport parking pages (verified 2026-06-16, all 25 dataset airports return 200):** `holidayextras.com/<slug>-airport-parking.html` (our airport slug == HE's). Used as the **parking** `ued` so clicks land on the airport's own page, not the generic homepage — see `partners.ts → heAirportParkingUrl`. Other products + off-airport contexts keep the generic category page.
 
 ## Rules
 - **Prohibited: PPC brand bidding** on "Holiday Extras" terms → 1-week commission clawback.

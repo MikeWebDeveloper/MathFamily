@@ -73,11 +73,17 @@ describe("offerLd", () => {
   it("builds a Product with a single Offer, converting pence to pounds", () => {
     const ld = offerLd({
       name: "Gatwick drop-off charge",
+      description: "Gatwick drop-off forecourt charge",
+      image: "https://example.com/drop-off-charges/gatwick/opengraph-image",
       url: "https://example.com/drop-off-charges/gatwick",
       pricePence: 600,
-      priceValidUntil: "2026-08-10"
+      priceValidUntil: "2026-08-10",
+      brand: "Gatwick Airport"
     }) as any;
     expect(ld["@type"]).toBe("Product");
+    expect(ld.description).toBe("Gatwick drop-off forecourt charge");
+    expect(ld.image).toEqual(["https://example.com/drop-off-charges/gatwick/opengraph-image"]);
+    expect(ld.brand).toEqual({ "@type": "Brand", name: "Gatwick Airport" });
     expect(ld.offers).toMatchObject({
       "@type": "Offer",
       price: "6.00",
@@ -94,13 +100,18 @@ describe("aggregateOfferLd", () => {
     const ld = aggregateOfferLd({
       name: "Heathrow airport parking",
       description: "Gate vs pre-book parking at Heathrow",
+      image: "https://example.com/airport-parking/heathrow/opengraph-image",
       url: "https://example.com/airport-parking/heathrow",
       lowPricePence: 4200,
       highPricePence: 9000,
       offerCount: 5,
-      priceValidUntil: "2026-08-10"
+      priceValidUntil: "2026-08-10",
+      brand: "Heathrow Airport"
     }) as any;
     expect(ld["@type"]).toBe("Product");
+    expect(ld.description).toBe("Gate vs pre-book parking at Heathrow");
+    expect(ld.image).toEqual(["https://example.com/airport-parking/heathrow/opengraph-image"]);
+    expect(ld.brand).toEqual({ "@type": "Brand", name: "Heathrow Airport" });
     expect(ld.offers).toMatchObject({
       "@type": "AggregateOffer",
       lowPrice: "42.00",

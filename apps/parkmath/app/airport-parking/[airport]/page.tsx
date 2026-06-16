@@ -80,11 +80,13 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
           data={aggregateOfferLd({
             name: `${airport.name} airport parking`,
             description: `Gate vs pre-book parking at ${airport.name} for 3, 7 and 14 days — verified prices.`,
+            image: `${siteUrl}/airport-parking/${airport.slug}/opengraph-image`,
             url: `${siteUrl}/airport-parking/${airport.slug}`,
             lowPricePence: Math.min(...validSevenDay),
             highPricePence: Math.max(...validSevenDay),
             offerCount: validSevenDay.length,
-            priceValidUntil
+            priceValidUntil,
+            brand: airport.name
           })}
         />
       ) : null}

@@ -1,0 +1,39 @@
+{
+  "name": "@mathfamily/reels",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run tests",
+    "typecheck": "tsc --noEmit",
+    "generate": "tsx src/cli.ts",
+    "digest": "tsx src/digest-cli.ts",
+    "render": "node render.mjs",
+    "studio": "remotion studio"
+  },
+  "dependencies": {
+    "@mathfamily/data": "workspace:*",
+    "@mathfamily/engine": "workspace:*",
+    "@remotion/bundler": "^4.0.0",
+    "@remotion/captions": "^4.0.477",
+    "@remotion/cli": "^4.0.0",
+    "@remotion/google-fonts": "^4.0.477",
+    "@remotion/install-whisper-cpp": "^4.0.477",
+    "@remotion/renderer": "^4.0.0",
+    "@remotion/tailwind-v4": "^4.0.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "remotion": "^4.0.0",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@mathfamily/config": "workspace:*",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "tailwindcss": "^4.1.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.8.0",
+    "vitest": "^3.2.0"
+  }
+}
