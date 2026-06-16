@@ -10,9 +10,9 @@ const scenes: Scene[] = [
 describe("buildTimeline", () => {
   it("scales scene hints to fill the real audio duration and is contiguous", () => {
     const timed = buildTimeline(scenes, 8000);
-    expect(timed[0].startMs).toBe(0);
-    expect(timed[1].startMs).toBe(timed[0].endMs);
-    expect(timed[timed.length - 1].endMs).toBe(8000);
-    expect(timed[1].endMs - timed[1].startMs).toBeGreaterThan(timed[0].endMs - timed[0].startMs);
+    expect(timed[0]!.startMs).toBe(0);
+    expect(timed[1]!.startMs).toBe(timed[0]!.endMs);
+    expect(timed[timed.length - 1]!.endMs).toBe(8000);
+    expect(timed[1]!.endMs - timed[1]!.startMs).toBeGreaterThan(timed[0]!.endMs - timed[0]!.startMs);
   });
 });
