@@ -42,3 +42,5 @@ export * from "./open-data-band";
 export * from "./theme-toggle";
 export * from "./compiled-byline";
 export * from "./answer-passage";
+export { EsimPickCard } from "./EsimPickCard";
+export type { EsimPickCardProps } from "./EsimPickCard";
