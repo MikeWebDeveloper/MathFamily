@@ -1,6 +1,6 @@
 {
-  "version": "1.2.0",
-  "lastUpdated": "2026-06-10",
+  "version": "1.2.1",
+  "lastUpdated": "2026-06-18",
   "records": [
     {
       "airportSlug": "heathrow",
@@ -421,15 +421,15 @@
       "penaltyPence": 10000,
       "penaltyNotes": "£100 Parking Charge for overstaying the 30-minute maximum or non-payment, reduced to £60 if paid within 14 days, plus a debt-recovery fee of up to £70",
       "paymentDeadline": "Barrier-free — pay by 23:59 the day after your visit (online or by phone; payment cannot be made on exit)",
-      "blueBadgePolicy": "No specific Rapid Drop-off concession is published; Blue Badge holders can use Short Stay 1 free for up to 30 minutes, or the Long Stay car park free for up to 60 minutes",
+      "blueBadgePolicy": "Blue Badge holders get up to 30 minutes free at Short Stay 1 (nearest the terminal); general drivers pay £6 for up to 30 minutes there (£8 up to 1 hour). The 60-minute free drop-off/pick-up at Long Stay 2 is open to all drivers (see free alternative). No specific Blue Badge concession is published for the Rapid Drop-off area",
       "freeAlternative": {
-        "name": "Short Stay car park free drop-off",
-        "minutesFree": 30,
-        "details": "Up to 30 minutes free in the Short Stay car park for dropping off and picking up; Long Stay 2 also offers one hour free"
+        "name": "Long Stay 2 car park",
+        "minutesFree": 60,
+        "details": "Free for up to 60 minutes for drop-off and pick-up, then £1 per minute. A 15-20 minute walk from the terminal, or take the free shuttle bus"
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://www.eastmidlandsairport.com/parking/pick-up-and-drop-off/",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-06-18"
     },
     {
       "airportSlug": "aberdeen",
