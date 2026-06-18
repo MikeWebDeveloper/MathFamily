@@ -5,10 +5,16 @@ import { webSiteLd, JsonLd } from "@mathfamily/geo";
 import { CountryFlag, EmailCaptureSlot, StatStrip } from "@mathfamily/ui";
 import { FamilyLinks } from "@/components/family-links";
 import { NETWORK_LABELS } from "@/lib/roaming-content";
+import { HomeTripCalculator } from "../components/home-trip-calculator";
 
 export default function HomePage() {
   const roamingDataset = loadRoamingDataset();
   const esimDataset = loadEsimDataset();
+
+  const calculatorEsimRecords = esimDataset.records.map((r) => ({
+    countrySlug: r.countrySlug,
+    bundles: r.bundles,
+  }));
 
   const destinations = roamingDataset.destinations;
   const destinationCount = destinations.length;
@@ -78,6 +84,13 @@ export default function HomePage() {
           comparisons and airline baggage fees — every figure verified against official
           pages and date-stamped.
         </p>
+      </section>
+
+      <section>
+        <HomeTripCalculator
+          destinations={destinations}
+          esimRecords={calculatorEsimRecords}
+        />
       </section>
 
       <section>
