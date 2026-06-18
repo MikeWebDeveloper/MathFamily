@@ -144,7 +144,7 @@ export default async function CountryHubPage({ params }: { params: Promise<{ cou
       />
 
       {esim ? (
-        <AffiliateBlock providerId="airalo" countrySlug={destination.countrySlug} clickref="esim" officialUrl={esim.sourceUrl} />
+        <AffiliateBlock providerName={m.esimChoice?.provider ?? null} countrySlug={destination.countrySlug} officialUrl={esim.sourceUrl} />
       ) : null}
 
       <FeeGrid

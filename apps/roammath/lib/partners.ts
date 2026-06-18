@@ -1,7 +1,5 @@
 import partnersJson from "./partners.json";
 
-export type ProviderId = "airalo" | "saily" | "holafly";
-
 export interface ResolvedSlot {
   kind: "affiliate" | "official";
   url: string;
@@ -17,22 +15,40 @@ interface PartnerConfig {
   trackingNote: string;
 }
 
-export function resolveProvider(providerId: ProviderId, countrySlug: string, clickref: string, officialUrl: string): ResolvedSlot {
-  const partner = (partnersJson.partners as Record<string, PartnerConfig>)[providerId];
-  if (partner?.active && partner.deeplinkTemplate.startsWith("http")) {
-    return {
-      kind: "affiliate",
-      url: partner.deeplinkTemplate.replaceAll("{countrySlug}", countrySlug).replaceAll("{clickref}", clickref),
-      label: `Check prices with ${partner.name}`,
-      partnerName: partner.name,
-      disclosureRequired: true
-    };
-  }
-  return {
+export function buildAffiliateUrl(template: string, countrySlug: string): string {
+  const clickref = `esim-${countrySlug}`;
+  return template
+    .replaceAll("{countrySlug}", countrySlug)
+    .replaceAll("{clickref}", clickref);
+}
+
+export function resolveSlot(
+  providerName: string | null,
+  countrySlug: string,
+  officialUrl: string
+): ResolvedSlot {
+  const fallback: ResolvedSlot = {
     kind: "official",
     url: officialUrl,
-    label: "Check live prices on the official site",
+    label: "Check live eSIM prices",
     partnerName: null,
-    disclosureRequired: false
+    disclosureRequired: false,
+  };
+
+  if (!providerName) return fallback;
+
+  const key = providerName.toLowerCase();
+  const partner = (partnersJson.partners as Record<string, PartnerConfig>)[key];
+
+  if (!partner?.active || !partner.deeplinkTemplate.startsWith("http")) {
+    return fallback;
+  }
+
+  return {
+    kind: "affiliate",
+    url: buildAffiliateUrl(partner.deeplinkTemplate, countrySlug),
+    label: `Buy with ${partner.name}`,
+    partnerName: partner.name,
+    disclosureRequired: true,
   };
 }

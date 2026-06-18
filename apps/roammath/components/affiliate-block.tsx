@@ -1,7 +1,13 @@
-import { resolveProvider, type ProviderId } from "@/lib/partners";
+import { resolveSlot } from "@/lib/partners";
 
-export function AffiliateBlock({ providerId, countrySlug, clickref, officialUrl }: { providerId: ProviderId; countrySlug: string; clickref: string; officialUrl: string }) {
-  const slot = resolveProvider(providerId, countrySlug, clickref, officialUrl);
+interface AffiliateBlockProps {
+  providerName: string | null;
+  countrySlug: string;
+  officialUrl: string;
+}
+
+export function AffiliateBlock({ providerName, countrySlug, officialUrl }: AffiliateBlockProps) {
+  const slot = resolveSlot(providerName, countrySlug, officialUrl);
   return (
     <div className="rounded-card border border-brand-accent/30 bg-blue-50 dark:bg-brand-accent/[0.08] dark:border-brand-accent/20 p-4">
       <a
@@ -14,8 +20,7 @@ export function AffiliateBlock({ providerId, countrySlug, clickref, officialUrl 
       </a>
       {slot.disclosureRequired ? (
         <p className="mt-2 text-sm text-ink-muted">
-          Affiliate link: if you buy through {slot.partnerName}, RoamMath may earn a commission at no cost to you. This
-          never affects which option we show as cheapest.
+          Affiliate link: if you buy through {slot.partnerName}, RoamMath may earn a commission at no cost to you. This never affects which option we show as cheapest.
         </p>
       ) : null}
     </div>
