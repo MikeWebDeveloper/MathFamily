@@ -1,6 +1,6 @@
 import partnersJson from "./partners.json";
 
-export type SlotId = "esim";
+export type ProviderId = "airalo" | "saily" | "holafly";
 
 export interface ResolvedSlot {
   kind: "affiliate" | "official";
@@ -10,20 +10,19 @@ export interface ResolvedSlot {
   disclosureRequired: boolean;
 }
 
-interface SlotConfig {
-  id: string;
-  partnerId: string;
-  deeplinkTemplate: string;
+interface PartnerConfig {
+  name: string;
   active: boolean;
+  deeplinkTemplate: string;
+  trackingNote: string;
 }
 
-export function resolveSlot(slotId: SlotId, airportSlug: string, officialUrl: string): ResolvedSlot {
-  const slot = (partnersJson.slots as SlotConfig[]).find((s) => s.id === slotId);
-  const partner = slot ? (partnersJson.partners as Record<string, { name: string; active: boolean }>)[slot.partnerId] : undefined;
-  if (slot?.active && partner?.active && slot.deeplinkTemplate.startsWith("http")) {
+export function resolveProvider(providerId: ProviderId, countrySlug: string, clickref: string, officialUrl: string): ResolvedSlot {
+  const partner = (partnersJson.partners as Record<string, PartnerConfig>)[providerId];
+  if (partner?.active && partner.deeplinkTemplate.startsWith("http")) {
     return {
       kind: "affiliate",
-      url: slot.deeplinkTemplate.replaceAll("{airportSlug}", airportSlug).replaceAll("{officialUrl}", officialUrl),
+      url: partner.deeplinkTemplate.replaceAll("{countrySlug}", countrySlug).replaceAll("{clickref}", clickref),
       label: `Check prices with ${partner.name}`,
       partnerName: partner.name,
       disclosureRequired: true

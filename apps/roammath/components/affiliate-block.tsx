@@ -1,7 +1,7 @@
-import { resolveSlot, type SlotId } from "@/lib/partners";
+import { resolveProvider, type ProviderId } from "@/lib/partners";
 
-export function AffiliateBlock({ slotId, airportSlug, officialUrl }: { slotId: SlotId; airportSlug: string; officialUrl: string }) {
-  const slot = resolveSlot(slotId, airportSlug, officialUrl);
+export function AffiliateBlock({ providerId, countrySlug, clickref, officialUrl }: { providerId: ProviderId; countrySlug: string; clickref: string; officialUrl: string }) {
+  const slot = resolveProvider(providerId, countrySlug, clickref, officialUrl);
   return (
     <div className="rounded-card border border-brand-accent/30 bg-blue-50 dark:bg-brand-accent/[0.08] dark:border-brand-accent/20 p-4">
       <a
