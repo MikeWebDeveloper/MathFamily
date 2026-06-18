@@ -376,20 +376,32 @@ Dataset bumped to **v1.2.1**.
 - Short Stay 1 general tariff: **£6** up to 30 min, **£8** up to 1 h, £12 / £16 for 2 h / 3 h.
 - "Up to 30 minutes for Blue Badge holders (Short Stay 1 only): **Free**" — i.e. the 30-min
   free period is **Blue Badge only**; general drivers pay £6.
-- Assisted Travel section: Blue Badge holders get Short Stay 1 free up to 30 min **and**
-  Long Stay 2 free up to 60 min — so the "1 hour free at Long Stay" is **also** a Blue
-  Badge concession, not a general perk.
-- The page does call the **Long Stay car park a "free" alternative** for drop-off and
-  there is a **free 24/7 shuttle** (every 20 min, 3–5 min ride; confirmed on
-  /parking/long-stay/), but **neither page publishes a free time-limit for general
-  drivers** at Long Stay.
+- The pick-up/drop-off page calls the **Long Stay car park a "free" alternative** for
+  drop-off (links to /parking/long-stay/) and there is a **free 24/7 shuttle** (every
+  20 min, 3–5 min ride), but that page does not state the free duration.
+- **General free Long Stay window confirmed** via the official EMA car-parking FAQ /
+  parking content (the JS accordion that won't render for a fetcher, surfaced via a
+  domain-restricted search of eastmidlandsairport.com): "**60 minutes FREE parking is
+  provided in the Long Stay 2 car park for the purposes of drop off and pick up … a
+  shuttle bus service is available. If you need additional time beyond the 60 minutes,
+  charges are £1 per every minute.**" The £1-per-minute overage is a general consumer
+  tariff (Blue-Badge concessions don't carry per-minute overage), so this 60-min free
+  window is **open to all drivers**, not a Blue-Badge-only perk. This matches the
+  public commenter ("the one hour free at long stay is correct").
 
-**Correction made:** the prior `freeAlternative` ("Short Stay free for up to 30 minutes;
-Long Stay 2 also free for one hour") presented two **Blue-Badge-only** concessions as
-general free options — the same error class corrected for Liverpool's "40 min free" on
-10 Jun. Set `freeAlternative` → **null** and rewrote `blueBadgePolicy` to state the
-general Short Stay tariff and that both free periods are Blue-Badge only. `verifiedAt`
-→ 2026-06-18.
+**Correction made (two passes):**
+1. First set `freeAlternative` → **null**, because the only free durations visible on the
+   rendered pick-up/drop-off page (Short Stay 30 min, Long Stay 2 60 min) appeared in the
+   Blue-Badge / Assisted-Travel framing — the same error class as Liverpool's "40 min
+   free" (10 Jun).
+2. Then, after confirming the **general** 60-min Long Stay 2 window from the official FAQ
+   content, **restored** `freeAlternative` to `{name: "Long Stay 2 car park",
+   minutesFree: 60, details: "Free for up to 60 minutes for drop-off and pick-up, then
+   £1 per minute. A 15-20 minute walk from the terminal, or take the free shuttle bus"}`.
+
+`blueBadgePolicy` rewritten to make clear the **Short Stay 1 30-min free is Blue-Badge
+only** (general drivers pay £6), while the **Long Stay 2 60-min free is open to all**.
+`verifiedAt` → 2026-06-18.
 
 **Retained (not re-fetched today):** the **£5 / 15-min Rapid Drop-off** headline fee.
 It is no longer shown on the pick-up-drop-off page (now "pay by midnight the day after",
@@ -398,13 +410,11 @@ no £ figure), but it was officially sourced on 10 Jun from
 max stay and payment deadline were re-confirmed today.
 
 > ## NEEDS-HUMAN
-> EMA markets the Long Stay car park as a **free** drop-off alternative (free 24/7
-> shuttle) and the public commenter asserts a **1-hour free** Long Stay window for
-> everyone — but no official EMA page publishes a free *duration* for general drivers
-> (the only sourced "60 min free at Long Stay 2" is a Blue Badge concession). I set
-> `freeAlternative` to `null` rather than invent a duration. **If Mike can confirm a
-> general free Long Stay window from official signage/the payment portal, restore
-> `freeAlternative` with the sourced `minutesFree`** (likely `{name: "Long Stay car
-> park", minutesFree: 60, details: "...free shuttle every 20 min, 3–5 min ride"}`).
-> Separately, the £5/15-min Rapid Drop-off fee should be re-sourced from the official
-> Rapid Drop-off T&C page on the next sweep since the main page no longer lists it.
+> The general 60-min Long Stay 2 free window is sourced from the official EMA FAQ/parking
+> content (the JS accordion won't render for an automated fetcher, so it was captured via
+> a domain-restricted search of eastmidlandsairport.com rather than a direct page read) and
+> corroborated by the public commenter + the airport's own "free Long Stay alternative"
+> language. **A human glance at the EMA car-parking FAQ accordion would pin the exact
+> wording** if you want belt-and-braces before merging. Separately, the £5/15-min Rapid
+> Drop-off fee should be re-sourced from the official Rapid Drop-off T&C page on the next
+> sweep, since the main page no longer lists it.

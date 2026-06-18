@@ -421,8 +421,12 @@
       "penaltyPence": 10000,
       "penaltyNotes": "£100 Parking Charge for overstaying the 30-minute maximum or non-payment, reduced to £60 if paid within 14 days, plus a debt-recovery fee of up to £70",
       "paymentDeadline": "Barrier-free — pay by 23:59 the day after your visit (online or by phone; payment cannot be made on exit)",
-      "blueBadgePolicy": "Blue Badge holders park free for both pick-up and drop-off: up to 30 minutes at Short Stay 1, or up to 60 minutes at Long Stay 2. The 30-minute Short Stay free period is Blue Badge only — general drivers pay £6 for up to 30 minutes (£8 up to 1 hour). No specific Blue Badge concession is published for the Rapid Drop-off area",
-      "freeAlternative": null,
+      "blueBadgePolicy": "Blue Badge holders get up to 30 minutes free at Short Stay 1 (nearest the terminal); general drivers pay £6 for up to 30 minutes there (£8 up to 1 hour). The 60-minute free drop-off/pick-up at Long Stay 2 is open to all drivers (see free alternative). No specific Blue Badge concession is published for the Rapid Drop-off area",
+      "freeAlternative": {
+        "name": "Long Stay 2 car park",
+        "minutesFree": 60,
+        "details": "Free for up to 60 minutes for drop-off and pick-up, then £1 per minute. A 15-20 minute walk from the terminal, or take the free shuttle bus"
+      },
       "priorYearFeePence": null,
       "sourceUrl": "https://www.eastmidlandsairport.com/parking/pick-up-and-drop-off/",
       "verifiedAt": "2026-06-18"
