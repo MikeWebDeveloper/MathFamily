@@ -1,6 +1,7 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, test } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import { roamingTripCost, type NetworkRoamingOption, type EsimBundleOption } from "@mathfamily/engine";
+import { AffiliateBlock } from "../components/affiliate-block";
 import type { ResolvedSlot } from "../lib/partners";
 import { RoamingAnswerDisplay, buildHeroAnswer } from "../components/roaming-answer";
 
@@ -134,4 +135,39 @@ describe("RoamingAnswer warnings / caveats", () => {
     // The engine always emits ESIM_SNAPSHOT when esimBundles covers the trip
     expect(html.toLowerCase()).toContain("snapshot");
   });
+});
+
+// ---------------------------------------------------------------------------
+// AffiliateBlock tests
+// ---------------------------------------------------------------------------
+
+test("AffiliateBlock renders fallback (official link) when all partners inactive", () => {
+  const html = renderToStaticMarkup(
+    <AffiliateBlock
+      providerName="Airalo"
+      countrySlug="spain"
+      officialUrl="https://airalo.com/spain"
+      bundleName="Spain 5GB"
+      totalPence={1499}
+      countryName="Spain"
+    />
+  );
+  // All partners are active: false in partners.json, so fallback mode
+  expect(html).toContain("Check live eSIM prices");
+  expect(html).not.toContain("Affiliate link");
+  expect(html).not.toContain("Best eSIM pick");
+});
+
+test("AffiliateBlock renders eSIM option section regardless", () => {
+  const html = renderToStaticMarkup(
+    <AffiliateBlock
+      providerName={null}
+      countrySlug="france"
+      officialUrl="https://airalo.com/france"
+      bundleName={null}
+      totalPence={null}
+      countryName="France"
+    />
+  );
+  expect(html).toContain("Check live eSIM prices");
 });
