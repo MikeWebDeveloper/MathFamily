@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "parkmath-dev",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "parkmath", "exec", "next", "dev", "--port", "4321"],
+      "port": 4321
+    },
+    {
+      "name": "roammath-dev",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "roammath", "exec", "next", "dev", "--port", "4322"],
+      "port": 4322
+    }
+  ]
+}

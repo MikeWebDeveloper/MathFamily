@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { formatPence, roamingTripCost, type NetworkRoamingOption, type EsimBundleOption, type RoamingTripResult } from "@mathfamily/engine";
 import { AnswerLead, CaveatChip, RangeSlider } from "@mathfamily/ui";
-import type { ResolvedSlot } from "../lib/partners";
+import { type ResolvedSlot } from "../lib/partners";
 
 export interface RoamingAnswerProps {
   networkOption: NetworkRoamingOption;
