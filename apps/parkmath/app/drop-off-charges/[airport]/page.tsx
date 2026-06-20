@@ -6,6 +6,7 @@ import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd, offerLd, speakableLd } from "@mathfamily/geo";
 import { AnswerCard, AnswerLead, AnswerPassage, CaveatChip, Callout, FaqAccordion, FreshnessBadge, LatestUpdates, MiniAnswerBar, PageHeading, SourceCitation, SourcesBlock, EmailCaptureSlot, UkMap, VerifiedStamp } from "@mathfamily/ui";
 import { DropOffCalculator } from "@/components/drop-off-calculator";
+import { DropOffParkingBridge } from "@/components/drop-off-bridge";
 import { HolidayExtrasCard } from "@/components/holiday-extras-card";
 import { buildDropOffFaqs, freshnessDelta, isPerEntryTariff, paymentDeadlineChip, trendNote } from "@/lib/content";
 
@@ -134,6 +135,10 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
           Free for {record.freeAlternative.minutesFree} minutes. {record.freeAlternative.details}
         </Callout>
       ) : null}
+
+      {/* Decision bridge: keep the free-alternative message above intact (trust + ranking asset);
+          ADD an honest, in-flow path for the segment that will actually park for the trip. */}
+      <DropOffParkingBridge slug={airport.slug} airportName={airport.name} />
 
       {!record.isFree && !isPerEntryTariff(record) ? (
         <DropOffCalculator tariff={record} airportName={airport.name} buildDate={new Date().toISOString()} />

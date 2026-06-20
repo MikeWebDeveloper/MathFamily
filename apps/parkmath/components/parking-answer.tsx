@@ -4,11 +4,13 @@ import { useState } from "react";
 import { formatPence } from "@mathfamily/engine";
 import { AnswerLead, CaveatChip, SavesVerdict, SegmentedControl } from "@mathfamily/ui";
 import { BookingOptions } from "./booking-options";
-import type { ParkingPageModel } from "../lib/parking-content";
+import type { ParkingCtaModel, ParkingPageModel } from "../lib/parking-content";
 
 export interface ParkingAnswerEntry {
   days: number;
   model: ParkingPageModel;
+  /** Honest CTA view-model for this duration (price + "save £X vs gate", or gate-only suppression). */
+  cta: ParkingCtaModel;
 }
 
 const DURATION_OPTIONS = [
@@ -108,8 +110,7 @@ export function ParkingAnswer({
           airportName={airportName}
           airportSlug={slug}
           officialUrl={officialUrl}
-          price={m.cheapest?.totalPence}
-          days={currentEntry!.days}
+          cta={currentEntry!.cta}
         />
       </div>
     </section>

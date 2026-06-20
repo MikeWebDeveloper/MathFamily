@@ -4,6 +4,7 @@ import {
   REFERENCE_DAYS,
   buildParkingVsDropOffFaqs,
   dropOffFeePence,
+  dropOffParkingBridge,
   gateParkingPence,
   parkingEquivalenceLine,
   parkingVsDropOffAnswer,
@@ -164,5 +165,43 @@ describe("parkingVsDropOffIndexSummary", () => {
   });
   it("handles an empty list", () => {
     expect(parkingVsDropOffIndexSummary([])).toContain("don't yet have");
+  });
+});
+
+describe("dropOffParkingBridge (drop-off → parking decision bridge)", () => {
+  it("carries the concrete comparison figure when the airport qualifies (charged drop-off + gate price)", () => {
+    // gatwick: charged drop-off AND a verified 7-day drive-up gate price → full comparison bridge.
+    const b = dropOffParkingBridge("gatwick");
+    expect(b.show).toBe(true);
+    expect(b.hasComparison).toBe(true);
+    expect(b.hasParking).toBe(true);
+    expect(b.parkingDays).toBe(REFERENCE_DAYS);
+    expect(b.parkingPence).not.toBeNull();
+    expect(b.dropOffFeePence).not.toBeNull();
+    expect(b.verifiedAt).not.toBeNull();
+    // The figures are integer pence drawn from the dataset, never fabricated.
+    expect(Number.isInteger(b.parkingPence!)).toBe(true);
+    expect(Number.isInteger(b.dropOffFeePence!)).toBe(true);
+  });
+
+  it("degrades to a plain onward link (no figure) for a FREE drop-off airport that still has a parking page", () => {
+    // birmingham: free drop-off (excluded from comparison) but a parking page exists.
+    const b = dropOffParkingBridge("birmingham");
+    expect(b.show).toBe(true);
+    expect(b.hasComparison).toBe(false);
+    expect(b.hasParking).toBe(true);
+    // No fabricated comparison numbers when there is nothing honest to compare.
+    expect(b.parkingPence).toBeNull();
+    expect(b.dropOffFeePence).toBeNull();
+    expect(b.verifiedAt).toBeNull();
+  });
+
+  it("renders nothing when there is no parking page to send a parker to (charged drop-off, no parking data)", () => {
+    // norwich: charged drop-off but no parking record at all → no bridge.
+    const b = dropOffParkingBridge("norwich");
+    expect(b.show).toBe(false);
+    expect(b.hasComparison).toBe(false);
+    expect(b.hasParking).toBe(false);
+    expect(b.parkingPence).toBeNull();
   });
 });

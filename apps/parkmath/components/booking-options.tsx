@@ -1,4 +1,5 @@
 import { resolveSlot, type SlotId } from "../lib/partners";
+import type { ParkingCtaModel } from "../lib/parking-content";
 
 const PARKING_SLOT: SlotId = "parking-prebook";
 
@@ -8,24 +9,42 @@ export function BookingOptions({
   officialUrl,
   price,
   days,
+  cta,
 }: {
   airportName: string;
   airportSlug: string;
   officialUrl: string;
-  /** Optional: cheapest pre-book price in pence, shown in the affiliate CTA. */
+  /** Optional: cheapest pre-book price in pence, shown in the affiliate CTA.
+   *  Ignored when `cta` is provided (the model decides what is honest to show). */
   price?: number;
   /** Optional: duration in days, shown beside the price figure. */
   days?: number;
+  /** Honest CTA view-model. When provided, it is the single source of truth for the price and the
+   *  "save £X vs gate" claim — it suppresses the price entirely in the gate-only case so we never
+   *  show a drive-up gate price dressed up as a "from" pre-book figure. */
+  cta?: ParkingCtaModel;
 }) {
   const he = resolveSlot(PARKING_SLOT, airportSlug, officialUrl);
   const hasAffiliate = he.kind === "affiliate";
 
+  // Resolve the honest price to surface: prefer the cta model (which suppresses the gate-only
+  // price), and fall back to the legacy price/days props for callers that don't pass a model.
+  const ctaPrice = cta ? cta.pricePence ?? undefined : price;
+  const ctaDays = cta ? cta.days : days;
+  const savingPence = cta?.state === "saving" ? cta.savingVsGatePence : null;
+
   const priceStr =
-    price !== undefined && days !== undefined
-      ? `from £${(price / 100).toFixed(2)} for ${days} day${days === 1 ? "" : "s"}`
-      : price !== undefined
-        ? `from £${(price / 100).toFixed(2)}`
+    ctaPrice !== undefined && ctaDays !== undefined
+      ? `from £${(ctaPrice / 100).toFixed(2)} for ${ctaDays} day${ctaDays === 1 ? "" : "s"}`
+      : ctaPrice !== undefined
+        ? `from £${(ctaPrice / 100).toFixed(2)}`
         : null;
+
+  // Honest saving line: only when a real pre-book price beats the drive-up gate for this duration.
+  const savingStr =
+    savingPence !== null && savingPence !== undefined && cta?.gatePence
+      ? `Save £${(savingPence / 100).toFixed(2)} vs the £${(cta.gatePence / 100).toFixed(2)} drive-up gate price`
+      : null;
 
   return (
     <section aria-label="Your booking options" className="space-y-4 rounded-card border border-ink/10 bg-surface p-4">
@@ -55,6 +74,12 @@ export function BookingOptions({
                 Terms ↗
               </a>
             </p>
+            {savingStr ? (
+              <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-positive/10 px-3 py-1 text-sm font-semibold text-positive">
+                <span aria-hidden>✓</span>
+                {savingStr}
+              </p>
+            ) : null}
             <p className="mt-2 text-xs text-ink-muted">
               We earn a commission only if you book the &ldquo;Ad&rdquo; option — it never changes our ranking or which park
               we show as cheapest.

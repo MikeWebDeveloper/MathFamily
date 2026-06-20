@@ -6,7 +6,7 @@ import { formatPence } from "@mathfamily/engine";
 import { aggregateOfferLd, breadcrumbLd, faqPageLd, JsonLd, speakableLd } from "@mathfamily/geo";
 import { AnswerPassage, FaqAccordion, FeeGrid, FreshnessBadge, PageHeading, SourceCitation, SourcesBlock, EmailCaptureSlot } from "@mathfamily/ui";
 import { ParkingAnswer } from "@/components/parking-answer";
-import { DURATION_SLUGS, buildParkingFaqs, coveredParkingDurations, parkingPageModel } from "@/lib/parking-content";
+import { DURATION_SLUGS, buildParkingFaqs, coveredParkingDurations, parkingCtaModel, parkingPageModel } from "@/lib/parking-content";
 import { airportHasParkingVsDropOff } from "@/lib/parking-vs-drop-off-content";
 
 export const dynamicParams = false;
@@ -45,6 +45,7 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
   const entries = coveredParkingDurations(record).map((days) => ({
     days,
     model: parkingPageModel(record, days),
+    cta: parkingCtaModel(record, days),
   }));
 
   // Clamp the default selected duration to one that actually has data.
