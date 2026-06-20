@@ -1,0 +1,168 @@
+import { describe, expect, it } from "vitest";
+import type { DropOffRecord, ParkingRecord } from "@mathfamily/data";
+import {
+  REFERENCE_DAYS,
+  buildParkingVsDropOffFaqs,
+  dropOffFeePence,
+  gateParkingPence,
+  parkingEquivalenceLine,
+  parkingVsDropOffAnswer,
+  parkingVsDropOffIndexSummary,
+  parkingVsDropOffLeadFacts,
+  parkingVsDropOffModel,
+  qualifiesForParkingVsDropOff
+} from "../lib/parking-vs-drop-off-content";
+
+const dropOff: DropOffRecord = {
+  airportSlug: "gatwick",
+  isFree: false,
+  feeSummary: "£10 for up to 10 minutes",
+  bands: [{ upToMinutes: 10, totalPence: 1000 }],
+  maxStayMinutes: 30,
+  perMinuteAfterPence: 100,
+  maxChargePence: 3000,
+  penaltyPence: 10000,
+  penaltyNotes: "Reduced to £60 if paid within 14 days",
+  paymentDeadline: "Midnight the day after",
+  blueBadgePolicy: "Blue Badge holders are exempt if registered in advance",
+  freeAlternative: { name: "Long Stay car park", minutesFree: 120, details: "Free shuttle bus to the terminals." },
+  priorYearFeePence: null,
+  sourceUrl: "https://www.gatwickairport.com/drop-off",
+  verifiedAt: "2026-06-10"
+};
+
+// 7-day gate = £230.00, i.e. £32.86/24h → one £10 drop-off ≈ 438 min of parking.
+const parking: ParkingRecord = {
+  airportSlug: "gatwick",
+  products: [
+    {
+      productType: "gate",
+      name: "Long Stay — roll-up (drive-up)",
+      prices: [
+        { days: 3, totalPence: 10200 },
+        { days: 7, totalPence: 23000 },
+        { days: 14, totalPence: 45400 }
+      ],
+      snapshotDate: null,
+      notes: null
+    },
+    {
+      productType: "prebook",
+      name: "Long Stay (pre-book) — 'from' price",
+      prices: [{ days: 8, totalPence: 7199 }],
+      snapshotDate: "2026-06-12",
+      notes: null
+    }
+  ],
+  sourceUrl: "https://www.gatwickairport.com/parking",
+  verifiedAt: "2026-06-12"
+};
+
+describe("dropOffFeePence / gateParkingPence", () => {
+  it("reads the first drop-off band and the gate price for the duration", () => {
+    expect(dropOffFeePence(dropOff)).toBe(1000);
+    expect(gateParkingPence(parking, 7)).toBe(23000);
+  });
+  it("returns null for a free airport (nothing to compare)", () => {
+    expect(dropOffFeePence({ isFree: true, bands: [] })).toBeNull();
+  });
+  it("uses ONLY the gate product, never a pre-book snapshot", () => {
+    // 8-day pre-book exists but no gate price for 8 days → null, never the pre-book value.
+    expect(gateParkingPence(parking, 8)).toBeNull();
+  });
+});
+
+describe("qualifiesForParkingVsDropOff", () => {
+  it("true only when a real drop-off charge AND a gate parking price both exist", () => {
+    expect(qualifiesForParkingVsDropOff({ dropOff, parking })).toBe(true);
+  });
+  it("false when the airport's drop-off is free", () => {
+    const free = { ...dropOff, isFree: true, bands: [] };
+    expect(qualifiesForParkingVsDropOff({ dropOff: free, parking })).toBe(false);
+  });
+  it("false when no gate parking price covers the reference duration", () => {
+    const noGate: ParkingRecord = { ...parking, products: parking.products.filter((p) => p.productType !== "gate") };
+    expect(qualifiesForParkingVsDropOff({ dropOff, parking: noGate })).toBe(false);
+  });
+});
+
+describe("parkingVsDropOffModel", () => {
+  it("derives per-day, minutes-equivalence and the verdict from data", () => {
+    const m = parkingVsDropOffModel({ dropOff, parking })!;
+    expect(m.dropOffFeePence).toBe(1000);
+    expect(m.parkingPence).toBe(23000);
+    expect(m.parkingDays).toBe(REFERENCE_DAYS);
+    expect(m.perDayPence).toBe(Math.round(23000 / 7)); // 3286
+    expect(m.parkingMinutesPerDropOff).toBe(Math.round((1000 / 3286) * 1440)); // 438
+    expect(m.dropOffsPerParkingStay).toBe(Math.round(23000 / 1000)); // 23
+    expect(m.cheaperToday).toBe("drop-off");
+  });
+  it("reports the FRESHER of the two source verification dates", () => {
+    const m = parkingVsDropOffModel({ dropOff, parking })!;
+    expect(m.verifiedAt).toBe("2026-06-12"); // parking is fresher than 2026-06-10
+  });
+  it("flips the verdict when parking is the smaller outlay", () => {
+    const cheapPark: ParkingRecord = {
+      ...parking,
+      products: [{ productType: "gate", name: "g", prices: [{ days: 7, totalPence: 800 }], snapshotDate: null, notes: null }]
+    };
+    expect(parkingVsDropOffModel({ dropOff, parking: cheapPark })!.cheaperToday).toBe("parking");
+  });
+  it("returns null when inputs don't qualify (defensive)", () => {
+    expect(parkingVsDropOffModel({ dropOff: { ...dropOff, isFree: true, bands: [] }, parking })).toBeNull();
+  });
+});
+
+describe("parkingVsDropOffAnswer", () => {
+  it("gives the honest dual framing and exact figures when drop-off is cheaper", () => {
+    const a = parkingVsDropOffAnswer(parkingVsDropOffModel({ dropOff, parking })!, "London Gatwick");
+    expect(a).toContain("£10");
+    expect(a).toContain("£230");
+    expect(a).toContain("438 minutes");
+    expect(a).toContain("cheaper");
+  });
+});
+
+describe("parkingVsDropOffLeadFacts / equivalence", () => {
+  it("lead facts are all data-backed", () => {
+    const facts = parkingVsDropOffLeadFacts(parkingVsDropOffModel({ dropOff, parking })!);
+    expect(facts.some((f) => f.includes("£10"))).toBe(true);
+    expect(facts.some((f) => f.includes("£230"))).toBe(true);
+    expect(facts.some((f) => f.includes("438 minutes"))).toBe(true);
+  });
+  it("equivalence line states the minutes-per-drop-off", () => {
+    const line = parkingEquivalenceLine(parkingVsDropOffModel({ dropOff, parking })!, "London Gatwick");
+    expect(line).toContain("438 minutes");
+    expect(line).toContain("£10");
+  });
+});
+
+describe("buildParkingVsDropOffFaqs", () => {
+  it("leads with the park-or-drop-off question and cites the verified date", () => {
+    const faqs = buildParkingVsDropOffFaqs(parkingVsDropOffModel({ dropOff, parking })!, dropOff, "London Gatwick");
+    expect(faqs[0]?.question).toBe("Is it cheaper to park or get dropped off at London Gatwick?");
+    expect(faqs[0]?.answer).toContain("2026-06-12");
+  });
+  it("includes the avoid-the-charge cross-sell only when a free alternative exists", () => {
+    const faqs = buildParkingVsDropOffFaqs(parkingVsDropOffModel({ dropOff, parking })!, dropOff, "London Gatwick");
+    expect(faqs.some((f) => f.question.includes("avoid"))).toBe(true);
+    const noAlt = { ...dropOff, freeAlternative: null };
+    const faqs2 = buildParkingVsDropOffFaqs(parkingVsDropOffModel({ dropOff, parking })!, noAlt, "London Gatwick");
+    expect(faqs2.some((f) => f.question.includes("avoid"))).toBe(false);
+  });
+});
+
+describe("parkingVsDropOffIndexSummary", () => {
+  it("counts comparable airports and headlines the dearest drive-up park", () => {
+    const s = parkingVsDropOffIndexSummary([
+      { slug: "gatwick", name: "Gatwick", dropOffFeePence: 1000, parkingPence: 23000, parkingDays: 7, cheaperToday: "drop-off" },
+      { slug: "manchester", name: "Manchester", dropOffFeePence: 500, parkingPence: 42980, parkingDays: 7, cheaperToday: "drop-off" }
+    ]);
+    expect(s).toContain("2 UK airports");
+    expect(s).toContain("Manchester");
+    expect(s).toContain("£429.80");
+  });
+  it("handles an empty list", () => {
+    expect(parkingVsDropOffIndexSummary([])).toContain("don't yet have");
+  });
+});

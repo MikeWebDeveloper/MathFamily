@@ -7,6 +7,7 @@ import { aggregateOfferLd, breadcrumbLd, faqPageLd, JsonLd, speakableLd } from "
 import { AnswerPassage, FaqAccordion, FeeGrid, FreshnessBadge, PageHeading, SourceCitation, SourcesBlock, EmailCaptureSlot } from "@mathfamily/ui";
 import { ParkingAnswer } from "@/components/parking-answer";
 import { DURATION_SLUGS, buildParkingFaqs, coveredParkingDurations, parkingPageModel } from "@/lib/parking-content";
+import { airportHasParkingVsDropOff } from "@/lib/parking-vs-drop-off-content";
 
 export const dynamicParams = false;
 
@@ -188,6 +189,14 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
           Just dropping someone off at {airport.name}? See the drop-off charge →
         </Link>
       </p>
+
+      {airportHasParkingVsDropOff(airport.slug) ? (
+        <p className="mf-reveal text-sm" style={{ "--mf-delay": "0ms" } as React.CSSProperties}>
+          <Link href={`/parking-vs-drop-off/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
+            Park or get dropped off at {airport.name}? See which is cheaper →
+          </Link>
+        </p>
+      ) : null}
 
       <p className="mf-reveal text-sm" style={{ "--mf-delay": "0ms" } as React.CSSProperties}>
         <Link href={`/abroad/${airport.slug}`} className="text-brand-accent underline underline-offset-4">

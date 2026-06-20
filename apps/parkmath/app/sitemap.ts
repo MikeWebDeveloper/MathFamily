@@ -38,6 +38,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
         changeFrequency: "monthly" as const,
         priority: 0.7
       })),
+    { url: `${base}/parking-vs-drop-off`, changeFrequency: "weekly" as const, priority: 0.8, lastModified: latestParkingModified },
+    ...dropOffRecords
+      .filter((d) => {
+        if (d.isFree || (d.bands[0]?.totalPence ?? null) === null) return false;
+        const p = parkingRecords.find((r) => r.airportSlug === d.airportSlug);
+        return Boolean(p?.products.some((prod) => prod.productType === "gate" && prod.prices.some((pr) => pr.days === 7)));
+      })
+      .map((d) => ({
+        url: `${base}/parking-vs-drop-off/${d.airportSlug}`,
+        lastModified: new Date(`${d.verifiedAt}T00:00:00Z`),
+        changeFrequency: "monthly" as const,
+        priority: 0.7
+      })),
     { url: `${base}/airport-parking`, changeFrequency: "weekly" as const, priority: 0.9, lastModified: latestParkingModified },
     ...parkingRecords.map((r) => ({
       url: `${base}/airport-parking/${r.airportSlug}`,

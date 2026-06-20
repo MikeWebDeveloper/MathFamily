@@ -8,6 +8,7 @@ import { AnswerLead, AnswerPassage, Callout, CaveatChip, EmailCaptureSlot, FaqAc
 import { HolidayExtrasCard } from "@/components/holiday-extras-card";
 import { freshnessDelta } from "@/lib/content";
 import { avoidAnswer, avoidLeadFacts, buildAvoidFaqs, buildAvoidSteps, qualifiesForAvoidPage } from "@/lib/avoid-content";
+import { airportHasParkingVsDropOff } from "@/lib/parking-vs-drop-off-content";
 
 export const dynamicParams = false;
 
@@ -148,6 +149,13 @@ export default async function AvoidDropOffPage({ params }: { params: Promise<{ a
           Full {airport.name} drop-off charge breakdown →
         </Link>
       </p>
+      {airportHasParkingVsDropOff(airport.slug) ? (
+        <p>
+          <Link href={`/parking-vs-drop-off/${airport.slug}`} className="text-sm font-medium text-brand-accent underline underline-offset-4">
+            Parking vs drop-off at {airport.name}: which is cheaper? →
+          </Link>
+        </p>
+      ) : null}
       <p>
         <a href="/avoid-drop-off-charge" className="text-sm font-medium text-brand-accent underline underline-offset-4">
           How to avoid the charge at every UK airport →
