@@ -188,6 +188,13 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
         hook={`Get notified when ${airport.name} changes its fees`}
       />
 
+      {!record.isFree && record.freeAlternative ? (
+        <p>
+          <Link href={`/avoid-drop-off-charge/${airport.slug}`} className="text-sm font-medium text-brand-accent underline underline-offset-4">
+            How to avoid the {airport.name} drop-off charge →
+          </Link>
+        </p>
+      ) : null}
       <p>
         <a href="/drop-off-charges" className="text-sm font-medium text-brand-accent underline underline-offset-4">
           Compare drop-off charges at all UK airports →

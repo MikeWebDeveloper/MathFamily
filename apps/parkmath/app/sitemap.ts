@@ -29,6 +29,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly" as const,
       priority: 0.8
     })),
+    { url: `${base}/avoid-drop-off-charge`, changeFrequency: "weekly" as const, priority: 0.8, lastModified: latestModified },
+    ...dropOffRecords
+      .filter((r) => !r.isFree && r.freeAlternative !== null)
+      .map((r) => ({
+        url: `${base}/avoid-drop-off-charge/${r.airportSlug}`,
+        lastModified: new Date(`${r.verifiedAt}T00:00:00Z`),
+        changeFrequency: "monthly" as const,
+        priority: 0.7
+      })),
     { url: `${base}/airport-parking`, changeFrequency: "weekly" as const, priority: 0.9, lastModified: latestParkingModified },
     ...parkingRecords.map((r) => ({
       url: `${base}/airport-parking/${r.airportSlug}`,

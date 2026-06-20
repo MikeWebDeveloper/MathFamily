@@ -10,6 +10,26 @@ export function faqPageLd(items: { question: string; answer: string }[]) {
   };
 }
 
+/** HowTo — for a step-by-step "how to avoid the X charge" page. Steps are built only from
+ *  verified dataset facts (the free alternative, Blue Badge policy, payment deadline); we never
+ *  fabricate a step or a price. No cost/supply fields are emitted (this is a money-saving how-to,
+ *  not a purchasable product). */
+export function howToLd(input: { name: string; description: string; url: string; steps: { name: string; text: string }[] }) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "HowTo" as const,
+    name: input.name,
+    description: input.description,
+    url: input.url,
+    step: input.steps.map((s, index) => ({
+      "@type": "HowToStep" as const,
+      position: index + 1,
+      name: s.name,
+      text: s.text
+    }))
+  };
+}
+
 export function organizationLd(input: { siteUrl: string; name: string; logoUrl: string; sameAs?: string[]; founder?: { name: string; jobTitle: string; sameAs?: string[] } }) {
   return {
     "@context": "https://schema.org",

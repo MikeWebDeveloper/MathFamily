@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { aggregateOfferLd, breadcrumbLd, datasetLd, faqPageLd, itemListLd, offerLd, webSiteLd, newsArticleLd, organizationLd, personLd, speakableLd } from "../src/builders";
+import { aggregateOfferLd, breadcrumbLd, datasetLd, faqPageLd, howToLd, itemListLd, offerLd, webSiteLd, newsArticleLd, organizationLd, personLd, speakableLd } from "../src/builders";
 
 describe("faqPageLd", () => {
   it("builds a FAQPage with one Question per item", () => {
@@ -7,6 +7,28 @@ describe("faqPageLd", () => {
     expect(ld["@type"]).toBe("FAQPage");
     expect(ld.mainEntity).toHaveLength(2);
     expect(ld.mainEntity[0]).toMatchObject({ "@type": "Question", name: "Q1?", acceptedAnswer: { "@type": "Answer", text: "A1" } });
+  });
+});
+
+describe("howToLd", () => {
+  it("builds a HowTo with one positioned HowToStep per step and no cost/supply fields", () => {
+    const ld = howToLd({
+      name: "How to avoid the Gatwick drop-off charge",
+      description: "Three ways to skip the £6 forecourt fee at Gatwick.",
+      url: "https://example.com/avoid-drop-off-charge/gatwick",
+      steps: [
+        { name: "Use the free alternative", text: "Park in the Long Stay car park — free for 30 minutes." },
+        { name: "Check Blue Badge exemption", text: "Blue Badge holders may be exempt." }
+      ]
+    });
+    expect(ld["@type"]).toBe("HowTo");
+    expect(ld.name).toContain("Gatwick");
+    expect(ld.step).toHaveLength(2);
+    expect(ld.step[0]).toMatchObject({ "@type": "HowToStep", position: 1, name: "Use the free alternative" });
+    expect(ld.step[1]).toMatchObject({ position: 2, name: "Check Blue Badge exemption" });
+    expect("totalTime" in ld).toBe(false);
+    expect("estimatedCost" in ld).toBe(false);
+    expect("supply" in ld).toBe(false);
   });
 });
 
