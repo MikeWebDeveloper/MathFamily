@@ -39,10 +39,31 @@ function read(file) {
 }
 
 const slugs = (file) => read(file).map((r) => r.airportSlug).filter(Boolean);
-const dropOff = slugs("drop-off-fees.json");
-const parking = slugs("parking-tariffs.json");
+const dropOffRecords = read("drop-off-fees.json");
+const parkingRecords = read("parking-tariffs.json");
+const dropOff = dropOffRecords.map((r) => r.airportSlug).filter(Boolean);
+const parking = parkingRecords.map((r) => r.airportSlug).filter(Boolean);
 const lounges = slugs("lounges.json");
 const news = read("news.json").map((r) => r.id).filter(Boolean);
+
+// Mirror app/sitemap.ts so every indexable cluster page also gets pinged.
+// "avoid the drop-off charge": airports that charge AND publish a free alternative.
+const avoid = dropOffRecords
+  .filter((r) => !r.isFree && r.freeAlternative != null)
+  .map((r) => r.airportSlug)
+  .filter(Boolean);
+
+// "parking vs drop-off": charging airports (with a band price) that also have a 7-day gate parking price.
+const parkingVsDropOff = dropOffRecords
+  .filter((d) => {
+    if (d.isFree || (d.bands?.[0]?.totalPence ?? null) === null) return false;
+    const p = parkingRecords.find((r) => r.airportSlug === d.airportSlug);
+    return Boolean(
+      p?.products?.some((prod) => prod.productType === "gate" && prod.prices?.some((pr) => pr.days === 7))
+    );
+  })
+  .map((d) => d.airportSlug)
+  .filter(Boolean);
 
 const urls = [
   ...new Set([
@@ -50,10 +71,14 @@ const urls = [
     `${BASE}/llms.txt`,
     `${BASE}/parking-price-index-2026`,
     `${BASE}/drop-off-charges`,
+    `${BASE}/avoid-drop-off-charge`,
+    `${BASE}/parking-vs-drop-off`,
     `${BASE}/airport-parking`,
     `${BASE}/airport-lounges`,
     `${BASE}/news`,
     ...dropOff.map((s) => `${BASE}/drop-off-charges/${s}`),
+    ...avoid.map((s) => `${BASE}/avoid-drop-off-charge/${s}`),
+    ...parkingVsDropOff.map((s) => `${BASE}/parking-vs-drop-off/${s}`),
     ...parking.map((s) => `${BASE}/airport-parking/${s}`),
     ...parking.flatMap((s) => DURATIONS.map((d) => `${BASE}/airport-parking/${s}/${d}`)),
     ...lounges.map((s) => `${BASE}/airport-lounges/${s}`),
