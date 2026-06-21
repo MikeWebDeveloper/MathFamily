@@ -7,7 +7,7 @@ import { PageHeading } from "@mathfamily/ui";
 export const metadata: Metadata = {
   title: "About ParkMath — who runs it and why",
   description:
-    "ParkMath is run by Mike Latal, its founder, to keep every UK airport drop-off and parking charge current — verified against each airport's own official page, not copied from stale comparison sites.",
+    "ParkMath is run by Mike, its founder, to keep every UK airport drop-off and parking charge current — verified against each airport's own official page, not copied from stale comparison sites.",
   alternates: { canonical: "/about" }
 };
 
@@ -30,7 +30,7 @@ export default function AboutPage() {
       <JsonLd
         data={personLd({
           siteUrl,
-          name: "Mike Latal",
+          name: "Mike",
           jobTitle: "Founder & editor, ParkMath",
           url: `${siteUrl}/about`
         })}
@@ -39,7 +39,7 @@ export default function AboutPage() {
       <header className="space-y-3">
         <PageHeading>About ParkMath</PageHeading>
         <p className="mf-speakable text-lead text-ink">
-          ParkMath is run by a real person — <strong>Mike Latal, its founder</strong> — to answer one
+          ParkMath is run by a real person — <strong>Mike, its founder</strong> — to answer one
           question honestly: what does it actually cost to drop someone off, or park, at a UK airport
           right now?
         </p>
@@ -68,7 +68,6 @@ export default function AboutPage() {
         </p>
       </section>
 
-      {/* Mike: tweak bio / confirm name (Mike Latal vs Michal Latal) before promote */}
       <section className="space-y-4">
         <h2 className="text-h2 font-semibold text-ink">Who runs ParkMath</h2>
         <div className="mf-card-lg mf-edge space-y-4 p-6">
@@ -77,14 +76,14 @@ export default function AboutPage() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/images/mike-latal.webp"
-              alt="Mike Latal, founder of ParkMath"
+              alt="Mike, founder of ParkMath"
               width={80}
               height={80}
               loading="lazy"
               className="h-20 w-20 shrink-0 rounded-full object-cover ring-1 ring-ink/10"
             />
             <div className="space-y-1">
-              <p className="text-lg font-bold text-ink">Mike Latal</p>
+              <p className="text-lg font-bold text-ink">Mike</p>
               <p className="text-sm text-ink-muted">Founder &amp; editor, ParkMath</p>
             </div>
           </div>

@@ -56,7 +56,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Organization + founder graph, emitted site-wide. founder.sameAs is intentionally
             omitted until Mike confirms a real profile URL — we never invent social links.
             [Mike to confirm]: add e.g. ["https://www.linkedin.com/in/…"] to founder.sameAs. */}
-        <JsonLd data={organizationLd({ siteUrl: SITE_URL, name: "ParkMath", logoUrl: `${SITE_URL}/opengraph-image`, founder: { name: "Mike Latal", jobTitle: "Founder & editor" } })} />
+        <JsonLd data={organizationLd({ siteUrl: SITE_URL, name: "ParkMath", logoUrl: `${SITE_URL}/opengraph-image`, founder: { name: "Mike", jobTitle: "Founder & editor" } })} />
         <noscript>
           <style>{`.mf-reveal{opacity:1;transform:none;transition:none}`}</style>
         </noscript>
