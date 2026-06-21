@@ -168,7 +168,7 @@ export default function HomePage() {
             date-stamped. We&apos;re independent — not owned by any airport or booking site.
           </p>
         </div>
-        <a href="/drop-off-charges" className="text-sm font-semibold text-brand-accent hover:underline">
+        <a href="/methodology" className="text-sm font-semibold text-brand-accent hover:underline">
           Sources &amp; method <span aria-hidden>→</span>
         </a>
       </section>
