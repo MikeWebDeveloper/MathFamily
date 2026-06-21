@@ -1,23 +1,79 @@
 import { formatPence, loungeBreakEven } from "@mathfamily/engine";
 import type { DropOffRecord, LoungeRecord, PriorityPassTier } from "@mathfamily/data";
 
+/**
+ * The token people actually search. The dataset stores official names ("London Stansted",
+ * "London Heathrow"), but GSC queries are "stansted drop off charges", "heathrow drop off fee" —
+ * the leading "London " buries the discriminating token and dilutes the title/H1 match. Drop it
+ * for the headline label, EXCEPT where "London" is the whole brand ("London City"). The official
+ * name is still used everywhere in the body and structured data.
+ */
+export function searchName(airportName: string): string {
+  // "London City" is its own brand — never reduce it to "City".
+  if (airportName === "London City") return airportName;
+  const stripped = airportName.replace(/^London\s+/, "");
+  return stripped.length > 0 ? stripped : airportName;
+}
+
+/**
+ * One unique, indexable sentence about the time limit / tier structure of THIS airport's charge —
+ * the bit that differs most between pages (Stansted's £28-over-15-min step, Bristol's escalating
+ * bands, Southend's flat 10-min express). Null for free airports and flat per-entry tariffs (where
+ * "time limit" is meaningless). Pure; data-driven only.
+ */
+export function dropOffTimeLimitNote(record: DropOffRecord): string | null {
+  if (record.isFree || isPerEntryTariff(record)) return null;
+  const first = record.bands[0];
+  if (!first) return null;
+  if (record.bands.length >= 2) {
+    const next = record.bands[1]!;
+    return `The headline ${formatPence(first.totalPence)} covers up to ${first.upToMinutes} minutes; stay longer and it steps up to ${formatPence(next.totalPence)}${record.maxStayMinutes !== null ? ` (max stay ${record.maxStayMinutes} minutes)` : ""}.`;
+  }
+  const cap = record.maxStayMinutes ?? first.upToMinutes;
+  return `You get up to ${cap} minutes for the ${formatPence(first.totalPence)} charge — there is no cheaper shorter band, so a 2-minute stop costs the same as the full ${cap} minutes.`;
+}
+
 export function buildDropOffFaqs(record: DropOffRecord, airportName: string): { question: string; answer: string }[] {
+  const search = searchName(airportName);
   const faqs: { question: string; answer: string }[] = [
-    { question: `How much is the drop-off charge at ${airportName}?`, answer: `${record.feeSummary} (verified ${record.verifiedAt}, per the official ${airportName} page).` }
+    // Q1 matches the dominant query phrasing ("how much is it to drop off at <airport>") and uses the
+    // searched token, not the "London …" prefix.
+    { question: `How much is the drop-off charge at ${search} Airport?`, answer: `${record.feeSummary} (verified ${record.verifiedAt}, per the official ${airportName} page).` }
   ];
+
+  const timeLimit = dropOffTimeLimitNote(record);
+  if (timeLimit) {
+    faqs.push({
+      question: `Is there a time limit on the ${search} drop-off zone?`,
+      answer: timeLimit
+    });
+  }
+
   if (record.paymentDeadline) {
     faqs.push({
-      question: `Can I pay the ${airportName} drop-off charge after I leave?`,
+      question: `Can I pay the ${search} drop-off charge after I leave?`,
       answer: `Yes — pay by ${record.paymentDeadline}. ${record.penaltyNotes ?? ""}`.trim()
     });
   }
+
+  // Penalty / PCN question — distinct per airport (Heathrow £80→£40 PCN, Bristol/Southend red-route
+  // £100). Surfaces the real consequence of not paying, a high-intent query.
+  if (record.penaltyPence !== null || record.penaltyNotes) {
+    const penaltyLine = record.penaltyPence !== null ? `The penalty is ${formatPence(record.penaltyPence)}. ` : "";
+    faqs.push({
+      question: `What happens if you don't pay the ${search} drop-off fee?`,
+      answer: `${penaltyLine}${record.penaltyNotes ?? "A Parking Charge Notice may be issued for non-payment."}`.trim()
+    });
+  }
+
   faqs.push({
-    question: `Are Blue Badge holders exempt from the ${airportName} drop-off fee?`,
+    question: `Are Blue Badge holders exempt from the ${search} drop-off fee?`,
     answer: record.blueBadgePolicy
   });
+
   if (record.freeAlternative) {
     faqs.push({
-      question: `How do I avoid the ${airportName} drop-off fee?`,
+      question: `How do I avoid the ${search} drop-off fee?`,
       answer: `Use the ${record.freeAlternative.name} — free for ${record.freeAlternative.minutesFree} minutes. ${record.freeAlternative.details}`
     });
   }

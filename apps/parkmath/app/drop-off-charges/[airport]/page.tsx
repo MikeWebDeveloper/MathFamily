@@ -8,7 +8,7 @@ import { AnswerCard, AnswerLead, AnswerPassage, CaveatChip, Callout, FaqAccordio
 import { DropOffCalculator } from "@/components/drop-off-calculator";
 import { DropOffParkingBridge } from "@/components/drop-off-bridge";
 import { HolidayExtrasCard } from "@/components/holiday-extras-card";
-import { bandPriceParenthetical, buildDropOffFaqs, freshnessDelta, isPerEntryTariff, paymentDeadlineChip, trendNote } from "@/lib/content";
+import { bandPriceParenthetical, buildDropOffFaqs, dropOffTimeLimitNote, freshnessDelta, isPerEntryTariff, paymentDeadlineChip, searchName, trendNote } from "@/lib/content";
 import { airportHasParkingVsDropOff } from "@/lib/parking-vs-drop-off-content";
 
 export const dynamicParams = false;
@@ -27,9 +27,14 @@ export async function generateMetadata({ params }: { params: Promise<{ airport: 
   const { airport } = await params;
   const data = getData(airport);
   if (!data) return {};
+  // Lead the title/description with the searched token + "Airport" + plural "charges & fees"
+  // (the literal GSC queries: "stansted drop off charges", "stansted airport drop off fees").
+  const sn = searchName(data.airport.name);
+  const headlineFee = data.record.isFree ? "free" : formatPence(data.record.bands[0]?.totalPence ?? 0);
+  const structureWord = data.record.isFree ? "rules" : isPerEntryTariff(data.record) ? "per entry" : "time limit";
   return {
-    title: `${data.airport.name} drop-off charge 2026 — fee, limit & free alternative`,
-    description: `${data.airport.name} drop-off: ${data.record.feeSummary}. Penalty, payment deadline, Blue Badge rules and how to avoid the fee — verified ${data.record.verifiedAt}.`,
+    title: `${sn} Airport drop-off charges 2026 — ${data.record.isFree ? "free" : `${headlineFee} fee`}, ${structureWord} & how to avoid it`,
+    description: `${sn} Airport drop-off charges: ${data.record.feeSummary}. How much it costs, the time limit, penalty, payment deadline, Blue Badge rules and how to avoid the fee — verified ${data.record.verifiedAt}.`,
     alternates: { canonical: `/drop-off-charges/${airport}` }
   };
 }
@@ -39,7 +44,9 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
   const data = getData(slug);
   if (!data) notFound();
   const { airport, record } = data;
+  const sn = searchName(airport.name);
   const faqs = buildDropOffFaqs(record, airport.name);
+  const timeLimitNote = dropOffTimeLimitNote(record);
   const trend = trendNote(record);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
   const hasParking = loadParkingDataset().records.some((r) => r.airportSlug === slug);
@@ -77,7 +84,10 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
       <JsonLd data={speakableLd({ url: `${siteUrl}/drop-off-charges/${airport.slug}` })} />
 
       <header className="space-y-3">
-        <PageHeading>{airport.name} drop-off charge</PageHeading>
+        <PageHeading>{sn} Airport drop-off charges</PageHeading>
+        {sn !== airport.name ? (
+          <p className="text-sm text-ink-muted">Official name: {airport.name} ({airport.iata}).</p>
+        ) : null}
         <div className="flex flex-wrap items-center gap-3">
           <FreshnessBadge verifiedAt={pageVerifiedAt} deltaLabel={freshnessDelta(record) ?? undefined} />
           <SourceCitation url={record.sourceUrl} label={`Official ${airport.name} page`} />
@@ -131,6 +141,12 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
       </AnswerPassage>
 
       {trend ? <p className="text-sm font-medium text-warning">{trend}</p> : null}
+
+      {timeLimitNote ? (
+        <AnswerPassage question={`Is there a time limit on the ${sn} drop-off zone?`}>
+          {timeLimitNote}{record.paymentDeadline ? <> Payment is barrier-free: you can settle online by {record.paymentDeadline}.</> : null} These figures are read from the official {airport.name} page and verified {record.verifiedAt}.
+        </AnswerPassage>
+      ) : null}
 
       {record.freeAlternative ? (
         <Callout variant="free" title={`The free alternative: ${record.freeAlternative.name}`}>

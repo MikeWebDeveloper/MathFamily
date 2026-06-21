@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { DropOffRecord, LoungeRecord, PriorityPassTier } from "@mathfamily/data";
-import { bandPriceParenthetical, buildDropOffFaqs, buildLoungeFaqs, dearestDropOff, dropOffIndexSummary, freshnessDelta, isPerEntryTariff, paymentDeadlineChip, trendNote } from "../lib/content";
+import { bandPriceParenthetical, buildDropOffFaqs, buildLoungeFaqs, dearestDropOff, dropOffIndexSummary, dropOffTimeLimitNote, freshnessDelta, isPerEntryTariff, paymentDeadlineChip, searchName, trendNote } from "../lib/content";
 
 const record: DropOffRecord = {
   airportSlug: "gatwick",
@@ -23,24 +23,67 @@ const record: DropOffRecord = {
 describe("buildDropOffFaqs", () => {
   it("always includes the how-much question", () => {
     const faqs = buildDropOffFaqs(record, "London Gatwick");
-    expect(faqs[0]?.question).toBe("How much is the drop-off charge at London Gatwick?");
+    // Q1 leads with the searched token (Gatwick, not "London Gatwick") + "Airport" to match real queries.
+    expect(faqs[0]?.question).toBe("How much is the drop-off charge at Gatwick Airport?");
     expect(faqs[0]?.answer).toContain("£10");
   });
-  it("includes pay-after, blue badge and avoid questions when data exists", () => {
+  it("includes pay-after, blue badge, avoid and penalty questions when data exists", () => {
     const questions = buildDropOffFaqs(record, "London Gatwick").map((f) => f.question);
-    expect(questions).toHaveLength(4);
     expect(questions.some((q) => q.includes("after"))).toBe(true);
     expect(questions.some((q) => q.includes("Blue Badge"))).toBe(true);
     expect(questions.some((q) => q.includes("avoid"))).toBe(true);
+    // penalty/PCN question surfaces the £100 charge + its reduction
+    expect(questions.some((q) => q.toLowerCase().includes("penalty") || q.toLowerCase().includes("don't pay"))).toBe(true);
   });
   it("omits optional questions when data is null", () => {
-    const sparse = { ...record, paymentDeadline: null, freeAlternative: null };
+    // Bare record: flat single-band, no deadline / alt / penalty → only Q1 (how much) + Blue Badge.
+    const sparse: DropOffRecord = { ...record, paymentDeadline: null, freeAlternative: null, penaltyPence: null, penaltyNotes: null, maxStayMinutes: null, bands: [{ upToMinutes: 1, totalPence: 700 }] };
     expect(buildDropOffFaqs(sparse, "X")).toHaveLength(2);
+  });
+  it("uses a different question set per airport (no two pages identical)", () => {
+    // Stansted has a 2nd band + max stay; Heathrow is per-entry with a PCN; their FAQs must differ.
+    const stansted: DropOffRecord = { ...record, airportSlug: "stansted", feeSummary: "£10 for up to 15 minutes, £28 over 15 minutes", bands: [{ upToMinutes: 15, totalPence: 1000 }, { upToMinutes: 30, totalPence: 2800 }], maxStayMinutes: 30, penaltyPence: null, penaltyNotes: "Parking Charge for non-payment", freeAlternative: { name: "Mid Stay", minutesFree: 60, details: "Free shuttle" } };
+    const heathrow: DropOffRecord = { ...record, airportSlug: "heathrow", feeSummary: "£7 each time a vehicle enters", bands: [{ upToMinutes: 1, totalPence: 700 }], maxStayMinutes: null, penaltyPence: 8000, penaltyNotes: "£80 PCN, £40 if paid within 14 days" };
+    const a = buildDropOffFaqs(stansted, "London Stansted").map((f) => f.question).join("|");
+    const b = buildDropOffFaqs(heathrow, "London Heathrow").map((f) => f.question).join("|");
+    expect(a).not.toBe(b);
   });
   it("cites the verified date and official source in the fee answer", () => {
     const faqs = buildDropOffFaqs(record, "London Gatwick");
     expect(faqs[0]?.answer).toContain("verified 2026-06-10");
     expect(faqs[0]?.answer).toContain("official London Gatwick");
+  });
+});
+
+describe("searchName", () => {
+  it("strips a leading 'London ' so titles lead with the searched token", () => {
+    expect(searchName("London Stansted")).toBe("Stansted");
+    expect(searchName("London Southend")).toBe("Southend");
+    expect(searchName("London Heathrow")).toBe("Heathrow");
+  });
+  it("leaves non-London names unchanged", () => {
+    expect(searchName("Bristol")).toBe("Bristol");
+    expect(searchName("Manchester")).toBe("Manchester");
+  });
+  it("does not strip 'London' when it is the whole name (London City)", () => {
+    expect(searchName("London City")).toBe("London City");
+  });
+});
+
+describe("dropOffTimeLimitNote", () => {
+  it("describes a single time-limited band", () => {
+    const r = { ...record, bands: [{ upToMinutes: 10, totalPence: 850 }], maxStayMinutes: 10 };
+    expect(dropOffTimeLimitNote(r)).toContain("10 min");
+  });
+  it("describes a two-tier band as a tier step", () => {
+    const r = { ...record, feeSummary: "£10 for up to 15 minutes, £28 over 15 minutes", bands: [{ upToMinutes: 15, totalPence: 1000 }, { upToMinutes: 30, totalPence: 2800 }], maxStayMinutes: 30 };
+    const note = dropOffTimeLimitNote(r)!;
+    expect(note).toContain("£28");
+    expect(note).toContain("15");
+  });
+  it("returns null for free or per-entry tariffs", () => {
+    expect(dropOffTimeLimitNote({ ...record, isFree: true })).toBeNull();
+    expect(dropOffTimeLimitNote({ ...record, bands: [{ upToMinutes: 1, totalPence: 700 }], maxStayMinutes: null })).toBeNull();
   });
 });
 
