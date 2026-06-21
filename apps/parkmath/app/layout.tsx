@@ -31,6 +31,16 @@ const NAV = [
   { label: "Drop-off charges", href: "/drop-off-charges" },
   { label: "Parking", href: "/airport-parking" },
   { label: "Lounges", href: "/airport-lounges" },
+  { label: "About", href: "/about" }
+];
+
+// Footer carries the full set, including the E-E-A-T trust pages and legal.
+const FOOTER_NAV = [
+  { label: "Drop-off charges", href: "/drop-off-charges" },
+  { label: "Parking", href: "/airport-parking" },
+  { label: "Lounges", href: "/airport-lounges" },
+  { label: "About", href: "/about" },
+  { label: "How we verify", href: "/methodology" },
   { label: "Privacy", href: "/privacy" }
 ];
 
@@ -43,7 +53,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="relative bg-surface font-sans text-ink antialiased">
         <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded focus:bg-brand-accent focus:px-3 focus:py-2 focus:text-sm focus:font-semibold focus:text-white">Skip to content</a>
-        <JsonLd data={organizationLd({ siteUrl: SITE_URL, name: "ParkMath", logoUrl: `${SITE_URL}/opengraph-image`, founder: { name: "Michal Latal", jobTitle: "Founder & editor" } })} />
+        {/* Organization + founder graph, emitted site-wide. founder.sameAs is intentionally
+            omitted until Mike confirms a real profile URL — we never invent social links.
+            [Mike to confirm]: add e.g. ["https://www.linkedin.com/in/…"] to founder.sameAs. */}
+        <JsonLd data={organizationLd({ siteUrl: SITE_URL, name: "ParkMath", logoUrl: `${SITE_URL}/opengraph-image`, founder: { name: "Mike", jobTitle: "Founder & editor" } })} />
         <noscript>
           <style>{`.mf-reveal{opacity:1;transform:none;transition:none}`}</style>
         </noscript>
@@ -53,7 +66,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AmbientBackdrop />
         <SiteHeader brandName="ParkMath" brandPrefix="Park" links={NAV} />
         <main id="main" className="mx-auto max-w-5xl px-4 py-8">{children}</main>
-        <SiteFooter brandName="ParkMath" links={NAV} />
+        <SiteFooter brandName="ParkMath" links={FOOTER_NAV} />
         <SiteAnalytics />
       </body>
     </html>
