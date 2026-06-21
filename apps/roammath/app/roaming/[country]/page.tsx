@@ -144,7 +144,14 @@ export default async function CountryHubPage({ params }: { params: Promise<{ cou
       />
 
       {esim ? (
-        <AffiliateBlock slotId="esim" airportSlug={destination.countrySlug} officialUrl={esim.sourceUrl} />
+        <AffiliateBlock
+          providerName={m.esimChoice?.provider ?? null}
+          countrySlug={destination.countrySlug}
+          officialUrl={esim.sourceUrl}
+          bundleName={m.esimChoice?.bundleName ?? null}
+          totalPence={m.esimChoice?.totalPence ?? null}
+          countryName={destination.countryName}
+        />
       ) : null}
 
       <FeeGrid

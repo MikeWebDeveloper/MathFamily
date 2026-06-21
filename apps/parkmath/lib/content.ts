@@ -133,3 +133,21 @@ export function isPerEntryTariff(record: DropOffRecord): boolean {
   const first = record.bands[0];
   return !record.isFree && record.bands.length === 1 && first !== undefined && first.upToMinutes <= 1;
 }
+
+/**
+ * Concrete "(£X for up to Y minutes)" anchor for the headline answer — but ONLY when it adds
+ * something. Returns null when:
+ *  - the record is free / has no band;
+ *  - it's a flat per-entry tariff (the "for up to 1 minute" framing is misleading — the charge
+ *    is per entry, not per minute);
+ *  - feeSummary already states that exact "£X for up to Y minutes…" phrasing (appending it would
+ *    duplicate the price, e.g. "…max stay 30 minutes) (£10 for up to 10 minutes)").
+ */
+export function bandPriceParenthetical(record: DropOffRecord): string | null {
+  const first = record.bands[0];
+  if (record.isFree || !first || isPerEntryTariff(record)) return null;
+  const price = formatPence(first.totalPence);
+  const phrase = `${price} for up to ${first.upToMinutes} minute`; // matches "minute" and "minutes"
+  if (record.feeSummary.toLowerCase().includes(phrase.toLowerCase())) return null;
+  return `${price} for up to ${first.upToMinutes} minutes`;
+}

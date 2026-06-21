@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import { BookingOptions } from "../components/booking-options";
+import type { ParkingCtaModel } from "../lib/parking-content";
 
 const html = renderToStaticMarkup(
   <BookingOptions airportName="Gatwick" airportSlug="gatwick" officialUrl="https://www.gatwickairport.com/parking" />
@@ -76,5 +77,28 @@ describe("BookingOptions", () => {
   it("does not show price string when price/days are omitted", () => {
     // baseline html without price should not include "from £"
     expect(html).not.toContain("from £");
+  });
+
+  it("shows the honest saving line when the cta model is in the 'saving' state", () => {
+    const savingCta: ParkingCtaModel = { state: "saving", pricePence: 4200, gatePence: 31500, savingVsGatePence: 27300, days: 7 };
+    const out = renderToStaticMarkup(
+      <BookingOptions airportName="Manchester" airportSlug="manchester" officialUrl="https://x" cta={savingCta} />
+    );
+    expect(out).toContain("from £42.00 for 7 days");
+    expect(out).toContain("Save £273.00 vs the £315.00 drive-up gate price");
+  });
+
+  it("gate-only cta (Stansted case): suppresses the price AND makes no saving claim", () => {
+    // Only the drive-up gate price exists for this duration — never present it as a 'from' pre-book
+    // figure, and never imply a saving that doesn't exist.
+    const gateOnlyCta: ParkingCtaModel = { state: "gate-only", pricePence: null, gatePence: 33600, savingVsGatePence: null, days: 7 };
+    const out = renderToStaticMarkup(
+      <BookingOptions airportName="Stansted" airportSlug="stansted" officialUrl="https://x" cta={gateOnlyCta} />
+    );
+    expect(out).not.toContain("from £");
+    expect(out).not.toContain("£336.00");
+    expect(out).not.toContain("Save £");
+    // The CTA still renders (just without a fabricated price).
+    expect(out).toContain("Book my parking");
   });
 });

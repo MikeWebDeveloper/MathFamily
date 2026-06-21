@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { DropOffRecord, LoungeRecord, PriorityPassTier } from "@mathfamily/data";
-import { buildDropOffFaqs, buildLoungeFaqs, dearestDropOff, dropOffIndexSummary, freshnessDelta, isPerEntryTariff, paymentDeadlineChip, trendNote } from "../lib/content";
+import { bandPriceParenthetical, buildDropOffFaqs, buildLoungeFaqs, dearestDropOff, dropOffIndexSummary, freshnessDelta, isPerEntryTariff, paymentDeadlineChip, trendNote } from "../lib/content";
 
 const record: DropOffRecord = {
   airportSlug: "gatwick",
@@ -124,6 +124,33 @@ describe("isPerEntryTariff", () => {
   it("false for duration-banded and free records", () => {
     expect(isPerEntryTariff(record)).toBe(false);
     expect(isPerEntryTariff({ ...record, isFree: true, bands: [] })).toBe(false);
+  });
+});
+
+describe("bandPriceParenthetical", () => {
+  it("returns null when feeSummary already leads with the band price (avoids duplication)", () => {
+    // feeSummary "£10 for up to 20 minutes" already contains the band phrasing
+    expect(bandPriceParenthetical(record)).toBeNull();
+    expect(
+      bandPriceParenthetical({
+        ...record,
+        feeSummary: "£10 for up to 10 minutes, then £1 per additional minute (max stay 30 minutes)",
+        bands: [{ upToMinutes: 10, totalPence: 1000 }]
+      })
+    ).toBeNull();
+  });
+  it("returns the concrete anchor when feeSummary does not state the band price", () => {
+    expect(
+      bandPriceParenthetical({
+        ...record,
+        feeSummary: "£7 each time a vehicle enters a terminal drop-off zone",
+        bands: [{ upToMinutes: 10, totalPence: 700 }]
+      })
+    ).toBe("£7 for up to 10 minutes");
+  });
+  it("returns null for free records or records without a band", () => {
+    expect(bandPriceParenthetical({ ...record, isFree: true, bands: [] })).toBeNull();
+    expect(bandPriceParenthetical({ ...record, bands: [] })).toBeNull();
   });
 });
 

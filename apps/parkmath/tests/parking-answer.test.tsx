@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import type { ParkingRecord } from "@mathfamily/data";
 import { ParkingAnswer } from "../components/parking-answer";
-import { coveredParkingDurations, parkingPageModel } from "../lib/parking-content";
+import { coveredParkingDurations, parkingCtaModel, parkingPageModel } from "../lib/parking-content";
 
 const record: ParkingRecord = {
   airportSlug: "manchester",
@@ -34,7 +34,7 @@ const record: ParkingRecord = {
   verifiedAt: "2026-06-10"
 };
 
-const entries = [3, 7, 14].map((days) => ({ days, model: parkingPageModel(record, days) }));
+const entries = [3, 7, 14].map((days) => ({ days, model: parkingPageModel(record, days), cta: parkingCtaModel(record, days) }));
 
 const html = renderToStaticMarkup(
   <ParkingAnswer
@@ -57,6 +57,7 @@ const recordNo7: ParkingRecord = {
 const entriesNo7 = coveredParkingDurations(recordNo7).map((days) => ({
   days,
   model: parkingPageModel(recordNo7, days),
+  cta: parkingCtaModel(recordNo7, days),
 }));
 
 describe("ParkingAnswer clamp: defaultDays=7 but 7 not in entries", () => {
@@ -122,6 +123,11 @@ describe("ParkingAnswer SSR at defaultDays=7", () => {
   it("renders the price in the BookingOptions affiliate CTA", () => {
     // With price=4200 (7-day cheapest) → £42.00
     expect(html).toContain("from £42.00 for 7 days");
+  });
+
+  it("surfaces the honest 'save £X vs the £Y drive-up gate price' line (saving state)", () => {
+    // 7-day: gate £315.00 − pre-book £42.00 = £273.00 saving vs the £315.00 gate.
+    expect(html).toContain("Save £273.00 vs the £315.00 drive-up gate price");
   });
 
   it("affiliate CTA (Book my parking) appears before the official site link (Go to airport site)", () => {

@@ -1,23 +1,34 @@
-import { resolveSlot, type SlotId } from "@/lib/partners";
+import { formatPence } from "@mathfamily/engine";
+import { EsimPickCard } from "@mathfamily/ui";
+import { resolveSlot } from "../lib/partners";
 
-export function AffiliateBlock({ slotId, airportSlug, officialUrl }: { slotId: SlotId; airportSlug: string; officialUrl: string }) {
-  const slot = resolveSlot(slotId, airportSlug, officialUrl);
+interface AffiliateBlockProps {
+  providerName: string | null;
+  countrySlug: string;
+  officialUrl: string;
+  bundleName: string | null;
+  totalPence: number | null;
+  countryName: string;
+}
+
+export function AffiliateBlock({
+  providerName,
+  countrySlug,
+  officialUrl,
+  bundleName,
+  totalPence,
+  countryName,
+}: AffiliateBlockProps) {
+  const slot = resolveSlot(providerName, countrySlug, officialUrl);
+  const totalFormatted = totalPence !== null ? formatPence(totalPence) : null;
   return (
-    <div className="rounded-card border border-brand-accent/30 bg-blue-50 dark:bg-brand-accent/[0.08] dark:border-brand-accent/20 p-4">
-      <a
-        href={slot.url}
-        rel={slot.kind === "affiliate" ? "sponsored noopener noreferrer" : "noopener noreferrer"}
-        target="_blank"
-        className="font-semibold text-brand-accent underline underline-offset-4"
-      >
-        {slot.label} ↗
-      </a>
-      {slot.disclosureRequired ? (
-        <p className="mt-2 text-sm text-ink-muted">
-          Affiliate link: if you buy through {slot.partnerName}, RoamMath may earn a commission at no cost to you. This
-          never affects which option we show as cheapest.
-        </p>
-      ) : null}
-    </div>
+    <EsimPickCard
+      providerName={slot.partnerName}
+      bundleName={bundleName}
+      totalFormatted={totalFormatted}
+      countryName={countryName}
+      affiliateUrl={slot.url}
+      disclosureRequired={slot.disclosureRequired}
+    />
   );
 }

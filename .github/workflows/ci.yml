@@ -15,6 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # fetch-depth 0 gives Turbo the full history it needs to compute
+          # --affected correctly on both PRs and direct pushes to main.
+          fetch-depth: 0
 
       - uses: pnpm/action-setup@v4
         with:
@@ -27,9 +31,9 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - run: pnpm turbo run typecheck
+      - run: pnpm turbo run typecheck --affected
 
-      - run: pnpm turbo run test
+      - run: pnpm turbo run test --affected
 
       # tools/* are plain Node ESM helpers (not turbo packages); run their node:test suites directly.
       # Glob form is required — the bare-directory form (node --test tools/watchdog/) is a no-op on Node 22.
@@ -39,7 +43,7 @@ jobs:
       # Build catches Next.js/route regressions. The esbuild deadlock noted in
       # docs/engineering-notes.md is specific to the TB4 APFS volume — CI runs on
       # Ubuntu, so it builds cleanly. NEXT_PUBLIC_* vars fall back to localhost.
-      - run: pnpm turbo run build
+      - run: pnpm turbo run build --affected
 
       # Playwright e2e is intentionally NOT run here (needs a live URL).
       # Run locally: cd apps/parkmath && pnpm e2e

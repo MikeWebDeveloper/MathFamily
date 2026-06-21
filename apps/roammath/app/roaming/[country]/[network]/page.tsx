@@ -67,9 +67,9 @@ export default async function NetworkPage({
   const networkSource = networkSources.find((s) => s.network === networkSlug);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3001";
 
-  // eSIM affiliate slot (Airalo inactive until AWIN approved — falls back to official site)
+  // eSIM affiliate provider (Airalo inactive until AWIN approved — falls back to official site)
   const officialAiraloUrl = `https://www.airalo.com/${countrySlug}-esim`;
-  const esimSlot = resolveSlot("esim", countrySlug, officialAiraloUrl);
+  const esimSlot = resolveSlot("airalo", countrySlug, officialAiraloUrl);
 
   // FAQ: just this network's question + eSIM question
   const allFaqs = buildRoamingFaqs(destination, esim, 7);

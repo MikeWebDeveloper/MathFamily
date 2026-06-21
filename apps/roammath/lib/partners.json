@@ -1,10 +1,22 @@
 {
   "partners": {
-    "airalo": { "name": "Airalo", "active": false },
-    "saily": { "name": "Saily", "active": false },
-    "holafly": { "name": "Holafly", "active": false }
-  },
-  "slots": [
-    { "id": "esim", "partnerId": "airalo", "deeplinkTemplate": "", "active": false }
-  ]
+    "airalo": {
+      "name": "Airalo",
+      "active": false,
+      "deeplinkTemplate": "",
+      "trackingNote": "fill after partners.airalo.com signup — use {countrySlug} and {clickref} placeholders"
+    },
+    "saily": {
+      "name": "Saily",
+      "active": false,
+      "deeplinkTemplate": "",
+      "trackingNote": "fill after saily.com/affiliate signup"
+    },
+    "holafly": {
+      "name": "Holafly",
+      "active": false,
+      "deeplinkTemplate": "",
+      "trackingNote": "fill after holafly.com/affiliate signup"
+    }
+  }
 }
