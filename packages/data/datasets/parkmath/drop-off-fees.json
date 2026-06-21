@@ -1,6 +1,6 @@
 {
-  "version": "1.2.1",
-  "lastUpdated": "2026-06-18",
+  "version": "1.2.2",
+  "lastUpdated": "2026-06-21",
   "records": [
     {
       "airportSlug": "heathrow",
@@ -190,11 +190,11 @@
     {
       "airportSlug": "glasgow",
       "isFree": false,
-      "feeSummary": "£6 for up to 15 minutes, then £1 per minute (£50 rate beyond 30 minutes)",
+      "feeSummary": "£7 for up to 15 minutes, then £1 per minute (£50 rate beyond 30 minutes)",
       "bands": [
         {
           "upToMinutes": 15,
-          "totalPence": 600
+          "totalPence": 700
         }
       ],
       "maxStayMinutes": 30,
@@ -209,9 +209,9 @@
         "minutesFree": 60,
         "details": "Free for up to one hour, with a free shuttle bus to the terminal"
       },
-      "priorYearFeePence": null,
+      "priorYearFeePence": 600,
       "sourceUrl": "https://www.glasgowairport.com/to-and-from/pick-up-and-drop-off/",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-06-21"
     },
     {
       "airportSlug": "bristol",
@@ -377,7 +377,7 @@
       "freeAlternative": null,
       "priorYearFeePence": 0,
       "sourceUrl": "https://www.londoncityairport.com/parking/drop-off",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-06-21"
     },
     {
       "airportSlug": "leeds-bradford",
@@ -534,10 +534,14 @@
       "penaltyNotes": "Vehicles must not be left unattended and may be removed; 3–24 hours costs £50",
       "paymentDeadline": null,
       "blueBadgePolicy": "Not specifically stated on the official page; a special assistance vehicle is available — check with the airport",
-      "freeAlternative": null,
+      "freeAlternative": {
+        "name": "Car Park 2",
+        "minutesFree": 20,
+        "details": "First 20 minutes free in Car Park 2; a special assistance vehicle is available for passengers with reduced mobility"
+      },
       "priorYearFeePence": null,
       "sourceUrl": "https://cardiff-airport.com/parking-cwl/drop-off-and-pick-up-cwl/",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-06-21"
     },
     {
       "airportSlug": "exeter",

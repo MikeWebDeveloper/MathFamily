@@ -13,6 +13,7 @@
     },
     "purple-parking": { "name": "Purple Parking", "awinmid": "12028", "active": false },
     "airparks": { "name": "Airparks", "awinmid": "3494", "active": false },
+    "aph": { "name": "APH", "awinmid": "1478", "active": false, "landingUrl": "https://www.aph.com/airport-parking/" },
     "priority-pass": { "name": "Priority Pass", "awinmid": null, "active": false }
   },
   "slots": [
