@@ -68,41 +68,34 @@ export default function AboutPage() {
         </p>
       </section>
 
-      {/* ── PLACEHOLDER: Mike's bio, photo and any credentials ──────────────────────────
-          We do NOT invent biographical facts or credentials. Mike fills this in. ──────── */}
+      {/* Mike: tweak bio / confirm name (Mike Latal vs Michal Latal) before promote */}
       <section className="space-y-4">
         <h2 className="text-h2 font-semibold text-ink">Who runs ParkMath</h2>
         <div className="mf-card-lg mf-edge space-y-4 p-6">
           <div className="flex items-start gap-4">
-            {/* Photo placeholder */}
-            <div
-              className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-surface-muted text-xs font-semibold text-ink-muted ring-1 ring-ink/10"
-              aria-hidden
-            >
-              Photo
-            </div>
+            {/* Real founder headshot. Plain <img> to match the existing image pattern in this app. */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/mike-latal.webp"
+              alt="Mike Latal, founder of ParkMath"
+              width={80}
+              height={80}
+              loading="lazy"
+              className="h-20 w-20 shrink-0 rounded-full object-cover ring-1 ring-ink/10"
+            />
             <div className="space-y-1">
               <p className="text-lg font-bold text-ink">Mike Latal</p>
               <p className="text-sm text-ink-muted">Founder &amp; editor, ParkMath</p>
             </div>
           </div>
 
-          <div className="space-y-2 rounded-lg border border-dashed border-brand-accent/40 bg-brand-accent/5 p-4 text-sm text-ink-muted">
-            <p className="font-semibold text-ink">[Mike to confirm]</p>
-            <p>
-              Short bio (2–4 sentences), a photo, and any relevant credentials go here. Leave blank
-              rather than guess — this block is intentionally a placeholder and ships only what Mike
-              confirms is true. Nothing in this box is invented by the build.
-            </p>
-            <ul className="list-disc space-y-1 pl-5">
-              <li>[Mike to confirm] Bio — who you are, why you started ParkMath.</li>
-              <li>[Mike to confirm] Photo — a real headshot (replaces the placeholder above).</li>
-              <li>
-                [Mike to confirm] Credentials / relevant background, if any — only state what&apos;s
-                genuinely true.
-              </li>
-            </ul>
-          </div>
+          <p className="text-ink-muted">
+            Mike is a web developer and the founder of ParkMath. He built it to fix a simple,
+            frustrating problem: airport drop-off and parking prices change constantly, and most
+            comparison sites quietly run out of date. ParkMath checks every UK airport&apos;s fee
+            against the airport&apos;s own official page and date-stamps each one — so the number you
+            see is the number you&apos;ll pay.
+          </p>
         </div>
       </section>
 
