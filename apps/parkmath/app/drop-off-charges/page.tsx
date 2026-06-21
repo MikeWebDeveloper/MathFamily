@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { loadAirports, loadDropOffDataset } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
-import { breadcrumbLd, datasetLd, itemListLd, JsonLd } from "@mathfamily/geo";
-import { FreshnessBadge, OpenDataBand, PageHeading } from "@mathfamily/ui";
-import { dropOffIndexSummary, isPerEntryTariff } from "@/lib/content";
+import { breadcrumbLd, datasetLd, itemListLd, JsonLd, tableLd } from "@mathfamily/geo";
+import { AnswerPassage, FreshnessBadge, OpenDataBand, PageHeading, StatStrip } from "@mathfamily/ui";
+import { buildDropOffLeague, dropOffHubAnswer, dropOffIndexSummary, dropOffPerMinutePence, isPerEntryTariff } from "@/lib/content";
 import { SortableFeeTable, type DropOffRow } from "@/components/sortable-fee-table";
+import { DropOffLeagueTable } from "@/components/dropoff-league-table";
 
 export const metadata: Metadata = {
-  title: "UK airport drop-off charges 2026 — every airport compared",
+  title: "UK airport drop-off charges 2026 — all airports compared (verified)",
   description:
-    "Current drop-off (kiss and fly) charges at every major UK airport: fee, time limit, penalty and the free alternative. Verified against official airport pages.",
+    "Every major UK airport's drop-off (kiss-and-fly) charge for 2026 in one sortable table: fee, time window, £-per-minute, penalty and the free alternative — each verified against the airport's own official page. The only all-airports league table that's actually current.",
   alternates: { canonical: "/drop-off-charges" }
 };
 
@@ -17,6 +19,8 @@ export default function MasterTablePage() {
   const airports = new Map(loadAirports().map((a) => [a.slug, a]));
   const dataset = loadDropOffDataset();
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const nameFor = (slug: string) => airports.get(slug)?.name ?? slug;
+
   // SSR default: most expensive first (matches "fee" sort key)
   const records = [...dataset.records].sort(
     (a, b) => (b.bands[0]?.totalPence ?? 0) - (a.bands[0]?.totalPence ?? 0)
@@ -24,23 +28,40 @@ export default function MasterTablePage() {
   const latestVerified = records.map((r) => r.verifiedAt).sort().at(-1) ?? dataset.lastUpdated;
   const oldestVerified = records.map((r) => r.verifiedAt).sort()[0];
 
+  const league = buildDropOffLeague(records, nameFor);
+  const hubAnswer = dropOffHubAnswer(league, latestVerified);
+
+  // Headline stats for the strip (the data-PR "most & least expensive" hook).
+  const charging = league.filter((e) => !e.isFree);
+  const byFee = [...charging].sort((a, b) => a.feePence - b.feePence);
+  const cheapest = byFee[0];
+  const dearest = byFee[byFee.length - 1];
+  const worstPerMin = league.find((e) => e.perMinutePence !== null);
+  const freeCount = league.filter((e) => e.isFree).length;
+
   const rows: DropOffRow[] = records.map((r) => {
     const airport = airports.get(r.airportSlug);
+    const perMinPence = dropOffPerMinutePence(r);
     return {
       airportSlug: r.airportSlug,
       airportName: airport?.name ?? r.airportSlug,
       iata: airport?.iata ?? "???",
       feePence: r.isFree ? 0 : (r.bands[0]?.totalPence ?? 0),
+      perMinutePence: perMinPence,
       fee: r.isFree ? "Free" : formatPence(r.bands[0]?.totalPence ?? 0),
+      perMin: perMinPence !== null ? `${formatPence(Math.round(perMinPence))}/min` : r.isFree ? "Free" : "Flat",
       timeLimit: r.isFree ? "—" : isPerEntryTariff(r) ? "Per entry" : `${r.bands[0]?.upToMinutes ?? "—"} min`,
       penalty: r.penaltyPence !== null ? formatPence(r.penaltyPence) : "—",
       freeAlt: r.freeAlternative ? `${r.freeAlternative.name} (${r.freeAlternative.minutesFree} min)` : "—",
+      sourceUrl: r.sourceUrl,
       verifiedAt: r.verifiedAt
     };
   });
 
+  const tableColumns = ["Airport", "Fee", "£/min", "Time limit", "Penalty", "Free alternative", "Verified"];
+
   return (
-    <article className="space-y-6">
+    <article className="space-y-8">
       <JsonLd
         data={breadcrumbLd([
           { name: "Home", url: siteUrl },
@@ -49,8 +70,8 @@ export default function MasterTablePage() {
       />
       <JsonLd
         data={datasetLd({
-          name: "UK airport drop-off charges",
-          description: `Drop-off fees, time limits, penalties and free alternatives at ${records.length} UK airports, verified against official airport pages.`,
+          name: "UK airport drop-off charges 2026",
+          description: `Drop-off fees, time limits, £-per-minute, penalties and free alternatives at ${records.length} UK airports, each verified against the airport's official page.`,
           url: `${siteUrl}/drop-off-charges`,
           dateModified: latestVerified,
           siteUrl,
@@ -58,27 +79,113 @@ export default function MasterTablePage() {
         })}
       />
       <JsonLd
+        data={tableLd({
+          about: "UK airport drop-off charges 2026, compared",
+          url: `${siteUrl}/drop-off-charges`,
+          columns: tableColumns,
+          rowCount: records.length,
+          dateModified: latestVerified
+        })}
+      />
+      <JsonLd
         data={itemListLd({
           name: "UK airport drop-off charges, highest first",
           items: records.map((r) => ({
-            name: `${airports.get(r.airportSlug)?.name ?? r.airportSlug} — ${r.isFree ? "free" : formatPence(r.bands[0]?.totalPence ?? 0)}`,
+            name: `${nameFor(r.airportSlug)} — ${r.isFree ? "free" : formatPence(r.bands[0]?.totalPence ?? 0)}`,
             url: `${siteUrl}/drop-off-charges/${r.airportSlug}`
           }))
         })}
       />
+
       <header className="space-y-3">
-        <PageHeading>UK airport drop-off charges, compared</PageHeading>
+        <PageHeading>UK airport drop-off charges, compared (2026)</PageHeading>
         <FreshnessBadge verifiedAt={latestVerified} oldestRowDate={oldestVerified} />
-        <p className="text-lead text-ink">
-          {dropOffIndexSummary(records.map((r) => ({ name: airports.get(r.airportSlug)?.name ?? r.airportSlug, isFree: r.isFree, feePence: r.bands[0]?.totalPence ?? 0 })))}
-        </p>
+        <p className="mf-speakable text-lead text-ink">{hubAnswer}</p>
       </header>
+
+      {dearest && cheapest ? (
+        <StatStrip
+          stats={[
+            { label: "Most expensive", value: formatPence(dearest.feePence), note: dearest.name },
+            { label: "Cheapest charge", value: formatPence(cheapest.feePence), note: cheapest.name },
+            ...(worstPerMin && worstPerMin.perMinutePence !== null
+              ? [{ label: "Worst £/min", value: `${formatPence(Math.round(worstPerMin.perMinutePence))}`, note: worstPerMin.name }]
+              : []),
+            { label: "Drop off free", value: `${freeCount} of ${league.length}`, note: "airports" }
+          ]}
+        />
+      ) : null}
+
       <OpenDataBand
         downloads={[{ href: "/data/drop-off-charges.csv", label: "Drop-off charges (CSV)" }]}
-        citation={`ParkMath, "UK airport drop-off charges", verified ${latestVerified}, parkmath.co.uk`}
+        citation={`ParkMath, "UK airport drop-off charges 2026", verified ${latestVerified}, parkmath.co.uk`}
       />
-      <h2 className="text-h2 font-semibold text-ink">Every UK airport, compared</h2>
-      <SortableFeeTable rows={rows} />
+
+      <section className="space-y-3">
+        <h2 className="text-h2 font-semibold text-ink">Every UK airport, compared</h2>
+        <p className="text-sm text-ink-muted">
+          {dropOffIndexSummary(
+            records.map((r) => ({ name: nameFor(r.airportSlug), isFree: r.isFree, feePence: r.bands[0]?.totalPence ?? 0 }))
+          )}{" "}
+          Sort by headline fee, by cost per minute, or A–Z. The aggregators and money pages get these wrong; every
+          row here links to the airport&apos;s own page and shows the date we last checked it.
+        </p>
+        <SortableFeeTable rows={rows} />
+      </section>
+
+      <section className="space-y-3">
+        <h2 className="text-h2 font-semibold text-ink">The £-per-minute league table: most &amp; least expensive to drop off</h2>
+        <AnswerPassage question="Which UK airport is the worst value to drop off at, per minute?">
+          {worstPerMin && worstPerMin.perMinutePence !== null ? (
+            <>
+              You aren&apos;t really charged per drop-off — you&apos;re charged per minute of allowance. On that basis the
+              worst value in the UK is <strong>{worstPerMin.name}</strong> at {formatPence(Math.round(worstPerMin.perMinutePence))} a
+              minute ({formatPence(worstPerMin.feePence)} for up to {worstPerMin.minutes} minutes). The table below ranks
+              every airport by effective cost per minute; flat per-entry charges (like Heathrow&apos;s) and the free airports
+              sit at the bottom because there&apos;s no honest per-minute figure for them.
+            </>
+          ) : (
+            <>Every airport&apos;s effective cost per minute of drop-off allowance, ranked worst-value first.</>
+          )}
+        </AnswerPassage>
+        <DropOffLeagueTable league={league} />
+      </section>
+
+      <section className="space-y-2">
+        <h2 className="text-lg font-semibold text-ink">Per-airport drop-off guides</h2>
+        <p className="text-sm text-ink-muted">
+          Full breakdown for each airport — the exact fee, time bands, penalty, payment deadline, Blue Badge rules and the
+          free alternative, all date-stamped against the official source:
+        </p>
+        <ul className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm sm:grid-cols-3">
+          {[...records]
+            .sort((a, b) => nameFor(a.airportSlug).localeCompare(nameFor(b.airportSlug)))
+            .map((r) => (
+              <li key={r.airportSlug}>
+                <Link
+                  href={`/drop-off-charges/${r.airportSlug}`}
+                  className="text-brand-accent underline underline-offset-4 hover:opacity-80"
+                >
+                  {nameFor(r.airportSlug)} drop-off charges →
+                </Link>
+              </li>
+            ))}
+        </ul>
+      </section>
+
+      <section className="space-y-2 rounded-lg border border-ink/10 bg-surface-muted px-4 py-3 text-sm">
+        <h2 className="text-base font-semibold text-ink">How we keep this current</h2>
+        <p className="text-ink-muted">
+          Each row is read directly from the airport&apos;s own official drop-off page and re-verified on the date shown — tap
+          the ✓ in any row to open that source. We never republish a price we haven&apos;t checked, which is why the figures
+          here differ from the older aggregator and money-saving pages. Found a fee that&apos;s changed? It&apos;ll be reflected
+          here within days. See also our{" "}
+          <Link href="/parking-price-index-2026" className="text-brand-accent underline underline-offset-4">
+            2026 UK airport parking price index
+          </Link>
+          .
+        </p>
+      </section>
     </article>
   );
 }

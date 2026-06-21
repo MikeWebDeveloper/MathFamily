@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { aggregateOfferLd, breadcrumbLd, datasetLd, faqPageLd, howToLd, itemListLd, offerLd, webSiteLd, newsArticleLd, organizationLd, personLd, speakableLd } from "../src/builders";
+import { aggregateOfferLd, breadcrumbLd, datasetLd, faqPageLd, howToLd, itemListLd, offerLd, tableLd, webSiteLd, newsArticleLd, organizationLd, personLd, speakableLd } from "../src/builders";
 
 describe("faqPageLd", () => {
   it("builds a FAQPage with one Question per item", () => {
@@ -73,6 +73,23 @@ describe("breadcrumbLd", () => {
 describe("webSiteLd", () => {
   it("builds a WebSite", () => {
     expect(webSiteLd({ name: "ParkMath", url: "https://example.com" })["@type"]).toBe("WebSite");
+  });
+});
+
+describe("tableLd", () => {
+  it("builds a Table that carries the columns and row count", () => {
+    const ld = tableLd({
+      about: "UK airport drop-off charges compared",
+      url: "https://example.com/drop-off-charges",
+      columns: ["Airport", "Fee", "£/min"],
+      rowCount: 25,
+      dateModified: "2026-06-21"
+    });
+    expect(ld["@type"]).toBe("Table");
+    expect(ld.isAccessibleForFree).toBe(true);
+    expect(ld.dateModified).toBe("2026-06-21");
+    expect(ld.mainEntity.value).toContain("£/min");
+    expect(ld.mainEntity.valueReference).toMatchObject({ name: "rowCount", value: 25 });
   });
 });
 

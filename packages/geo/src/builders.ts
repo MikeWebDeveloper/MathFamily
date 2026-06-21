@@ -80,6 +80,35 @@ export function webSiteLd(input: { name: string; url: string }) {
   return { "@context": "https://schema.org", "@type": "WebSite" as const, name: input.name, url: input.url };
 }
 
+/**
+ * Table — schema.org structured data for a data table (a comparison/league table).
+ * Emits a `Table` whose `about` describes the comparison subject and whose `mainEntity`
+ * carries the column headers + a row count, so the table reads as a first-class data object
+ * (not just a styled grid). Used by the multi-airport drop-off comparison hub.
+ */
+export function tableLd(input: {
+  about: string;
+  url: string;
+  columns: string[];
+  rowCount: number;
+  dateModified: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Table" as const,
+    about: input.about,
+    url: input.url,
+    dateModified: input.dateModified,
+    isAccessibleForFree: true,
+    mainEntity: {
+      "@type": "PropertyValue" as const,
+      name: "columns",
+      value: input.columns.join(", "),
+      valueReference: { "@type": "PropertyValue" as const, name: "rowCount", value: input.rowCount }
+    }
+  };
+}
+
 export function itemListLd(input: { name: string; items: { name: string; url: string }[] }) {
   return {
     "@context": "https://schema.org",

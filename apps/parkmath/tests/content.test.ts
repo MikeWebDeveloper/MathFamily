@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { DropOffRecord, LoungeRecord, PriorityPassTier } from "@mathfamily/data";
-import { bandPriceParenthetical, buildDropOffFaqs, buildLoungeFaqs, dearestDropOff, dropOffIndexSummary, dropOffTimeLimitNote, freshnessDelta, isPerEntryTariff, paymentDeadlineChip, searchName, trendNote } from "../lib/content";
+import { bandPriceParenthetical, buildDropOffFaqs, buildDropOffLeague, buildLoungeFaqs, dearestDropOff, dropOffHubAnswer, dropOffIndexSummary, dropOffPerMinutePence, dropOffTimeLimitNote, freshnessDelta, isPerEntryTariff, paymentDeadlineChip, searchName, trendNote } from "../lib/content";
 
 const record: DropOffRecord = {
   airportSlug: "gatwick",
@@ -194,6 +194,61 @@ describe("bandPriceParenthetical", () => {
   it("returns null for free records or records without a band", () => {
     expect(bandPriceParenthetical({ ...record, isFree: true, bands: [] })).toBeNull();
     expect(bandPriceParenthetical({ ...record, bands: [] })).toBeNull();
+  });
+});
+
+describe("dropOffPerMinutePence", () => {
+  it("divides the headline fee by the minutes it buys", () => {
+    // £10 for up to 10 minutes → 100p/min
+    expect(dropOffPerMinutePence({ isFree: false, bands: [{ upToMinutes: 10, totalPence: 1000 }] } as any)).toBe(100);
+    // £8 for up to 5 minutes → 160p/min
+    expect(dropOffPerMinutePence({ isFree: false, bands: [{ upToMinutes: 5, totalPence: 800 }] } as any)).toBe(160);
+  });
+  it("returns null for free and per-entry tariffs (no honest per-minute figure)", () => {
+    expect(dropOffPerMinutePence({ isFree: true, bands: [] } as any)).toBeNull();
+    // per-entry: nominal 1-minute band
+    expect(dropOffPerMinutePence({ isFree: false, bands: [{ upToMinutes: 1, totalPence: 700 }] } as any)).toBeNull();
+  });
+});
+
+describe("buildDropOffLeague", () => {
+  const recs = [
+    { airportSlug: "southend", isFree: false, bands: [{ upToMinutes: 10, totalPence: 800 }] }, // 80p/min
+    { airportSlug: "londoncity", isFree: false, bands: [{ upToMinutes: 5, totalPence: 800 }] }, // 160p/min — worst
+    { airportSlug: "heathrow", isFree: false, bands: [{ upToMinutes: 1, totalPence: 700 }] }, // per-entry
+    { airportSlug: "inverness", isFree: true, bands: [] } // free
+  ] as any;
+  const name = (s: string) => ({ southend: "Southend", londoncity: "London City", heathrow: "Heathrow", inverness: "Inverness" }[s] ?? s);
+
+  it("ranks worst £/min first, with per-entry and free airports last", () => {
+    const league = buildDropOffLeague(recs, name);
+    expect(league.map((e) => e.airportSlug)).toEqual(["londoncity", "southend", "heathrow", "inverness"]);
+    expect(league[0]!.perMinutePence).toBe(160);
+  });
+  it("flags per-entry and free entries (no per-minute figure)", () => {
+    const league = buildDropOffLeague(recs, name);
+    const heathrow = league.find((e) => e.airportSlug === "heathrow")!;
+    expect(heathrow.isPerEntry).toBe(true);
+    expect(heathrow.perMinutePence).toBeNull();
+    expect(league.find((e) => e.airportSlug === "inverness")!.isFree).toBe(true);
+  });
+});
+
+describe("dropOffHubAnswer", () => {
+  const recs = [
+    { airportSlug: "southend", isFree: false, bands: [{ upToMinutes: 10, totalPence: 800 }] },
+    { airportSlug: "londoncity", isFree: false, bands: [{ upToMinutes: 5, totalPence: 800 }] },
+    { airportSlug: "inverness", isFree: true, bands: [] }
+  ] as any;
+  const name = (s: string) => ({ southend: "Southend", londoncity: "London City", inverness: "Inverness" }[s] ?? s);
+  it("leads with counts and the dearest/cheapest + worst £/min, with a verified date", () => {
+    const league = buildDropOffLeague(recs, name);
+    const ans = dropOffHubAnswer(league, "2026-06-21");
+    expect(ans).toContain("2 of the 3");
+    expect(ans).toContain("21 June 2026");
+    expect(ans).toContain("London City"); // worst £/min
+    expect(ans).toContain("/minute");
+    expect(ans).toContain("official");
   });
 });
 

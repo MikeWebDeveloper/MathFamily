@@ -185,6 +185,105 @@ export function paymentDeadlineChip(record: Pick<DropOffRecord, "paymentDeadline
   return record.paymentDeadline ? `Pay by: ${record.paymentDeadline}` : null;
 }
 
+/**
+ * Effective £-per-minute for the HEADLINE band — the "you're charged by the minute" data-PR metric.
+ * It is the headline fee divided by the minutes you actually get for it (`bands[0].upToMinutes`),
+ * i.e. the worst-case £/min if you only stop for a moment. Returns null when this framing is
+ * meaningless: free airports (0) and flat per-entry tariffs (the charge isn't time-based, so
+ * "per minute" would mislead — e.g. Heathrow's nominal 1-minute band).
+ */
+export function dropOffPerMinutePence(record: Pick<DropOffRecord, "isFree" | "bands"> & Partial<DropOffRecord>): number | null {
+  if (record.isFree) return null;
+  const first = record.bands[0];
+  if (!first || first.upToMinutes <= 0) return null;
+  if (isPerEntryTariff(record as DropOffRecord)) return null;
+  return first.totalPence / first.upToMinutes;
+}
+
+export interface LeagueEntry {
+  airportSlug: string;
+  name: string;
+  /** headline fee pence (bands[0]); 0 when free */
+  feePence: number;
+  /** minutes the headline fee buys (bands[0].upToMinutes); 0 when free/per-entry */
+  minutes: number;
+  /** effective £/min in pence, or null when not a time-based charge (free / per-entry) */
+  perMinutePence: number | null;
+  isFree: boolean;
+  isPerEntry: boolean;
+}
+
+/**
+ * Build the £-per-minute league table: every airport, with the worst-value-per-minute first.
+ * Time-based tariffs are ranked by £/min (descending); per-entry and free airports are ranked
+ * last (they have no honest per-minute figure) and sorted among themselves by headline fee.
+ * Pure + unit-tested — drives the public "most & least expensive to drop off" ranking.
+ */
+export function buildDropOffLeague(
+  records: (Pick<DropOffRecord, "airportSlug" | "isFree" | "bands"> & Partial<DropOffRecord>)[],
+  nameFor: (slug: string) => string
+): LeagueEntry[] {
+  const entries: LeagueEntry[] = records.map((r) => {
+    const first = r.bands[0];
+    const perEntry = !r.isFree && isPerEntryTariff(r as DropOffRecord);
+    return {
+      airportSlug: r.airportSlug,
+      name: nameFor(r.airportSlug),
+      feePence: r.isFree ? 0 : (first?.totalPence ?? 0),
+      minutes: r.isFree || perEntry ? 0 : (first?.upToMinutes ?? 0),
+      perMinutePence: dropOffPerMinutePence(r),
+      isFree: r.isFree,
+      isPerEntry: perEntry
+    };
+  });
+  return entries.sort((a, b) => {
+    // Time-based (has a per-minute figure) always ranks above per-entry/free.
+    if (a.perMinutePence !== null && b.perMinutePence !== null) return b.perMinutePence - a.perMinutePence;
+    if (a.perMinutePence !== null) return -1;
+    if (b.perMinutePence !== null) return 1;
+    // Among non-per-minute (per-entry / free): dearer headline fee first.
+    return b.feePence - a.feePence;
+  });
+}
+
+/**
+ * Number-first, source-cited answer paragraph for the comparison hub (GEO/AEO citation asset).
+ * Leads with hard numbers (how many airports charge, the dearest & cheapest headline fee, and the
+ * worst £/min) so an answer engine can lift one self-contained, sourced sentence. Pure + tested.
+ */
+export function dropOffHubAnswer(
+  league: LeagueEntry[],
+  verifiedDate: string
+): string {
+  const charging = league.filter((e) => !e.isFree);
+  const free = league.filter((e) => e.isFree);
+  const byFee = [...charging].sort((a, b) => a.feePence - b.feePence);
+  const cheapest = byFee[0];
+  const dearest = byFee[byFee.length - 1];
+  const perMin = league.filter((e) => e.perMinutePence !== null);
+  const worstPerMin = perMin[0]; // league is already £/min-descending
+  const fmtVerified = new Date(`${verifiedDate}T00:00:00Z`).toLocaleDateString("en-GB", {
+    day: "numeric", month: "long", year: "numeric", timeZone: "UTC"
+  });
+  const total = league.length;
+  const parts: string[] = [];
+  parts.push(
+    `As of ${fmtVerified}, ${charging.length} of the ${total} largest UK airports charge to drop a passenger off at the terminal${free.length ? `; ${free.length} still let you drop off free` : ""}.`
+  );
+  if (dearest && cheapest) {
+    parts.push(
+      `The most expensive headline fee is ${dearest.name} at ${formatPence(dearest.feePence)}, and the cheapest charge is ${cheapest.name} at ${formatPence(cheapest.feePence)}.`
+    );
+  }
+  if (worstPerMin && worstPerMin.perMinutePence !== null) {
+    parts.push(
+      `Measured per minute of allowance, the worst value is ${worstPerMin.name} at ${formatPence(Math.round(worstPerMin.perMinutePence))}/minute (${formatPence(worstPerMin.feePence)} for up to ${worstPerMin.minutes} minutes).`
+    );
+  }
+  parts.push("Every figure is read from each airport's own official page and date-stamped below.");
+  return parts.join(" ");
+}
+
 export function isPerEntryTariff(record: DropOffRecord): boolean {
   const first = record.bands[0];
   return !record.isFree && record.bands.length === 1 && first !== undefined && first.upToMinutes <= 1;
