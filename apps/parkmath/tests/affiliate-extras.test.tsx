@@ -18,11 +18,14 @@ describe("AffiliateExtras", () => {
     expect(html).toContain("Holiday Extras");
   });
 
-  it("affiliate hrefs point to AWIN with the correct awinmid and clickref", () => {
-    expect(html).toContain("https://www.awin1.com/cread.php?");
-    expect(html).toContain("awinmid=3496");
-    // All four products use clickref parkmath-home-home
-    expect(html).toContain("clickref=parkmath-home-home");
+  it("affiliate hrefs point to the first-party /go redirect (not a bare awin1.com link)", () => {
+    // Click measurement: components link to /go/<airport>/<target>?s=<surface>; the route records
+    // the click and 302s to the exact AWIN deep link. The raw awin1.com link must NOT be in the DOM.
+    expect(html).not.toContain("https://www.awin1.com/cread.php?");
+    expect(html).toContain('href="/go/home/parking?s=home"');
+    expect(html).toContain('href="/go/home/lounge?s=home"');
+    expect(html).toContain('href="/go/home/hotels?s=home"');
+    expect(html).toContain('href="/go/home/transfers?s=home"');
   });
 
   it("marks affiliate links as sponsored", () => {

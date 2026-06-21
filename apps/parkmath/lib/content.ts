@@ -1,23 +1,79 @@
 import { formatPence, loungeBreakEven } from "@mathfamily/engine";
 import type { DropOffRecord, LoungeRecord, PriorityPassTier } from "@mathfamily/data";
 
+/**
+ * The token people actually search. The dataset stores official names ("London Stansted",
+ * "London Heathrow"), but GSC queries are "stansted drop off charges", "heathrow drop off fee" —
+ * the leading "London " buries the discriminating token and dilutes the title/H1 match. Drop it
+ * for the headline label, EXCEPT where "London" is the whole brand ("London City"). The official
+ * name is still used everywhere in the body and structured data.
+ */
+export function searchName(airportName: string): string {
+  // "London City" is its own brand — never reduce it to "City".
+  if (airportName === "London City") return airportName;
+  const stripped = airportName.replace(/^London\s+/, "");
+  return stripped.length > 0 ? stripped : airportName;
+}
+
+/**
+ * One unique, indexable sentence about the time limit / tier structure of THIS airport's charge —
+ * the bit that differs most between pages (Stansted's £28-over-15-min step, Bristol's escalating
+ * bands, Southend's flat 10-min express). Null for free airports and flat per-entry tariffs (where
+ * "time limit" is meaningless). Pure; data-driven only.
+ */
+export function dropOffTimeLimitNote(record: DropOffRecord): string | null {
+  if (record.isFree || isPerEntryTariff(record)) return null;
+  const first = record.bands[0];
+  if (!first) return null;
+  if (record.bands.length >= 2) {
+    const next = record.bands[1]!;
+    return `The headline ${formatPence(first.totalPence)} covers up to ${first.upToMinutes} minutes; stay longer and it steps up to ${formatPence(next.totalPence)}${record.maxStayMinutes !== null ? ` (max stay ${record.maxStayMinutes} minutes)` : ""}.`;
+  }
+  const cap = record.maxStayMinutes ?? first.upToMinutes;
+  return `You get up to ${cap} minutes for the ${formatPence(first.totalPence)} charge — there is no cheaper shorter band, so a 2-minute stop costs the same as the full ${cap} minutes.`;
+}
+
 export function buildDropOffFaqs(record: DropOffRecord, airportName: string): { question: string; answer: string }[] {
+  const search = searchName(airportName);
   const faqs: { question: string; answer: string }[] = [
-    { question: `How much is the drop-off charge at ${airportName}?`, answer: `${record.feeSummary} (verified ${record.verifiedAt}, per the official ${airportName} page).` }
+    // Q1 matches the dominant query phrasing ("how much is it to drop off at <airport>") and uses the
+    // searched token, not the "London …" prefix.
+    { question: `How much is the drop-off charge at ${search} Airport?`, answer: `${record.feeSummary} (verified ${record.verifiedAt}, per the official ${airportName} page).` }
   ];
+
+  const timeLimit = dropOffTimeLimitNote(record);
+  if (timeLimit) {
+    faqs.push({
+      question: `Is there a time limit on the ${search} drop-off zone?`,
+      answer: timeLimit
+    });
+  }
+
   if (record.paymentDeadline) {
     faqs.push({
-      question: `Can I pay the ${airportName} drop-off charge after I leave?`,
+      question: `Can I pay the ${search} drop-off charge after I leave?`,
       answer: `Yes — pay by ${record.paymentDeadline}. ${record.penaltyNotes ?? ""}`.trim()
     });
   }
+
+  // Penalty / PCN question — distinct per airport (Heathrow £80→£40 PCN, Bristol/Southend red-route
+  // £100). Surfaces the real consequence of not paying, a high-intent query.
+  if (record.penaltyPence !== null || record.penaltyNotes) {
+    const penaltyLine = record.penaltyPence !== null ? `The penalty is ${formatPence(record.penaltyPence)}. ` : "";
+    faqs.push({
+      question: `What happens if you don't pay the ${search} drop-off fee?`,
+      answer: `${penaltyLine}${record.penaltyNotes ?? "A Parking Charge Notice may be issued for non-payment."}`.trim()
+    });
+  }
+
   faqs.push({
-    question: `Are Blue Badge holders exempt from the ${airportName} drop-off fee?`,
+    question: `Are Blue Badge holders exempt from the ${search} drop-off fee?`,
     answer: record.blueBadgePolicy
   });
+
   if (record.freeAlternative) {
     faqs.push({
-      question: `How do I avoid the ${airportName} drop-off fee?`,
+      question: `How do I avoid the ${search} drop-off fee?`,
       answer: `Use the ${record.freeAlternative.name} — free for ${record.freeAlternative.minutesFree} minutes. ${record.freeAlternative.details}`
     });
   }
@@ -127,6 +183,105 @@ export function freshnessDelta(record: Pick<DropOffRecord, "isFree" | "bands" | 
 /** The payment-deadline caveat text, driven by the real data (never generic copy). */
 export function paymentDeadlineChip(record: Pick<DropOffRecord, "paymentDeadline">): string | null {
   return record.paymentDeadline ? `Pay by: ${record.paymentDeadline}` : null;
+}
+
+/**
+ * Effective £-per-minute for the HEADLINE band — the "you're charged by the minute" data-PR metric.
+ * It is the headline fee divided by the minutes you actually get for it (`bands[0].upToMinutes`),
+ * i.e. the worst-case £/min if you only stop for a moment. Returns null when this framing is
+ * meaningless: free airports (0) and flat per-entry tariffs (the charge isn't time-based, so
+ * "per minute" would mislead — e.g. Heathrow's nominal 1-minute band).
+ */
+export function dropOffPerMinutePence(record: Pick<DropOffRecord, "isFree" | "bands"> & Partial<DropOffRecord>): number | null {
+  if (record.isFree) return null;
+  const first = record.bands[0];
+  if (!first || first.upToMinutes <= 0) return null;
+  if (isPerEntryTariff(record as DropOffRecord)) return null;
+  return first.totalPence / first.upToMinutes;
+}
+
+export interface LeagueEntry {
+  airportSlug: string;
+  name: string;
+  /** headline fee pence (bands[0]); 0 when free */
+  feePence: number;
+  /** minutes the headline fee buys (bands[0].upToMinutes); 0 when free/per-entry */
+  minutes: number;
+  /** effective £/min in pence, or null when not a time-based charge (free / per-entry) */
+  perMinutePence: number | null;
+  isFree: boolean;
+  isPerEntry: boolean;
+}
+
+/**
+ * Build the £-per-minute league table: every airport, with the worst-value-per-minute first.
+ * Time-based tariffs are ranked by £/min (descending); per-entry and free airports are ranked
+ * last (they have no honest per-minute figure) and sorted among themselves by headline fee.
+ * Pure + unit-tested — drives the public "most & least expensive to drop off" ranking.
+ */
+export function buildDropOffLeague(
+  records: (Pick<DropOffRecord, "airportSlug" | "isFree" | "bands"> & Partial<DropOffRecord>)[],
+  nameFor: (slug: string) => string
+): LeagueEntry[] {
+  const entries: LeagueEntry[] = records.map((r) => {
+    const first = r.bands[0];
+    const perEntry = !r.isFree && isPerEntryTariff(r as DropOffRecord);
+    return {
+      airportSlug: r.airportSlug,
+      name: nameFor(r.airportSlug),
+      feePence: r.isFree ? 0 : (first?.totalPence ?? 0),
+      minutes: r.isFree || perEntry ? 0 : (first?.upToMinutes ?? 0),
+      perMinutePence: dropOffPerMinutePence(r),
+      isFree: r.isFree,
+      isPerEntry: perEntry
+    };
+  });
+  return entries.sort((a, b) => {
+    // Time-based (has a per-minute figure) always ranks above per-entry/free.
+    if (a.perMinutePence !== null && b.perMinutePence !== null) return b.perMinutePence - a.perMinutePence;
+    if (a.perMinutePence !== null) return -1;
+    if (b.perMinutePence !== null) return 1;
+    // Among non-per-minute (per-entry / free): dearer headline fee first.
+    return b.feePence - a.feePence;
+  });
+}
+
+/**
+ * Number-first, source-cited answer paragraph for the comparison hub (GEO/AEO citation asset).
+ * Leads with hard numbers (how many airports charge, the dearest & cheapest headline fee, and the
+ * worst £/min) so an answer engine can lift one self-contained, sourced sentence. Pure + tested.
+ */
+export function dropOffHubAnswer(
+  league: LeagueEntry[],
+  verifiedDate: string
+): string {
+  const charging = league.filter((e) => !e.isFree);
+  const free = league.filter((e) => e.isFree);
+  const byFee = [...charging].sort((a, b) => a.feePence - b.feePence);
+  const cheapest = byFee[0];
+  const dearest = byFee[byFee.length - 1];
+  const perMin = league.filter((e) => e.perMinutePence !== null);
+  const worstPerMin = perMin[0]; // league is already £/min-descending
+  const fmtVerified = new Date(`${verifiedDate}T00:00:00Z`).toLocaleDateString("en-GB", {
+    day: "numeric", month: "long", year: "numeric", timeZone: "UTC"
+  });
+  const total = league.length;
+  const parts: string[] = [];
+  parts.push(
+    `As of ${fmtVerified}, ${charging.length} of the ${total} largest UK airports charge to drop a passenger off at the terminal${free.length ? `; ${free.length} still let you drop off free` : ""}.`
+  );
+  if (dearest && cheapest) {
+    parts.push(
+      `The most expensive headline fee is ${dearest.name} at ${formatPence(dearest.feePence)}, and the cheapest charge is ${cheapest.name} at ${formatPence(cheapest.feePence)}.`
+    );
+  }
+  if (worstPerMin && worstPerMin.perMinutePence !== null) {
+    parts.push(
+      `Measured per minute of allowance, the worst value is ${worstPerMin.name} at ${formatPence(Math.round(worstPerMin.perMinutePence))}/minute (${formatPence(worstPerMin.feePence)} for up to ${worstPerMin.minutes} minutes).`
+    );
+  }
+  parts.push("Every figure is read from each airport's own official page and date-stamped below.");
+  return parts.join(" ");
 }
 
 export function isPerEntryTariff(record: DropOffRecord): boolean {

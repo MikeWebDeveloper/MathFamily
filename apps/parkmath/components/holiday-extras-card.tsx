@@ -1,4 +1,4 @@
-import { resolveHeProduct, type HeProduct } from "../lib/partners";
+import { goLink, resolveHeProduct, type HeProduct } from "../lib/partners";
 
 const TERMS_URL = "https://www.holidayextras.com/airport-parking.html";
 
@@ -16,9 +16,15 @@ export function HolidayExtrasCard({ product, airportName, airportSlug, surface, 
 }) {
   const primary = resolveHeProduct(product, airportSlug, surface);
   if (!primary) return null;
+  // First-party redirect path (records the click, then 302s to the exact AWIN link). The label/
+  // null-check still come from resolveHeProduct so an inactive partner renders nothing.
+  const primaryHref = goLink(surface, airportSlug, product);
   const extraLinks = (extras ?? [])
-    .map((p) => resolveHeProduct(p, airportSlug, `${surface}-${p}`))
-    .filter((r): r is { url: string; productLabel: string } => r !== null);
+    .map((p) => {
+      const r = resolveHeProduct(p, airportSlug, `${surface}-${p}`);
+      return r ? { product: p, href: goLink(`${surface}-${p}`, airportSlug, p), productLabel: r.productLabel } : null;
+    })
+    .filter((r): r is { product: HeProduct; href: string; productLabel: string } => r !== null);
 
   return (
     <section aria-label={`Pre-book ${primary.productLabel} with Holiday Extras`} className="rounded-card border border-brand-accent/30 bg-blue-50 dark:bg-brand-accent/[0.08] dark:border-brand-accent/20 p-4">
@@ -28,7 +34,7 @@ export function HolidayExtrasCard({ product, airportName, airportSlug, surface, 
       </div>
 
       <a
-        href={primary.url}
+        href={primaryHref}
         rel="sponsored noopener noreferrer"
         target="_blank"
         className="flex min-h-[44px] items-center justify-between gap-3 font-semibold text-brand-accent sm:hidden"
@@ -49,7 +55,7 @@ export function HolidayExtrasCard({ product, airportName, airportSlug, surface, 
           <a href={TERMS_URL} rel="noopener noreferrer" target="_blank" className="underline underline-offset-4">Terms ↗</a>
         </p>
         <a
-          href={primary.url}
+          href={primaryHref}
           rel="sponsored noopener noreferrer"
           target="_blank"
           className="mt-3 inline-block rounded-card bg-brand-accent px-4 py-2 text-sm font-semibold text-white"
@@ -64,7 +70,7 @@ export function HolidayExtrasCard({ product, airportName, airportSlug, surface, 
           {extraLinks.map((r, i) => (
             <span key={r.productLabel}>
               {i > 0 ? " · " : ""}
-              <a href={r.url} rel="sponsored noopener noreferrer" target="_blank" className="underline underline-offset-4">
+              <a href={r.href} rel="sponsored noopener noreferrer" target="_blank" className="underline underline-offset-4">
                 airport {r.productLabel}s
               </a>
             </span>

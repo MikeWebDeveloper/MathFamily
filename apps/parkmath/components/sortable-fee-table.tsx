@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { FeeGrid, IataTile, SegmentedControl } from "@mathfamily/ui";
+import { FeeGrid, IataTile, SegmentedControl, VerifiedStamp } from "@mathfamily/ui";
 
-type SortKey = "fee" | "cheap" | "az";
+type SortKey = "fee" | "cheap" | "permin" | "az";
 
 export interface DropOffRow {
   airportSlug: string;
@@ -12,17 +12,23 @@ export interface DropOffRow {
   iata: string;
   /** fee pence for sort; null = free (sort as 0) */
   feePence: number;
-  /** Display cells (already formatted strings/strings) — indices match columns[1..5] */
+  /** effective £/min in pence for sort; null = no per-minute figure (free / per-entry → sort last) */
+  perMinutePence: number | null;
+  /** Display cells (already formatted strings) — indices match columns[1..n] */
   fee: string;
+  perMin: string;
   timeLimit: string;
   penalty: string;
   freeAlt: string;
+  /** Official airport source URL — the per-row "verified [date]" link (the freshness moat). */
+  sourceUrl: string;
   verifiedAt: string;
 }
 
 const SORT_OPTIONS: { value: SortKey; label: string }[] = [
   { value: "fee", label: "Most expensive" },
   { value: "cheap", label: "Cheapest" },
+  { value: "permin", label: "£/min" },
   { value: "az", label: "A–Z" }
 ];
 
@@ -32,6 +38,14 @@ function sortRows(rows: DropOffRow[], key: SortKey): DropOffRow[] {
     copy.sort((a, b) => b.feePence - a.feePence);
   } else if (key === "cheap") {
     copy.sort((a, b) => a.feePence - b.feePence);
+  } else if (key === "permin") {
+    // Worst £/min first; entries without a per-minute figure (free / per-entry) sort last.
+    copy.sort((a, b) => {
+      if (a.perMinutePence !== null && b.perMinutePence !== null) return b.perMinutePence - a.perMinutePence;
+      if (a.perMinutePence !== null) return -1;
+      if (b.perMinutePence !== null) return 1;
+      return b.feePence - a.feePence;
+    });
   } else {
     copy.sort((a, b) => a.airportName.localeCompare(b.airportName));
   }
@@ -52,10 +66,16 @@ export function SortableFeeTable({ rows: initialRows }: { rows: DropOffRow[] }) 
       <IataTile code={r.iata} />
     </Link>,
     r.fee,
+    r.perMin,
     r.timeLimit,
     r.penalty,
     r.freeAlt,
-    r.verifiedAt
+    <VerifiedStamp
+      key="v"
+      verifiedAt={r.verifiedAt}
+      sourceUrl={r.sourceUrl}
+      sourceLabel={`Official ${r.airportName} page`}
+    />
   ]);
 
   return (
@@ -70,9 +90,9 @@ export function SortableFeeTable({ rows: initialRows }: { rows: DropOffRow[] }) 
         />
       </div>
       <FeeGrid
-        caption="Data verified per airport — click through for details, sources and the free alternative."
-        columns={["Airport", "Fee", "Time limit", "Penalty", "Free alternative", "Verified"]}
-        numericColumns={[1, 2, 3]}
+        caption="Every figure is read from each airport's own official page — tap the ✓ date in any row to open the source. Click an airport for the full breakdown and the free alternative."
+        columns={["Airport", "Fee", "£/min", "Time limit", "Penalty", "Free alternative", "Verified"]}
+        numericColumns={[1, 2, 3, 4]}
         rows={feeGridRows}
       />
     </div>

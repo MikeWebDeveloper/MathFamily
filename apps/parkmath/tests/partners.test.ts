@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { activeSlotPartnerName, buildAwinLink, heAirportParkingUrl, resolveHeProduct, resolveSlot } from "../lib/partners";
+import { activeSlotPartnerName, buildAwinLink, goLink, heAirportParkingUrl, resolveGoTarget, resolveHeProduct, resolveSlot } from "../lib/partners";
 
 describe("buildAwinLink", () => {
   it("builds a bare cread.php link with clickref and no ued", () => {
@@ -78,5 +78,49 @@ describe("activeSlotPartnerName", () => {
   });
   it("returns null for an inactive slot", () => {
     expect(activeSlotPartnerName("lounge-membership")).toBeNull();
+  });
+});
+
+describe("goLink (first-party redirect path)", () => {
+  it("builds /go/<airport>/<target>?s=<surface>", () => {
+    expect(goLink("dropoff", "gatwick", "parking")).toBe("/go/gatwick/parking?s=dropoff");
+    expect(goLink("lounge", "manchester", "lounge")).toBe("/go/manchester/lounge?s=lounge");
+  });
+  it("omits the ?s= query when surface is empty (slot CTA has no clickref suffix)", () => {
+    expect(goLink("", "gatwick", "parking-prebook")).toBe("/go/gatwick/parking-prebook");
+  });
+  it("url-encodes path segments", () => {
+    expect(goLink("home", "home", "transfers")).toBe("/go/home/transfers?s=home");
+  });
+});
+
+describe("resolveGoTarget — rebuilds the EXACT AWIN deep link (attribution preserved)", () => {
+  it("parking-prebook rebuilds the same URL resolveSlot produced (byte-identical)", () => {
+    // The redirect destination must equal what the component used to render directly — same
+    // awinmid/awinaffid/clickref/ued — so AWIN attribution is untouched by the new /go hop.
+    const direct = resolveSlot("parking-prebook", "gatwick", "");
+    const viaGo = resolveGoTarget("parking-prebook", "gatwick", "");
+    expect(viaGo).not.toBeNull();
+    expect(viaGo!.url).toBe(direct.url);
+    expect(viaGo!.url).toContain("awinmid=3496");
+    expect(viaGo!.url).toContain("awinaffid=2932035");
+    expect(viaGo!.url).toContain("clickref=parkmath-gatwick");
+    expect(viaGo!.url).toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Fgatwick-airport-parking.html");
+  });
+  it("an HE product target rebuilds the same URL resolveHeProduct produced (with surface clickref)", () => {
+    const direct = resolveHeProduct("hotels", "gatwick", "dropoff-hotels");
+    const viaGo = resolveGoTarget("hotels", "gatwick", "dropoff-hotels");
+    expect(viaGo!.url).toBe(direct!.url);
+    expect(viaGo!.url).toContain("clickref=parkmath-gatwick-dropoff-hotels");
+  });
+  it("lounge target with lounge surface matches the direct lounge deep link", () => {
+    const direct = resolveHeProduct("lounge", "gatwick", "lounge");
+    const viaGo = resolveGoTarget("lounge", "gatwick", "lounge");
+    expect(viaGo!.url).toBe(direct!.url);
+    expect(viaGo!.url).toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Fairport-lounges.html");
+  });
+  it("returns null for an unknown target (route 404s — never an open redirect)", () => {
+    expect(resolveGoTarget("evil", "gatwick", "")).toBeNull();
+    expect(resolveGoTarget("https://evil.example.com", "gatwick", "")).toBeNull();
   });
 });

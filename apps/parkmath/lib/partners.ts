@@ -82,6 +82,44 @@ export function resolveHeProduct(
   };
 }
 
+// ─── First-party affiliate-click measurement ────────────────────────────────
+// Components render a first-party `/go/...` path instead of the raw awin1.com link. The redirect
+// route (app/go/[airport]/[target]/route.ts) records a lightweight click event server-side, then
+// 302s to the *exact* AWIN deep link rebuilt here via the same resolvers — so awinmid/awinaffid/
+// clickref/ued are byte-identical and AWIN attribution is never broken. No third-party script.
+
+/** The set of redirect targets the /go route understands. A bare HeProduct (parking/lounge/hotels/
+ *  transfers) resolves via resolveHeProduct; "parking-prebook" resolves via resolveSlot (the
+ *  booking-options "Pre-book & save" CTA, which uses the slot landing URL). */
+export type GoTarget = HeProduct | "parking-prebook";
+
+/** Build the first-party redirect path a CTA links to. `surface` becomes the clickref suffix once
+ *  the route rebuilds the AWIN link, so per-page/product attribution is preserved end to end.
+ *  e.g. goLink("dropoff", "gatwick", "parking") → "/go/gatwick/parking?s=dropoff". */
+export function goLink(surface: string, airportSlug: string, target: GoTarget): string {
+  const path = `/go/${encodeURIComponent(airportSlug)}/${encodeURIComponent(target)}`;
+  return surface ? `${path}?s=${encodeURIComponent(surface)}` : path;
+}
+
+/** Server-side: rebuild the exact AWIN deep link for a /go redirect, or null if the target is
+ *  inactive/unknown (route then 404s — never an open redirect, never a bare awin1.com). Reuses the
+ *  same resolvers the components used, so the destination is identical to the pre-route behaviour. */
+export function resolveGoTarget(
+  target: string,
+  airportSlug: string,
+  surface: string,
+): { url: string } | null {
+  if (target === "parking-prebook") {
+    const r = resolveSlot("parking-prebook", airportSlug, "");
+    return r.kind === "affiliate" ? { url: r.url } : null;
+  }
+  if (target === "parking" || target === "lounge" || target === "hotels" || target === "transfers") {
+    const r = resolveHeProduct(target, airportSlug, surface);
+    return r ? { url: r.url } : null;
+  }
+  return null;
+}
+
 /** Name of the first active partner for an active slot, or null. Surfaces without an
  *  airport in context (e.g. the home deals strip) use this to decide affiliate framing;
  *  the tracked link is still built per-airport elsewhere via resolveSlot/buildAwinLink. */
