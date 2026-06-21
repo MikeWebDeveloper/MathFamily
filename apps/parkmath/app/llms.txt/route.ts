@@ -32,6 +32,16 @@ ${updatesBlock}
 - /drop-off-charges — master comparison table (schema.org Dataset)
 - /drop-off-charges/[airport] — per-airport fee, time limit, penalty, Blue Badge policy,
   free alternative, FAQ (schema.org FAQPage)
+- /blue-badge — Blue Badge drop-off policy for all ${dropOff.records.length} UK airports: which
+  waive the charge, which give a free window, which only a concession, which publish nothing
+  (schema.org ItemList + FAQPage)
+- /blue-badge/[airport] — per-airport Blue Badge drop-off policy (read verbatim from the airport's
+  page), whether it's free/exempt, how to claim it, and the free option for everyone
+  (schema.org HowTo where a process is published + FAQPage)
+- /avoid-drop-off-charge/[airport] — the verified free alternative to a charging airport's
+  forecourt, the saving, and how to use it (schema.org HowTo + FAQPage)
+- /parking-vs-drop-off/[airport] — drive-up parking vs a single drop-off, honest decision page
+  (schema.org FAQPage)
 - /airport-parking — gate vs pre-book parking hub for all tracked airports
 - /airport-parking/[airport] — per-airport parking comparison with gate and pre-book
   prices, savings callout, and interactive calculator (schema.org FAQPage)

@@ -168,7 +168,7 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
         <FaqAccordion items={faqs} />
       </section>
 
-      {(hasParking || hasLounge || hasCompare) ? (
+      {(
         <section className="space-y-2">
           <h2 className="text-lg font-semibold text-ink">More at this airport</h2>
           <ul className="space-y-1 text-sm">
@@ -193,9 +193,14 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
                 </Link>
               </li>
             ) : null}
+            <li>
+              <Link href={`/blue-badge/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
+                Blue Badge drop-off at {airport.name}: is it free? →
+              </Link>
+            </li>
           </ul>
         </section>
-      ) : null}
+      )}
 
       <EmailCaptureSlot
         formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}

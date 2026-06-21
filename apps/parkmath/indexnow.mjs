@@ -53,6 +53,12 @@ const avoid = dropOffRecords
   .map((r) => r.airportSlug)
   .filter(Boolean);
 
+// "blue badge": every airport that carries a populated Blue Badge drop-off policy (all 25).
+const blueBadge = dropOffRecords
+  .filter((r) => typeof r.blueBadgePolicy === "string" && r.blueBadgePolicy.trim().length > 0)
+  .map((r) => r.airportSlug)
+  .filter(Boolean);
+
 // "parking vs drop-off": charging airports (with a band price) that also have a 7-day gate parking price.
 const parkingVsDropOff = dropOffRecords
   .filter((d) => {
@@ -72,12 +78,14 @@ const urls = [
     `${BASE}/parking-price-index-2026`,
     `${BASE}/drop-off-charges`,
     `${BASE}/avoid-drop-off-charge`,
+    `${BASE}/blue-badge`,
     `${BASE}/parking-vs-drop-off`,
     `${BASE}/airport-parking`,
     `${BASE}/airport-lounges`,
     `${BASE}/news`,
     ...dropOff.map((s) => `${BASE}/drop-off-charges/${s}`),
     ...avoid.map((s) => `${BASE}/avoid-drop-off-charge/${s}`),
+    ...blueBadge.map((s) => `${BASE}/blue-badge/${s}`),
     ...parkingVsDropOff.map((s) => `${BASE}/parking-vs-drop-off/${s}`),
     ...parking.map((s) => `${BASE}/airport-parking/${s}`),
     ...parking.flatMap((s) => DURATIONS.map((d) => `${BASE}/airport-parking/${s}/${d}`)),

@@ -38,6 +38,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
         changeFrequency: "monthly" as const,
         priority: 0.7
       })),
+    { url: `${base}/blue-badge`, changeFrequency: "weekly" as const, priority: 0.8, lastModified: latestModified },
+    ...dropOffRecords
+      .filter((r) => r.blueBadgePolicy.trim().length > 0)
+      .map((r) => ({
+        url: `${base}/blue-badge/${r.airportSlug}`,
+        lastModified: new Date(`${r.verifiedAt}T00:00:00Z`),
+        changeFrequency: "monthly" as const,
+        priority: 0.7
+      })),
     { url: `${base}/parking-vs-drop-off`, changeFrequency: "weekly" as const, priority: 0.8, lastModified: latestParkingModified },
     ...dropOffRecords
       .filter((d) => {

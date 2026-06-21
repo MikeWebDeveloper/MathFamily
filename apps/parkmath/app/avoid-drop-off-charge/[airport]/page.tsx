@@ -157,6 +157,11 @@ export default async function AvoidDropOffPage({ params }: { params: Promise<{ a
         </p>
       ) : null}
       <p>
+        <Link href={`/blue-badge/${airport.slug}`} className="text-sm font-medium text-brand-accent underline underline-offset-4">
+          Blue Badge drop-off at {airport.name}: is it free? →
+        </Link>
+      </p>
+      <p>
         <a href="/avoid-drop-off-charge" className="text-sm font-medium text-brand-accent underline underline-offset-4">
           How to avoid the charge at every UK airport →
         </a>
