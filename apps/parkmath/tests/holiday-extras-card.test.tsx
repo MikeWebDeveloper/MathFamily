@@ -10,25 +10,25 @@ const lounge = renderToStaticMarkup(
 );
 
 describe("HolidayExtrasCard", () => {
-  it("drop-off parking card: Ad, sponsored deep link, extras, compliant copy", () => {
+  it("drop-off parking card: Ad, sponsored first-party deep link, extras, compliant copy", () => {
     expect(dropoff).toContain(">Ad<");
     expect(dropoff).toContain("Book parking");
-    expect(dropoff).toContain("https://www.awin1.com/cread.php?");
-    expect(dropoff).toContain("awinmid=3496");
-    expect(dropoff).toContain("clickref=parkmath-gatwick-dropoff");
-    expect(dropoff).toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Fgatwick-airport-parking.html");
+    // Click measurement: links go through the first-party /go redirect (surface carried as ?s=),
+    // not a bare awin1.com link. The route rebuilds the exact AWIN deep link before the 302.
+    expect(dropoff).not.toContain("https://www.awin1.com/cread.php?");
+    expect(dropoff).toContain('href="/go/gatwick/parking?s=dropoff"');
     expect(dropoff).toContain("Also from Holiday Extras");
-    expect(dropoff).toContain("clickref=parkmath-gatwick-dropoff-hotels");
+    expect(dropoff).toContain('href="/go/gatwick/hotels?s=dropoff-hotels"');
     expect(dropoff).toContain('rel="sponsored noopener noreferrer"');
     expect(dropoff).not.toContain(">Up to 25% off<");
     expect(dropoff).not.toContain("may earn");
   });
 
-  it("lounge card: Ad, lounge deep link with lounge clickref", () => {
+  it("lounge card: Ad, first-party lounge link carrying the lounge surface", () => {
     expect(lounge).toContain(">Ad<");
     expect(lounge).toContain("Book lounge");
-    expect(lounge).toContain("clickref=parkmath-gatwick-lounge");
-    expect(lounge).toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Fairport-lounges.html");
+    expect(lounge).not.toContain("https://www.awin1.com/cread.php?");
+    expect(lounge).toContain('href="/go/gatwick/lounge?s=lounge"');
     expect(lounge).not.toContain("may earn");
   });
 });

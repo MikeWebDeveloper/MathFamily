@@ -1,4 +1,4 @@
-import { resolveSlot, type SlotId } from "../lib/partners";
+import { goLink, resolveSlot, type SlotId } from "../lib/partners";
 import type { ParkingCtaModel } from "../lib/parking-content";
 
 const PARKING_SLOT: SlotId = "parking-prebook";
@@ -85,7 +85,7 @@ export function BookingOptions({
               we show as cheapest.
             </p>
             <a
-              href={he.url}
+              href={goLink("", airportSlug, "parking-prebook")}
               rel="sponsored noopener noreferrer"
               target="_blank"
               className="mt-3 inline-block rounded-card bg-brand-accent px-4 py-2 text-sm font-semibold text-white"

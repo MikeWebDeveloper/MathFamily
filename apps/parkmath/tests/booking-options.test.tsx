@@ -25,15 +25,15 @@ describe("BookingOptions", () => {
     expect(html).not.toContain('href="https://www.gatwickairport.com/parking" rel="sponsored');
   });
 
-  it("renders the Holiday Extras route with Ad, benefits, compliant discount + deep link", () => {
+  it("renders the Holiday Extras route with Ad, benefits, compliant discount + first-party deep link", () => {
     expect(html).toContain(">Ad<");
     expect(html).toContain("Free cancellation (cancel to arrival)");
     expect(html).toContain("up to 25% at Gatwick");
     expect(html).toContain("Discount applied automatically");
-    expect(html).toContain("https://www.awin1.com/cread.php?");
-    expect(html).toContain("awinmid=3496");
-    expect(html).toContain("clickref=parkmath-gatwick");
-    expect(html).toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Fgatwick-airport-parking.html");
+    // Click measurement: the CTA links to the first-party /go redirect, NOT a bare awin1.com link.
+    // The route rebuilds the exact AWIN deep link (awinmid/clickref/ued) server-side before the 302.
+    expect(html).not.toContain("https://www.awin1.com/cread.php?");
+    expect(html).toContain('href="/go/gatwick/parking-prebook"');
     expect(html).toContain("Book my parking");
     expect(html).toContain('rel="sponsored noopener noreferrer"');
   });

@@ -1,5 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
-import { resolveHeProduct, type HeProduct } from "../lib/partners";
+import { goLink, resolveHeProduct, type HeProduct } from "../lib/partners";
 import { ParkingIcon, LoungeIcon, HotelIcon, TransferIcon } from "./tile-icons";
 
 // Internal fallback routes when HE is inactive
@@ -54,8 +54,10 @@ const CARDS: ExtraCard[] = [
 
 /** Resolve the affiliate link for one card or fall back to an internal page. */
 function resolveLink(product: HeProduct): { href: string; isAffiliate: boolean } {
+  // When HE is active, link to the first-party /go redirect (records the click, then 302s to the
+  // exact AWIN deep link). resolveHeProduct gates on the partner being active, like before.
   const he = resolveHeProduct(product, "home", "home");
-  if (he) return { href: he.url, isAffiliate: true };
+  if (he) return { href: goLink("home", "home", product), isAffiliate: true };
   return { href: FALLBACK[product], isAffiliate: false };
 }
 
