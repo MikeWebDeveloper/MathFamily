@@ -19,19 +19,25 @@ const COPY: Record<PartnerCategory, { title: string; blurb: string }> = {
  * INERT affiliate slot (the green rail). In this MVP every partner is gated
  * (active: false, no deeplink), so this ALWAYS renders the "coming soon" state
  * with an "Ad" label — no outbound link, no merchant ID. When a partner goes
- * live it would render a labelled, rel="sponsored" CTA instead.
+ * live it renders a labelled, rel="sponsored" CTA that routes through the
+ * surface-tagged `/go` redirect (`/go/<category>/<region>?s=<surface>`), so every
+ * click is logged + attributed before the 302 — never a bare affiliate link.
  *
  * COMPLIANCE: green/energy categories only — no FCA-regulated products.
  */
 export function AffiliateBlock({
   category,
-  regionSlug
+  regionSlug,
+  surface
 }: {
   category: PartnerCategory;
   regionSlug: string;
+  /** Surface tag for /go attribution, e.g. "home" | "region". */
+  surface: string;
 }) {
   const slot = resolveSlot(category, regionSlug);
   const copy = COPY[category];
+  const goHref = `/go/${category}/${regionSlug}?s=${encodeURIComponent(surface)}`;
 
   return (
     <aside
@@ -55,7 +61,7 @@ export function AffiliateBlock({
             </p>
           ) : null}
           <a
-            href={slot.url}
+            href={goHref}
             rel="sponsored noopener"
             target="_blank"
             className="mt-2 inline-block rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-white hover:bg-brand-accent/90"

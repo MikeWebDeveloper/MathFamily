@@ -36,6 +36,30 @@ export function buildAffiliateUrl(template: string, regionSlug: string): string 
   return template.replaceAll("{regionSlug}", regionSlug).replaceAll("{clickref}", clickref);
 }
 
+const CATEGORIES: readonly PartnerCategory[] = ["solar", "heat-pump", "switching"];
+
+function isCategory(value: string): value is PartnerCategory {
+  return (CATEGORIES as readonly string[]).includes(value);
+}
+
+/**
+ * /go deeplink resolver — wired into the shared `createGoRoute` from `@mathfamily/engine`.
+ *
+ * A CTA links to `/go/<category>[/<regionSlug>]?s=<surface>`. The catch-all path `parts` are
+ * `[category, regionSlug?]`. We reuse the inert `resolveSlot` resolver as the single source of
+ * truth, so this returns a LIVE affiliate url only once a partner is flipped active with a real
+ * https deeplink. While every partner is inert it returns `null`, and `createGoRoute` then logs
+ * the click intent and 302s back to an on-site fallback (never a 404 / bare affiliate link).
+ *
+ * `surface` is recorded by `createGoRoute` for attribution; it doesn't change the destination.
+ */
+export function resolveDeeplink(parts: string[], _surface: string): string | null {
+  const [category, regionSlug = "london"] = parts;
+  if (!category || !isCategory(category)) return null;
+  const slot = resolveSlot(category, regionSlug);
+  return slot.kind === "affiliate" ? slot.url : null;
+}
+
 export function resolveSlot(category: PartnerCategory, regionSlug: string): ResolvedSlot {
   const partner = (partnersJson.partners as Record<string, PartnerConfig>)[
     category === "heat-pump" ? "heatpump" : category
