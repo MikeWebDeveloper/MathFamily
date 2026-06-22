@@ -1,6 +1,6 @@
 {
-  "version": "1.2.2",
-  "lastUpdated": "2026-06-21",
+  "version": "1.2.3",
+  "lastUpdated": "2026-06-22",
   "records": [
     {
       "airportSlug": "heathrow",
@@ -282,7 +282,7 @@
       "blueBadgePolicy": "Blue Badge holders can use the Short Stay Car Park free of charge for 30 minutes by validating the ticket with a car park team member; after 30 minutes a minimum £5 fee applies",
       "freeAlternative": null,
       "priorYearFeePence": null,
-      "sourceUrl": "https://www.belfastairport.com/car-parking/drop-off-zone",
+      "sourceUrl": "https://www.belfastairport.com/parking/pick-up-and-drop-off",
       "verifiedAt": "2026-06-10"
     },
     {
@@ -324,7 +324,7 @@
         "details": "Free parking for up to 90 minutes at Callerton Parkway, with a free 24/7 shuttle bus to the terminal (departs every 30 minutes)"
       },
       "priorYearFeePence": null,
-      "sourceUrl": "https://www.newcastleairport.com/car-parking/pick-up-drop-off/",
+      "sourceUrl": "https://www.newcastleairport.com/car-parking/picking-up-dropping-off/",
       "verifiedAt": "2026-06-10"
     },
     {
@@ -382,11 +382,11 @@
     {
       "airportSlug": "leeds-bradford",
       "isFree": false,
-      "feeSummary": "£7 for up to 10 minutes (Pick Up & Drop Off car park, one-minute walk from the terminal)",
+      "feeSummary": "£8 for up to 10 minutes (Pick Up & Drop Off car park, one-minute walk from the terminal)",
       "bands": [
         {
           "upToMinutes": 10,
-          "totalPence": 700
+          "totalPence": 800
         }
       ],
       "maxStayMinutes": null,
@@ -395,15 +395,15 @@
       "penaltyPence": null,
       "penaltyNotes": null,
       "paymentDeadline": "Cashless — pay at the barrier on exit (SmoothPark automatic payment gives 10% off the standard tariff)",
-      "blueBadgePolicy": "Blue Badge holders can use the dedicated Blue Badge bays in the Pick Up & Drop Off car park for up to 60 minutes for the £7 fee",
+      "blueBadgePolicy": "Blue Badge holders can use the dedicated Blue Badge bays in the Pick Up & Drop Off car park for up to 60 minutes for the £8 fee",
       "freeAlternative": {
         "name": "One Hour Free Zone",
         "minutesFree": 60,
         "details": "Free for up to one hour, a 3–4 minute walk from the terminal; fully electric private cars may also use the Pick Up & Drop Off car park free for up to 1 hour (max 2 visits/day)"
       },
-      "priorYearFeePence": null,
-      "sourceUrl": "https://www.leedsbradfordairport.co.uk/parking/pick-up-drop-off",
-      "verifiedAt": "2026-06-10"
+      "priorYearFeePence": 700,
+      "sourceUrl": "https://www.leedsbradfordairport.co.uk/parking",
+      "verifiedAt": "2026-06-22"
     },
     {
       "airportSlug": "east-midlands",
