@@ -1,8 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { SegmentedControl } from "@mathfamily/ui";
+import { AnimatedNumber, SegmentedControl } from "@mathfamily/ui";
 import type { EnergyRegion, UsageProfile } from "../lib/energy-data";
 import {
   estimateAnnualBill,
@@ -11,6 +11,13 @@ import {
   formatPounds,
   formatPoundsPrecise
 } from "../lib/energy-calc";
+
+/** AnimatedNumber counts up an integer and renders it via the supplied formatter.
+ *  EnergyMath figures are in pounds, so we pass the rounded pound value through the
+ *  numeric slot and format it with formatPounds — same count-up the calculators use. */
+function PoundsCountUp({ pounds }: { pounds: number }) {
+  return <AnimatedNumber pence={Math.round(pounds)} render={(v) => (v === null ? "—" : formatPounds(v))} dur={500} />;
+}
 
 type Mode = "bill" | "heat-pump" | "solar";
 
@@ -52,6 +59,30 @@ export function BillCalculator({ regions, profiles, defaultRegionSlug }: BillCal
     () => estimateSolarPayback(systemKwp, systemCost, region.electricityUnitRatePence),
     [systemKwp, systemCost, region]
   );
+
+  // Signature motion: one-shot accent glow as the headline figure for the active mode lands
+  // (mirrors ParkMath's DropOffCalculator). Track a single primary figure per mode.
+  const primaryValue = Math.round(
+    mode === "bill"
+      ? bill.totalPounds
+      : mode === "heat-pump"
+        ? heatPump.annualSavingPounds
+        : (solar.paybackYears ?? 0) * 10
+  );
+  const [revealing, setRevealing] = useState(false);
+  const prevValue = useRef<number | null>(null);
+  const glowTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    const prev = prevValue.current;
+    prevValue.current = primaryValue;
+    const reduced = typeof matchMedia !== "undefined" && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!reduced && prev !== null && prev !== primaryValue) {
+      setRevealing(true);
+      if (glowTimer.current) clearTimeout(glowTimer.current);
+      glowTimer.current = setTimeout(() => setRevealing(false), 320);
+    }
+  }, [primaryValue]);
+  useEffect(() => () => { if (glowTimer.current) clearTimeout(glowTimer.current); }, []);
 
   return (
     <div className="space-y-5 rounded-card border border-ink/10 bg-card p-4 sm:p-6">
@@ -108,22 +139,24 @@ export function BillCalculator({ regions, profiles, defaultRegionSlug }: BillCal
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-3">
+          {/* is-revealing: one-shot accent glow as the new figures land (tokens.css mf-glow-pulse),
+              mirroring ParkMath's DropOffCalculator. Skipped under reduced motion. */}
+          <div className={`flex flex-wrap gap-3 rounded-xl transition-none${revealing ? " is-revealing" : ""}`}>
             <div className="min-w-44 flex-1 rounded-lg border border-brand-accent/20 bg-brand-accent/[0.06] p-3">
               <p className="text-xs font-medium text-brand-accent">Estimated annual bill</p>
-              <p className="text-2xl font-bold tracking-tight text-ink">{formatPounds(bill.totalPounds)}</p>
+              <p className="text-2xl font-bold tracking-tight text-ink"><PoundsCountUp pounds={bill.totalPounds} /></p>
               <p className="text-xs text-ink-muted">
                 {formatPoundsPrecise(bill.monthlyPounds)}/month · dual fuel
               </p>
             </div>
             <div className="min-w-40 flex-1 rounded-lg border border-ink/10 bg-surface p-3">
               <p className="text-xs font-medium text-ink-muted">Electricity</p>
-              <p className="text-xl font-bold text-ink">{formatPounds(bill.electricityPounds)}</p>
+              <p className="text-xl font-bold text-ink"><PoundsCountUp pounds={bill.electricityPounds} /></p>
               <p className="text-xs text-ink-muted">{region.electricityUnitRatePence}p/kWh</p>
             </div>
             <div className="min-w-40 flex-1 rounded-lg border border-ink/10 bg-surface p-3">
               <p className="text-xs font-medium text-ink-muted">Gas</p>
-              <p className="text-xl font-bold text-ink">{formatPounds(bill.gasPounds)}</p>
+              <p className="text-xl font-bold text-ink"><PoundsCountUp pounds={bill.gasPounds} /></p>
               <p className="text-xs text-ink-muted">{region.gasUnitRatePence}p/kWh</p>
             </div>
           </div>
@@ -152,21 +185,21 @@ export function BillCalculator({ regions, profiles, defaultRegionSlug }: BillCal
               </button>
             ))}
           </div>
-          <div className="flex flex-wrap gap-3">
+          <div className={`flex flex-wrap gap-3 rounded-xl transition-none${revealing ? " is-revealing" : ""}`}>
             <div className="min-w-40 flex-1 rounded-lg border border-ink/10 bg-surface p-3">
               <p className="text-xs font-medium text-ink-muted">Gas boiler heating</p>
-              <p className="text-2xl font-bold text-ink">{formatPounds(heatPump.boilerHeatingCostPounds)}/yr</p>
+              <p className="text-2xl font-bold text-ink"><PoundsCountUp pounds={heatPump.boilerHeatingCostPounds} />/yr</p>
             </div>
             <div className="min-w-40 flex-1 rounded-lg border border-ink/10 bg-surface p-3">
               <p className="text-xs font-medium text-ink-muted">Heat pump heating</p>
-              <p className="text-2xl font-bold text-ink">{formatPounds(heatPump.heatPumpHeatingCostPounds)}/yr</p>
+              <p className="text-2xl font-bold text-ink"><PoundsCountUp pounds={heatPump.heatPumpHeatingCostPounds} />/yr</p>
             </div>
             <div className="min-w-44 flex-1 rounded-lg border border-brand-accent/20 bg-brand-accent/[0.06] p-3">
               <p className="text-xs font-medium text-brand-accent">
                 {heatPump.cheaper === "heat-pump" ? "Heat pump saves" : "Boiler cheaper by"}
               </p>
               <p className="text-2xl font-bold text-ink">
-                {formatPounds(Math.abs(heatPump.annualSavingPounds))}/yr
+                <PoundsCountUp pounds={Math.abs(heatPump.annualSavingPounds)} />/yr
               </p>
               <p className="text-xs text-ink-muted">running cost only</p>
             </div>
@@ -208,7 +241,7 @@ export function BillCalculator({ regions, profiles, defaultRegionSlug }: BillCal
               />
             </label>
           </div>
-          <div className="flex flex-wrap gap-3">
+          <div className={`flex flex-wrap gap-3 rounded-xl transition-none${revealing ? " is-revealing" : ""}`}>
             <div className="min-w-40 flex-1 rounded-lg border border-ink/10 bg-surface p-3">
               <p className="text-xs font-medium text-ink-muted">Annual generation</p>
               <p className="text-2xl font-bold text-ink">
@@ -217,7 +250,7 @@ export function BillCalculator({ regions, profiles, defaultRegionSlug }: BillCal
             </div>
             <div className="min-w-40 flex-1 rounded-lg border border-ink/10 bg-surface p-3">
               <p className="text-xs font-medium text-ink-muted">Annual benefit</p>
-              <p className="text-2xl font-bold text-ink">{formatPounds(solar.annualBenefitPounds)}</p>
+              <p className="text-2xl font-bold text-ink"><PoundsCountUp pounds={solar.annualBenefitPounds} /></p>
             </div>
             <div className="min-w-44 flex-1 rounded-lg border border-brand-accent/20 bg-brand-accent/[0.06] p-3">
               <p className="text-xs font-medium text-brand-accent">Payback time</p>

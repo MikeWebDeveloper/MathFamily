@@ -2,7 +2,7 @@ import Link from "next/link";
 import { loadRoamingDataset, loadEsimDataset } from "@mathfamily/data";
 import { roamingTripCost, formatPence } from "@mathfamily/engine";
 import { webSiteLd, JsonLd } from "@mathfamily/geo";
-import { CountryFlag, EmailCaptureSlot, StatStrip } from "@mathfamily/ui";
+import { ChapterDivider, CountryFlag, EmailCaptureSlot, StatStrip } from "@mathfamily/ui";
 import { FamilyLinks } from "@/components/family-links";
 import { NETWORK_LABELS } from "@/lib/roaming-content";
 import { HomeTripCalculator } from "../components/home-trip-calculator";
@@ -101,9 +101,11 @@ export default function HomePage() {
         ]} />
       </section>
 
-      <section>
+      <ChapterDivider label="Where are you going?" />
+
+      <section className="mf-reveal">
         <h2 className="mb-4 text-xl font-semibold text-ink">40 destinations</h2>
-        <nav aria-label="Destinations" className="mf-reveal flex flex-wrap gap-2">
+        <nav aria-label="Destinations" className="flex flex-wrap gap-2">
           {destinations.map((d) => (
             <Link
               key={d.countrySlug}

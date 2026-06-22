@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { loadRoamingDataset, loadEsimDataset, NETWORKS, type RoamingDestination, type EsimCountry } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd, speakableLd } from "@mathfamily/geo";
-import { AnswerLead, AnswerPassage, CountryFlag, EmailCaptureSlot, FaqAccordion, FeeGrid, FreshnessBadge, MiniAnswerBar, PageHeading, RegionMap, SavesVerdict, SourceCitation, SourcesBlock } from "@mathfamily/ui";
+import { AnswerLead, AnswerPassage, ChapterDivider, CountryFlag, EmailCaptureSlot, FaqAccordion, FeeGrid, FreshnessBadge, MiniAnswerBar, PageHeading, RegionMap, SavesVerdict, SourceCitation, SourcesBlock } from "@mathfamily/ui";
 import { RoamingCalculator } from "@/components/roaming-calculator";
 import { AffiliateBlock } from "@/components/affiliate-block";
 import { buildRoamingFaqs, roamingPageModel, NETWORK_LABELS } from "@/lib/roaming-content";
@@ -124,6 +124,8 @@ export default async function CountryHubPage({ params }: { params: Promise<{ cou
           : <> All figures are taken directly from the official UK network price guides and verified against published sources.</>}
       </AnswerPassage>
 
+      <ChapterDivider label="Work out your trip" />
+
       <RoamingCalculator
         networks={destination.perNetwork}
         esims={esim?.bundles ?? []}
@@ -154,6 +156,8 @@ export default async function CountryHubPage({ params }: { params: Promise<{ cou
         />
       ) : null}
 
+      <ChapterDivider label="All networks compared" />
+
       <FeeGrid
         caption={`All four networks' ${destination.countryName} roaming charges (verified ${latestVerified}).`}
         columns={["Network", "Daily charge", "Pass / product name", "Fair-use note"]}
@@ -181,6 +185,8 @@ export default async function CountryHubPage({ params }: { params: Promise<{ cou
           ))}
         </ul>
       </nav>
+
+      <ChapterDivider label="Good to know" />
 
       <section className="space-y-2">
         <h2 className="text-xl font-semibold text-ink">Frequently asked questions</h2>

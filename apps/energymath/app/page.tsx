@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { webSiteLd, faqPageLd, JsonLd } from "@mathfamily/geo";
-import { EmailCaptureSlot, FaqAccordion, StatStrip } from "@mathfamily/ui";
+import { ChapterDivider, EmailCaptureSlot, FaqAccordion, StatStrip } from "@mathfamily/ui";
 import { BillCalculator } from "@/components/bill-calculator";
 import { AffiliateBlock } from "@/components/affiliate-block";
 import { FamilyLinks } from "@/components/family-links";
@@ -62,7 +62,9 @@ export default function HomePage() {
         />
       </section>
 
-      <section>
+      <ChapterDivider label="Where you live" />
+
+      <section className="mf-reveal">
         <h2 className="mb-4 text-xl font-semibold text-ink">Energy bills by UK region</h2>
         <p className="mb-3 text-sm text-ink-muted">
           Ofgem sets a separate price cap for each of the 14 distribution regions. Pick yours for a

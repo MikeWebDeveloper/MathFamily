@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { roamingTripCost, formatPence } from "@mathfamily/engine";
 import type { RoamingDestination, EsimCountry } from "@mathfamily/data";
-import { CountryFlag } from "@mathfamily/ui";
+import { AnimatedNumber, CountryFlag } from "@mathfamily/ui";
 import { NETWORK_LABELS } from "../lib/roaming-content";
 
 interface HomeTripCalculatorProps {
@@ -31,6 +31,24 @@ export function HomeTripCalculator({ destinations, esimRecords }: HomeTripCalcul
 
   const cheapest = result?.cheapestNetwork;
   const esimPick = result?.esimChoice;
+
+  // Signature motion: one-shot accent glow as the new quote lands (mirrors ParkMath's
+  // DropOffCalculator). Tracks the cheapest-network figure — the headline result.
+  const cheapestPence = cheapest?.included ? 0 : cheapest?.totalPence ?? null;
+  const [revealing, setRevealing] = useState(false);
+  const prevPence = useRef<number | null>(null);
+  const glowTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    const prev = prevPence.current;
+    prevPence.current = cheapestPence;
+    const reduced = typeof matchMedia !== "undefined" && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!reduced && prev !== null && prev !== cheapestPence) {
+      setRevealing(true);
+      if (glowTimer.current) clearTimeout(glowTimer.current);
+      glowTimer.current = setTimeout(() => setRevealing(false), 320);
+    }
+  }, [cheapestPence]);
+  useEffect(() => () => { if (glowTimer.current) clearTimeout(glowTimer.current); }, []);
 
   return (
     <div className="space-y-5 rounded-card border border-ink/10 bg-card p-4 sm:p-6">
@@ -93,16 +111,23 @@ export function HomeTripCalculator({ destinations, esimRecords }: HomeTripCalcul
       {/* Inline results */}
       {result && destination && (
         <>
-          <div className="flex flex-wrap gap-3">
+          {/* is-revealing: one-shot accent glow as the figures land (tokens.css mf-glow-pulse),
+              mirroring ParkMath's DropOffCalculator. Wrapper carries the rounded shape + shadow
+              so the box-shadow reads correctly. Skipped under reduced motion. */}
+          <div
+            className={`flex flex-wrap gap-3 rounded-xl transition-none${revealing ? " is-revealing" : ""}`}
+          >
             {/* Cheapest network card */}
             <div className="min-w-40 flex-1 rounded-lg border border-ink/10 bg-surface p-3">
               <p className="text-xs font-medium text-ink-muted">Cheapest network</p>
               <p className="text-2xl font-bold tracking-tight text-ink">
-                {cheapest?.included
-                  ? "£0"
-                  : cheapest?.totalPence != null
-                    ? formatPence(cheapest.totalPence)
-                    : "—"}
+                {cheapest?.included ? (
+                  "£0"
+                ) : cheapest?.totalPence != null ? (
+                  <AnimatedNumber pence={cheapest.totalPence} render={(p) => (p === null ? "—" : formatPence(p))} dur={500} />
+                ) : (
+                  "—"
+                )}
               </p>
               <p className="text-xs text-ink-muted">
                 {cheapest
@@ -118,7 +143,7 @@ export function HomeTripCalculator({ destinations, esimRecords }: HomeTripCalcul
               <div className="min-w-40 flex-1 rounded-lg border border-brand-accent/20 bg-brand-accent/[0.06] p-3">
                 <p className="text-xs font-medium text-brand-accent">Best eSIM</p>
                 <p className="text-2xl font-bold tracking-tight text-ink">
-                  {formatPence(esimPick.totalPence)}
+                  <AnimatedNumber pence={esimPick.totalPence} render={(p) => (p === null ? "—" : formatPence(p))} dur={500} />
                 </p>
                 <p className="text-xs text-ink-muted">
                   {esimPick.provider} · {esimPick.bundleName}

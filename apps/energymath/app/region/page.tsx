@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { breadcrumbLd, tableLd, JsonLd } from "@mathfamily/geo";
-import { FeeGrid, PageHeading, SourcesBlock } from "@mathfamily/ui";
+import { ChapterDivider, FeeGrid, PageHeading, SourcesBlock } from "@mathfamily/ui";
 import { REGIONS, CAP_PERIOD, OFGEM_SOURCE_URL, GB_VERIFIED_AT } from "@/lib/energy-data";
 import { sortRegionsByBill } from "@/lib/energy-content";
 import { formatPounds } from "@/lib/energy-calc";
@@ -43,6 +43,8 @@ export default function RegionIndexPage() {
         </p>
       </header>
 
+      <ChapterDivider label="Every region compared" />
+
       <FeeGrid
         caption={`Typical medium-usage dual-fuel bill by region (Ofgem price cap, ${CAP_PERIOD}).`}
         columns={columns}
@@ -61,6 +63,8 @@ export default function RegionIndexPage() {
         are <strong>not financial advice</strong>. Most regional figures are currently shown at the
         GB-average rate as an estimate; we are confirming each region&apos;s exact Ofgem table.
       </p>
+
+      <ChapterDivider label="How we worked this out" />
 
       <SourcesBlock
         sources={[{ label: "Ofgem energy price cap unit rates and standing charges", url: OFGEM_SOURCE_URL, verifiedAt: GB_VERIFIED_AT }]}
