@@ -4,7 +4,6 @@ import { EmailCaptureSlot, StatStrip } from "@mathfamily/ui";
 import { PET_COST_RECORDS, PET_COSTS_LAST_UPDATED } from "@/lib/pet-costs";
 import { lifetimeRangeLabel } from "@/lib/pet-content";
 import { HomePetCalculator } from "@/components/home-pet-calculator";
-import { FoodAffiliateSlot } from "@/components/food-affiliate-slot";
 import { DisclosureNote } from "@/components/disclosure-note";
 import { FamilyLinks } from "@/components/family-links";
 
@@ -60,11 +59,12 @@ export default function HomePage() {
         </nav>
       </section>
 
-      <FoodAffiliateSlot speciesSlug="small-dog" species="Dog" />
-
       <EmailCaptureSlot
-        formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
+        brandName="PetMath"
         hook="Get notified when UK pet costs change"
+        description="UK pet-cost update"
+        source="home"
+        privacyHref="/privacy"
       />
 
       <DisclosureNote />

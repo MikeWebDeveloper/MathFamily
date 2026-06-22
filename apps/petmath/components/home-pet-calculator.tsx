@@ -6,6 +6,7 @@ import { formatPence } from "@mathfamily/engine";
 import { RangeSlider } from "@mathfamily/ui";
 import { lifetimeEstimate } from "../lib/pet-content";
 import { INSURANCE_ESTIMATE, type PetCostRecord } from "../lib/pet-costs";
+import { FoodAffiliateSlot } from "./food-affiliate-slot";
 
 interface HomePetCalculatorProps {
   records: PetCostRecord[];
@@ -124,6 +125,9 @@ export function HomePetCalculator({ records }: HomePetCalculatorProps) {
           Full {record.name.toLowerCase()} cost breakdown →
         </Link>
       </p>
+
+      {/* Contextual food slot — matches the pet the user selected above (not a hardcoded default). */}
+      <FoodAffiliateSlot speciesSlug={record.slug} species={record.species} surface="home" />
     </div>
   );
 }
