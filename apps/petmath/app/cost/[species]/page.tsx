@@ -5,6 +5,7 @@ import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd, speakableLd } from "@mathfamily/geo";
 import {
   AnswerLead,
+  AnswerPassage,
   Callout,
   EmailCaptureSlot,
   FaqAccordion,
@@ -92,6 +93,13 @@ export default async function PetCostPage({ params }: { params: Promise<{ specie
 
       <AnswerLead answer={petAnswer(record)}>{facts}</AnswerLead>
 
+      {/* AnswerPassage carries `.mf-speakable` on its heading + paragraph, so the page's speakableLd
+          (cssSelector ["h1", ".mf-speakable"]) captures the actual answer for voice/AI extraction,
+          not just the H1. AnswerLead is a shared package component without the class. */}
+      <AnswerPassage question={`How much does a ${record.name.toLowerCase()} cost in the UK?`}>
+        {petAnswer(record)}
+      </AnswerPassage>
+
       <FeeGrid
         caption={`${record.name} lifetime cost at each end of the PDSA lifespan band (verified ${record.verifiedAt}). Set-up + monthly care × lifespan; essential care only.`}
         columns={["Lifespan", "Set-up", "Care over lifespan", "Lifetime total"]}
@@ -112,7 +120,7 @@ export default async function PetCostPage({ params }: { params: Promise<{ specie
         insurance is a regulated product — PetMath does not sell it; always compare live quotes for your own pet.
       </Callout>
 
-      <FoodAffiliateSlot speciesSlug={record.slug} species={record.species} />
+      <FoodAffiliateSlot speciesSlug={record.slug} species={record.species} surface={record.slug} />
 
       <section className="space-y-2">
         <h2 className="text-xl font-semibold text-ink">Frequently asked questions</h2>
@@ -120,8 +128,11 @@ export default async function PetCostPage({ params }: { params: Promise<{ specie
       </section>
 
       <EmailCaptureSlot
-        formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
+        brandName="PetMath"
         hook="Get notified when UK pet costs change"
+        description="UK pet-cost update"
+        source={record.slug}
+        privacyHref="/privacy"
       />
 
       <p className="text-sm">

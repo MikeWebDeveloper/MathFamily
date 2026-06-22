@@ -54,3 +54,20 @@ export function resolveFoodSlot(speciesSlug: string): ResolvedFoodSlot {
     disclosureRequired: true,
   };
 }
+
+/**
+ * Surface-tagged `/go` deeplink resolver for the shared `createGoRoute`. The catch-all path is
+ * `/go/food/<speciesSlug>?s=<surface>`. Only the pet-FOOD rail is ever routed here — by construction
+ * this can never return an insurance link (insurance stays an inert, non-affiliate estimate line).
+ *
+ * Fail-CLOSED: while every food partner is inactive (gated, no live merchant IDs) this returns
+ * `null`, so `createGoRoute` still logs the click intent and 302s back to an on-site page — never a
+ * broken/bare affiliate link, never a 404. Ship the surface before deals are wired and lose no signal.
+ */
+export function resolveDeeplink(parts: string[], _surface: string): string | null {
+  const [category, speciesSlug] = parts;
+  if (category !== "food" || !speciesSlug) return null;
+
+  const slot = resolveFoodSlot(speciesSlug);
+  return slot.kind === "live" ? slot.url : null;
+}

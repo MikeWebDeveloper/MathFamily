@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveFoodSlot, buildAffiliateUrl } from "../lib/partners";
+import { resolveFoodSlot, buildAffiliateUrl, resolveDeeplink } from "../lib/partners";
 import partnersJson from "../lib/partners.json";
 
 describe("resolveFoodSlot", () => {
@@ -30,5 +30,19 @@ describe("buildAffiliateUrl", () => {
   it("substitutes species slug and a clickref", () => {
     const url = buildAffiliateUrl("https://x.test/?s={speciesSlug}&ref={clickref}", "small-dog");
     expect(url).toBe("https://x.test/?s=small-dog&ref=food-small-dog");
+  });
+});
+
+describe("resolveDeeplink (/go food rail)", () => {
+  it("returns null (inert → on-site fallback) for the food rail while gated", () => {
+    for (const slug of ["small-dog", "cat", "indoor-rabbits"]) {
+      expect(resolveDeeplink(["food", slug], "home")).toBeNull();
+    }
+  });
+
+  it("never resolves a non-food category (insurance can never be routed)", () => {
+    expect(resolveDeeplink(["insurance", "cat"], "spoke")).toBeNull();
+    expect(resolveDeeplink([], "home")).toBeNull();
+    expect(resolveDeeplink(["food"], "home")).toBeNull();
   });
 });

@@ -6,7 +6,16 @@ import { resolveFoodSlot } from "../lib/partners";
  * food-subscription partner is activated in partners.json it becomes a labelled sponsored link.
  * It can never render an insurance link by construction (resolveFoodSlot only returns food slots).
  */
-export function FoodAffiliateSlot({ speciesSlug, species }: { speciesSlug: string; species: string }) {
+export function FoodAffiliateSlot({
+  speciesSlug,
+  species,
+  surface
+}: {
+  speciesSlug: string;
+  species: string;
+  /** Surface tag for /go attribution, e.g. "home" | "<species-slug>". */
+  surface: string;
+}) {
   const slot = resolveFoodSlot(speciesSlug);
 
   if (slot.kind === "inert") {
@@ -40,7 +49,7 @@ export function FoodAffiliateSlot({ speciesSlug, species }: { speciesSlug: strin
         </span>
       </div>
       <a
-        href={slot.url!}
+        href={`/go/food/${speciesSlug}?s=${encodeURIComponent(surface)}`}
         rel="sponsored noopener noreferrer"
         target="_blank"
         className="mt-3 inline-flex min-h-11 items-center rounded-full bg-brand-accent px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
