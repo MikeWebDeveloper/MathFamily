@@ -30,7 +30,15 @@ export function howToLd(input: { name: string; description: string; url: string;
   };
 }
 
-export function organizationLd(input: { siteUrl: string; name: string; logoUrl: string; sameAs?: string[]; founder?: { name: string; jobTitle: string; sameAs?: string[] } }) {
+/** Organization JSON-LD for a brand site.
+ *
+ *  `parentOrganization` (optional) emits a proper portfolio-parent node carrying BOTH a `name`
+ *  and a `url` (plus a stable `@id` derived from that url, so the parent is a referenceable
+ *  entity, not an inline string). All 9 family apps pass
+ *  `{ name: "The Math Family", url: "https://themathfamily.com" }` to declare the same parent
+ *  consistently — replacing the per-app spread hacks that previously emitted name-only (or
+ *  malformed duplicate) blocks. Backward-compatible: omit it and no parentOrganization is emitted. */
+export function organizationLd(input: { siteUrl: string; name: string; logoUrl: string; sameAs?: string[]; founder?: { name: string; jobTitle: string; sameAs?: string[] }; parentOrganization?: { name: string; url: string } }) {
   return {
     "@context": "https://schema.org",
     "@type": "Organization" as const,
@@ -39,7 +47,8 @@ export function organizationLd(input: { siteUrl: string; name: string; logoUrl: 
     url: input.siteUrl,
     logo: { "@type": "ImageObject" as const, url: input.logoUrl },
     ...(input.sameAs && input.sameAs.length ? { sameAs: input.sameAs } : {}),
-    ...(input.founder ? { founder: { "@type": "Person" as const, "@id": `${input.siteUrl}/#person`, name: input.founder.name, jobTitle: input.founder.jobTitle, ...(input.founder.sameAs?.length ? { sameAs: input.founder.sameAs } : {}) } } : {})
+    ...(input.founder ? { founder: { "@type": "Person" as const, "@id": `${input.siteUrl}/#person`, name: input.founder.name, jobTitle: input.founder.jobTitle, ...(input.founder.sameAs?.length ? { sameAs: input.founder.sameAs } : {}) } } : {}),
+    ...(input.parentOrganization ? { parentOrganization: { "@type": "Organization" as const, "@id": `${input.parentOrganization.url}/#organization`, name: input.parentOrganization.name, url: input.parentOrganization.url } } : {})
   };
 }
 

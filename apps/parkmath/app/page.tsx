@@ -181,6 +181,7 @@ export default function HomePage() {
       {/* ── 8. EMAIL CAPTURE + FAMILY LINKS ── */}
       <div className="mf-reveal space-y-8" style={{ "--mf-delay": "100ms" } as CSSProperties}>
         <EmailCaptureSlot
+          brandName="ParkMath"
           source="hub"
           hook="Drop-off fees change every January — get told when a UK airport's changes."
         />

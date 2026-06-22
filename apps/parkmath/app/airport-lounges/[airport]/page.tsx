@@ -93,6 +93,7 @@ export default async function LoungePage({ params }: { params: Promise<{ airport
       </section>
 
       <EmailCaptureSlot
+        brandName="ParkMath"
         source="airport-lounges"
         hook={`Get notified when ${airport.name} lounge prices change`}
       />

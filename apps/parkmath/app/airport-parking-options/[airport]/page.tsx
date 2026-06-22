@@ -150,6 +150,7 @@ export default async function AirportParkingOptionsPage({ params }: { params: Pr
       </section>
 
       <EmailCaptureSlot
+        brandName="ParkMath"
         source="airport-parking-options"
         hook={`Get notified when ${airport.name} parking prices change`}
       />

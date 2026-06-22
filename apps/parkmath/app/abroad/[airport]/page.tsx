@@ -61,6 +61,7 @@ export default async function AbroadAirportPage({ params }: { params: Promise<{ 
       </p>
 
       <EmailCaptureSlot
+        brandName="ParkMath"
         source="abroad"
         hook={`Get notified when ${m.airport.name} parking or drop-off prices change`}
       />

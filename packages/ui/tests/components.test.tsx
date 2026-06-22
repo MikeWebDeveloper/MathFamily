@@ -35,12 +35,12 @@ describe("FreshnessBadge", () => {
 
 describe("EmailCaptureSlot", () => {
   it("ALWAYS renders the form (fail-safe: never silently drop a signup)", () => {
-    const { container } = render(<EmailCaptureSlot hook="Get notified when fees change" />);
+    const { container } = render(<EmailCaptureSlot brandName="ParkMath" hook="Get notified when fees change" />);
     expect(container.querySelector('form[action="/api/subscribe"]')).not.toBeNull();
     expect(screen.getByLabelText("Email address")).toBeDefined();
   });
   it("funnel mode (no formAction) renders the required GDPR consent checkbox", () => {
-    const { container } = render(<EmailCaptureSlot hook="Get notified when fees change" />);
+    const { container } = render(<EmailCaptureSlot brandName="ParkMath" hook="Get notified when fees change" />);
     const consent = container.querySelector('input[name="consent"]') as HTMLInputElement;
     expect(consent).not.toBeNull();
     expect(consent.required).toBe(true);

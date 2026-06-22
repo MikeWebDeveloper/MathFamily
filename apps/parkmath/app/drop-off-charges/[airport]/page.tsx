@@ -232,6 +232,7 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
       )}
 
       <EmailCaptureSlot
+        brandName="ParkMath"
         source="drop-off-charges"
         hook={`Get notified when ${airport.name} changes its fees`}
       />

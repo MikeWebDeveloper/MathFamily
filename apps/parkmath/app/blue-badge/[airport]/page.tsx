@@ -173,6 +173,7 @@ export default async function BlueBadgePage({ params }: { params: Promise<{ airp
       </section>
 
       <EmailCaptureSlot
+        brandName="ParkMath"
         source="blue-badge"
         hook={`Get notified when ${airport.name} changes its Blue Badge or drop-off policy`}
       />

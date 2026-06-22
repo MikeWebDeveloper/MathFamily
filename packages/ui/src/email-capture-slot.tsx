@@ -2,41 +2,77 @@
 
 import { useState, type FormEvent } from "react";
 
-/** Email capture — the front door to the list. ALWAYS renders (the old version returned null
- *  without a MailerLite form-action, silently losing every signup); now it posts to our own
- *  /api/subscribe funnel, which persists durably before touching MailerLite.
+/** Email capture — the front door to the durable, consented, cross-brand family funnel (the moat).
  *
- *  - Progressive enhancement: it's a real <form action="/api/subscribe" method="post">, so it
- *    works with JS off (the route redirects back with ?subscribed=1). With JS, we intercept,
- *    fetch, and show inline success/error without a navigation.
+ *  THE DEFAULT PATH is the funnel: it ALWAYS renders, POSTs to a first-party `/api/subscribe`
+ *  route, and persists durably BEFORE MailerLite is ever touched (see each app's lib/subscribe.ts,
+ *  copied from ParkMath's template). Every brand's signups land in ONE shared MailerLite family
+ *  group — the "What Britain Pays This Month" list — tagged `source` (app + surface) and `brand`
+ *  so we can attribute which app/page converted.
+ *
+ *  - Progressive enhancement: a real <form action="/api/subscribe" method="post">, so it works
+ *    with JS off (the route redirects back with ?subscribed=1). With JS we intercept, fetch, and
+ *    show inline success/error without a navigation.
  *  - UK GDPR: an explicit, UN-ticked consent checkbox (required) + a link to the privacy policy.
  *    No pre-ticked boxes, no assumed consent.
- *  - On-brand + mobile-first: stacks on small screens, inline on >=sm, existing design tokens.
+ *  - Brand-neutral copy: consent + success text are derived from `brandName` (and the optional
+ *    per-brand `description` hook), NOT hardcoded to any one brand.
  *
- *  Back-compat: `formAction` is the LEGACY mode — when passed (truthy), the component keeps its
- *  old behaviour (post the native form to that URL; render nothing when the URL is empty). This
- *  is what the sibling apps (loungemath/roammath) still use, so they are unchanged. ParkMath omits
- *  `formAction` and gets the durable-first /api/subscribe funnel below. `source` tags which
- *  surface converted; `privacyHref` lets a brand point at its own policy route. */
-export function EmailCaptureSlot({
-  hook,
-  source,
-  privacyHref = "/privacy",
-  action = "/api/subscribe",
-  formAction
-}: {
+ *  `formAction` is the LEGACY, DEPRECATED native-MailerLite mode (no consent, no privacy link, no
+ *  durable sink). It is preserved verbatim ONLY so existing call sites that still pass it keep
+ *  working — when passed (even empty) the component takes the old branch and `brandName` is not
+ *  required. New code must NOT use `formAction`; pass `brandName` and let the funnel run. */
+type FunnelProps = {
+  /** The bold hook line shown above the input. */
   hook: string;
+  /** Required for the funnel: the calling brand, e.g. "RoamMath". Drives consent/success copy and
+   *  is sent to /api/subscribe so the shared family list can attribute the brand. */
+  brandName: string;
+  /** Optional per-brand hook copy describing what they're signing up to receive, e.g.
+   *  "monthly UK energy price-cap update". Folded into the consent label + success message. */
+  description?: string;
+  /** Surface tag, e.g. "home" / "region" / "<spoke>" — recorded for per-page attribution. */
+  source?: string;
+  /** Brand's own privacy policy route. Defaults to /privacy. */
+  privacyHref?: string;
+  /** First-party funnel endpoint. Defaults to /api/subscribe. */
+  action?: string;
+  formAction?: undefined;
+};
+
+type LegacyProps = {
+  hook: string;
+  /** @deprecated Legacy native-MailerLite mode — no consent checkbox, no privacy link, no durable
+   *  sink. Kept only for back-compat with old call sites that pass the env-driven form action
+   *  (`formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}`, i.e. `string | undefined`).
+   *  The mere PRESENCE of this prop key selects legacy mode; `brandName` is then not required.
+   *  Use the funnel (omit `formAction`, pass `brandName`) for all new code. */
+  formAction: string | undefined;
+  brandName?: string;
+  description?: string;
   source?: string;
   privacyHref?: string;
   action?: string;
-  /** Legacy native-MailerLite mode. Pass to keep the old behaviour; omit for the funnel. */
-  formAction?: string;
-}) {
+};
+
+export type EmailCaptureSlotProps = FunnelProps | LegacyProps;
+
+export function EmailCaptureSlot(props: EmailCaptureSlotProps) {
+  const {
+    hook,
+    brandName,
+    description,
+    source,
+    privacyHref = "/privacy",
+    action = "/api/subscribe",
+    formAction
+  } = props;
+
   const [status, setStatus] = useState<"idle" | "submitting" | "done" | "error">("idle");
 
-  // LEGACY MODE: a call site explicitly opted into the old native-form behaviour. Empty URL →
-  // render nothing (the historical contract those apps rely on). This branch never uses fetch
-  // or the GDPR/consent funnel — it is preserved verbatim so other apps are untouched.
+  // LEGACY MODE (DEPRECATED): a call site explicitly passed `formAction`. Empty URL → render
+  // nothing (the historical contract those apps rely on). This branch never uses fetch or the
+  // GDPR/consent funnel — preserved verbatim so old call sites are untouched.
   if (formAction !== undefined) {
     if (!formAction) return null;
     return (
@@ -61,6 +97,14 @@ export function EmailCaptureSlot({
     );
   }
 
+  // FUNNEL MODE (default). `brandName` is required by the type here. Copy is derived, never hardcoded.
+  const brand = brandName ?? "the family";
+  // Consent line: "Email me <brand>'s <description>." Falls back to a neutral brand-derived line.
+  const consentBody = description ? `Email me ${brand}'s ${description}.` : `Email me ${brand}'s monthly update.`;
+  const successBody = description
+    ? `We'll email you ${brand}'s ${description}. Unsubscribe any time.`
+    : `We'll email you when ${brand} has something worth your while. Unsubscribe any time.`;
+
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     // Progressive enhancement: if fetch isn't available, let the native POST proceed.
     if (typeof fetch !== "function") return;
@@ -81,6 +125,7 @@ export function EmailCaptureSlot({
         body: JSON.stringify({
           email,
           consent: true,
+          brand: brandName,
           source: source ?? (typeof window !== "undefined" ? window.location.pathname : "unknown")
         })
       });
@@ -99,7 +144,7 @@ export function EmailCaptureSlot({
           </svg>
           You&apos;re on the list.
         </p>
-        <p className="mt-1 text-sm text-ink-muted">We&apos;ll email you when a UK airport changes its drop-off fee. Unsubscribe any time.</p>
+        <p className="mt-1 text-sm text-ink-muted">{successBody}</p>
       </div>
     );
   }
@@ -108,6 +153,7 @@ export function EmailCaptureSlot({
     <form action={action} method="post" onSubmit={onSubmit} className="rounded-card bg-surface p-6">
       <p className="font-semibold text-ink">{hook}</p>
       <input type="hidden" name="source" value={source ?? ""} />
+      <input type="hidden" name="brand" value={brandName ?? ""} />
 
       <div className="mt-3 flex flex-col gap-2 sm:flex-row">
         <label htmlFor="email-capture-input" className="sr-only">Email address</label>
@@ -137,7 +183,7 @@ export function EmailCaptureSlot({
           className="mt-0.5 size-4 shrink-0 rounded border-ink/30 text-brand-accent focus:ring-2 focus:ring-brand-accent/30"
         />
         <span>
-          Email me ParkMath&apos;s monthly UK drop-off fee update. I can unsubscribe any time. See our{" "}
+          {consentBody} I can unsubscribe any time. See our{" "}
           <a href={privacyHref} className="font-medium text-brand-accent underline underline-offset-2">privacy policy</a>.
         </span>
       </label>

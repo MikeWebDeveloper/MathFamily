@@ -54,6 +54,7 @@ export default function LoungeIndexPage() {
         ])}
       />
       <EmailCaptureSlot
+        brandName="ParkMath"
         source="airport-lounges-index"
         hook="Get notified when UK airport lounge prices change"
       />

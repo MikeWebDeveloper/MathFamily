@@ -232,6 +232,35 @@ describe("organizationLd founder", () => {
   });
 });
 
+describe("organizationLd parentOrganization", () => {
+  it("emits a parentOrganization node with BOTH name and url when provided", () => {
+    const org = organizationLd({
+      siteUrl: "https://sidemath.co.uk", name: "SideMath", logoUrl: "https://sidemath.co.uk/logo",
+      parentOrganization: { name: "The Math Family", url: "https://themathfamily.com" }
+    });
+    expect(org.parentOrganization).toEqual({
+      "@type": "Organization",
+      "@id": "https://themathfamily.com/#organization",
+      name: "The Math Family",
+      url: "https://themathfamily.com"
+    });
+  });
+  it("omits parentOrganization when not provided", () => {
+    const org = organizationLd({ siteUrl: "https://x.co", name: "X", logoUrl: "https://x.co/l" });
+    expect("parentOrganization" in org).toBe(false);
+  });
+  it("coexists with founder without producing a duplicate Organization block", () => {
+    const org = organizationLd({
+      siteUrl: "https://sidemath.co.uk", name: "SideMath", logoUrl: "https://sidemath.co.uk/logo",
+      founder: { name: "Michal Latal", jobTitle: "Founder & editor" },
+      parentOrganization: { name: "The Math Family", url: "https://themathfamily.com" }
+    });
+    expect(org.founder!["@type"]).toBe("Person");
+    expect(org.parentOrganization!.name).toBe("The Math Family");
+    expect(org.parentOrganization!.url).toBe("https://themathfamily.com");
+  });
+});
+
 describe("newsArticleLd author", () => {
   it("uses a Person author when authorName given, org stays publisher", () => {
     const a = newsArticleLd({
