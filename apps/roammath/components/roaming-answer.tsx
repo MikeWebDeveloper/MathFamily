@@ -187,7 +187,10 @@ export function RoamingAnswerDisplay({
 
         {/* eSIM CTA — shown only when esimChoice exists AND not included network */}
         {showEsimCta ? (
-          <div data-testid="esim-cta" className="rounded-card border border-ink/10 bg-card p-4">
+          <div
+            data-testid="esim-cta"
+            className="relative rounded-card border border-ink/10 bg-card p-4"
+          >
             {esimSlot.kind === "affiliate" ? (
               <>
                 <p className="mb-2 text-xs text-ink-muted" data-testid="affiliate-disclosure">
@@ -203,14 +206,28 @@ export function RoamingAnswerDisplay({
                 </a>
               </>
             ) : (
-              <a
-                href={esimSlot.url}
-                className="text-sm text-brand-accent underline underline-offset-4"
-                rel="noopener"
-                target="_blank"
-              >
-                {esimSlot.label} →
-              </a>
+              // Inert: no live merchant IDs configured. Tasteful "coming soon"
+              // slot with pre-disclosed "Ad" / sponsored labelling. Still links
+              // the user to the provider's own page. Green rail (eSIM) only.
+              <>
+                <span className="absolute right-4 top-4 rounded border border-ink/20 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-ink-muted">
+                  Ad
+                </span>
+                <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-brand-accent">
+                  eSIM picks — coming soon
+                </p>
+                <a
+                  href={esimSlot.url}
+                  className="text-sm text-brand-accent underline underline-offset-4"
+                  rel="noopener"
+                  target="_blank"
+                >
+                  {esimSlot.label} →
+                </a>
+                <p className="mt-2 text-xs text-ink-muted/70">
+                  This will become a sponsored (affiliate) placement — it never affects which option we show as cheapest.
+                </p>
+              </>
             )}
           </div>
         ) : null}

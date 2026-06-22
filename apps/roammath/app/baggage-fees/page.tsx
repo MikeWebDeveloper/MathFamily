@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { loadBaggageDataset } from "@mathfamily/data";
 import { breadcrumbLd, datasetLd, itemListLd, JsonLd } from "@mathfamily/geo";
-import { FeeGrid, OpenDataBand, PageHeading } from "@mathfamily/ui";
+import { EmailCaptureSlot, FeeGrid, OpenDataBand, PageHeading } from "@mathfamily/ui";
 import { feeRangeLabel } from "@/lib/baggage-content";
 
 export const metadata: Metadata = {
@@ -95,6 +95,11 @@ export default function BaggageFeesIndexPage() {
       <OpenDataBand
         downloads={[{ href: "/data/baggage-fees.csv", label: "Baggage fees (CSV)" }]}
         citation={`RoamMath, "UK airline baggage fees 2026", verified ${lastUpdated}, roammath.co.uk`}
+      />
+
+      <EmailCaptureSlot
+        formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
+        hook="Get notified when airline baggage fees change"
       />
     </article>
   );

@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { loadRoamingDataset, loadEsimDataset, NETWORKS, type RoamingDestination, type EsimCountry, type NetworkRoaming } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
-import { FaqAccordion, FreshnessBadge, SourcesBlock } from "@mathfamily/ui";
+import { EmailCaptureSlot, FaqAccordion, FreshnessBadge, SourcesBlock } from "@mathfamily/ui";
 import { buildRoamingFaqs, NETWORK_LABELS } from "@/lib/roaming-content";
 import { resolveSlot } from "@/lib/partners";
 import { RoamingAnswer } from "@/components/roaming-answer";
@@ -139,6 +139,11 @@ export default async function NetworkPage({
           ← All networks in {destination.countryName}
         </Link>
       </p>
+
+      <EmailCaptureSlot
+        formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
+        hook={`Get notified when ${networkLabel} roaming in ${destination.countryName} changes`}
+      />
 
       <SourcesBlock
         sources={sources}

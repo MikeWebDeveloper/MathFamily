@@ -32,6 +32,22 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="relative bg-surface font-sans text-ink antialiased">
         <JsonLd data={organizationLd({ siteUrl: SITE_URL, name: "RoamMath", logoUrl: `${SITE_URL}/opengraph-image`, founder: { name: "Michal Latal", jobTitle: "Founder & editor" } })} />
+        {/* App-local: declares RoamMath as part of the parent brand. The shared
+            organizationLd builder doesn't emit parentOrganization, so we attach
+            it here via an @id reference to the same Organization node — no
+            change to @mathfamily/geo required. */}
+        <JsonLd
+          data={{
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "@id": `${SITE_URL}/#organization`,
+            parentOrganization: {
+              "@type": "Organization",
+              name: "The Math Family",
+              url: "https://themathfamily.com"
+            }
+          }}
+        />
         <noscript>
           <style>{`.mf-reveal{opacity:1;transform:none;transition:none}`}</style>
         </noscript>

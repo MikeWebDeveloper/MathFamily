@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { loadBaggageDataset, type BaggageRecord } from "@mathfamily/data";
 import { breadcrumbLd, faqPageLd, JsonLd, speakableLd } from "@mathfamily/geo";
-import { AnswerLead, AnswerPassage, Callout, FaqAccordion, FeeGrid, FreshnessBadge, PageHeading, SourceCitation, SourcesBlock } from "@mathfamily/ui";
+import { AnswerLead, AnswerPassage, Callout, EmailCaptureSlot, FaqAccordion, FeeGrid, FreshnessBadge, PageHeading, SourceCitation, SourcesBlock } from "@mathfamily/ui";
 import { baggageAnswer, feeRangeLabel } from "@/lib/baggage-content";
 
 export const dynamicParams = false;
@@ -111,6 +111,11 @@ export default async function AirlineBaggagePage({ params }: { params: Promise<{
           ← All airlines
         </Link>
       </p>
+
+      <EmailCaptureSlot
+        formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
+        hook={`Get notified when ${record.airlineName} baggage fees change`}
+      />
 
       <SourcesBlock
         sources={[{ label: `Official ${record.airlineName} fee page`, url: record.sourceUrl, verifiedAt: record.verifiedAt }]}

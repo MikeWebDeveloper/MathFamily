@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { loadRoamingDataset, loadEsimDataset, NETWORKS, type RoamingDestination, type EsimCountry } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd, speakableLd } from "@mathfamily/geo";
-import { AnswerLead, AnswerPassage, CountryFlag, FaqAccordion, FeeGrid, FreshnessBadge, MiniAnswerBar, PageHeading, RegionMap, SavesVerdict, SourceCitation, SourcesBlock } from "@mathfamily/ui";
+import { AnswerLead, AnswerPassage, CountryFlag, EmailCaptureSlot, FaqAccordion, FeeGrid, FreshnessBadge, MiniAnswerBar, PageHeading, RegionMap, SavesVerdict, SourceCitation, SourcesBlock } from "@mathfamily/ui";
 import { RoamingCalculator } from "@/components/roaming-calculator";
 import { AffiliateBlock } from "@/components/affiliate-block";
 import { buildRoamingFaqs, roamingPageModel, NETWORK_LABELS } from "@/lib/roaming-content";
@@ -192,6 +192,11 @@ export default async function CountryHubPage({ params }: { params: Promise<{ cou
           ← All destinations
         </Link>
       </p>
+
+      <EmailCaptureSlot
+        formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
+        hook={`Get notified when ${destination.countryName} roaming charges change`}
+      />
 
       <SourcesBlock
         sources={sources}

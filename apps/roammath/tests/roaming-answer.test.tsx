@@ -128,6 +128,19 @@ describe("RoamingAnswer eSIM CTA absent when network is included", () => {
   });
 });
 
+describe("RoamingAnswer inert eSIM CTA", () => {
+  it("renders an 'Ad' label + 'coming soon' framing when the slot is inert (official)", () => {
+    const html = renderDisplay(networkWithPass, officialSlot);
+
+    expect(html).toContain("data-testid=\"esim-cta\"");
+    // Inert: no active affiliate, but pre-disclosed sponsored labelling
+    expect(html).toContain("Ad");
+    expect(html.toLowerCase()).toContain("coming soon");
+    // Still links the user to the official provider page
+    expect(html).toContain(officialSlot.url);
+  });
+});
+
 describe("RoamingAnswer warnings / caveats", () => {
   it("renders warning caveats when eSIM snapshot warning is present", () => {
     const html = renderDisplay(networkWithPass, officialSlot);
@@ -170,4 +183,24 @@ test("AffiliateBlock renders eSIM option section regardless", () => {
     />
   );
   expect(html).toContain("Check live eSIM prices");
+});
+
+test("AffiliateBlock inert slot carries an 'Ad' label and 'coming soon' framing", () => {
+  const html = renderToStaticMarkup(
+    <AffiliateBlock
+      providerName="Airalo"
+      countrySlug="spain"
+      officialUrl="https://airalo.com/spain"
+      bundleName="Spain 5GB"
+      totalPence={1499}
+      countryName="Spain"
+    />
+  );
+  // Inert (no live merchant IDs): tasteful sponsored labelling, no active affiliate link
+  expect(html).toContain("Ad");
+  expect(html.toLowerCase()).toContain("coming soon");
+  expect(html).not.toContain("Affiliate link");
+  expect(html).not.toContain("Best eSIM pick");
+  // Still links to the official provider page for the user
+  expect(html).toContain("https://airalo.com/spain");
 });
