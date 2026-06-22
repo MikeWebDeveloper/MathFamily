@@ -8,21 +8,37 @@ export interface ResolvedSlot {
   url: string;
   label: string;
   partnerName: string | null;
+  /** Merchant terms/landing URL for the "Terms ↗" link — merchant-specific, never hardcoded. */
+  termsUrl: string | null;
   disclosureRequired: boolean;
+}
+
+interface AirportParkingUrlConfig {
+  /** HE-style: one URL template with a {slug} placeholder (slugs verified to match the merchant). */
+  template?: string;
+  /** APH-style: explicit per-airport map (APH's URL structure is irregular — some /<slug>-airport-parking.html,
+   *  some /<slug>-airport/parking/ — so each is verified individually; absence ⇒ fail closed for that airport). */
+  byAirport?: Record<string, string>;
 }
 
 interface PartnerConfig {
   name: string;
   awinmid: string | null;
   active: boolean;
+  termsUrl?: string;
   landingUrl?: string;
   products?: Record<string, { url: string; label: string }>;
+  airportParkingUrl?: AirportParkingUrlConfig;
 }
 
 interface SlotConfig {
   id: string;
   partnerIds: string[];
   active: boolean;
+  /** Per-airport merchant preference order, overriding the default `partnerIds` for that airport.
+   *  Lets us serve a different (e.g. higher-coverage / more reputable) merchant on specific airports
+   *  while keeping the incumbent everywhere else — diversification without breaking existing links. */
+  airportOverrides?: Record<string, string[]>;
 }
 
 const config = partnersJson as unknown as {
@@ -33,7 +49,8 @@ const config = partnersJson as unknown as {
 
 /** Build a bare, fully-tracked AWIN deep link. `clickref` tags each click with its airport (plus an
  *  optional surface suffix for per-page/product attribution). `ued` (optional) is percent-encoded by
- *  URLSearchParams, so a destination carrying its own query string can never leak into the query. */
+ *  URLSearchParams, so a destination carrying its own query string can never leak into the query.
+ *  Works for any AWIN merchant — awinmid selects the merchant, awinaffid is always our publisher id. */
 export function buildAwinLink(args: {
   awinmid: string;
   publisherId: string;
@@ -50,36 +67,92 @@ export function buildAwinLink(args: {
   return `https://www.awin1.com/cread.php?${params.toString()}`;
 }
 
-/** Holiday Extras' verified per-airport parking page (`/<slug>-airport-parking.html`). Returns null
- *  for non-airport contexts (e.g. the home page, slug "home") so callers fall back to the generic
- *  category page. Our airport slugs match HE's URL slugs (verified live for all dataset airports). */
-export function heAirportParkingUrl(airportSlug: string): string | null {
+/** Resolve a partner's verified per-airport parking landing URL, or null when the partner has no
+ *  page for that airport (the fail-closed gate). HE uses a uniform {slug} template; APH uses an
+ *  explicit verified map. Returns null for non-airport contexts (slug "home"/empty) so callers fall
+ *  back to the merchant's generic category page. */
+export function airportParkingUrl(partnerId: string, airportSlug: string): string | null {
   if (!airportSlug || airportSlug === "home") return null;
-  return `https://www.holidayextras.com/${airportSlug}-airport-parking.html`;
+  const cfg = config.partners[partnerId]?.airportParkingUrl;
+  if (!cfg) return null;
+  if (cfg.byAirport) return cfg.byAirport[airportSlug] ?? null;
+  if (cfg.template) return cfg.template.replace("{slug}", airportSlug);
+  return null;
 }
 
-/** Resolve a Holiday Extras product to a tracked deep link, or null when HE is inactive or the
- *  product has no configured URL. `clickrefSuffix` distinguishes the surface (e.g. "dropoff", "lounge",
- *  "dropoff-hotels"). */
+/** Back-compat: Holiday Extras' verified per-airport parking page. Thin wrapper over
+ *  airportParkingUrl("holiday-extras", slug); kept so existing imports/tests keep working. */
+export function heAirportParkingUrl(airportSlug: string): string | null {
+  return airportParkingUrl("holiday-extras", airportSlug);
+}
+
+/** The ordered list of partner ids that may serve a slot for a given airport: the slot's
+ *  airportOverrides entry if present, else the default partnerIds. */
+function partnerOrderFor(slot: SlotConfig, airportSlug: string): string[] {
+  return slot.airportOverrides?.[airportSlug] ?? slot.partnerIds;
+}
+
+/** Resolve a product to a tracked deep link for a *specific* partner, or null when that partner is
+ *  inactive or has no configured URL for the product. `clickrefSuffix` distinguishes the surface
+ *  (e.g. "dropoff", "lounge", "dropoff-hotels"). For "parking" the destination is the partner's
+ *  verified per-airport page (or null ⇒ fail closed for that airport); other products use the
+ *  partner's generic category page. */
+export function resolvePartnerProduct(
+  partnerId: string,
+  product: HeProduct,
+  airportSlug: string,
+  clickrefSuffix: string,
+): { url: string; productLabel: string; partnerName: string; termsUrl: string | null } | null {
+  const partner = config.partners[partnerId];
+  const entry = partner?.products?.[product];
+  if (!partner?.active || !partner.awinmid || !entry) return null;
+  // Parking deep-links to the airport's own page on the merchant. If the merchant has no verified
+  // page for this airport, fail closed (null) rather than dump the visitor on a generic category page
+  // under a per-airport CTA — except off-airport contexts (slug "home"), which intentionally use the
+  // generic page.
+  let ued: string;
+  if (product === "parking") {
+    const perAirport = airportParkingUrl(partnerId, airportSlug);
+    if (!perAirport && airportSlug && airportSlug !== "home") return null;
+    ued = perAirport ?? entry.url;
+  } else {
+    ued = entry.url;
+  }
+  return {
+    url: buildAwinLink({ awinmid: partner.awinmid, publisherId: config.awin.publisherId, airportSlug, ued, clickrefSuffix }),
+    productLabel: entry.label,
+    partnerName: partner.name,
+    termsUrl: partner.termsUrl ?? null,
+  };
+}
+
+/** Resolve a Holiday Extras product to a tracked deep link (back-compat wrapper). Used by the
+ *  HE-specific surfaces (Travel extras grid, the HE card). Returns null when HE is inactive or the
+ *  product has no configured URL. */
 export function resolveHeProduct(
   product: HeProduct,
   airportSlug: string,
   clickrefSuffix: string,
 ): { url: string; productLabel: string } | null {
-  const partner = config.partners["holiday-extras"];
-  const entry = partner?.products?.[product];
-  if (!partner?.active || !partner.awinmid || !entry) return null;
-  return {
-    url: buildAwinLink({
-      awinmid: partner.awinmid,
-      publisherId: config.awin.publisherId,
-      airportSlug,
-      // Parking deep-links to the airport's own HE page; other products use the generic category page.
-      ued: product === "parking" ? heAirportParkingUrl(airportSlug) ?? entry.url : entry.url,
-      clickrefSuffix,
-    }),
-    productLabel: entry.label,
-  };
+  const r = resolvePartnerProduct("holiday-extras", product, airportSlug, clickrefSuffix);
+  return r ? { url: r.url, productLabel: r.productLabel } : null;
+}
+
+/** Resolve the parking merchant for an airport: walk the slot's per-airport partner order and return
+ *  the first active partner that has a live parking deep link for that airport. This is the
+ *  diversification entry point — APH on its override airports, Holiday Extras elsewhere, fail-closed
+ *  if neither has a live link. clickrefSuffix is the surface (e.g. "hub", "dropoff"). */
+export function resolveParkingMerchant(
+  airportSlug: string,
+  clickrefSuffix: string,
+): { url: string; partnerName: string; termsUrl: string | null; partnerId: string } | null {
+  const slot = config.slots.find((s) => s.id === "parking-prebook");
+  if (!slot?.active) return null;
+  for (const partnerId of partnerOrderFor(slot, airportSlug)) {
+    const r = resolvePartnerProduct(partnerId, "parking", airportSlug, clickrefSuffix);
+    if (r) return { url: r.url, partnerName: r.partnerName, termsUrl: r.termsUrl, partnerId };
+  }
+  return null;
 }
 
 // ─── First-party affiliate-click measurement ────────────────────────────────
@@ -89,8 +162,8 @@ export function resolveHeProduct(
 // clickref/ued are byte-identical and AWIN attribution is never broken. No third-party script.
 
 /** The set of redirect targets the /go route understands. A bare HeProduct (parking/lounge/hotels/
- *  transfers) resolves via resolveHeProduct; "parking-prebook" resolves via resolveSlot (the
- *  booking-options "Pre-book & save" CTA, which uses the slot landing URL). */
+ *  transfers) resolves the per-airport merchant (parking) or HE (other products); "parking-prebook"
+ *  resolves via resolveSlot (the booking-options "Pre-book & save" CTA, which uses the slot). */
 export type GoTarget = HeProduct | "parking-prebook";
 
 /** Build the first-party redirect path a CTA links to. `surface` becomes the clickref suffix once
@@ -113,7 +186,12 @@ export function resolveGoTarget(
     const r = resolveSlot("parking-prebook", airportSlug, "");
     return r.kind === "affiliate" ? { url: r.url } : null;
   }
-  if (target === "parking" || target === "lounge" || target === "hotels" || target === "transfers") {
+  if (target === "parking") {
+    // Per-airport merchant (APH override airports → APH, else Holiday Extras), fail-closed.
+    const r = resolveParkingMerchant(airportSlug, surface);
+    return r ? { url: r.url } : null;
+  }
+  if (target === "lounge" || target === "hotels" || target === "transfers") {
     const r = resolveHeProduct(target, airportSlug, surface);
     return r ? { url: r.url } : null;
   }
@@ -133,22 +211,30 @@ export function activeSlotPartnerName(slotId: SlotId): string | null {
   return null;
 }
 
-/** Resolve a slot to either the first active AWIN partner (affiliate mode) or the official fallback
- *  link. Signature/shape unchanged so the page call sites need no edits. */
+/** Resolve a slot to either the first active AWIN partner for this airport (affiliate mode) or the
+ *  official fallback link. Consults the slot's per-airport override order first, so e.g. Heathrow
+ *  serves APH while everywhere else serves Holiday Extras. Fail-closed: a partner without a live
+ *  per-airport parking link is skipped (→ next partner → official). */
 export function resolveSlot(slotId: SlotId, airportSlug: string, officialUrl: string): ResolvedSlot {
   const slot = config.slots.find((s) => s.id === slotId);
   if (slot?.active) {
-    for (const partnerId of slot.partnerIds) {
+    for (const partnerId of partnerOrderFor(slot, airportSlug)) {
       const partner = config.partners[partnerId];
-      if (partner?.active && partner.awinmid) {
-        return {
-          kind: "affiliate",
-          url: buildAwinLink({ awinmid: partner.awinmid, publisherId: config.awin.publisherId, airportSlug, ued: slotId === "parking-prebook" ? heAirportParkingUrl(airportSlug) ?? partner.landingUrl : partner.landingUrl }),
-          label: `Pre-book & compare prices with ${partner.name}`,
-          partnerName: partner.name,
-          disclosureRequired: true,
-        };
-      }
+      if (!partner?.active || !partner.awinmid) continue;
+      // For the parking slot, require a verified per-airport landing URL (fail-closed). For other
+      // slots (non per-airport), fall back to the partner's landingUrl.
+      const isParking = slotId === "parking-prebook";
+      const perAirport = isParking ? airportParkingUrl(partnerId, airportSlug) : null;
+      if (isParking && !perAirport && airportSlug && airportSlug !== "home") continue;
+      const ued = perAirport ?? partner.landingUrl;
+      return {
+        kind: "affiliate",
+        url: buildAwinLink({ awinmid: partner.awinmid, publisherId: config.awin.publisherId, airportSlug, ued }),
+        label: `Pre-book & compare prices with ${partner.name}`,
+        partnerName: partner.name,
+        termsUrl: partner.termsUrl ?? null,
+        disclosureRequired: true,
+      };
     }
   }
   return {
@@ -156,6 +242,7 @@ export function resolveSlot(slotId: SlotId, airportSlug: string, officialUrl: st
     url: officialUrl,
     label: "Check live prices on the official site",
     partnerName: null,
+    termsUrl: null,
     disclosureRequired: false,
   };
 }

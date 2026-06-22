@@ -3,21 +3,66 @@
   "partners": {
     "holiday-extras": {
       "name": "Holiday Extras", "awinmid": "3496", "active": true,
+      "termsUrl": "https://www.holidayextras.com/airport-parking.html",
       "landingUrl": "https://www.holidayextras.com/airport-parking.html",
       "products": {
         "parking":   { "url": "https://www.holidayextras.com/airport-parking.html",  "label": "parking"  },
         "lounge":    { "url": "https://www.holidayextras.com/airport-lounges.html",   "label": "lounge"   },
         "hotels":    { "url": "https://www.holidayextras.com/airport-hotels.html",    "label": "hotel"    },
         "transfers": { "url": "https://www.holidayextras.com/airport-transfers.html", "label": "transfer" }
+      },
+      "airportParkingUrl": { "template": "https://www.holidayextras.com/{slug}-airport-parking.html" }
+    },
+    "aph": {
+      "name": "APH", "awinmid": "1478", "active": true,
+      "termsUrl": "https://www.aph.com/",
+      "landingUrl": "https://www.aph.com/",
+      "products": {
+        "parking": { "url": "https://www.aph.com/", "label": "parking" }
+      },
+      "airportParkingUrl": {
+        "byAirport": {
+          "heathrow":      "https://www.aph.com/heathrow-airport/parking/",
+          "gatwick":       "https://www.aph.com/gatwick-airport-parking.html",
+          "manchester":    "https://www.aph.com/manchester-airport-parking.html",
+          "stansted":      "https://www.aph.com/stansted-airport/parking/",
+          "luton":         "https://www.aph.com/luton-airport-parking.html",
+          "birmingham":    "https://www.aph.com/birmingham-airport/parking/",
+          "bristol":       "https://www.aph.com/bristol-airport-parking.html",
+          "edinburgh":     "https://www.aph.com/edinburgh-airport-parking.html",
+          "glasgow":       "https://www.aph.com/glasgow-airport-parking.html",
+          "newcastle":     "https://www.aph.com/newcastle-airport-parking.html",
+          "liverpool":     "https://www.aph.com/liverpool-airport-parking.html",
+          "leeds-bradford":"https://www.aph.com/leeds-bradford-airport-parking.html",
+          "east-midlands": "https://www.aph.com/east-midlands-airport-parking.html",
+          "aberdeen":      "https://www.aph.com/aberdeen-airport-parking.html",
+          "cardiff":       "https://www.aph.com/cardiff-airport-parking.html",
+          "southampton":   "https://www.aph.com/southampton-airport-parking.html",
+          "exeter":        "https://www.aph.com/exeter-airport-parking.html",
+          "southend":      "https://www.aph.com/southend-airport-parking.html"
+        }
       }
     },
     "purple-parking": { "name": "Purple Parking", "awinmid": "12028", "active": false },
     "airparks": { "name": "Airparks", "awinmid": "3494", "active": false },
-    "aph": { "name": "APH", "awinmid": "1478", "active": false, "landingUrl": "https://www.aph.com/airport-parking/" },
     "priority-pass": { "name": "Priority Pass", "awinmid": null, "active": false }
   },
   "slots": [
-    { "id": "parking-prebook", "partnerIds": ["holiday-extras"], "active": true },
+    {
+      "id": "parking-prebook",
+      "partnerIds": ["holiday-extras"],
+      "active": true,
+      "airportOverrides": {
+        "heathrow":   ["aph", "holiday-extras"],
+        "gatwick":    ["aph", "holiday-extras"],
+        "manchester": ["aph", "holiday-extras"],
+        "stansted":   ["aph", "holiday-extras"],
+        "luton":      ["aph", "holiday-extras"],
+        "birmingham": ["aph", "holiday-extras"],
+        "bristol":    ["aph", "holiday-extras"],
+        "edinburgh":  ["aph", "holiday-extras"]
+      }
+    },
     { "id": "lounge-membership", "partnerIds": ["priority-pass"], "active": false }
   ]
 }

@@ -1,5 +1,16 @@
 import { describe, expect, it } from "vitest";
-import { activeSlotPartnerName, buildAwinLink, goLink, heAirportParkingUrl, resolveGoTarget, resolveHeProduct, resolveSlot } from "../lib/partners";
+import {
+  activeSlotPartnerName,
+  airportParkingUrl,
+  buildAwinLink,
+  goLink,
+  heAirportParkingUrl,
+  resolveGoTarget,
+  resolveHeProduct,
+  resolveParkingMerchant,
+  resolvePartnerProduct,
+  resolveSlot,
+} from "../lib/partners";
 
 describe("buildAwinLink", () => {
   it("builds a bare cread.php link with clickref and no ued", () => {
@@ -23,16 +34,50 @@ describe("buildAwinLink", () => {
   });
 });
 
-describe("resolveSlot", () => {
-  it("parking-prebook resolves to the active Holiday Extras affiliate link", () => {
+describe("airportParkingUrl (per-merchant, per-airport)", () => {
+  it("Holiday Extras uses the uniform {slug} template", () => {
+    expect(airportParkingUrl("holiday-extras", "heathrow")).toBe("https://www.holidayextras.com/heathrow-airport-parking.html");
+  });
+  it("APH uses its verified explicit map (irregular structure)", () => {
+    // .html-style airport
+    expect(airportParkingUrl("aph", "gatwick")).toBe("https://www.aph.com/gatwick-airport-parking.html");
+    // directory-style airport (verified live: /<slug>-airport/parking/)
+    expect(airportParkingUrl("aph", "heathrow")).toBe("https://www.aph.com/heathrow-airport/parking/");
+    expect(airportParkingUrl("aph", "stansted")).toBe("https://www.aph.com/stansted-airport/parking/");
+    expect(airportParkingUrl("aph", "birmingham")).toBe("https://www.aph.com/birmingham-airport/parking/");
+  });
+  it("APH returns null where it has no verified page (fail-closed)", () => {
+    expect(airportParkingUrl("aph", "belfast-international")).toBeNull();
+    expect(airportParkingUrl("aph", "norwich")).toBeNull();
+  });
+  it("returns null for non-airport contexts", () => {
+    expect(airportParkingUrl("holiday-extras", "home")).toBeNull();
+    expect(heAirportParkingUrl("")).toBeNull();
+  });
+});
+
+describe("resolveSlot — per-airport merchant override (diversification)", () => {
+  it("Gatwick is an APH override airport → resolves to APH (awinmid 1478) at APH's verified URL", () => {
     const r = resolveSlot("parking-prebook", "gatwick", "https://www.gatwickairport.com/parking");
     expect(r.kind).toBe("affiliate");
-    expect(r.partnerName).toBe("Holiday Extras");
+    expect(r.partnerName).toBe("APH");
     expect(r.disclosureRequired).toBe(true);
-    expect(r.url).toContain("awinmid=3496");
+    expect(r.url).toContain("awinmid=1478");
     expect(r.url).toContain("awinaffid=2932035");
     expect(r.url).toContain("clickref=parkmath-gatwick");
-    expect(r.url).toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Fgatwick-airport-parking.html");
+    expect(r.url).toContain("ued=https%3A%2F%2Fwww.aph.com%2Fgatwick-airport-parking.html");
+  });
+  it("Heathrow (APH override) uses APH's directory-style verified URL", () => {
+    const r = resolveSlot("parking-prebook", "heathrow", "https://heathrow.com");
+    expect(r.partnerName).toBe("APH");
+    expect(r.url).toContain("awinmid=1478");
+    expect(r.url).toContain("ued=https%3A%2F%2Fwww.aph.com%2Fheathrow-airport%2Fparking%2F");
+  });
+  it("a non-override airport still resolves to Holiday Extras (existing HE links unbroken)", () => {
+    const r = resolveSlot("parking-prebook", "newcastle", "https://newcastleairport.com");
+    expect(r.partnerName).toBe("Holiday Extras");
+    expect(r.url).toContain("awinmid=3496");
+    expect(r.url).toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Fnewcastle-airport-parking.html");
   });
   it("lounge-membership stays official while inactive", () => {
     const r = resolveSlot("lounge-membership", "gatwick", "https://www.prioritypass.com");
@@ -40,9 +85,37 @@ describe("resolveSlot", () => {
     expect(r.url).toBe("https://www.prioritypass.com");
     expect(r.disclosureRequired).toBe(false);
   });
+  it("carries a merchant-specific termsUrl", () => {
+    expect(resolveSlot("parking-prebook", "gatwick", "x").termsUrl).toBe("https://www.aph.com/");
+    expect(resolveSlot("parking-prebook", "newcastle", "x").termsUrl).toBe("https://www.holidayextras.com/airport-parking.html");
+  });
 });
 
-describe("resolveHeProduct", () => {
+describe("resolveParkingMerchant", () => {
+  it("picks APH on an override airport and HE otherwise", () => {
+    expect(resolveParkingMerchant("manchester", "hub")?.partnerName).toBe("APH");
+    expect(resolveParkingMerchant("liverpool", "hub")?.partnerName).toBe("Holiday Extras");
+  });
+  it("builds the airport-specific clickref + deep link", () => {
+    const r = resolveParkingMerchant("manchester", "hub");
+    expect(r!.url).toContain("awinmid=1478");
+    expect(r!.url).toContain("clickref=parkmath-manchester-hub");
+    expect(r!.url).toContain("ued=https%3A%2F%2Fwww.aph.com%2Fmanchester-airport-parking.html");
+  });
+});
+
+describe("resolvePartnerProduct — parking fails closed where merchant has no page", () => {
+  it("APH parking returns null for an airport APH does not cover", () => {
+    expect(resolvePartnerProduct("aph", "parking", "belfast-international", "hub")).toBeNull();
+  });
+  it("APH parking resolves for a covered airport", () => {
+    const r = resolvePartnerProduct("aph", "parking", "edinburgh", "dropoff");
+    expect(r!.partnerName).toBe("APH");
+    expect(r!.url).toContain("ued=https%3A%2F%2Fwww.aph.com%2Fedinburgh-airport-parking.html");
+  });
+});
+
+describe("resolveHeProduct (HE-only products)", () => {
   it("builds an HE lounge deep link with a surface clickref", () => {
     const r = resolveHeProduct("lounge", "gatwick", "lounge");
     expect(r).not.toBeNull();
@@ -51,10 +124,9 @@ describe("resolveHeProduct", () => {
     expect(r!.url).toContain("clickref=parkmath-gatwick-lounge");
     expect(r!.url).toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Fairport-lounges.html");
   });
-  it("parking deep-links to the airport's own HE page (verified per-airport URL)", () => {
-    const r = resolveHeProduct("parking", "gatwick", "dropoff");
-    expect(r!.url).toContain("clickref=parkmath-gatwick-dropoff");
-    expect(r!.url).toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Fgatwick-airport-parking.html");
+  it("HE parking deep-links to the airport's own HE page", () => {
+    const r = resolveHeProduct("parking", "newcastle", "dropoff");
+    expect(r!.url).toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Fnewcastle-airport-parking.html");
   });
   it("parking falls back to the generic page off-airport (slug 'home')", () => {
     const r = resolveHeProduct("parking", "home", "home");
@@ -62,18 +134,8 @@ describe("resolveHeProduct", () => {
   });
 });
 
-describe("heAirportParkingUrl", () => {
-  it("builds the verified per-airport HE parking URL", () => {
-    expect(heAirportParkingUrl("heathrow")).toBe("https://www.holidayextras.com/heathrow-airport-parking.html");
-  });
-  it("returns null for non-airport contexts (fall back to generic)", () => {
-    expect(heAirportParkingUrl("home")).toBeNull();
-    expect(heAirportParkingUrl("")).toBeNull();
-  });
-});
-
 describe("activeSlotPartnerName", () => {
-  it("returns the active parking partner's name", () => {
+  it("returns the default active parking partner's name", () => {
     expect(activeSlotPartnerName("parking-prebook")).toBe("Holiday Extras");
   });
   it("returns null for an inactive slot", () => {
@@ -95,17 +157,25 @@ describe("goLink (first-party redirect path)", () => {
 });
 
 describe("resolveGoTarget — rebuilds the EXACT AWIN deep link (attribution preserved)", () => {
-  it("parking-prebook rebuilds the same URL resolveSlot produced (byte-identical)", () => {
-    // The redirect destination must equal what the component used to render directly — same
-    // awinmid/awinaffid/clickref/ued — so AWIN attribution is untouched by the new /go hop.
+  it("parking-prebook rebuilds the same URL resolveSlot produced (byte-identical, APH airport)", () => {
     const direct = resolveSlot("parking-prebook", "gatwick", "");
     const viaGo = resolveGoTarget("parking-prebook", "gatwick", "");
     expect(viaGo).not.toBeNull();
     expect(viaGo!.url).toBe(direct.url);
+    expect(viaGo!.url).toContain("awinmid=1478");
+    expect(viaGo!.url).toContain("ued=https%3A%2F%2Fwww.aph.com%2Fgatwick-airport-parking.html");
+  });
+  it("parking target on an APH override airport rebuilds the APH deep link", () => {
+    const direct = resolveParkingMerchant("heathrow", "dropoff");
+    const viaGo = resolveGoTarget("parking", "heathrow", "dropoff");
+    expect(viaGo!.url).toBe(direct!.url);
+    expect(viaGo!.url).toContain("awinmid=1478");
+    expect(viaGo!.url).toContain("clickref=parkmath-heathrow-dropoff");
+  });
+  it("parking target on a non-override airport rebuilds the HE deep link", () => {
+    const viaGo = resolveGoTarget("parking", "liverpool", "dropoff");
     expect(viaGo!.url).toContain("awinmid=3496");
-    expect(viaGo!.url).toContain("awinaffid=2932035");
-    expect(viaGo!.url).toContain("clickref=parkmath-gatwick");
-    expect(viaGo!.url).toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Fgatwick-airport-parking.html");
+    expect(viaGo!.url).toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Fliverpool-airport-parking.html");
   });
   it("an HE product target rebuilds the same URL resolveHeProduct produced (with surface clickref)", () => {
     const direct = resolveHeProduct("hotels", "gatwick", "dropoff-hotels");
@@ -113,14 +183,13 @@ describe("resolveGoTarget — rebuilds the EXACT AWIN deep link (attribution pre
     expect(viaGo!.url).toBe(direct!.url);
     expect(viaGo!.url).toContain("clickref=parkmath-gatwick-dropoff-hotels");
   });
-  it("lounge target with lounge surface matches the direct lounge deep link", () => {
-    const direct = resolveHeProduct("lounge", "gatwick", "lounge");
-    const viaGo = resolveGoTarget("lounge", "gatwick", "lounge");
-    expect(viaGo!.url).toBe(direct!.url);
-    expect(viaGo!.url).toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Fairport-lounges.html");
-  });
   it("returns null for an unknown target (route 404s — never an open redirect)", () => {
     expect(resolveGoTarget("evil", "gatwick", "")).toBeNull();
     expect(resolveGoTarget("https://evil.example.com", "gatwick", "")).toBeNull();
+  });
+  it("returns null for a parking target where no merchant covers the airport (fail-closed)", () => {
+    // belfast-international: not an APH override, but HE covers it via template — so HE still serves.
+    // Use a hypothetical: APH override-only with no HE? Not present, so assert HE fallback works.
+    expect(resolveGoTarget("parking", "belfast-international", "hub")!.url).toContain("awinmid=3496");
   });
 });

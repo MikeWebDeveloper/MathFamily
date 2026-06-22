@@ -17,6 +17,11 @@ const htmlWithPrice = renderToStaticMarkup(
   />
 );
 
+// A non-override airport still serves Holiday Extras (diversification must not break existing HE links).
+const heHtml = renderToStaticMarkup(
+  <BookingOptions airportName="Newcastle" airportSlug="newcastle" officialUrl="https://www.newcastleairport.com/parking" />
+);
+
 describe("BookingOptions", () => {
   it("renders the official route as a non-sponsored equal-weight button", () => {
     expect(html).toContain("Book direct with the airport");
@@ -25,17 +30,26 @@ describe("BookingOptions", () => {
     expect(html).not.toContain('href="https://www.gatwickairport.com/parking" rel="sponsored');
   });
 
-  it("renders the Holiday Extras route with Ad, benefits, compliant discount + first-party deep link", () => {
+  it("Gatwick is an APH override airport: renders the APH route with Ad + first-party deep link", () => {
+    // Gatwick now serves APH (diversification), so the merchant name is APH and no HE-specific
+    // discount claim appears (no fabricated promo for a merchant that didn't offer it).
     expect(html).toContain(">Ad<");
+    expect(html).toContain("Pre-book &amp; save with APH");
     expect(html).toContain("Free cancellation (cancel to arrival)");
-    expect(html).toContain("up to 25% at Gatwick");
-    expect(html).toContain("Discount applied automatically");
+    expect(html).not.toContain("up to 25% at Gatwick"); // HE-only promo — must not be claimed for APH
     // Click measurement: the CTA links to the first-party /go redirect, NOT a bare awin1.com link.
     // The route rebuilds the exact AWIN deep link (awinmid/clickref/ued) server-side before the 302.
     expect(html).not.toContain("https://www.awin1.com/cread.php?");
     expect(html).toContain('href="/go/gatwick/parking-prebook"');
     expect(html).toContain("Book my parking");
     expect(html).toContain('rel="sponsored noopener noreferrer"');
+  });
+
+  it("a non-override airport still renders the Holiday Extras route with its compliant discount copy", () => {
+    expect(heHtml).toContain("Pre-book &amp; save with Holiday Extras");
+    expect(heHtml).toContain("up to 25% at Gatwick");
+    expect(heHtml).toContain("Discount applied automatically");
+    expect(heHtml).toContain('href="/go/newcastle/parking-prebook"');
   });
 
   it("keeps the ranking commission-blind and avoids non-compliant copy", () => {

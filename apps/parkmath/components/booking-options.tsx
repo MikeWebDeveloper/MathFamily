@@ -26,6 +26,12 @@ export function BookingOptions({
 }) {
   const he = resolveSlot(PARKING_SLOT, airportSlug, officialUrl);
   const hasAffiliate = he.kind === "affiliate";
+  // Merchant is resolved per-airport (Holiday Extras by default, APH on its override airports), so
+  // all merchant-facing copy and the Terms link must come from the resolver, never hardcoded.
+  const merchant = he.partnerName ?? "our partner";
+  const termsUrl = he.termsUrl ?? officialUrl;
+  // The 10%-off / "up to 25% Gatwick" promo is a Holiday Extras offer only — never claim it for APH.
+  const isHolidayExtras = he.partnerName === "Holiday Extras";
 
   // Resolve the honest price to surface: prefer the cta model (which suppresses the gate-only
   // price), and fall back to the legacy price/days props for callers that don't pass a model.
@@ -59,18 +65,19 @@ export function BookingOptions({
         <>
           <div className="rounded-card border border-brand-accent/30 bg-blue-50 dark:bg-brand-accent/[0.08] dark:border-brand-accent/20 p-4">
             <div className="flex items-center justify-between gap-2">
-              <h3 className="font-semibold text-ink">Pre-book &amp; save with {he.partnerName}</h3>
+              <h3 className="font-semibold text-ink">Pre-book &amp; save with {merchant}</h3>
               <span className="rounded border border-ink-muted/40 px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Ad</span>
             </div>
             <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-ink">
               <li>✓ Free cancellation (cancel to arrival)</li>
               <li>✓ No code needed</li>
-              <li>✓ Best Price Guaranteed</li>
+              <li>✓ Compare every car park in one place</li>
             </ul>
             <p className="mt-2 text-sm text-ink-muted">
-              10% off most Holiday Extras car parks — up to 25% at Gatwick (Meet &amp; Greet North). Discount applied
-              automatically, no code.{" "}
-              <a href="https://www.holidayextras.com/airport-parking.html" rel="noopener noreferrer" target="_blank" className="underline underline-offset-4">
+              {isHolidayExtras
+                ? "10% off most Holiday Extras car parks — up to 25% at Gatwick (Meet & Greet North). Discount applied automatically, no code."
+                : `Compare on-airport, Park & Ride and Meet & Greet at ${merchant} — free cancellation, no code needed.`}{" "}
+              <a href={termsUrl} rel="noopener noreferrer" target="_blank" className="underline underline-offset-4">
                 Terms ↗
               </a>
             </p>

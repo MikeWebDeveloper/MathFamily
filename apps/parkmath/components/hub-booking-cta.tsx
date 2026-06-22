@@ -1,22 +1,26 @@
-import { goLink, resolveHeProduct } from "../lib/partners";
+import { goLink, resolveParkingMerchant } from "../lib/partners";
 import type { LeagueEntry } from "../lib/content";
 
 const SURFACE = "hub";
 
 /** One tracked pre-book link per airport, resolved off the live affiliate config. Built here (not in
- *  the component body) so the whole section can fail closed: if nothing resolves we render nothing. */
-function resolveHubLinks(league: LeagueEntry[]): { slug: string; name: string; href: string }[] {
+ *  the component body) so the whole section can fail closed: if nothing resolves we render nothing.
+ *  Each airport resolves to its configured merchant (APH on its override airports, Holiday Extras
+ *  elsewhere); we carry the merchant name through so the disclosure names exactly who is used. */
+function resolveHubLinks(
+  league: LeagueEntry[],
+): { slug: string; name: string; href: string; merchant: string }[] {
   return league
     // Pre-booking a car park is only an honest CTA where there's a forecourt charge to avoid.
     .filter((e) => !e.isFree)
     .map((e) => {
-      // resolveHeProduct returns null when Holiday Extras is inactive or has no link for the slug —
+      // resolveParkingMerchant returns null when no active merchant has a live link for the slug —
       // that null IS the fail-closed gate. No live link → no CTA for that airport.
-      const he = resolveHeProduct("parking", e.airportSlug, SURFACE);
-      if (!he) return null;
-      return { slug: e.airportSlug, name: e.name, href: goLink(SURFACE, e.airportSlug, "parking") };
+      const m = resolveParkingMerchant(e.airportSlug, SURFACE);
+      if (!m) return null;
+      return { slug: e.airportSlug, name: e.name, href: goLink(SURFACE, e.airportSlug, "parking"), merchant: m.partnerName };
     })
-    .filter((r): r is { slug: string; name: string; href: string } => r !== null);
+    .filter((r): r is { slug: string; name: string; href: string; merchant: string } => r !== null);
 }
 
 /**
@@ -32,6 +36,12 @@ function resolveHubLinks(league: LeagueEntry[]): { slug: string; name: string; h
 export function HubBookingCta({ league }: { league: LeagueEntry[] }) {
   const links = resolveHubLinks(league);
   if (links.length === 0) return null; // graceful absence — no live affiliate link anywhere
+  // Name the actual merchants used (could be a mix of Holiday Extras + APH across airports).
+  const merchants = Array.from(new Set(links.map((l) => l.merchant)));
+  const merchantList =
+    merchants.length === 1
+      ? merchants[0]
+      : `${merchants.slice(0, -1).join(", ")} or ${merchants[merchants.length - 1]}`;
 
   return (
     <section
@@ -63,7 +73,7 @@ export function HubBookingCta({ league }: { league: LeagueEntry[] }) {
         ))}
       </ul>
       <p className="text-xs text-ink-muted">
-        Affiliate links (Ad) — if you book through Holiday Extras, ParkMath earns a commission, at no cost to
+        Affiliate links (Ad) — if you book through {merchantList}, ParkMath earns a commission, at no cost to
         you. It never affects our ranking or which airport we show as cheapest.
       </p>
     </section>
