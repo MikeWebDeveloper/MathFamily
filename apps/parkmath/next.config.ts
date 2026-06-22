@@ -11,11 +11,12 @@ const umamiHost = process.env.NEXT_PUBLIC_UMAMI_HOST
   ? ` ${process.env.NEXT_PUBLIC_UMAMI_HOST.replace(/\/+$/, "")}`
   : "";
 
-// frame-ancestors directive: 'none' everywhere EXCEPT the embeddable widget routes (/embed/*),
-// which must be framable from any third-party site (that's the whole point of the embed widget).
-// The embed route handler also sets its own permissive CSP, but the site-wide header() rule below
-// would otherwise *also* attach 'none' to it (browsers honour the most restrictive) — so we scope
-// the restrictive frame headers to everything-but-/embed and give /embed an explicit permissive set.
+// frame-ancestors directive: 'none' everywhere EXCEPT the embeddable widget routes (/embed/* and
+// /widget/*), which must be framable from any third-party site (that's the whole point of the embed
+// widget). The embed route handler also sets its own permissive CSP, but the site-wide header() rule
+// below would otherwise *also* attach 'none' to it (browsers honour the most restrictive) — so we
+// scope the restrictive frame headers to everything-but-embed/widget and give those an explicit
+// permissive set.
 const cspBase = (frameAncestors: string) =>
   [
     "default-src 'self'",
@@ -47,8 +48,8 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        // Everything except the embeddable widget: locked to no framing.
-        source: "/:path((?!embed/).*)",
+        // Everything except the embeddable routes: locked to no framing.
+        source: "/:path((?!embed/|widget/).*)",
         headers: [
           ...commonHeaders,
           { key: "X-Frame-Options", value: "DENY" },
@@ -56,8 +57,13 @@ const nextConfig: NextConfig = {
         ]
       },
       {
-        // The embeddable widget: framable anywhere. No X-Frame-Options (deprecated; CSP wins).
+        // The drop-off league-table embed: framable anywhere.
         source: "/embed/:path*",
+        headers: [...commonHeaders, { key: "Content-Security-Policy", value: cspEmbed }]
+      },
+      {
+        // The index widget (/widget/*): framable anywhere, no X-Frame-Options.
+        source: "/widget/:path*",
         headers: [...commonHeaders, { key: "Content-Security-Policy", value: cspEmbed }]
       }
     ];

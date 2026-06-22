@@ -45,3 +45,5 @@ export * from "./compiled-byline";
 export * from "./answer-passage";
 export { EsimPickCard } from "./EsimPickCard";
 export type { EsimPickCardProps } from "./EsimPickCard";
+export { WidgetLayout } from "./widget-layout";
+export type { WidgetLayoutProps } from "./widget-layout";
