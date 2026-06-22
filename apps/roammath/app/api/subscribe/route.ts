@@ -40,7 +40,9 @@ export async function POST(req: Request) {
     return reply(isForm, req, { ok: false, reason: "invalid_email" }, 400);
   }
 
-  const result = await processSubscription({ email, consent, brand: BRAND, source }, env);
+  // Pass the originating page (referer) so the operator notification can show WHERE it came from.
+  const referrer = req.headers.get("referer") ?? undefined;
+  const result = await processSubscription({ email, consent, brand: BRAND, source, referrer }, env);
   if (!result.ok) {
     const status = result.reason === "durable_failed" ? 500 : 400; // only durable_failed is retryable
     return reply(isForm, req, result, status);

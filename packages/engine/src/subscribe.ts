@@ -40,6 +40,10 @@ export interface FamilySubscribeInput {
   brand: string;
   /** Surface tag, e.g. "home" / "region" / "<spoke>". */
   source?: string;
+  /** Optional page path the signup came from (e.g. "/region/london"). Included in the notify body. */
+  page?: string;
+  /** Optional referrer URL (e.g. the originating page's full URL). Included in the notify body. */
+  referrer?: string;
 }
 
 export interface FamilySubscribeEnv {
@@ -70,20 +74,90 @@ export function signupLogLine(email: string, brand: string, source: string): str
   return `SIGNUP|${email}|${brand}|${source}|${new Date().toISOString()}`;
 }
 
+/** Operator-facing notification timezone. We report London time because the whole family is a
+ *  UK money-questions portfolio and "when" should read in the operator's own clock. */
+const NOTIFY_TZ = "Europe/London";
+
+/** `HH:MM` (24h) in Europe/London — the time fragment that leads the subject so the operator sees
+ *  WHEN at a glance. Pure formatting off the captured signup instant. */
+export function formatNotifyTime(at: Date, timeZone: string = NOTIFY_TZ): string {
+  return new Intl.DateTimeFormat("en-GB", {
+    timeZone,
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false
+  }).format(at);
+}
+
+/** Full human date + time in Europe/London for the body (e.g. "22 Jun 2026, 14:07"). */
+export function formatNotifyTimestamp(at: Date, timeZone: string = NOTIFY_TZ): string {
+  return new Intl.DateTimeFormat("en-GB", {
+    timeZone,
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false
+  }).format(at);
+}
+
+export interface SignupNotificationInput {
+  email: string;
+  brand: string;
+  source: string;
+  page?: string;
+  referrer?: string;
+}
+
+/** Build the operator notification email. SOURCE-LED: the subject leads with brand + surface +
+ *  time so it reads "what converted, where, when" at a glance and VARIES per app/page automatically
+ *  (it is templated off brandName + source). The body carries the rest around it: the email
+ *  address, brand, source/surface, the full London timestamp, and any page/referrer captured.
+ *  Pure (takes the captured instant) so the subject format is unit-testable without faking time. */
+export function buildSignupNotification(
+  input: SignupNotificationInput,
+  at: Date
+): { subject: string; text: string } {
+  const time = formatNotifyTime(at);
+  // brand + surface + time FIRST — the source-led, per-app/per-page varying subject.
+  const subject = `New signup · ${input.brand} · ${input.source} · ${time}`;
+
+  const lines = [
+    `email: ${input.email}`,
+    `brand: ${input.brand}`,
+    `source: ${input.source}`,
+    `at: ${formatNotifyTimestamp(at)} (${NOTIFY_TZ})`
+  ];
+  if (input.page) lines.push(`page: ${input.page}`);
+  if (input.referrer) lines.push(`referrer: ${input.referrer}`);
+  lines.push(
+    "",
+    "Reply-safe durable record of a family-list signup. If MailerLite was not yet connected, run the family flush import."
+  );
+
+  return { subject, text: lines.join("\n") };
+}
+
 /** Durable sink. Returns true once the signup is safely persisted somewhere that survives the
  *  request. The log line ALWAYS lands (so we never silently lose a signup even with zero env),
  *  and we additionally email it via Resend when configured. Durable if EITHER the email send
  *  succeeded OR there is no Resend config (log-only fallback is still recoverable). We only return
- *  false when Resend IS configured but the send hard-fails, so the client can ask for a retry. */
+ *  false when Resend IS configured but the send hard-fails, so the client can ask for a retry.
+ *  The signup INSTANT is captured once here so the log line, subject time, and body timestamp all
+ *  agree — that captured `Date` is how we record exactly WHEN someone signed up. */
 export async function persistDurable(
-  input: { email: string; brand: string; source: string },
+  input: { email: string; brand: string; source: string; page?: string; referrer?: string },
   env: FamilySubscribeEnv,
   fetchImpl: typeof fetch = fetch,
   log: (line: string) => void = console.log
 ): Promise<boolean> {
+  const at = new Date(); // capture the signup timestamp once — single source of truth for "when"
   log(signupLogLine(input.email, input.brand, input.source));
 
   if (!env.resendToken || !env.notifyTo) return true;
+
+  const { subject, text } = buildSignupNotification(input, at);
 
   try {
     const res = await fetchImpl("https://api.resend.com/emails", {
@@ -92,8 +166,8 @@ export async function persistDurable(
       body: JSON.stringify({
         from: env.notifyFrom || `${input.brand} signups <list@themathfamily.com>`,
         to: [env.notifyTo],
-        subject: `New ${input.brand} signup: ${input.email}`,
-        text: `${input.email}\nbrand: ${input.brand}\nsource: ${input.source}\nat: ${new Date().toISOString()}\n\nReply-safe durable record of a family-list signup. If MailerLite was not yet connected, run the family flush import.`
+        subject,
+        text
       })
     });
     return res.ok;
@@ -150,8 +224,10 @@ export async function processSubscription(
   const email = input.email.trim().toLowerCase();
   const brand = (input.brand || "unknown").slice(0, 60);
   const source = (input.source || "unknown").slice(0, 200);
+  const page = input.page ? input.page.slice(0, 300) : undefined;
+  const referrer = input.referrer ? input.referrer.slice(0, 500) : undefined;
 
-  const durable = await persistDurable({ email, brand, source }, env, fetchImpl, log);
+  const durable = await persistDurable({ email, brand, source, page, referrer }, env, fetchImpl, log);
   if (!durable) return { ok: false, reason: "durable_failed" };
 
   const familyList = await subscribeFamilyList(email, brand, source, env, fetchImpl);

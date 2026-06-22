@@ -3,6 +3,8 @@ import {
   isValidEmail,
   hasConsent,
   signupLogLine,
+  buildSignupNotification,
+  formatNotifyTime,
   persistDurable,
   subscribeFamilyList,
   processSubscription,
@@ -36,6 +38,58 @@ describe("signupLogLine", () => {
   });
 });
 
+describe("buildSignupNotification — source-led, timestamped subject", () => {
+  // A fixed instant: 2026-06-22T13:07:00Z → 14:07 Europe/London (BST, +01:00).
+  const at = new Date("2026-06-22T13:07:00Z");
+
+  it("subject LEADS with brand + source + HH:MM time (the source-led format)", () => {
+    const { subject } = buildSignupNotification(
+      { email: "a@b.co", brand: "RoamMath", source: "region" },
+      at
+    );
+    // brand + surface + time FIRST.
+    expect(subject).toBe("New signup · RoamMath · region · 14:07");
+    expect(subject).toContain("RoamMath"); // brand present
+    expect(subject).toContain("region"); // source present
+    expect(subject).toMatch(/\b\d{2}:\d{2}$/); // HH:MM time present, leading the line
+    expect(formatNotifyTime(at)).toBe("14:07"); // London time, not UTC
+  });
+
+  it("subject VARIES by source (templated off brand + source per app/page)", () => {
+    const home = buildSignupNotification({ email: "a@b.co", brand: "RoamMath", source: "home" }, at);
+    const region = buildSignupNotification({ email: "a@b.co", brand: "RoamMath", source: "region" }, at);
+    expect(home.subject).not.toBe(region.subject);
+    expect(home.subject).toContain("home");
+    expect(region.subject).toContain("region");
+  });
+
+  it("subject VARIES by brand too (per-app)", () => {
+    const roam = buildSignupNotification({ email: "a@b.co", brand: "RoamMath", source: "home" }, at);
+    const rent = buildSignupNotification({ email: "a@b.co", brand: "RentMath", source: "home" }, at);
+    expect(roam.subject).not.toBe(rent.subject);
+  });
+
+  it("body carries email, brand, source, full London timestamp, and page/referrer when present", () => {
+    const { text } = buildSignupNotification(
+      { email: "a@b.co", brand: "RoamMath", source: "region", page: "/region/london", referrer: "https://roammath.com/region/london" },
+      at
+    );
+    expect(text).toContain("email: a@b.co");
+    expect(text).toContain("brand: RoamMath");
+    expect(text).toContain("source: region");
+    expect(text).toContain("22 Jun 2026, 14:07"); // full date + time, Europe/London
+    expect(text).toContain("Europe/London");
+    expect(text).toContain("page: /region/london");
+    expect(text).toContain("referrer: https://roammath.com/region/london");
+  });
+
+  it("omits page/referrer lines when not supplied", () => {
+    const { text } = buildSignupNotification({ email: "a@b.co", brand: "RoamMath", source: "home" }, at);
+    expect(text).not.toContain("page:");
+    expect(text).not.toContain("referrer:");
+  });
+});
+
 describe("persistDurable", () => {
   it("always logs the durable line even with zero env (log-only is recoverable → durable)", async () => {
     const log = vi.fn();
@@ -54,8 +108,12 @@ describe("persistDurable", () => {
     );
     expect(ok).toBe(true);
     expect(f).toHaveBeenCalledOnce();
-    const [url] = f.mock.calls[0]!;
+    const [url, init] = f.mock.calls[0]!;
     expect(url).toBe("https://api.resend.com/emails");
+    // The Resend payload carries the source-led subject (brand + source + HH:MM time).
+    const body = JSON.parse(String((init as RequestInit).body));
+    expect(body.subject).toMatch(/^New signup · RoamMath · home · \d{2}:\d{2}$/);
+    expect(body.text).toContain("email: a@b.co");
   });
 
   it("returns false ONLY when Resend is configured but the send hard-fails", async () => {
