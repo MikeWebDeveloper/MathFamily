@@ -23,6 +23,7 @@ import {
   buildProjectFaqs,
   estimate,
   perSqmLabel,
+  snapshotNote,
   MIDLANDS_REGION,
   STANDARD_FINISH
 } from "@/lib/content";
@@ -114,6 +115,7 @@ export default async function ProjectCostPage({ params }: { params: Promise<{ pr
         regions={regions}
         finishLevels={finishLevels}
         lockedProjectSlug={project.slug}
+        snapshotNote={snapshotNote()}
       />
 
       <TradesLeadSlot projectSlug={project.slug} projectName={project.name} />
@@ -150,8 +152,11 @@ export default async function ProjectCostPage({ params }: { params: Promise<{ pr
       </section>
 
       <EmailCaptureSlot
-        formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
+        brandName="BuildMath"
         hook="Get notified when UK build costs move"
+        description="occasional UK build-cost update"
+        source={project.slug}
+        privacyHref="/privacy"
       />
 
       <p className="text-sm">
