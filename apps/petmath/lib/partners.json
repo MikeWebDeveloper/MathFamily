@@ -1,0 +1,18 @@
+{
+  "partners": {
+    "tails": {
+      "name": "tails.com",
+      "category": "pet-food-subscription",
+      "active": false,
+      "deeplinkTemplate": "",
+      "trackingNote": "GREEN rail (pet food subscription). Fill after tails.com affiliate signup — use {speciesSlug} and {clickref} placeholders. Keep active=false until a real merchant ID is approved."
+    },
+    "butternut-box": {
+      "name": "Butternut Box",
+      "category": "pet-food-subscription",
+      "active": false,
+      "deeplinkTemplate": "",
+      "trackingNote": "GREEN rail (fresh dog food subscription). Fill after Butternut Box affiliate signup. Keep active=false until approved."
+    }
+  }
+}
