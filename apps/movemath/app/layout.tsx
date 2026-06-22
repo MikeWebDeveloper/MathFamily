@@ -26,19 +26,16 @@ const NAV = [
 ];
 
 /**
- * Organization JSON-LD with `parentOrganization` ("The Math Family"). The shared geo builder does
- * NOT emit parentOrganization, and the package is read-only, so we add it app-locally by spreading
- * the builder's output. (Do NOT edit @mathfamily/geo for this.)
+ * Organization JSON-LD with `parentOrganization` ("The Math Family") emitted natively by the shared
+ * geo builder — it now stamps a proper parentOrganization node with @type, a stable @id, name AND url.
  */
-const organizationJsonLd = {
-  ...organizationLd({
-    siteUrl: SITE_URL,
-    name: "MoveMath",
-    logoUrl: `${SITE_URL}/opengraph-image`,
-    founder: { name: "Michal Latal", jobTitle: "Founder & editor" }
-  }),
-  parentOrganization: { "@type": "Organization" as const, name: "The Math Family" }
-};
+const organizationJsonLd = organizationLd({
+  siteUrl: SITE_URL,
+  name: "MoveMath",
+  logoUrl: `${SITE_URL}/opengraph-image`,
+  founder: { name: "Michal Latal", jobTitle: "Founder & editor" },
+  parentOrganization: { name: "The Math Family", url: "https://themathfamily.com" }
+});
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

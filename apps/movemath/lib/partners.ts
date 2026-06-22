@@ -66,3 +66,31 @@ export function allGreenSlotsInert(): boolean {
   const partners = partnersJson.partners as Record<string, PartnerConfig>;
   return Object.values(partners).every((p) => !p.active || !p.deeplinkTemplate.startsWith("http"));
 }
+
+const GREEN_CATEGORIES: GreenCategory[] = ["removals", "conveyancing", "surveys"];
+
+function isGreenCategory(value: string): value is GreenCategory {
+  return (GREEN_CATEGORIES as string[]).includes(value);
+}
+
+/**
+ * Deeplink resolver for the shared `/go` catch-all route (createGoRoute).
+ *
+ * Maps the catch-all path parts (the first part is the GREEN category) + surface tag to a live
+ * affiliate deeplink, or `null` when no live deal is wired yet. Every green rail is currently INERT,
+ * so this always returns `null` and `/go` fail-closes back to an on-site page — the click intent is
+ * still logged for attribution. FCA-red products (mortgage/insurance) are deliberately NOT routable
+ * here: they have no partner entry and no `/go` surface.
+ */
+export function resolveDeeplink(parts: string[], surface: string): string | null {
+  const category = parts[0];
+  if (!category || !isGreenCategory(category)) return null;
+
+  const partner = (partnersJson.partners as Record<string, PartnerConfig>)[category];
+  if (!partner || !partner.active || !partner.deeplinkTemplate.startsWith("http")) {
+    return null; // inert rail — fail closed, intent still logged by /go
+  }
+
+  const clickref = surface ? `${surface}-${category}` : category;
+  return buildAffiliateUrl(partner.deeplinkTemplate, clickref);
+}

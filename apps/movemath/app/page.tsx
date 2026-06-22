@@ -68,16 +68,19 @@ export default function HomePage() {
       <section className="space-y-3">
         <h2 className="text-xl font-semibold text-ink">Get quotes for your move</h2>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <AffiliateSlot category="removals" clickref="home-removals" />
-          <AffiliateSlot category="conveyancing" clickref="home-conveyancing" />
-          <AffiliateSlot category="surveys" clickref="home-surveys" />
+          <AffiliateSlot category="removals" surface="home" />
+          <AffiliateSlot category="conveyancing" surface="home" />
+          <AffiliateSlot category="surveys" surface="home" />
           <MortgageSlot />
         </div>
       </section>
 
       <EmailCaptureSlot
-        formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
+        brandName="MoveMath"
         hook="Get notified when Stamp Duty rules or moving costs change"
+        description="UK moving-cost & Stamp Duty updates"
+        source="home"
+        privacyHref="/privacy"
       />
 
       <p className="text-xs text-ink-muted">Stamp Duty rates verified against gov.uk on {VERIFIED_AT}.</p>

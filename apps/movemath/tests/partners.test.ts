@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildAffiliateUrl, resolveSlot } from "../lib/partners";
+import { buildAffiliateUrl, resolveDeeplink, resolveSlot } from "../lib/partners";
 
 describe("buildAffiliateUrl", () => {
   it("substitutes {clickref}", () => {
@@ -19,5 +19,19 @@ describe("resolveSlot fallback", () => {
     expect(slot.kind).toBe("coming-soon");
     expect(slot.partnerName).toBeNull();
     expect(slot.category).toBe("removals");
+  });
+});
+
+describe("resolveDeeplink — /go resolver, inert + fail-closed", () => {
+  it("returns null for every green category (rails still INERT)", () => {
+    for (const category of ["removals", "conveyancing", "surveys"]) {
+      expect(resolveDeeplink([category], "home")).toBeNull();
+    }
+  });
+
+  it("returns null for FCA-red / unknown categories — mortgage is never routable through /go", () => {
+    expect(resolveDeeplink(["mortgage"], "home")).toBeNull();
+    expect(resolveDeeplink(["insurance"], "home")).toBeNull();
+    expect(resolveDeeplink([], "home")).toBeNull();
   });
 });

@@ -1,11 +1,14 @@
+import Link from "next/link";
 import { resolveSlot, type GreenCategory } from "../lib/partners";
 
 /**
- * GREEN affiliate slot — removals / conveyancing / surveys. Currently INERT: resolveSlot returns
- * `coming-soon` for every category (no live merchant IDs are configured). Renders a labelled,
- * non-clickable "coming soon" card with an "Ad" / sponsored disclosure so the placement is honest
- * before any partner is live. Once a partner is activated in partners.json it becomes a real,
- * disclosed affiliate link — but it can never be a mortgage/insurance (FCA-red) product.
+ * GREEN affiliate slot — removals / conveyancing / surveys. The rail is still INERT (resolveSlot
+ * returns `coming-soon` for every category; no live merchant IDs are configured), but the CTA now
+ * routes through the shared, surface-tagged `/go/<category>?s=<surface>` attribution route so every
+ * click is logged even before a partner is wired. `/go` is fail-closed: with no live deeplink it
+ * 302s back on-site (never a 404, never a bare affiliate link). Once a partner is activated in
+ * partners.json the same /go path resolves to a real, disclosed deeplink — but it can never be a
+ * mortgage/insurance (FCA-red) product.
  */
 
 const CATEGORY_COPY: Record<GreenCategory, { title: string; blurb: string }> = {
@@ -23,9 +26,12 @@ const CATEGORY_COPY: Record<GreenCategory, { title: string; blurb: string }> = {
   }
 };
 
-export function AffiliateSlot({ category, clickref }: { category: GreenCategory; clickref: string }) {
-  const slot = resolveSlot(category, clickref);
+export function AffiliateSlot({ category, surface }: { category: GreenCategory; surface: string }) {
+  const slot = resolveSlot(category, surface);
   const copy = CATEGORY_COPY[category];
+  // Surface-tagged attribution route. Inert today (resolveDeeplink returns null → fail-closed 302
+  // back on-site), but the click is logged so we capture demand before any deal is wired.
+  const goHref = `/go/${category}?s=${encodeURIComponent(surface)}`;
 
   return (
     <div
@@ -40,19 +46,14 @@ export function AffiliateSlot({ category, clickref }: { category: GreenCategory;
         </span>
       </div>
       <p className="mt-1 text-sm text-ink-muted">{copy.blurb}</p>
-      {slot.kind === "affiliate" && slot.url ? (
-        <a
-          href={slot.url}
-          rel="sponsored nofollow"
-          className="mt-3 inline-flex min-h-10 items-center rounded-lg bg-brand-accent px-3 py-2 text-sm font-semibold text-white"
-        >
-          {slot.label}
-        </a>
-      ) : (
-        <p className="mt-3 inline-flex min-h-9 items-center rounded-lg border border-ink/15 bg-card px-3 py-1.5 text-xs font-medium text-ink-muted">
-          Comparison coming soon
-        </p>
-      )}
+      <Link
+        href={goHref}
+        rel="sponsored nofollow"
+        prefetch={false}
+        className="mt-3 inline-flex min-h-10 items-center rounded-lg bg-brand-accent px-3 py-2 text-sm font-semibold text-white"
+      >
+        {slot.kind === "affiliate" ? slot.label : "Compare quotes"}
+      </Link>
     </div>
   );
 }
