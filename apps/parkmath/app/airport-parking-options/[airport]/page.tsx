@@ -149,7 +149,7 @@ export default async function AirportParkingOptionsPage({ params }: { params: Pr
       </section>
 
       <EmailCaptureSlot
-        formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
+        source="airport-parking-options"
         hook={`Get notified when ${airport.name} parking prices change`}
       />
 

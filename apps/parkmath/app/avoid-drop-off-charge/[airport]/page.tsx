@@ -144,7 +144,7 @@ export default async function AvoidDropOffPage({ params }: { params: Promise<{ a
       </section>
 
       <EmailCaptureSlot
-        formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
+        source="avoid-drop-off-charge"
         hook={`Get notified when ${airport.name} changes its drop-off fee`}
       />
 

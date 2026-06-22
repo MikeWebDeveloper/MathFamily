@@ -206,7 +206,7 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
       </p>
 
       <div className="mf-reveal" style={{ "--mf-delay": "0ms" } as React.CSSProperties}>
-        <EmailCaptureSlot formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION} hook={`Get notified when ${airport.name} parking prices change`} />
+        <EmailCaptureSlot source="airport-parking" hook={`Get notified when ${airport.name} parking prices change`} />
       </div>
 
       <div className="mf-reveal" style={{ "--mf-delay": "40ms" } as React.CSSProperties}>

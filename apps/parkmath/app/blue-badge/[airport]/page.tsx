@@ -173,7 +173,7 @@ export default async function BlueBadgePage({ params }: { params: Promise<{ airp
       </section>
 
       <EmailCaptureSlot
-        formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
+        source="blue-badge"
         hook={`Get notified when ${airport.name} changes its Blue Badge or drop-off policy`}
       />
 

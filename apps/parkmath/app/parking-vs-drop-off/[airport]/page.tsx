@@ -155,7 +155,7 @@ export default async function ParkingVsDropOffPage({ params }: { params: Promise
       </section>
 
       <EmailCaptureSlot
-        formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
+        source="parking-vs-drop-off"
         hook={`Get notified when ${airport.name} changes its parking or drop-off prices`}
       />
 

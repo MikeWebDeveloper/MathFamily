@@ -232,7 +232,7 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
       )}
 
       <EmailCaptureSlot
-        formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
+        source="drop-off-charges"
         hook={`Get notified when ${airport.name} changes its fees`}
       />
 
