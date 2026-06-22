@@ -1,0 +1,22 @@
+{
+  "partners": {
+    "checkatrade": {
+      "name": "Checkatrade",
+      "active": false,
+      "deeplinkTemplate": "",
+      "trackingNote": "INERT — fill after a Checkatrade/affiliate-network (e.g. Awin) approval; use {projectSlug} and {clickref} placeholders. No live merchant ID until gated."
+    },
+    "mybuilder": {
+      "name": "MyBuilder",
+      "active": false,
+      "deeplinkTemplate": "",
+      "trackingNote": "INERT — fill after MyBuilder/affiliate-network approval."
+    },
+    "rated-people": {
+      "name": "Rated People",
+      "active": false,
+      "deeplinkTemplate": "",
+      "trackingNote": "INERT — fill after Rated People/affiliate-network approval."
+    }
+  }
+}
