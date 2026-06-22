@@ -40,16 +40,25 @@ describe("BookingOptions", () => {
     // Click measurement: the CTA links to the first-party /go redirect, NOT a bare awin1.com link.
     // The route rebuilds the exact AWIN deep link (awinmid/clickref/ued) server-side before the 302.
     expect(html).not.toContain("https://www.awin1.com/cread.php?");
-    expect(html).toContain('href="/go/gatwick/parking-prebook"');
+    // Attribution fix: the CTA now carries its surface (?s=parking) so the rebuilt AWIN clickref is
+    // parkmath-gatwick-parking — parking-spoke clicks are distinguishable from hub/dropoff/options.
+    expect(html).toContain('href="/go/gatwick/parking?s=parking"');
     expect(html).toContain("Book my parking");
     expect(html).toContain('rel="sponsored noopener noreferrer"');
+  });
+
+  it("the parking CTA is surface-tagged (?s=parking) so its clicks are attribution-distinct", () => {
+    // Regression guard for the Day-60-honesty fix: an empty surface (the old bug) made every
+    // booking-options click attribution-blind. The default surface MUST be present.
+    expect(html).toContain("?s=parking");
+    expect(html).not.toContain('href="/go/gatwick/parking-prebook"');
   });
 
   it("a non-override airport still renders the Holiday Extras route with its compliant discount copy", () => {
     expect(heHtml).toContain("Pre-book &amp; save with Holiday Extras");
     expect(heHtml).toContain("up to 25% at Gatwick");
     expect(heHtml).toContain("Discount applied automatically");
-    expect(heHtml).toContain('href="/go/newcastle/parking-prebook"');
+    expect(heHtml).toContain('href="/go/newcastle/parking?s=parking"');
   });
 
   it("keeps the ranking commission-blind and avoids non-compliant copy", () => {

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { loadAirports, loadLoungeDataset } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, itemListLd, JsonLd } from "@mathfamily/geo";
-import { FeeGrid, PageHeading } from "@mathfamily/ui";
+import { EmailCaptureSlot, FeeGrid, PageHeading } from "@mathfamily/ui";
 
 export const metadata: Metadata = {
   title: "UK airport lounge prices & Priority Pass, compared",
@@ -52,6 +52,10 @@ export default function LoungeIndexPage() {
           String(r.count),
           r.from !== null ? formatPence(r.from) : "—"
         ])}
+      />
+      <EmailCaptureSlot
+        source="airport-lounges-index"
+        hook="Get notified when UK airport lounge prices change"
       />
     </article>
   );

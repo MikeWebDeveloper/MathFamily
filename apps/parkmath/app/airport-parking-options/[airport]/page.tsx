@@ -141,6 +141,7 @@ export default async function AirportParkingOptionsPage({ params }: { params: Pr
         airportSlug={airport.slug}
         officialUrl={dropOff.sourceUrl}
         cta={parking ? parkingCtaModel(parking, 7) : undefined}
+        surface="options"
       />
 
       <section className="mf-reveal space-y-2">

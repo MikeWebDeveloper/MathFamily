@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { loadAirports, loadLoungeDataset, loadParkingDataset, loadPriorityPass, type Airport, type LoungeRecord } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd, speakableLd } from "@mathfamily/geo";
-import { AnswerPassage, FaqAccordion, FeeGrid, FreshnessBadge, PageHeading, SourceCitation, SourcesBlock } from "@mathfamily/ui";
+import { AnswerPassage, EmailCaptureSlot, FaqAccordion, FeeGrid, FreshnessBadge, PageHeading, SourceCitation, SourcesBlock } from "@mathfamily/ui";
 import { HolidayExtrasCard } from "@/components/holiday-extras-card";
 import { LoungeAnswer } from "@/components/lounge-answer";
 import { buildLoungeFaqs } from "@/lib/content";
@@ -91,6 +91,11 @@ export default async function LoungePage({ params }: { params: Promise<{ airport
         <h2 className="text-xl font-semibold text-ink">Frequently asked questions</h2>
         <FaqAccordion items={faqs} />
       </section>
+
+      <EmailCaptureSlot
+        source="airport-lounges"
+        hook={`Get notified when ${airport.name} lounge prices change`}
+      />
 
       {hasParking ? (
         <p className="text-sm">

@@ -10,6 +10,7 @@ export function BookingOptions({
   price,
   days,
   cta,
+  surface = "parking",
 }: {
   airportName: string;
   airportSlug: string;
@@ -23,6 +24,12 @@ export function BookingOptions({
    *  "save £X vs gate" claim — it suppresses the price entirely in the gate-only case so we never
    *  show a drive-up gate price dressed up as a "from" pre-book figure. */
   cta?: ParkingCtaModel;
+  /** Attribution surface for this CTA — flows into BOTH the /go click-log line AND the AWIN
+   *  `clickref` suffix (parkmath-{airport}-{surface}) so parking-spoke clicks are distinguishable
+   *  from hub / drop-off / options clicks. Defaults to "parking" (this is the parking surface);
+   *  the options page passes "options". Never "" — an empty surface makes every booking-options
+   *  click attribution-blind. */
+  surface?: string;
 }) {
   const he = resolveSlot(PARKING_SLOT, airportSlug, officialUrl);
   const hasAffiliate = he.kind === "affiliate";
@@ -92,7 +99,7 @@ export function BookingOptions({
               we show as cheapest.
             </p>
             <a
-              href={goLink("", airportSlug, "parking-prebook")}
+              href={goLink(surface, airportSlug, "parking")}
               rel="sponsored noopener noreferrer"
               target="_blank"
               className="mt-3 inline-block rounded-card bg-brand-accent px-4 py-2 text-sm font-semibold text-white"
