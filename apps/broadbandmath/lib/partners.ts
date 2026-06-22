@@ -73,3 +73,19 @@ export function resolveSlot(planSlug: string, partnerKey = "comparison"): Resolv
     disclosureRequired: true
   };
 }
+
+/**
+ * Deeplink resolver for the shared `/go/[...go]` route (`createGoRoute`). The first path part is
+ * the plan/target slug; the surface ("home" | "provider" | "speed" | spoke) comes from `?s=`.
+ *
+ * INERT-SAFE / fail-CLOSED: the broadband-switching rail has no signed agreement and no live
+ * deeplink yet, so this ALWAYS returns `null`. createGoRoute then logs the click intent and
+ * 302s back to an on-site page — never a 404, never a bare/broken affiliate link. The `/go`
+ * surface ships now so we capture switching-intent signal before any deal is wired; the slot
+ * only becomes live once a human flips `active` AND pastes a real https deeplink template.
+ */
+export function resolveDeeplink(parts: string[], _surface: string): string | null {
+  const planSlug = parts[0] ?? "home";
+  const slot = resolveSlot(planSlug);
+  return slot.kind === "affiliate" ? slot.url : null;
+}

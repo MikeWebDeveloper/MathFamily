@@ -7,6 +7,7 @@ import {
   AnswerLead,
   AnswerPassage,
   Callout,
+  EmailCaptureSlot,
   FaqAccordion,
   FeeGrid,
   FreshnessBadge,
@@ -97,7 +98,10 @@ export default async function ProviderDetailPage({ params }: { params: Promise<{
       <div id="mf-answer-anchor">
         <AnswerLead answer={answer}>{facts}</AnswerLead>
       </div>
-      <MiniAnswerBar summary={`${name} · real cost from ${formatPence(cheapest.contract.effectiveMonthlyPence)}/mo`} verified />
+      {/* Only claim "verified" when every row is actually verified:true. While any plan is
+          verified:false the figures are honest estimates, so we DROP the green verified badge to
+          avoid contradicting the "verify before relying" warning above. */}
+      <MiniAnswerBar summary={`${name} · ${anyUnverified ? "estimated real cost" : "real cost"} from ${formatPence(cheapest.contract.effectiveMonthlyPence)}/mo`} verified={!anyUnverified} />
 
       <AnswerPassage question={`How much does ${name} broadband really cost?`}>
         {answer} The advertised price applies only until the first April rise; after that the monthly charge steps up,
@@ -119,12 +123,20 @@ export default async function ProviderDetailPage({ params }: { params: Promise<{
         ])}
       />
 
-      <AffiliateBlock planSlug={cheapest.plan.slug} />
+      <AffiliateBlock planSlug={cheapest.plan.slug} surface="provider" />
 
       <section className="space-y-2">
         <h2 className="text-xl font-semibold text-ink">Frequently asked questions</h2>
         <FaqAccordion items={faqs} />
       </section>
+
+      <EmailCaptureSlot
+        brandName="BroadbandMath"
+        hook={`Get notified when ${name} broadband prices or terms change`}
+        description="updates when UK broadband prices and switching rules change"
+        source="provider"
+        privacyHref="/privacy"
+      />
 
       <p className="text-sm">
         <Link href="/provider" className="text-brand-accent underline underline-offset-4">← All providers</Link>

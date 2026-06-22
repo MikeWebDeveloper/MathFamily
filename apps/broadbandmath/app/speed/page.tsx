@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, itemListLd, JsonLd } from "@mathfamily/geo";
-import { FeeGrid, FreshnessBadge, PageHeading } from "@mathfamily/ui";
+import { EmailCaptureSlot, FeeGrid, FreshnessBadge, PageHeading } from "@mathfamily/ui";
 import { loadBroadbandDataset, plansBySpeedTier } from "@/lib/broadband-data";
 import { planCostModel } from "@/lib/broadband-content";
 
@@ -53,6 +53,14 @@ export default function SpeedIndexPage() {
         columns={["Speed tier", "Deals tracked", "Cheapest effective"]}
         numericColumns={[1, 2]}
         rows={rows}
+      />
+
+      <EmailCaptureSlot
+        brandName="BroadbandMath"
+        hook="Get notified when broadband prices and switching rules change"
+        description="updates when UK broadband prices and switching rules change"
+        source="speed"
+        privacyHref="/privacy"
       />
     </article>
   );

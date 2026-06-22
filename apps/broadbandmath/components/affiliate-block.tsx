@@ -2,14 +2,20 @@ import { resolveSlot } from "../lib/partners";
 
 interface AffiliateBlockProps {
   planSlug: string;
+  /** Surface tag for /go attribution: "home" | "provider" | "speed" | spoke slug. */
+  surface?: string;
 }
 
 /**
  * INERT affiliate slot. In this scaffold `resolveSlot` always returns kind="inert", so this
  * renders a "Coming soon" placeholder labelled "Ad" / sponsored — never a live merchant link.
  * Green rail only (broadband switching); no FCA-regulated products.
+ *
+ * When a slot goes live the switching CTA routes through the first-party /go redirect
+ * (/go/<planSlug>?s=<surface>) so every click is logged for attribution before bouncing to the
+ * affiliate deeplink — the outbound URL is never exposed raw in the markup.
  */
-export function AffiliateBlock({ planSlug }: AffiliateBlockProps) {
+export function AffiliateBlock({ planSlug, surface = "home" }: AffiliateBlockProps) {
   const slot = resolveSlot(planSlug);
 
   if (slot.kind === "inert" || !slot.url) {
@@ -41,7 +47,7 @@ export function AffiliateBlock({ planSlug }: AffiliateBlockProps) {
       </span>
       <p className="mt-1 text-sm font-semibold text-ink">{slot.partnerName}</p>
       <a
-        href={slot.url}
+        href={`/go/${encodeURIComponent(planSlug)}?s=${encodeURIComponent(surface)}`}
         rel="sponsored noopener noreferrer"
         target="_blank"
         className="mt-3 inline-flex min-h-11 items-center rounded-full bg-brand-accent px-5 py-2.5 text-sm font-semibold text-white hover:opacity-90"

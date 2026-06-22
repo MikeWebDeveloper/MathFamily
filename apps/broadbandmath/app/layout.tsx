@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import { AmbientBackdrop, ScrollProgress, ScrollReveal, SiteAnalytics, SiteFooter, SiteHeader } from "@mathfamily/ui";
-import { JsonLd } from "@mathfamily/geo";
+import { JsonLd, organizationLd } from "@mathfamily/geo";
 import "./globals.css";
 
 const plexSans = IBM_Plex_Sans({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-plex-sans" });
@@ -25,22 +25,6 @@ const NAV = [
   { label: "Privacy", href: "/privacy" }
 ];
 
-// Organization JSON-LD with parentOrganization "The Math Family". Built inline (not via the
-// shared organizationLd builder) so the read-only @mathfamily/geo package is untouched while
-// still emitting the required parentOrganization relationship.
-function organizationWithParentLd(siteUrl: string) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "Organization" as const,
-    "@id": `${siteUrl}/#organization`,
-    name: "BroadbandMath",
-    url: siteUrl,
-    logo: { "@type": "ImageObject" as const, url: `${siteUrl}/opengraph-image` },
-    parentOrganization: { "@type": "Organization" as const, name: "The Math Family" },
-    founder: { "@type": "Person" as const, "@id": `${siteUrl}/#person`, name: "Michal Latal", jobTitle: "Founder & editor" }
-  };
-}
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en-GB" suppressHydrationWarning className={`${plexSans.variable} ${plexMono.variable}`}>
@@ -48,7 +32,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light'){document.documentElement.dataset.theme=t;}else if(window.matchMedia('(prefers-color-scheme: dark)').matches){document.documentElement.dataset.theme='dark';}}catch(e){}})();` }} />
       </head>
       <body className="relative bg-surface font-sans text-ink antialiased">
-        <JsonLd data={organizationWithParentLd(SITE_URL)} />
+        <JsonLd
+          data={organizationLd({
+            siteUrl: SITE_URL,
+            name: "BroadbandMath",
+            logoUrl: `${SITE_URL}/opengraph-image`,
+            founder: { name: "Michal Latal", jobTitle: "Founder & editor" },
+            parentOrganization: { name: "The Math Family", url: "https://themathfamily.com" }
+          })}
+        />
         <noscript>
           <style>{`.mf-reveal{opacity:1;transform:none;transition:none}`}</style>
         </noscript>
