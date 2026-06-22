@@ -9,27 +9,34 @@ interface TakeHomeCalculatorProps {
   /** Optional starting figures (a spoke page seeds its trade profile). */
   initialGrossPounds?: number;
   initialExpensesPounds?: number;
+  /** Optional starting main/PAYE day-job income (defaults to £0 — no day job). */
+  initialPayePounds?: number;
 }
 
 type DeductionMode = "expenses" | "allowance";
 
 const GROSS_MAX = 150_000;
 const EXP_MAX = 60_000;
+const PAYE_MAX = 150_000;
 
 export function TakeHomeCalculator({
   initialGrossPounds = 18_000,
-  initialExpensesPounds = 3_000
+  initialExpensesPounds = 3_000,
+  initialPayePounds = 0
 }: TakeHomeCalculatorProps) {
   const [grossPounds, setGrossPounds] = useState(initialGrossPounds);
   const [expensesPounds, setExpensesPounds] = useState(initialExpensesPounds);
+  const [payePounds, setPayePounds] = useState(initialPayePounds);
   const [mode, setMode] = useState<DeductionMode>("expenses");
 
   const grossId = useId();
   const expId = useId();
+  const payeId = useId();
 
   const input: TaxInput = {
     grossPence: Math.round(grossPounds * 100),
     expensesPence: Math.round(expensesPounds * 100),
+    payeIncomePence: Math.round(payePounds * 100),
     useTradingAllowance: mode === "allowance"
   };
   const b = calculateTax(input);
@@ -37,6 +44,28 @@ export function TakeHomeCalculator({
 
   return (
     <div className="space-y-5 rounded-card border border-ink/10 bg-card p-4 sm:p-6">
+      {/* Main / PAYE day-job income — drives the marginal rate the side profit is taxed at. */}
+      <label htmlFor={payeId} className="flex flex-col gap-1.5">
+        <span className="text-xs font-medium text-ink-muted">
+          Main job (PAYE) income before tax: <strong className="text-ink">£{payePounds.toLocaleString("en-GB")}</strong>
+        </span>
+        <input
+          id={payeId}
+          type="range"
+          min={0}
+          max={PAYE_MAX}
+          step={250}
+          value={payePounds}
+          onChange={(e) => setPayePounds(Number(e.target.value))}
+          className="h-2 w-full cursor-pointer accent-brand-accent"
+          aria-valuetext={`£${payePounds} main job income`}
+        />
+        <span className="text-[11px] text-ink-muted">
+          Your salary or other PAYE pay. Your side hustle is taxed <strong className="text-ink">on top</strong> of this,
+          so it uses your personal allowance and tax bands first. Leave at £0 if your side hustle is your only income.
+        </span>
+      </label>
+
       <div className="grid gap-5 sm:grid-cols-2">
         {/* Gross income */}
         <label htmlFor={grossId} className="flex flex-col gap-1.5">
@@ -101,17 +130,17 @@ export function TakeHomeCalculator({
 
       {/* Headline result */}
       <div className="grid gap-3 sm:grid-cols-3">
-        <ResultCard label="Estimated tax & NIC" value={formatPence(b.totalTaxPence)} tone="muted" note={`≈ ${effPct}% of profit`} />
+        <ResultCard label="Tax & NIC on the side hustle" value={formatPence(b.totalTaxPence)} tone="muted" note={`≈ ${effPct}% of profit${b.payeIncomePence > 0 ? ", on top of your job" : ""}`} />
         <ResultCard label="Take-home from profit" value={formatPence(b.takeHomePence)} tone="accent" note={`on £${(b.profitPence / 100).toLocaleString("en-GB")} profit`} />
         <ResultCard label="Taxable profit" value={formatPence(b.profitPence)} tone="muted" note={mode === "allowance" ? "after £1,000 allowance" : "after expenses"} />
       </div>
 
       {/* Breakdown */}
       <dl className="grid gap-x-6 gap-y-2 rounded-card bg-surface p-4 text-sm sm:grid-cols-2">
-        <Row label="Income tax (20/40/45%)" value={formatPence(b.incomeTaxPence)} />
+        <Row label={b.payeIncomePence > 0 ? "Income tax on side profit (marginal)" : "Income tax (20/40/45%)"} value={formatPence(b.incomeTaxPence)} />
         <Row label="Class 4 NIC (6% / 2%)" value={formatPence(b.class4Pence)} />
         <Row label="Class 2 NIC" value={b.class2Pence === 0 ? "£0 (treated as paid)" : formatPence(b.class2Pence)} />
-        <Row label="Personal Allowance used" value={formatPence(b.personalAllowancePence)} />
+        <Row label="Personal Allowance" value={b.payeIncomePence > 0 ? "Used by your main job first" : formatPence(b.personalAllowancePence)} />
       </dl>
 
       <p className="text-xs leading-relaxed text-ink-muted">

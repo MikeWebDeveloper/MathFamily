@@ -29,20 +29,35 @@ export interface TaxInput {
   expensesPence: number;
   /** Use the £1,000 trading allowance instead of deducting actual expenses. */
   useTradingAllowance: boolean;
+  /**
+   * Main / PAYE employment income for the year, in pence (gross salary from a day job, etc.).
+   * The self-employed profit is stacked MARGINALLY ON TOP of this: the personal allowance and the
+   * basic-rate band are consumed by PAYE income first, so the side profit is taxed at the user's
+   * TRUE marginal rate. Defaults to 0 (no day job) for back-compat. NIC here is income-tax only —
+   * the side hustle's own Class 4 NIC is computed separately on the self-employed profit.
+   */
+  payeIncomePence?: number;
 }
 
 export interface TaxBreakdown {
   grossPence: number;
+  /** Main / PAYE employment income the side profit was stacked on top of. */
+  payeIncomePence: number;
   /** Deduction actually applied (max of expenses vs trading allowance, or the chosen one). */
   deductionPence: number;
-  /** Taxable profit after the chosen deduction (never below 0). */
+  /** Taxable self-employed profit after the chosen deduction (never below 0). */
   profitPence: number;
-  /** Personal Allowance after the £100k taper. */
+  /** Personal Allowance after the £100k taper, computed on TOTAL income (PAYE + profit). */
   personalAllowancePence: number;
+  /**
+   * Income tax attributable to the SIDE PROFIT — the marginal slice on top of PAYE income.
+   * (= income tax on PAYE+profit − income tax on PAYE alone.) NOT the user's whole income-tax bill.
+   */
   incomeTaxPence: number;
+  /** Class 4 NIC on the self-employed profit (a profit-based charge, independent of PAYE income). */
   class4Pence: number;
   class2Pence: number;
-  /** incomeTax + class4 + class2. */
+  /** incomeTax (on the side profit) + class4 + class2 — the extra tax the side hustle creates. */
   totalTaxPence: number;
   /** profit − totalTax (what's left from the business profit after tax). */
   takeHomePence: number;
@@ -92,6 +107,30 @@ export function incomeTax(profitPence: number, personalAllowancePence: number): 
   return roundPence(tax);
 }
 
+/**
+ * Income tax on the SIDE PROFIT stacked marginally on top of PAYE income.
+ *
+ * The personal allowance and the basic-rate band are consumed by total income, with PAYE income
+ * taking them first. So we compute income tax on (PAYE + profit) and subtract income tax on PAYE
+ * alone — the difference is the extra tax the side profit actually creates, at the user's true
+ * marginal rate(s). The PA used is the one tapered on TOTAL income (£100k+ taper).
+ *
+ * With payeIncomePence = 0 this collapses to the isolated case (the profit gets the full PA itself).
+ */
+export function marginalIncomeTax(profitPence: number, payeIncomePence: number): number {
+  const paye = clampNonNeg(payeIncomePence);
+  const profit = clampNonNeg(profitPence);
+  const total = paye + profit;
+
+  const paOnTotal = taperedPersonalAllowance(total);
+  const paOnPaye = taperedPersonalAllowance(paye);
+
+  const taxOnTotal = incomeTax(total, paOnTotal);
+  const taxOnPaye = incomeTax(paye, paOnPaye);
+
+  return clampNonNeg(roundPence(taxOnTotal - taxOnPaye));
+}
+
 /** Class 4 NIC: 6% between LPT and UPL, 2% above the UPL. */
 export function class4Nic(profitPence: number): number {
   const mainSlice = clampNonNeg(
@@ -117,6 +156,7 @@ export function class2Nic(profitPence: number): number {
 export function calculateTax(input: TaxInput): TaxBreakdown {
   const grossPence = clampNonNeg(Math.round(input.grossPence));
   const expensesPence = clampNonNeg(Math.round(input.expensesPence));
+  const payeIncomePence = clampNonNeg(Math.round(input.payeIncomePence ?? 0));
 
   // Full trading-allowance relief: gross <= £1,000 means nothing to declare.
   const fullRelief = input.useTradingAllowance && grossPence <= TRADING_ALLOWANCE_PENCE;
@@ -124,8 +164,14 @@ export function calculateTax(input: TaxInput): TaxBreakdown {
   const deductionPence = input.useTradingAllowance ? TRADING_ALLOWANCE_PENCE : expensesPence;
   const profitPence = fullRelief ? 0 : clampNonNeg(grossPence - deductionPence);
 
-  const personalAllowancePence = taperedPersonalAllowance(profitPence);
-  const incomeTaxPence = incomeTax(profitPence, personalAllowancePence);
+  // The personal allowance reported is the one tapered on TOTAL income (PAYE + side profit) — the
+  // £100k+ taper depends on a person's whole income, not the side hustle in isolation.
+  const personalAllowancePence = taperedPersonalAllowance(payeIncomePence + profitPence);
+
+  // Income tax on the side profit is the MARGINAL slice on top of PAYE income (PA + basic band are
+  // consumed by the day job first), so side income is taxed at the user's true marginal rate.
+  const incomeTaxPence = marginalIncomeTax(profitPence, payeIncomePence);
+  // Class 4 NIC is a profit-based charge on the self-employed profit, independent of PAYE income.
   const class4Pence = class4Nic(profitPence);
   const class2Pence = class2Nic(profitPence);
   const totalTaxPence = incomeTaxPence + class4Pence + class2Pence;
@@ -133,6 +179,7 @@ export function calculateTax(input: TaxInput): TaxBreakdown {
 
   return {
     grossPence,
+    payeIncomePence,
     deductionPence: fullRelief ? grossPence : deductionPence,
     profitPence,
     personalAllowancePence,
