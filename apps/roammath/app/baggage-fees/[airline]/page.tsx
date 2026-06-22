@@ -31,7 +31,7 @@ export default async function AirlineBaggagePage({ params }: { params: Promise<{
   const record = getData(slug);
   if (!record) notFound();
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3001";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3001";
 
   const cabin = record.fees.find((f) => f.item.toLowerCase().includes("cabin"));
   const checked = record.fees.find(

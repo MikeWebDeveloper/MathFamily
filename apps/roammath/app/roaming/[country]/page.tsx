@@ -54,7 +54,7 @@ export default async function CountryHubPage({ params }: { params: Promise<{ cou
       ? `${destination.countryName} · 7 days from ${formatPence(Math.min(...miniPrices))}`
       : `${destination.countryName} · see network price guides`;
   const faqs = buildRoamingFaqs(destination, esim, 7);
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3001";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3001";
 
   const networkFacts = destination.perNetwork.map((n) => {
     const label = NETWORK_LABELS[n.network] ?? n.network;

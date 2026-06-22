@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function BaggageFeesIndexPage() {
   const { records, lastUpdated } = loadBaggageDataset();
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3001";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3001";
 
   return (
     <article className="space-y-8">

@@ -16,7 +16,7 @@ export default function RoamingIndexPage() {
   const { destinations, networkSources } = loadRoamingDataset();
   const esimDataset = loadEsimDataset();
   const esimMap = new Map(esimDataset.records.map((r) => [r.countrySlug, r]));
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3001";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3001";
 
   const latestVerified = networkSources.map((s) => s.verifiedAt).sort().at(-1) ?? "";
 

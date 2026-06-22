@@ -68,7 +68,7 @@ export default function HomePage() {
     spainStatNote = noteParts.join(" · ");
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3001";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3001";
 
   return (
     <div className="space-y-10">

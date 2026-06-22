@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 };
 
 export default function RegionIndexPage() {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3004";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3004";
   const ranked = sortRegionsByBill(REGIONS);
   const columns = ["Region", "Typical bill/yr", "Elec p/kWh", "Gas p/kWh"];
 

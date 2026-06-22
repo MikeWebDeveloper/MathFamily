@@ -7,7 +7,7 @@ import "./globals.css";
 const plexSans = IBM_Plex_Sans({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-plex-sans" });
 const plexMono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500", "600"], variable: "--font-plex-mono" });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3004";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3004";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

@@ -16,7 +16,7 @@ import { homeFaqs, sortRegionsByBill } from "@/lib/energy-content";
 import { formatPounds } from "@/lib/energy-calc";
 
 export default function HomePage() {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3004";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3004";
   const faqs = homeFaqs();
   const ranked = sortRegionsByBill(REGIONS);
 

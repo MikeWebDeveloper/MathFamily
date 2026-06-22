@@ -9,7 +9,14 @@ node_modules
 *.png
 graphify-out
 tools/reels
-apps/roammath
 .agents
 .codex
 .superpowers
+apps/broadbandmath
+apps/buildmath
+apps/dentalmath
+apps/loungemath
+apps/movemath
+apps/petmath
+apps/rentmath
+apps/sidemath

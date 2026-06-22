@@ -49,7 +49,7 @@ export default async function RegionPage({ params }: { params: Promise<{ region:
   const region = getRegion(slug);
   if (!region) notFound();
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3004";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3004";
   const m = regionPageModel(region);
   const faqs = buildRegionFaqs(region);
 

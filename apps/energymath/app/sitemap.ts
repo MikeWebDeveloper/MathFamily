@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { REGIONS, DATASET_LAST_UPDATED } from "@/lib/energy-data";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3004";
+  const base = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3004";
   const lastModified = new Date(`${DATASET_LAST_UPDATED}T00:00:00Z`);
 
   return [

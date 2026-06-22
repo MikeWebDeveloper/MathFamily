@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { loadRoamingDataset, loadEsimDataset, loadBaggageDataset, NETWORKS } from "@mathfamily/data";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3001";
+  const base = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3001";
 
   const roamingDataset = loadRoamingDataset();
   const baggageDataset = loadBaggageDataset();
