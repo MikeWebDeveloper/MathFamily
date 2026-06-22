@@ -34,9 +34,12 @@ export function DropOffParkingBridge({ slug, airportName }: { slug: string; airp
             <strong className="mf-num text-ink">{formatPence(bridge.dropOffFeePence)}</strong> drop-off.
             Pre-booking is usually cheaper than the drive-up gate price.
           </p>
-          <p className="mt-2 flex flex-col gap-1">
-            <Link href={comparisonHref} className="font-semibold text-brand-accent underline underline-offset-4">
-              Parking for the trip? See gate vs pre-book for {airportName} →
+          <p className="mt-3 flex flex-col gap-2">
+            <Link
+              href={comparisonHref}
+              className="inline-flex min-h-[44px] w-full items-center justify-center gap-1 rounded-card bg-brand-accent px-4 py-2 text-sm font-semibold text-white sm:w-auto"
+            >
+              See gate vs pre-book for {airportName} →
             </Link>
             <Link href={parkingHref} className="font-medium text-brand-accent underline underline-offset-4">
               Compare all {airportName} parking options →
@@ -50,8 +53,11 @@ export function DropOffParkingBridge({ slug, airportName }: { slug: string; airp
             it&apos;s worth checking what parking costs — pre-booking is usually cheaper than paying
             at the drive-up gate.
           </p>
-          <p className="mt-2">
-            <Link href={parkingHref} className="font-semibold text-brand-accent underline underline-offset-4">
+          <p className="mt-3">
+            <Link
+              href={parkingHref}
+              className="inline-flex min-h-[44px] w-full items-center justify-center gap-1 rounded-card bg-brand-accent px-4 py-2 text-sm font-semibold text-white sm:w-auto"
+            >
               See {airportName} parking — gate vs pre-book →
             </Link>
           </p>

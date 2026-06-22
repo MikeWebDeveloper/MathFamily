@@ -58,6 +58,11 @@ export function HubBookingCta({ league }: { league: LeagueEntry[] }) {
         Dropping off costs more the longer you stop. If you&apos;re actually parking for the trip, pre-booking
         beats the drive-up gate price — free cancellation, no code. Pick your airport:
       </p>
+      <ul className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-ink">
+        <li>✓ Free cancellation</li>
+        <li>✓ No code needed</li>
+        <li>✓ Best Price Guaranteed</li>
+      </ul>
       <ul className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm sm:grid-cols-3">
         {links.map((l) => (
           <li key={l.slug}>
