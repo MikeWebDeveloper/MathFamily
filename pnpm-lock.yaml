@@ -12,7 +12,7 @@ importers:
         specifier: ^2.9.0
         version: 2.9.16
 
-  apps/buildmath:
+  apps/movemath:
     dependencies:
       '@mathfamily/data':
         specifier: workspace:*

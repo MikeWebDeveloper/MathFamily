@@ -1,0 +1,10 @@
+@import "tailwindcss";
+@import "@mathfamily/ui/tokens.css";
+@source "../../../packages/ui/src";
+
+@theme {
+  --font-sans: var(--font-plex-sans), "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, monospace;
+  --color-brand: #1e3a5f;
+  --color-brand-accent: #2563eb;
+}
