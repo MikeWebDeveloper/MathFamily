@@ -94,11 +94,14 @@ export default function HomePage() {
         </Link>
       </p>
 
-      <AffiliateBlock planSlug="home" />
+      <AffiliateBlock planSlug="home" surface="home" />
 
       <EmailCaptureSlot
-        formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
+        brandName="BroadbandMath"
         hook="Get notified when broadband prices and rules change"
+        description="updates when UK broadband prices and switching rules change"
+        source="home"
+        privacyHref="/privacy"
       />
 
       <FamilyLinks />

@@ -7,6 +7,7 @@ import {
   AnswerLead,
   AnswerPassage,
   Callout,
+  EmailCaptureSlot,
   FaqAccordion,
   FeeGrid,
   FreshnessBadge,
@@ -101,7 +102,9 @@ export default async function SpeedDetailPage({ params }: { params: Promise<{ ti
         <AnswerLead answer={answer}>{facts}</AnswerLead>
       </div>
       {cheapest && (
-        <MiniAnswerBar summary={`${tier.name} · real cost from ${formatPence(cheapest.contract.effectiveMonthlyPence)}/mo`} verified />
+        // Only claim "verified" when every row is actually verified:true; while any plan is
+        // verified:false these are honest estimates, so the green badge is dropped to match the warning.
+        <MiniAnswerBar summary={`${tier.name} · ${anyUnverified ? "estimated real cost" : "real cost"} from ${formatPence(cheapest.contract.effectiveMonthlyPence)}/mo`} verified={!anyUnverified} />
       )}
 
       <AnswerPassage question={`How much does ${tier.name.toLowerCase()} broadband really cost?`}>
@@ -127,7 +130,7 @@ export default async function SpeedDetailPage({ params }: { params: Promise<{ ti
         <p className="text-ink-muted">No deals tracked in this tier yet.</p>
       )}
 
-      <AffiliateBlock planSlug={cheapest?.plan.slug ?? slug} />
+      <AffiliateBlock planSlug={cheapest?.plan.slug ?? slug} surface="speed" />
 
       {faqs.length > 0 && (
         <section className="space-y-2">
@@ -135,6 +138,14 @@ export default async function SpeedDetailPage({ params }: { params: Promise<{ ti
           <FaqAccordion items={faqs} />
         </section>
       )}
+
+      <EmailCaptureSlot
+        brandName="BroadbandMath"
+        hook={`Get notified when ${tier.name.toLowerCase()} broadband prices change`}
+        description="updates when UK broadband prices and switching rules change"
+        source="speed"
+        privacyHref="/privacy"
+      />
 
       <p className="text-sm">
         <Link href="/speed" className="text-brand-accent underline underline-offset-4">← All speed tiers</Link>

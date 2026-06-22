@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, itemListLd, JsonLd } from "@mathfamily/geo";
-import { FeeGrid, FreshnessBadge, PageHeading } from "@mathfamily/ui";
+import { EmailCaptureSlot, FeeGrid, FreshnessBadge, PageHeading } from "@mathfamily/ui";
 import { loadBroadbandDataset, listProviders, plansByProvider } from "@/lib/broadband-data";
 import { planCostModel } from "@/lib/broadband-content";
 
@@ -61,6 +61,14 @@ export default function ProviderIndexPage() {
       <p className="text-sm text-ink-muted">
         Total deals tracked: {plans.length}. Every figure carries a source URL and verified date on the provider page.
       </p>
+
+      <EmailCaptureSlot
+        brandName="BroadbandMath"
+        hook="Get notified when broadband prices and switching rules change"
+        description="updates when UK broadband prices and switching rules change"
+        source="provider"
+        privacyHref="/privacy"
+      />
     </article>
   );
 }
