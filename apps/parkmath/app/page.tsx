@@ -181,8 +181,8 @@ export default function HomePage() {
       {/* ── 8. EMAIL CAPTURE + FAMILY LINKS ── */}
       <div className="mf-reveal space-y-8" style={{ "--mf-delay": "100ms" } as CSSProperties}>
         <EmailCaptureSlot
-          formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
-          hook="Get notified when any UK airport changes its drop-off fees"
+          source="hub"
+          hook="Drop-off fees change every January — get told when a UK airport's changes."
         />
         <FamilyLinks />
       </div>

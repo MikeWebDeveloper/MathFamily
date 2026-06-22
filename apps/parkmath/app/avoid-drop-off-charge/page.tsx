@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { loadAirports, loadDropOffDataset } from "@mathfamily/data";
+import { isPublicTransportAlt, loadAirports, loadDropOffDataset } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, itemListLd, JsonLd } from "@mathfamily/geo";
 import { FreshnessBadge, PageHeading } from "@mathfamily/ui";
@@ -70,7 +70,7 @@ export default function AvoidIndexPage() {
                 >
                   <span>
                     <span className="block font-semibold text-ink">{a?.name ?? r.airportSlug}</span>
-                    <span className="block text-sm text-ink-muted">Free: {r.freeAlternative!.name} ({r.freeAlternative!.minutesFree} min)</span>
+                    <span className="block text-sm text-ink-muted">Free: {r.freeAlternative!.name}{isPublicTransportAlt(r.freeAlternative!) ? " (public transport)" : ` (${r.freeAlternative!.minutesFree} min)`}</span>
                   </span>
                   <span className="mf-num shrink-0 rounded-full bg-positive/10 px-2.5 py-1 text-sm font-semibold text-positive">
                     save {formatPence(r.bands[0]?.totalPence ?? 0)}

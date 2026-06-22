@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { loadAirports, loadDropOffDataset, loadParkingDataset, newsForAirport, type Airport, type DropOffRecord, type ParkingRecord } from "@mathfamily/data";
+import { isPublicTransportAlt, loadAirports, loadDropOffDataset, loadParkingDataset, newsForAirport, type Airport, type DropOffRecord, type ParkingRecord } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd, speakableLd } from "@mathfamily/geo";
 import { AnswerLead, AnswerPassage, Callout, CaveatChip, EmailCaptureSlot, FaqAccordion, FeeGrid, FreshnessBadge, LatestUpdates, MiniAnswerBar, PageHeading, SavesVerdict, SourceCitation, SourcesBlock, StatStrip } from "@mathfamily/ui";
@@ -140,7 +140,7 @@ export default async function ParkingVsDropOffPage({ params }: { params: Promise
 
       {dropOff.freeAlternative ? (
         <Callout variant="free" title={`Want to avoid both? Use the ${dropOff.freeAlternative.name}`}>
-          Free for {dropOff.freeAlternative.minutesFree} minutes. {dropOff.freeAlternative.details}{" "}
+          {isPublicTransportAlt(dropOff.freeAlternative) ? "" : `Free for ${dropOff.freeAlternative.minutesFree} minutes. `}{dropOff.freeAlternative.details}{" "}
           <Link href={`/avoid-drop-off-charge/${airport.slug}`} className="font-medium text-brand-accent underline underline-offset-4">
             See how to avoid the {airport.name} drop-off charge →
           </Link>
@@ -155,7 +155,7 @@ export default async function ParkingVsDropOffPage({ params }: { params: Promise
       </section>
 
       <EmailCaptureSlot
-        formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
+        source="parking-vs-drop-off"
         hook={`Get notified when ${airport.name} changes its parking or drop-off prices`}
       />
 

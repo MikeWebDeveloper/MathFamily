@@ -101,6 +101,43 @@ describe("buildAvoidFaqs", () => {
   });
 });
 
+describe("public-transport free alternative (honest, no fabricated minutes)", () => {
+  const transit: DropOffRecord = {
+    ...record,
+    airportSlug: "london-city",
+    feeSummary: "£8 for up to 5 minutes, then £1 per minute",
+    bands: [{ upToMinutes: 5, totalPence: 800 }],
+    freeAlternative: {
+      name: "Docklands Light Railway (DLR)",
+      kind: "public-transport",
+      minutesFree: null,
+      details: "The DLR reaches the terminal directly."
+    }
+  };
+  it("avoidAnswer never invents a 'free for N minutes' figure", () => {
+    const a = avoidAnswer(transit, "London City");
+    expect(a).toContain("Docklands Light Railway");
+    expect(a).toContain("public transport");
+    expect(a).not.toMatch(/free for null/i);
+    expect(a).not.toMatch(/null minutes/i);
+  });
+  it("lead facts describe it as public transport, not minutes", () => {
+    const facts = avoidLeadFacts(transit);
+    expect(facts.some((f) => f.includes("public transport"))).toBe(true);
+    expect(facts.some((f) => /null/.test(f))).toBe(false);
+  });
+  it("the first step uses the transport details, not 'minutes free'", () => {
+    const steps = buildAvoidSteps(transit, "London City");
+    expect(steps[0]?.text).toContain("reaches the terminal");
+    expect(steps[0]?.text).not.toMatch(/minutes free/i);
+  });
+  it("FAQs answer honestly without a minutes figure", () => {
+    const faqs = buildAvoidFaqs(transit, "London City");
+    expect(faqs[0]?.answer).toContain("public transport");
+    expect(JSON.stringify(faqs)).not.toMatch(/null minutes|free for null/i);
+  });
+});
+
 describe("avoidIndexSummary", () => {
   it("counts airports and headlines the biggest single saving", () => {
     const s = avoidIndexSummary([

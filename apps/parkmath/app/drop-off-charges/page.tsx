@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { loadAirports, loadDropOffDataset } from "@mathfamily/data";
+import { isPublicTransportAlt, loadAirports, loadDropOffDataset } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, datasetLd, itemListLd, JsonLd, tableLd } from "@mathfamily/geo";
 import { AnswerPassage, FreshnessBadge, OpenDataBand, PageHeading, StatStrip } from "@mathfamily/ui";
@@ -53,7 +53,7 @@ export default function MasterTablePage() {
       perMin: perMinPence !== null ? `${formatPence(Math.round(perMinPence))}/min` : r.isFree ? "Free" : "Flat",
       timeLimit: r.isFree ? "—" : isPerEntryTariff(r) ? "Per entry" : `${r.bands[0]?.upToMinutes ?? "—"} min`,
       penalty: r.penaltyPence !== null ? formatPence(r.penaltyPence) : "—",
-      freeAlt: r.freeAlternative ? `${r.freeAlternative.name} (${r.freeAlternative.minutesFree} min)` : "—",
+      freeAlt: r.freeAlternative ? (isPublicTransportAlt(r.freeAlternative) ? `${r.freeAlternative.name} (public transport)` : `${r.freeAlternative.name} (${r.freeAlternative.minutesFree} min)`) : "—",
       sourceUrl: r.sourceUrl,
       verifiedAt: r.verifiedAt
     };
@@ -122,6 +122,19 @@ export default function MasterTablePage() {
         citation={`ParkMath, "UK airport drop-off charges 2026", verified ${latestVerified}, parkmath.co.uk`}
       />
 
+      <aside className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-brand-accent/25 bg-blue-50/60 px-4 py-3 text-sm dark:bg-brand-accent/[0.06] dark:border-brand-accent/20">
+        <p className="text-ink-muted">
+          <span className="font-semibold text-ink">Run a site or blog?</span> Embed this always-current
+          table for free — it updates itself whenever a fee changes.
+        </p>
+        <Link
+          href="/embed"
+          className="inline-flex min-h-[40px] items-center gap-1 rounded-md border border-brand-accent/40 px-3 py-1.5 font-semibold text-brand-accent hover:bg-brand-accent/5"
+        >
+          Get the embed code →
+        </Link>
+      </aside>
+
       <section className="space-y-3">
         <h2 className="text-h2 font-semibold text-ink">Every UK airport, compared</h2>
         <p className="text-sm text-ink-muted">
@@ -177,6 +190,17 @@ export default function MasterTablePage() {
               </li>
             ))}
         </ul>
+      </section>
+
+      <section className="space-y-2">
+        <h2 className="text-lg font-semibold text-ink">Parking for the trip, not just dropping off?</h2>
+        <p className="text-sm text-ink-muted">
+          See the cheapest way in and out of each airport — drop-off, the free alternative, drive-up gate parking, Park &amp;
+          Ride and Meet &amp; Greet, compared neutrally:{" "}
+          <Link href="/airport-parking-options" className="text-brand-accent underline underline-offset-4">
+            UK airport parking options compared →
+          </Link>
+        </p>
       </section>
 
       <section className="space-y-2 rounded-lg border border-ink/10 bg-surface-muted px-4 py-3 text-sm">

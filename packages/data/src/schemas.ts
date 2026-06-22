@@ -32,8 +32,24 @@ export const DropOffRecordSchema = z
     penaltyNotes: z.string().nullable(),
     paymentDeadline: z.string().nullable(),
     blueBadgePolicy: z.string().min(1),
+    // A genuinely free alternative to the forecourt charge, read from the airport's OWN page.
+    //  - kind "car-park" (default when absent): a free car park / free-grace facility with a real
+    //    `minutesFree` (positive int) — the classic "park here free for N minutes" model.
+    //  - kind "public-transport": rail/DLR/tram that reaches the terminal so you never use the
+    //    forecourt at all. There is no "free minutes" concept, so `minutesFree` is null.
+    // minutesFree is therefore required (positive) for car-park alternatives and null for
+    // public-transport ones — enforced by the refine below so we can never ship a transport
+    // alternative with a fabricated minutes figure.
     freeAlternative: z
-      .strictObject({ name: z.string().min(1), minutesFree: z.number().int().positive(), details: z.string().min(1) })
+      .strictObject({
+        name: z.string().min(1),
+        kind: z.enum(["car-park", "public-transport"]).optional(),
+        minutesFree: z.number().int().positive().nullable(),
+        details: z.string().min(1)
+      })
+      .refine((a) => (a.kind === "public-transport" ? a.minutesFree === null : a.minutesFree !== null), {
+        message: "car-park free alternatives need minutesFree; public-transport ones must have minutesFree null"
+      })
       .nullable(),
     priorYearFeePence: z.number().int().nonnegative().nullable(),
     sourceUrl: HttpUrl,
@@ -41,6 +57,22 @@ export const DropOffRecordSchema = z
   })
   .refine((r) => r.isFree || r.bands.length > 0, { message: "non-free airports need at least one tariff band" });
 export type DropOffRecord = z.infer<typeof DropOffRecordSchema>;
+export type FreeAlternative = NonNullable<DropOffRecord["freeAlternative"]>;
+
+/** A free alternative is "public transport" (rail/DLR/tram to the terminal) when its kind says so.
+ *  Absent kind is treated as the legacy default: a car park with free minutes. */
+export function isPublicTransportAlt(alt: FreeAlternative): boolean {
+  return alt.kind === "public-transport";
+}
+
+/** The honest one-clause "what it is" descriptor for a free alternative, used wherever copy used
+ *  to hard-code "free for {minutesFree} minutes". Car parks state the free minutes; public
+ *  transport states it reaches the terminal so the forecourt charge is avoided entirely. Pure. */
+export function freeAltClause(alt: FreeAlternative): string {
+  return isPublicTransportAlt(alt)
+    ? `${alt.name} (reaches the terminal — no forecourt charge)`
+    : `${alt.name} (free for ${alt.minutesFree} min)`;
+}
 
 export const DropOffDatasetSchema = z.strictObject({
   version: z.string().min(1),

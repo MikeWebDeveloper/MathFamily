@@ -36,11 +36,13 @@ describe("buildDropOffFaqs", () => {
     expect(questions.some((q) => q.toLowerCase().includes("penalty") || q.toLowerCase().includes("don't pay"))).toBe(true);
   });
   it("omits data-driven optional questions when data is null, but still answers 'how to avoid' honestly", () => {
-    // Bare charging record: no deadline / alt / penalty. Q1 (how much) + Blue Badge + an honest
-    // "how do I avoid" answer (no free zone exists → say so, don't imply one). 3 FAQs.
+    // Bare charging record: no deadline / alt / penalty. Q1 (how much) + Q2 (conversational
+    // "how much does it cost") + Blue Badge + an honest "how do I avoid" answer (no free zone
+    // exists → say so, don't imply one). 4 FAQs.
     const sparse: DropOffRecord = { ...record, paymentDeadline: null, freeAlternative: null, penaltyPence: null, penaltyNotes: null, maxStayMinutes: null, bands: [{ upToMinutes: 1, totalPence: 700 }] };
     const faqs = buildDropOffFaqs(sparse, "X");
-    expect(faqs).toHaveLength(3);
+    expect(faqs).toHaveLength(4);
+    expect(faqs.some((f) => f.question.startsWith("How much does it cost to drop off at"))).toBe(true);
     const avoid = faqs.find((f) => f.question.includes("avoid"));
     expect(avoid?.answer).toContain("doesn't publish a free drop-off zone");
   });
@@ -56,6 +58,19 @@ describe("buildDropOffFaqs", () => {
     const faqs = buildDropOffFaqs(record, "London Gatwick");
     expect(faqs[0]?.answer).toContain("verified 2026-06-10");
     expect(faqs[0]?.answer).toContain("official London Gatwick");
+  });
+  it("adds a 'pay … online' Q-match only when the deadline mentions online (Southend harvest)", () => {
+    const online: DropOffRecord = { ...record, airportSlug: "southend", paymentDeadline: "Midnight the following day (online, barrierless ANPR)" };
+    const onlineFaq = buildDropOffFaqs(online, "London Southend").find((f) => /pay the Southend drop-off charge online/i.test(f.question));
+    expect(onlineFaq).toBeTruthy();
+    expect(onlineFaq?.answer).toContain("online");
+    // Airports whose deadline is not online-based must NOT get the online Q.
+    const offline: DropOffRecord = { ...record, paymentDeadline: "Pay at the exit barrier on the day" };
+    expect(buildDropOffFaqs(offline, "X").some((f) => /online\?/i.test(f.question))).toBe(false);
+  });
+  it("conversational FAQ leads number-first with the headline fee", () => {
+    const conv = buildDropOffFaqs(record, "London Gatwick").find((f) => f.question.startsWith("How much does it cost to drop off at"));
+    expect(conv?.answer).toMatch(/^It costs £10 to drop off/);
   });
 });
 

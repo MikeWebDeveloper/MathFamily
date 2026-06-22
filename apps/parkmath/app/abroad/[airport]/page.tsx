@@ -61,7 +61,7 @@ export default async function AbroadAirportPage({ params }: { params: Promise<{ 
       </p>
 
       <EmailCaptureSlot
-        formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
+        source="abroad"
         hook={`Get notified when ${m.airport.name} parking or drop-off prices change`}
       />
 

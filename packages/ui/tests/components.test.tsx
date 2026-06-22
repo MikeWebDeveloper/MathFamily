@@ -34,14 +34,16 @@ describe("FreshnessBadge", () => {
 });
 
 describe("EmailCaptureSlot", () => {
-  it("renders nothing when no formAction is configured (slot pattern)", () => {
+  it("ALWAYS renders the form (fail-safe: never silently drop a signup)", () => {
     const { container } = render(<EmailCaptureSlot hook="Get notified when fees change" />);
-    expect(container.innerHTML).toBe("");
-  });
-  it("renders a form when configured", () => {
-    render(<EmailCaptureSlot formAction="https://assets.mailerlite.com/forms/x" hook="Get notified when fees change" />);
-    expect(screen.getByRole("textbox")).toBeDefined();
+    expect(container.querySelector('form[action="/api/subscribe"]')).not.toBeNull();
     expect(screen.getByLabelText("Email address")).toBeDefined();
+  });
+  it("funnel mode (no formAction) renders the required GDPR consent checkbox", () => {
+    const { container } = render(<EmailCaptureSlot hook="Get notified when fees change" />);
+    const consent = container.querySelector('input[name="consent"]') as HTMLInputElement;
+    expect(consent).not.toBeNull();
+    expect(consent.required).toBe(true);
   });
 });
 

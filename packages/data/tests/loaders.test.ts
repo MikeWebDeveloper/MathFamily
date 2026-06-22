@@ -4,7 +4,7 @@ import { loadAirports, loadDropOffDataset } from "../src/index";
 describe("loaders", () => {
   it("loads and validates all airports", () => {
     const airports = loadAirports();
-    expect(airports.length).toBe(25);
+    expect(airports.length).toBe(26);
   });
   it("loads and validates the drop-off dataset", () => {
     const dataset = loadDropOffDataset();

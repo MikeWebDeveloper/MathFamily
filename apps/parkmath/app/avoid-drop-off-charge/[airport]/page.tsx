@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { loadAirports, loadDropOffDataset, newsForAirport, type Airport, type DropOffRecord } from "@mathfamily/data";
+import { isPublicTransportAlt, loadAirports, loadDropOffDataset, newsForAirport, type Airport, type DropOffRecord } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, howToLd, JsonLd, speakableLd } from "@mathfamily/geo";
 import { AnswerLead, AnswerPassage, Callout, CaveatChip, EmailCaptureSlot, FaqAccordion, FreshnessBadge, LatestUpdates, MiniAnswerBar, PageHeading, SourceCitation, SourcesBlock } from "@mathfamily/ui";
@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: { params: Promise<{ airport: 
   const fee = record.bands[0]?.totalPence ?? 0;
   return {
     title: `How to avoid the ${a.name} drop-off charge 2026`,
-    description: `Skip the ${formatPence(fee)} ${a.name} drop-off fee: use ${record.freeAlternative?.name} (free for ${record.freeAlternative?.minutesFree} min), plus Blue Badge rules — verified ${record.verifiedAt}.`,
+    description: `Skip the ${formatPence(fee)} ${a.name} drop-off fee: use ${record.freeAlternative?.name}${record.freeAlternative && isPublicTransportAlt(record.freeAlternative) ? " (public transport to the terminal)" : ` (free for ${record.freeAlternative?.minutesFree} min)`}, plus Blue Badge rules — verified ${record.verifiedAt}.`,
     alternates: { canonical: `/avoid-drop-off-charge/${airport}` }
   };
 }
@@ -86,7 +86,7 @@ export default async function AvoidDropOffPage({ params }: { params: Promise<{ a
 
       <div className="flex flex-wrap gap-2">
         <CaveatChip>Forecourt charge: {formatPence(fee)}</CaveatChip>
-        <CaveatChip>Free for {alt.minutesFree} min at {alt.name}</CaveatChip>
+        <CaveatChip>{isPublicTransportAlt(alt) ? `Free alternative: ${alt.name}` : `Free for ${alt.minutesFree} min at ${alt.name}`}</CaveatChip>
         {record.penaltyPence !== null ? <CaveatChip>{formatPence(record.penaltyPence)} penalty if unpaid</CaveatChip> : null}
       </div>
 
@@ -94,14 +94,18 @@ export default async function AvoidDropOffPage({ params }: { params: Promise<{ a
       <MiniAnswerBar summary={`${airport.iata} · avoid ${formatPence(fee)} → use ${alt.name}`} verified />
 
       <AnswerPassage question={`How do I avoid the drop-off charge at ${airport.name}?`}>
-        {airport.name} charges {formatPence(fee)} to use the terminal drop-off forecourt, but you can avoid it: park in the{" "}
-        {alt.name}, which gives you {alt.minutesFree} minutes free. {alt.details} That saves the full {formatPence(fee)} per
-        drop-off.{record.penaltyPence !== null ? <> If you do use the forecourt and don&apos;t pay, the penalty is {formatPence(record.penaltyPence)}.</> : null} All
+        {airport.name} charges {formatPence(fee)} to use the terminal drop-off forecourt, but you can avoid it:{" "}
+        {isPublicTransportAlt(alt) ? (
+          <>arrive by the {alt.name} instead of driving up to the forecourt. {alt.details} That saves the full {formatPence(fee)} per drop-off.</>
+        ) : (
+          <>park in the {alt.name}, which gives you {alt.minutesFree} minutes free. {alt.details} That saves the full {formatPence(fee)} per drop-off.</>
+        )}
+        {record.penaltyPence !== null ? <> If you do use the forecourt and don&apos;t pay, the penalty is {formatPence(record.penaltyPence)}.</> : null} All
         figures are official, date-stamped snapshots read from the airport&apos;s own published page and verified {record.verifiedAt}.
       </AnswerPassage>
 
       <Callout variant="free" title={`The free alternative: ${alt.name}`}>
-        Free for {alt.minutesFree} minutes. {alt.details}
+        {isPublicTransportAlt(alt) ? <>{alt.details}</> : <>Free for {alt.minutesFree} minutes. {alt.details}</>}
       </Callout>
 
       <section className="mf-reveal space-y-4">
@@ -140,7 +144,7 @@ export default async function AvoidDropOffPage({ params }: { params: Promise<{ a
       </section>
 
       <EmailCaptureSlot
-        formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
+        source="avoid-drop-off-charge"
         hook={`Get notified when ${airport.name} changes its drop-off fee`}
       />
 

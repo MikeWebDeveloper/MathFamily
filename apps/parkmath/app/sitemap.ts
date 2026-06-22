@@ -23,6 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: base, changeFrequency: "weekly" as const, priority: 1, lastModified: latestModified },
     { url: `${base}/about`, changeFrequency: "monthly" as const, priority: 0.6 },
     { url: `${base}/methodology`, changeFrequency: "monthly" as const, priority: 0.6, lastModified: latestModified },
+    { url: `${base}/embed`, changeFrequency: "monthly" as const, priority: 0.5, lastModified: latestModified },
     { url: `${base}/parking-price-index-2026`, changeFrequency: "monthly" as const, priority: 0.8, lastModified: latestModified },
     { url: `${base}/drop-off-charges`, changeFrequency: "weekly" as const, priority: 0.9, lastModified: latestModified },
     ...dropOffRecords.map((r) => ({
@@ -62,6 +63,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
         changeFrequency: "monthly" as const,
         priority: 0.7
       })),
+    { url: `${base}/airport-parking-options`, changeFrequency: "weekly" as const, priority: 0.85, lastModified: latestModified },
+    ...dropOffRecords.map((r) => ({
+      url: `${base}/airport-parking-options/${r.airportSlug}`,
+      lastModified: new Date(`${r.verifiedAt}T00:00:00Z`),
+      changeFrequency: "monthly" as const,
+      priority: 0.75
+    })),
     { url: `${base}/airport-parking`, changeFrequency: "weekly" as const, priority: 0.9, lastModified: latestParkingModified },
     ...parkingRecords.map((r) => ({
       url: `${base}/airport-parking/${r.airportSlug}`,

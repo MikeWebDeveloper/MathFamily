@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { loadAirports, loadDropOffDataset } from "@mathfamily/data";
+import { isPublicTransportAlt, loadAirports, loadDropOffDataset } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { qualifiesForAvoidPage } from "@/lib/avoid-content";
 
@@ -17,8 +17,8 @@ export default async function OgImage({ params }: { params: Promise<{ airport: s
   const record = loadDropOffDataset().records.find((r) => r.airportSlug === slug);
   const airport = loadAirports().find((a) => a.slug === slug);
   const fee = record ? formatPence(record.bands[0]?.totalPence ?? 0) : "";
-  const altName = record?.freeAlternative?.name ?? "";
-  const minutesFree = record?.freeAlternative?.minutesFree ?? 0;
+  const alt = record?.freeAlternative ?? null;
+  const altLine = alt ? (isPublicTransportAlt(alt) ? `Use the ${alt.name} to the terminal` : `Use ${alt.name} — free for ${alt.minutesFree} min`) : "";
 
   return new ImageResponse(
     (
@@ -33,7 +33,7 @@ export default async function OgImage({ params }: { params: Promise<{ airport: s
         <div style={{ display: "flex", alignItems: "baseline", gap: 20, marginTop: 12 }}>
           <div style={{ display: "flex", fontSize: 96, fontWeight: 700, color: "#7fd1a8" }}>Save {fee}</div>
         </div>
-        <div style={{ display: "flex", fontSize: 30, marginTop: 18, opacity: 0.9 }}>Use {altName} — free for {minutesFree} min</div>
+        <div style={{ display: "flex", fontSize: 30, marginTop: 18, opacity: 0.9 }}>{altLine}</div>
         <div style={{ display: "flex", fontSize: 24, marginTop: 40, color: "#7fd1a8" }}>Verified {record?.verifiedAt} · ParkMath</div>
       </div>
     ),

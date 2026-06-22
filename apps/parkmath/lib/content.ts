@@ -1,5 +1,5 @@
 import { formatPence, loungeBreakEven } from "@mathfamily/engine";
-import type { DropOffRecord, LoungeRecord, PriorityPassTier } from "@mathfamily/data";
+import { isPublicTransportAlt, type DropOffRecord, type LoungeRecord, type PriorityPassTier } from "@mathfamily/data";
 
 /**
  * The token people actually search. The dataset stores official names ("London Stansted",
@@ -35,10 +35,18 @@ export function dropOffTimeLimitNote(record: DropOffRecord): string | null {
 
 export function buildDropOffFaqs(record: DropOffRecord, airportName: string): { question: string; answer: string }[] {
   const search = searchName(airportName);
+  // Number-first headline used by the conversational/AEO Q (matches "how much does it cost to drop
+  // off at <airport>" pos 9, the exact phrasing answer engines extract — intel §1).
+  const headline = record.isFree
+    ? `Dropping off at ${search} Airport is free at the forecourt`
+    : `It costs ${formatPence(record.bands[0]?.totalPence ?? 0)} to drop off at ${search} Airport — ${record.feeSummary.charAt(0).toLowerCase()}${record.feeSummary.slice(1)}`;
   const faqs: { question: string; answer: string }[] = [
     // Q1 matches the dominant query phrasing ("how much is it to drop off at <airport>") and uses the
     // searched token, not the "London …" prefix.
-    { question: `How much is the drop-off charge at ${search} Airport?`, answer: `${record.feeSummary} (verified ${record.verifiedAt}, per the official ${airportName} page).` }
+    { question: `How much is the drop-off charge at ${search} Airport?`, answer: `${record.feeSummary} (verified ${record.verifiedAt}, per the official ${airportName} page).` },
+    // Q2 matches the conversational phrasing verbatim ("how much does it cost to drop off at <airport>")
+    // with a number-first answer for answer-engine extraction.
+    { question: `How much does it cost to drop off at ${search}?`, answer: `${headline} (verified ${record.verifiedAt}, per the official ${airportName} page).` }
   ];
 
   const timeLimit = dropOffTimeLimitNote(record);
@@ -54,6 +62,14 @@ export function buildDropOffFaqs(record: DropOffRecord, airportName: string): { 
       question: `Can I pay the ${search} drop-off charge after I leave?`,
       answer: `Yes — pay by ${record.paymentDeadline}. ${record.penaltyNotes ?? ""}`.trim()
     });
+    // When the airport's deadline says payment is online, add the exact "pay … online" Q-match
+    // (GSC: "southend airport drop off payment online" pos 11.6, real payment-intent demand).
+    if (/online/i.test(record.paymentDeadline)) {
+      faqs.push({
+        question: `Can I pay the ${search} drop-off charge online?`,
+        answer: `Yes — ${search} Airport's drop-off charge is paid online (barrierless ANPR), not at a barrier. You can pay before your visit, on the day, or after you leave, by ${record.paymentDeadline.replace(/\s*\(online[^)]*\)/i, "")}. ${record.penaltyNotes ?? ""}`.trim()
+      });
+    }
   }
 
   // Penalty / PCN question — distinct per airport (Heathrow £80→£40 PCN, Bristol/Southend red-route
@@ -72,9 +88,12 @@ export function buildDropOffFaqs(record: DropOffRecord, airportName: string): { 
   });
 
   if (record.freeAlternative) {
+    const alt = record.freeAlternative;
     faqs.push({
       question: `How do I avoid the ${search} drop-off fee?`,
-      answer: `Use the ${record.freeAlternative.name} — free for ${record.freeAlternative.minutesFree} minutes. ${record.freeAlternative.details}`
+      answer: isPublicTransportAlt(alt)
+        ? `Arrive by the ${alt.name} instead of using the forecourt. ${alt.details}`
+        : `Use the ${alt.name} — free for ${alt.minutesFree} minutes. ${alt.details}`
     });
   } else if (!record.isFree) {
     // No free forecourt alternative is published — answer honestly rather than imply one exists.

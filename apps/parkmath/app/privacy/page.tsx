@@ -9,8 +9,9 @@ export default function PrivacyPage() {
       <p className="text-ink-muted">
         ParkMath does not set advertising cookies and does not require an account. We use privacy-friendly,
         aggregate analytics to understand which pages help people. If you join our email list we store your email
-        address with our email provider solely to send the updates you asked for; unsubscribe links are in every
-        email.
+        address — on the basis of the consent you give at sign-up — with our email provider (MailerLite) solely to
+        send the UK airport drop-off fee updates you asked for. We never sell or share it, and an unsubscribe link is
+        in every email; you can withdraw consent at any time.
       </p>
       <p className="text-ink-muted">
         Some pages may contain affiliate links in future, always labelled as such. Prices and fees shown are

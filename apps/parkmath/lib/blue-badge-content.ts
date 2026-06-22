@@ -1,5 +1,5 @@
 import { formatPence } from "@mathfamily/engine";
-import type { DropOffRecord } from "@mathfamily/data";
+import { isPublicTransportAlt, type DropOffRecord } from "@mathfamily/data";
 
 /** How the airport's published Blue Badge policy resolves, classified ONLY from the verbatim
  *  `blueBadgePolicy` prose the dataset carries. We never invent a policy: when the official page
@@ -107,7 +107,7 @@ export function blueBadgeLeadFacts(record: DropOffRecord): string[] {
   if (fee !== null) facts.push(`Standard forecourt charge: ${formatPence(fee)}`);
   if (kind === "exempt") facts.push("How: register the vehicle/badge as the airport's page requires");
   if (record.freeAlternative) {
-    facts.push(`Free for everyone: ${record.freeAlternative.name} (${record.freeAlternative.minutesFree} min)`);
+    facts.push(`Free for everyone: ${record.freeAlternative.name}${isPublicTransportAlt(record.freeAlternative) ? " (public transport)" : ` (${record.freeAlternative.minutesFree} min)`}`);
   }
   if (record.penaltyPence !== null) facts.push(`Penalty if a charge goes unpaid: ${formatPence(record.penaltyPence)}`);
   return facts;
@@ -188,7 +188,9 @@ export function buildBlueBadgeFaqs(
   if (record.freeAlternative) {
     faqs.push({
       question: `Is there a free drop-off option at ${airportName} for everyone?`,
-      answer: `Yes — the ${record.freeAlternative.name} is free for ${record.freeAlternative.minutesFree} minutes for any driver. ${record.freeAlternative.details} (Verified ${record.verifiedAt}.)`
+      answer: isPublicTransportAlt(record.freeAlternative)
+        ? `Yes — any traveller can arrive by the ${record.freeAlternative.name} instead of using the forecourt. ${record.freeAlternative.details} (Verified ${record.verifiedAt}.)`
+        : `Yes — the ${record.freeAlternative.name} is free for ${record.freeAlternative.minutesFree} minutes for any driver. ${record.freeAlternative.details} (Verified ${record.verifiedAt}.)`
     });
   }
 

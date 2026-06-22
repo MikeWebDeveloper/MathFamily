@@ -1,5 +1,11 @@
 import { formatPence } from "@mathfamily/engine";
-import type { DropOffRecord } from "@mathfamily/data";
+import { isPublicTransportAlt, type DropOffRecord, type FreeAlternative } from "@mathfamily/data";
+
+/** "free for N minutes" for a car-park alternative, or the honest transport phrasing otherwise.
+ *  Centralises the difference so no page hard-codes "free for {minutesFree} minutes". */
+function altSavingClause(alt: FreeAlternative): string {
+  return isPublicTransportAlt(alt) ? "reaching the terminal by public transport" : `free for ${alt.minutesFree} minutes`;
+}
 
 /** A record qualifies for an "avoid the drop-off charge" page only if it actually charges AND
  *  has a verified free alternative — there is nothing to "avoid" at a free airport, and we never
@@ -25,14 +31,14 @@ export function avoidAnswer(record: DropOffRecord, airportName: string): string 
     // Guarded by qualifiesForAvoidPage at the route; defensive fallback only.
     return `Drop-off at ${airportName} carries a forecourt charge — check the official page for free options.`;
   }
-  return `To avoid the ${formatPence(fee)} ${airportName} drop-off charge, use the ${alt.name} — free for ${alt.minutesFree} minutes — which saves you ${formatPence(fee)} per drop-off.`;
+  return `To avoid the ${formatPence(fee)} ${airportName} drop-off charge, use the ${alt.name} — ${altSavingClause(alt)} — which saves you ${formatPence(fee)} per drop-off.`;
 }
 
 /** Supporting facts for the AnswerLead bullet list — only those backed by real data. */
 export function avoidLeadFacts(record: DropOffRecord): string[] {
   const facts: string[] = [];
   const alt = record.freeAlternative;
-  if (alt) facts.push(`Free alternative: ${alt.name} (${alt.minutesFree} min free)`);
+  if (alt) facts.push(`Free alternative: ${alt.name}${isPublicTransportAlt(alt) ? " (public transport to the terminal)" : ` (${alt.minutesFree} min free)`}`);
   const fee = headlinePence(record);
   if (fee !== null) facts.push(`Forecourt charge avoided: ${formatPence(fee)} per drop-off`);
   if (record.paymentDeadline) facts.push(`If you do use the forecourt, pay by: ${record.paymentDeadline}`);
@@ -53,9 +59,11 @@ export function buildAvoidSteps(
   if (alt) {
     steps.push({
       name: `Use the ${alt.name}`,
-      text: `${alt.details} You get ${alt.minutesFree} minutes free${
-        fee !== null ? `, avoiding the ${formatPence(fee)} forecourt charge` : ""
-      }.`
+      text: isPublicTransportAlt(alt)
+        ? `${alt.details}${fee !== null ? ` That avoids the ${formatPence(fee)} forecourt charge entirely.` : ""}`
+        : `${alt.details} You get ${alt.minutesFree} minutes free${
+            fee !== null ? `, avoiding the ${formatPence(fee)} forecourt charge` : ""
+          }.`
     });
   }
 
@@ -93,7 +101,7 @@ export function buildAvoidFaqs(
   if (alt) {
     faqs.push({
       question: `How do I avoid the ${airportName} drop-off charge?`,
-      answer: `Use the ${alt.name} — free for ${alt.minutesFree} minutes${
+      answer: `Use the ${alt.name} — ${altSavingClause(alt)}${
         fee !== null ? `, which avoids the ${formatPence(fee)} forecourt charge` : ""
       }. ${alt.details} (Verified ${record.verifiedAt}, per the official ${airportName} page.)`
     });
@@ -102,7 +110,9 @@ export function buildAvoidFaqs(
   faqs.push({
     question: `Is there a free way to drop someone off at ${airportName}?`,
     answer: alt
-      ? `Yes — the ${alt.name} gives you ${alt.minutesFree} minutes free. ${alt.details}`
+      ? isPublicTransportAlt(alt)
+        ? `Yes — arrive by the ${alt.name} instead of driving to the forecourt. ${alt.details}`
+        : `Yes — the ${alt.name} gives you ${alt.minutesFree} minutes free. ${alt.details}`
       : `No free forecourt alternative is published for ${airportName}.`
   });
 
