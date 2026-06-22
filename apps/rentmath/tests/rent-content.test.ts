@@ -88,4 +88,12 @@ describe("buildTownFaqs", () => {
     expect(faqs.some((f) => f.question.toLowerCase().includes("deposit"))).toBe(true);
     expect(faqs.some((f) => f.answer.includes("Tenant Fees Act 2019"))).toBe(true);
   });
+
+  it("qualifies the deposit cap as England-only (Tenant Fees Act 2019 is England-only)", () => {
+    const result = trueCostOfRenting(townToInput(town));
+    const faqs = buildTownFaqs(town, result, formatPence);
+    const depositFaq = faqs.find((f) => f.question.toLowerCase().includes("deposit"));
+    expect(depositFaq?.answer).toContain("England only");
+    expect(depositFaq?.answer).toMatch(/Wales.*Scotland.*Northern Ireland/);
+  });
 });

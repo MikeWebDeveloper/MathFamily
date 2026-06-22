@@ -132,8 +132,11 @@ export default async function TownPage({ params }: { params: Promise<{ town: str
       <InertAffiliateSlot context={town.townName} />
 
       <EmailCaptureSlot
-        formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
+        brandName="RentMath"
         hook={`Get notified when ${town.townName} rent and council-tax figures change`}
+        description="monthly UK renting-cost update"
+        source="town"
+        privacyHref="/privacy"
       />
 
       <p className="text-sm">
