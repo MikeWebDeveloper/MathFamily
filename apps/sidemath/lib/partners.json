@@ -1,0 +1,25 @@
+{
+  "partners": {
+    "freeagent": {
+      "name": "FreeAgent",
+      "category": "Accounting software for the self-employed",
+      "active": false,
+      "deeplinkTemplate": "",
+      "trackingNote": "fill after FreeAgent affiliate/partner signup — use {clickref} placeholder. INERT until a real merchant ID is gated in."
+    },
+    "quickbooks": {
+      "name": "QuickBooks Self-Employed",
+      "category": "Self Assessment bookkeeping software",
+      "active": false,
+      "deeplinkTemplate": "",
+      "trackingNote": "fill after QuickBooks/Intuit affiliate signup. INERT until a real merchant ID is gated in."
+    },
+    "xero": {
+      "name": "Xero",
+      "category": "Online accounting software",
+      "active": false,
+      "deeplinkTemplate": "",
+      "trackingNote": "fill after Xero partner signup. INERT until a real merchant ID is gated in."
+    }
+  }
+}
