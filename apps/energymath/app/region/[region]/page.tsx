@@ -5,6 +5,7 @@ import { breadcrumbLd, faqPageLd, speakableLd, JsonLd } from "@mathfamily/geo";
 import {
   AnswerLead,
   Callout,
+  EmailCaptureSlot,
   FaqAccordion,
   FeeGrid,
   FreshnessBadge,
@@ -127,14 +128,23 @@ export default async function RegionPage({ params }: { params: Promise<{ region:
       </section>
 
       <div className="grid gap-3 sm:grid-cols-2">
-        <AffiliateBlock category="heat-pump" regionSlug={region.slug} />
-        <AffiliateBlock category="solar" regionSlug={region.slug} />
+        <AffiliateBlock category="heat-pump" regionSlug={region.slug} surface="region" />
+        <AffiliateBlock category="solar" regionSlug={region.slug} surface="region" />
       </div>
 
       <section className="space-y-2">
         <h2 className="text-xl font-semibold text-ink">Frequently asked questions</h2>
         <FaqAccordion items={faqs} />
       </section>
+
+      {/* The funnel must live on the spoke pages too — pSEO traffic lands here, not just home. */}
+      <EmailCaptureSlot
+        brandName="EnergyMath"
+        hook={`Get notified when the ${region.name} price cap changes`}
+        description="quarterly UK energy price-cap update"
+        source="region"
+        privacyHref="/privacy"
+      />
 
       <p className="text-sm">
         <Link href="/region" className="text-brand-accent underline underline-offset-4">

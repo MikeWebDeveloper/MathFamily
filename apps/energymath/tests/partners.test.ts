@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveSlot, buildAffiliateUrl, type PartnerCategory } from "../lib/partners";
+import { resolveSlot, buildAffiliateUrl, resolveDeeplink, type PartnerCategory } from "../lib/partners";
 import partnersJson from "../lib/partners.json";
 
 describe("partners.json compliance", () => {
@@ -39,5 +39,18 @@ describe("buildAffiliateUrl", () => {
     expect(buildAffiliateUrl("https://x.com/{regionSlug}?c={clickref}", "london")).toBe(
       "https://x.com/london?c=energy-london"
     );
+  });
+});
+
+describe("resolveDeeplink (the /go resolver)", () => {
+  it("returns null for every category while partners are inert", () => {
+    expect(resolveDeeplink(["switching"], "home")).toBeNull();
+    expect(resolveDeeplink(["solar", "london"], "region")).toBeNull();
+    expect(resolveDeeplink(["heat-pump", "london"], "region")).toBeNull();
+  });
+
+  it("returns null for an unknown category (fail-closed)", () => {
+    expect(resolveDeeplink(["mortgage"], "home")).toBeNull();
+    expect(resolveDeeplink([], "home")).toBeNull();
   });
 });

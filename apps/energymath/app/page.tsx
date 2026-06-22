@@ -25,19 +25,18 @@ export default function HomePage() {
       <JsonLd data={webSiteLd({ name: "EnergyMath", url: siteUrl })} />
       <JsonLd data={faqPageLd(faqs)} />
 
+      {/* Calculator-first: the interactive BillCalculator renders above the fold, directly under a
+          tight hook, so the primary tool is the first thing a visitor sees — regions, the affiliate
+          rail and the email funnel follow below. */}
       <section className="space-y-4">
         <h1 className="text-h1 font-bold tracking-tight text-balance text-ink">
           What does your home energy{" "}
           <span className="text-brand-accent">actually cost</span>?
         </h1>
-        <p className="max-w-2xl text-lg text-ink-muted">
-          Estimate your UK annual gas and electricity bill from the Ofgem price cap by region and
-          home size — then compare a heat pump against a gas boiler, or check solar payback. Every
-          rate is sourced from Ofgem and date-stamped.
+        <p className="max-w-2xl text-ink-muted">
+          Estimate your UK annual gas and electricity bill from the Ofgem price cap — pick your
+          region and home size below. Every rate is sourced from Ofgem and date-stamped.
         </p>
-      </section>
-
-      <section>
         <BillCalculator regions={REGIONS} profiles={USAGE_PROFILES} defaultRegionSlug="london" />
       </section>
 
@@ -85,11 +84,14 @@ export default function HomePage() {
         </nav>
       </section>
 
-      <AffiliateBlock category="switching" regionSlug="london" />
+      <AffiliateBlock category="switching" regionSlug="london" surface="home" />
 
       <EmailCaptureSlot
-        formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
+        brandName="EnergyMath"
         hook="Get notified when the Ofgem price cap changes"
+        description="quarterly UK energy price-cap update"
+        source="home"
+        privacyHref="/privacy"
       />
 
       <section className="space-y-2">
