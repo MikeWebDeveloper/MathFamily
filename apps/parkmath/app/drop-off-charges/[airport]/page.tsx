@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { isPublicTransportAlt, loadAirports, loadDropOffDataset, loadParkingDataset, loadLoungeDataset, newsForAirport, type Airport, type DropOffRecord } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd, offerLd, speakableLd } from "@mathfamily/geo";
-import { AnswerCard, AnswerLead, AnswerPassage, CaveatChip, Callout, FaqAccordion, FreshnessBadge, LatestUpdates, MiniAnswerBar, PageHeading, SourceCitation, SourcesBlock, EmailCaptureSlot, UkMap, VerifiedStamp } from "@mathfamily/ui";
+import { AnswerCard, AnswerLead, AnswerPassage, CaveatChip, Callout, ChapterDivider, FaqAccordion, FreshnessBadge, LatestUpdates, MiniAnswerBar, PageHeading, SourceCitation, SourcesBlock, EmailCaptureSlot, UkMap, VerifiedStamp } from "@mathfamily/ui";
 import { DropOffCalculator } from "@/components/drop-off-calculator";
 import { DropOffParkingBridge } from "@/components/drop-off-bridge";
 import { HolidayExtrasCard } from "@/components/holiday-extras-card";
@@ -27,8 +27,6 @@ export async function generateMetadata({ params }: { params: Promise<{ airport: 
   const { airport } = await params;
   const data = getData(airport);
   if (!data) return {};
-  // Lead the title/description with the searched token + "Airport" + plural "charges & fees"
-  // (the literal GSC queries: "stansted drop off charges", "stansted airport drop off fees").
   const sn = searchName(data.airport.name);
   const headlineFee = data.record.isFree ? "free" : formatPence(data.record.bands[0]?.totalPence ?? 0);
   const structureWord = data.record.isFree ? "rules" : isPerEntryTariff(data.record) ? "per entry" : "time limit";
@@ -60,6 +58,7 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
 
   return (
     <article className="space-y-8">
+      {/* ── Structured data (SSR, invisible) ──────────────────────────────── */}
       <JsonLd data={faqPageLd(faqs)} />
       <JsonLd
         data={breadcrumbLd([
@@ -83,6 +82,7 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
       ) : null}
       <JsonLd data={speakableLd({ url: `${siteUrl}/drop-off-charges/${airport.slug}` })} />
 
+      {/* ── Chapter 1: Headline fee ──────────────────────────────────────── */}
       <header className="space-y-3">
         <PageHeading>{sn} Airport drop-off charges</PageHeading>
         {sn !== airport.name ? (
@@ -92,8 +92,6 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
           <FreshnessBadge verifiedAt={pageVerifiedAt} deltaLabel={freshnessDelta(record) ?? undefined} />
           <SourceCitation url={record.sourceUrl} label={`Official ${airport.name} page`} />
         </div>
-        {/* Freshness moat, above the fold: answers the ranked "is this current information" query
-            and matches the verified-against-official-page snippet intent (intel §1, content spec §0). */}
         <p className="text-sm text-ink-muted">
           Yes, this is current information: {sn} Airport&apos;s drop-off charge was verified on{" "}
           {new Date(`${pageVerifiedAt}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" })}{" "}
@@ -124,6 +122,7 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
         ]}
       </AnswerLead>
 
+      {/* Hero answer card — SSR, visible with JS off, Google + AI citation anchor */}
       <div className="grid items-center gap-6 sm:grid-cols-[1fr_auto]">
         <AnswerCard
           label="Current drop-off charge"
@@ -142,41 +141,74 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
         verified
       />
 
-      <AnswerPassage question={`What does it cost to drop someone off at ${airport.name}?`}>
-        {record.isFree
-          ? <>Dropping off at {airport.name} is free at the forecourt — no charge applies when using the designated drop-off zone. This is an official, date-stamped snapshot read directly from the airport's published page and verified {record.verifiedAt}.{record.freeAlternative ? <> The {record.freeAlternative.name} also provides free waiting for up to {record.freeAlternative.minutesFree} minutes.</> : " Always check the airport's own page for any changes before you travel."}</>
-          : <>{airport.name} levies a charge to use the drop-off forecourt: {record.feeSummary.charAt(0).toLowerCase()}{record.feeSummary.slice(1)}{bandPriceParenthetical(record) ? <> ({bandPriceParenthetical(record)})</> : ""}{record.penaltyPence !== null ? <>; unpaid visits incur a {formatPence(record.penaltyPence)} penalty charge</> : ""}. {record.freeAlternative ? (isPublicTransportAlt(record.freeAlternative) ? <>A free alternative is to arrive by the {record.freeAlternative.name}, which reaches the terminal without using the forecourt.</> : <>A free alternative, {record.freeAlternative.name}, is available for {record.freeAlternative.minutesFree} minutes.</>) : <>No published free-forecourt alternative is available.</>} All figures are official, date-stamped snapshots read from the airport's own published page and verified {record.verifiedAt}.</>}
-      </AnswerPassage>
+      {/* ── Chapter 2: What does it cost? ─────────────────────────────────── */}
+      <ChapterDivider label="What does it cost?" />
 
-      {trend ? <p className="text-sm font-medium text-warning">{trend}</p> : null}
-
-      {timeLimitNote ? (
-        <AnswerPassage question={`Is there a time limit on the ${sn} drop-off zone?`}>
-          {timeLimitNote}{record.paymentDeadline ? <> Payment is barrier-free: you can settle online by {record.paymentDeadline}.</> : null} (This drop-off charge is sometimes called the {sn} drop-off levy or kiss-and-fly charge.) These figures are read from the official {airport.name} page and verified {record.verifiedAt}.
+      <section className="mf-reveal space-y-4">
+        <AnswerPassage question={`What does it cost to drop someone off at ${airport.name}?`}>
+          {record.isFree
+            ? <>Dropping off at {airport.name} is free at the forecourt — no charge applies when using the designated drop-off zone. This is an official, date-stamped snapshot read directly from the airport's published page and verified {record.verifiedAt}.{record.freeAlternative ? <> The {record.freeAlternative.name} also provides free waiting for up to {record.freeAlternative.minutesFree} minutes.</> : " Always check the airport's own page for any changes before you travel."}</>
+            : <>{airport.name} levies a charge to use the drop-off forecourt: {record.feeSummary.charAt(0).toLowerCase()}{record.feeSummary.slice(1)}{bandPriceParenthetical(record) ? <> ({bandPriceParenthetical(record)})</> : ""}{record.penaltyPence !== null ? <>; unpaid visits incur a {formatPence(record.penaltyPence)} penalty charge</> : ""}. {record.freeAlternative ? (isPublicTransportAlt(record.freeAlternative) ? <>A free alternative is to arrive by the {record.freeAlternative.name}, which reaches the terminal without using the forecourt.</> : <>A free alternative, {record.freeAlternative.name}, is available for {record.freeAlternative.minutesFree} minutes.</>) : <>No published free-forecourt alternative is available.</>} All figures are official, date-stamped snapshots read from the airport's own published page and verified {record.verifiedAt}.</>}
         </AnswerPassage>
+
+        {trend ? <p className="text-sm font-medium text-warning">{trend}</p> : null}
+      </section>
+
+      {/* ── Chapter 3: Per-minute calculator (JS-enhanced; answer stays SSR) ── */}
+      {!record.isFree && !isPerEntryTariff(record) ? (
+        <>
+          <ChapterDivider label="Per-minute calculator" />
+          <section className="mf-reveal">
+            <DropOffCalculator tariff={record} airportName={airport.name} buildDate={new Date().toISOString()} />
+          </section>
+        </>
       ) : null}
 
+      {isPerEntryTariff(record) ? (
+        <section className="mf-reveal">
+          <Callout variant="info" title="Flat charge per entry">
+            {airport.name} charges {formatPence(record.bands[0]?.totalPence ?? 0)} each time a vehicle enters the
+            drop-off zone — the fee doesn&apos;t depend on how long you stop. {record.feeSummary}
+          </Callout>
+        </section>
+      ) : null}
+
+      {/* ── Chapter 4: Free alternative ───────────────────────────────────── */}
       {record.freeAlternative ? (
-        <Callout variant="free" title={`The free alternative: ${record.freeAlternative.name}`}>
-          {isPublicTransportAlt(record.freeAlternative) ? <>{record.freeAlternative.details}</> : <>Free for {record.freeAlternative.minutesFree} minutes. {record.freeAlternative.details}</>}
-        </Callout>
+        <>
+          <ChapterDivider label="Free alternative" />
+          <section className="mf-reveal">
+            <Callout variant="free" title={`The free alternative: ${record.freeAlternative.name}`}>
+              {isPublicTransportAlt(record.freeAlternative) ? <>{record.freeAlternative.details}</> : <>Free for {record.freeAlternative.minutesFree} minutes. {record.freeAlternative.details}</>}
+            </Callout>
+          </section>
+        </>
       ) : null}
 
-      {/* Decision bridge: keep the free-alternative message above intact (trust + ranking asset);
-          ADD an honest, in-flow path for the segment that will actually park for the trip. */}
+      {/* Decision bridge: honest in-flow path for the segment that will park */}
       <DropOffParkingBridge slug={airport.slug} airportName={airport.name} />
 
-      {!record.isFree && !isPerEntryTariff(record) ? (
-        <DropOffCalculator tariff={record} airportName={airport.name} buildDate={new Date().toISOString()} />
-      ) : null}
-      {isPerEntryTariff(record) ? (
-        <Callout variant="info" title="Flat charge per entry">
-          {airport.name} charges {formatPence(record.bands[0]?.totalPence ?? 0)} each time a vehicle enters the
-          drop-off zone — the fee doesn&apos;t depend on how long you stop. {record.feeSummary}
-        </Callout>
-      ) : null}
+      {/* ── Chapter 5: Time limit & penalty ──────────────────────────────── */}
+      {(!record.isFree && timeLimitNote) ? (
+        <>
+          <ChapterDivider label="Time limit & penalty" />
+          <section className="mf-reveal space-y-4">
+            <AnswerPassage question={`Is there a time limit on the ${sn} drop-off zone?`}>
+              {timeLimitNote}{record.paymentDeadline ? <> Payment is barrier-free: you can settle online by {record.paymentDeadline}.</> : null} (This drop-off charge is sometimes called the {sn} drop-off levy or kiss-and-fly charge.) These figures are read from the official {airport.name} page and verified {record.verifiedAt}.
+            </AnswerPassage>
 
-      {!record.isFree ? (
+            {record.penaltyPence !== null || record.penaltyNotes ? (
+              <div className="rounded-card bg-surface-muted p-4 text-sm text-ink-muted" style={{ background: "color-mix(in srgb, var(--color-warning) 6%, var(--color-surface))" }}>
+                <p className="font-semibold text-warning mb-1">If you don&apos;t pay</p>
+                <p>
+                  {record.penaltyPence !== null ? `Penalty: ${formatPence(record.penaltyPence)}. ` : ""}
+                  {record.penaltyNotes ?? ""} {record.paymentDeadline ? `Payment deadline: ${record.paymentDeadline}.` : ""}
+                </p>
+              </div>
+            ) : null}
+          </section>
+        </>
+      ) : (!record.isFree && (record.penaltyPence !== null || record.penaltyNotes)) ? (
         <section className="mf-reveal space-y-2">
           <h2 className="mf-underline-grow text-xl font-semibold text-ink">If you don&apos;t pay</h2>
           <p className="text-sm text-ink-muted">
@@ -186,50 +218,55 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
         </section>
       ) : null}
 
-      <HolidayExtrasCard product="parking" surface="dropoff" airportName={airport.name} airportSlug={airport.slug} extras={["hotels", "lounge", "transfers"]} />
+      {/* ── Chapter 6: Comparison & booking ──────────────────────────────── */}
+      <ChapterDivider label="Compare & book" />
+      <section className="mf-reveal">
+        <HolidayExtrasCard product="parking" surface="dropoff" airportName={airport.name} airportSlug={airport.slug} extras={["hotels", "lounge", "transfers"]} />
+      </section>
+
+      {/* ── Chapter 7: FAQs ───────────────────────────────────────────────── */}
+      <ChapterDivider label="Frequently asked questions" />
       <section className="mf-reveal space-y-2">
-        <h2 className="mf-underline-grow text-xl font-semibold text-ink">Frequently asked questions</h2>
         <FaqAccordion items={faqs} />
       </section>
 
-      {(
-        <section className="space-y-2">
-          <h2 className="text-lg font-semibold text-ink">More at this airport</h2>
-          <ul className="space-y-1 text-sm">
+      {/* ── Chapter 8: More at this airport ──────────────────────────────── */}
+      <ChapterDivider label="More at this airport" />
+      <section className="mf-reveal space-y-2">
+        <ul className="space-y-1 text-sm">
+          <li>
+            <Link href={`/airport-parking-options/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
+              Cheapest way to park or drop off at {airport.name}: all options compared →
+            </Link>
+          </li>
+          {hasCompare ? (
             <li>
-              <Link href={`/airport-parking-options/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
-                Cheapest way to park or drop off at {airport.name}: all options compared →
+              <Link href={`/parking-vs-drop-off/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
+                Parking vs drop-off at {airport.name}: which is cheaper? →
               </Link>
             </li>
-            {hasCompare ? (
-              <li>
-                <Link href={`/parking-vs-drop-off/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
-                  Parking vs drop-off at {airport.name}: which is cheaper? →
-                </Link>
-              </li>
-            ) : null}
-            {hasParking ? (
-              <li>
-                <Link href={`/airport-parking/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
-                  Parking at {airport.name} compared →
-                </Link>
-              </li>
-            ) : null}
-            {hasLounge ? (
-              <li>
-                <Link href={`/airport-lounges/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
-                  Lounges at {airport.name} — prices &amp; Priority Pass →
-                </Link>
-              </li>
-            ) : null}
+          ) : null}
+          {hasParking ? (
             <li>
-              <Link href={`/blue-badge/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
-                Blue Badge drop-off at {airport.name}: is it free? →
+              <Link href={`/airport-parking/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
+                Parking at {airport.name} compared →
               </Link>
             </li>
-          </ul>
-        </section>
-      )}
+          ) : null}
+          {hasLounge ? (
+            <li>
+              <Link href={`/airport-lounges/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
+                Lounges at {airport.name} — prices &amp; Priority Pass →
+              </Link>
+            </li>
+          ) : null}
+          <li>
+            <Link href={`/blue-badge/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
+              Blue Badge drop-off at {airport.name}: is it free? →
+            </Link>
+          </li>
+        </ul>
+      </section>
 
       <EmailCaptureSlot
         brandName="ParkMath"

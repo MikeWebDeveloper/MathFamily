@@ -2,14 +2,20 @@
 
 import { useEffect, useRef, useState } from "react";
 
-/** Count-up numeric output (~250ms, ease-out). Instant under reduced motion,
- *  on first render, or when either side of the transition is null. */
+/** Count-up numeric output. Defaults to 250ms ease-out; calculator sites pass
+ *  `dur={500}` for a more deliberate "machine arriving at truth" feel.
+ *  Instant under reduced motion, on first render, or when either side is null.
+ *
+ *  @param dur  Animation duration in ms (default 250). Ignored under reduced-motion.
+ */
 export function AnimatedNumber({
   pence,
-  render
+  render,
+  dur = 250,
 }: {
   pence: number | null;
   render: (pence: number | null) => string;
+  dur?: number;
 }) {
   const [display, setDisplay] = useState(pence);
   const prev = useRef(pence);
@@ -26,7 +32,6 @@ export function AnimatedNumber({
       return;
     }
     const start = performance.now();
-    const dur = 250;
     let raf = 0;
     const tick = (t: number) => {
       const k = Math.min(1, (t - start) / dur);
@@ -36,6 +41,6 @@ export function AnimatedNumber({
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [pence]);
+  }, [pence, dur]);
   return <span className="mf-num">{render(display)}</span>;
 }

@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { MiniAnswerBar } from "../src/mini-answer-bar";
 import { AnimatedNumber } from "../src/animated-number";
+import { ChapterDivider } from "../src/chapter-divider";
 
 afterEach(cleanup);
 
@@ -38,5 +39,40 @@ describe("AnimatedNumber", () => {
     await act(async () => { rerender(<AnimatedNumber pence={250} render={fmt} />); });
     expect(screen.getByText("250")).toBeDefined(); // reduced-motion → instant
     vi.unstubAllGlobals();
+  });
+  it("accepts a custom dur prop without breaking output (reduced-motion path)", async () => {
+    vi.stubGlobal("matchMedia", vi.fn().mockReturnValue({ matches: true, addEventListener: vi.fn(), removeEventListener: vi.fn() }));
+    const fmt = (p: number | null) => (p === null ? "—" : `£${(p / 100).toFixed(2)}`);
+    const { rerender } = render(<AnimatedNumber pence={500} render={fmt} dur={500} />);
+    await act(async () => { rerender(<AnimatedNumber pence={1000} render={fmt} dur={500} />); });
+    // Under reduced-motion the value jumps instantly regardless of dur.
+    expect(screen.getByText("£10.00")).toBeDefined();
+    vi.unstubAllGlobals();
+  });
+  it("renders with default dur when dur prop is omitted", () => {
+    const fmt = (p: number | null) => (p === null ? "—" : String(p));
+    render(<AnimatedNumber pence={42} render={fmt} />);
+    expect(screen.getByText("42")).toBeDefined();
+  });
+});
+
+describe("ChapterDivider", () => {
+  it("renders a separator with a visible label", () => {
+    render(<ChapterDivider label="Free alternative" />);
+    const el = screen.getByRole("separator");
+    expect(el.getAttribute("aria-label")).toBe("Free alternative");
+    expect(el.textContent).toContain("Free alternative");
+  });
+  it("renders a plain hairline when no label is provided", () => {
+    const { container } = render(<ChapterDivider />);
+    const hr = container.querySelector("hr");
+    expect(hr).not.toBeNull();
+    // aria-hidden keeps it decorative for screen readers.
+    expect(hr?.getAttribute("aria-hidden")).toBe("true");
+  });
+  it("omits a visible text node when label is undefined", () => {
+    render(<ChapterDivider />);
+    // No separator role — just an hr — so getByRole("separator") should throw.
+    expect(screen.queryByRole("separator")).toBeNull();
   });
 });

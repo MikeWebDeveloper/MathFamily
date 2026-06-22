@@ -37,6 +37,11 @@
   --text-lead: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);     /* 17 → 20 */
   --text-lead--line-height: 1.55;
 
+  /* Motion: cost-reveal choreography (Concept 1).
+     --motion-dur-reveal drives the glow-pulse duration.  The is-revealing wrapper
+     class lasts ~300 ms (set in DropOffCalculator via setTimeout). */
+  --motion-dur-reveal: 300ms;
+
   /* Shape — tightened to a precise 12px */
   --radius-card: 0.75rem;
 
@@ -108,6 +113,26 @@
 /* Header box-shadow uses hardcoded rgb(15 23 42 / α) — flip to light ring */
 [data-theme="dark"] .mf-header-shadow {
   box-shadow: 0 1px 0 rgb(255 255 255 / 0.06), 0 6px 16px -10px rgb(0 0 0 / 0.5);
+}
+
+/* ── Cost-reveal glow-pulse (Concept 1) ──────────────────────────────────
+   Applied to the calculator result wrapper via .is-revealing for
+   --motion-dur-reveal (~300ms) after a new quote lands.  Compositor-safe:
+   box-shadow only; no layout paint.  Skipped under reduced-motion. ── */
+@keyframes mf-glow-pulse {
+  0%   { box-shadow: 0 0 0 0   color-mix(in srgb, var(--color-brand-accent) 0%,   transparent), var(--shadow-card); }
+  30%  { box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-brand-accent) 28%,  transparent), 0 0 20px -4px color-mix(in srgb, var(--color-brand-accent) 18%, transparent); }
+  100% { box-shadow: 0 0 0 0   color-mix(in srgb, var(--color-brand-accent) 0%,   transparent), var(--shadow-card); }
+}
+
+/* The wrapper class applied for ~300 ms post-calculation. */
+.is-revealing {
+  will-change: box-shadow;
+  animation: mf-glow-pulse var(--motion-dur-reveal) ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .is-revealing { animation: none; }
 }
 
 /* ── Motion: meaningful micro-animations, all transform/opacity, ≤300ms ── */

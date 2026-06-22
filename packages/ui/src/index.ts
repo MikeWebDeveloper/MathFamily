@@ -36,6 +36,7 @@ export * from "./site-analytics";
 export * from "./news-card";
 export * from "./latest-updates";
 export * from "./glint-controller";
+export * from "./chapter-divider";
 export * from "./nav-tile";
 export * from "./live-region";
 export * from "./open-data-band";
