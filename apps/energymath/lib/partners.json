@@ -1,0 +1,25 @@
+{
+  "partners": {
+    "solar": {
+      "name": "Solar quote partner",
+      "category": "solar",
+      "active": false,
+      "deeplinkTemplate": "",
+      "trackingNote": "fill after solar lead-gen affiliate signup — gated, no live merchant ID yet"
+    },
+    "heatpump": {
+      "name": "Heat pump quote partner",
+      "category": "heat-pump",
+      "active": false,
+      "deeplinkTemplate": "",
+      "trackingNote": "fill after heat-pump installer lead-gen signup — gated"
+    },
+    "switching": {
+      "name": "Energy switching partner",
+      "category": "switching",
+      "active": false,
+      "deeplinkTemplate": "",
+      "trackingNote": "fill after energy switching affiliate signup — gated"
+    }
+  }
+}
