@@ -25,24 +25,6 @@ const NAV = [
   { label: "Privacy", href: "/privacy" }
 ];
 
-/**
- * Adds the parent-org relationship to The Math Family on top of the shared Organization node.
- * The shared `organizationLd` builder (read-only package) does not expose `parentOrganization`,
- * so we emit a second, app-local node keyed to the same @id that carries the relationship.
- */
-function parentOrgLd(siteUrl: string) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "Organization" as const,
-    "@id": `${siteUrl}/#organization`,
-    parentOrganization: {
-      "@type": "Organization" as const,
-      name: "The Math Family",
-      url: "https://themathfamily.com"
-    }
-  };
-}
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en-GB" suppressHydrationWarning className={`${plexSans.variable} ${plexMono.variable}`}>
@@ -51,8 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light'){document.documentElement.dataset.theme=t;}else if(window.matchMedia('(prefers-color-scheme: dark)').matches){document.documentElement.dataset.theme='dark';}}catch(e){}})();` }} />
       </head>
       <body className="relative bg-surface font-sans text-ink antialiased">
-        <JsonLd data={organizationLd({ siteUrl: SITE_URL, name: "RentMath", logoUrl: `${SITE_URL}/opengraph-image`, founder: { name: "Michal Latal", jobTitle: "Founder & editor" } })} />
-        <JsonLd data={parentOrgLd(SITE_URL)} />
+        <JsonLd data={organizationLd({ siteUrl: SITE_URL, name: "RentMath", logoUrl: `${SITE_URL}/opengraph-image`, founder: { name: "Michal Latal", jobTitle: "Founder & editor" }, parentOrganization: { name: "The Math Family", url: "https://themathfamily.com" } })} />
         <noscript>
           <style>{`.mf-reveal{opacity:1;transform:none;transition:none}`}</style>
         </noscript>

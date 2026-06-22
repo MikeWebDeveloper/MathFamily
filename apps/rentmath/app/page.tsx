@@ -1,12 +1,21 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { formatPence } from "@mathfamily/engine";
-import { webSiteLd, JsonLd } from "@mathfamily/geo";
-import { EmailCaptureSlot, StatStrip } from "@mathfamily/ui";
+import { webSiteLd, speakableLd, JsonLd } from "@mathfamily/geo";
+import { AnswerLead, EmailCaptureSlot, StatStrip } from "@mathfamily/ui";
 import { TrueCostCalculator } from "../components/true-cost-calculator";
 import { InertAffiliateSlot } from "../components/inert-affiliate-slot";
 import { FamilyLinks } from "../components/family-links";
 import { TOWNS } from "../lib/rent-data";
 import { trueCostOfRenting, townToInput } from "../lib/rent-content";
+
+// Home is the family's renting "what does it really cost" entry point — give it its own GEO-ready
+// title + description (the layout template appends "| RentMath" elsewhere; the home title is whole).
+export const metadata: Metadata = {
+  title: "True cost of renting in the UK — rent plus council tax, bills & deposit, by town",
+  description:
+    "What renting in the UK really costs: median rent plus council tax, typical bills and the capped move-in deposit, worked out town by town — every figure with a source and a date."
+};
 
 export default function HomePage() {
   const towns = TOWNS;
@@ -19,9 +28,17 @@ export default function HomePage() {
   const cheapest = ranked[0];
   const dearest = ranked[ranked.length - 1];
 
+  // One-sentence, factual, voice/AI-extractable answer derived ONLY from the seed dataset range.
+  const homeAnswer = cheapest && dearest
+    ? `In the UK, the true cost of renting — median rent plus council tax, typical bills and the statutory capped deposit — works out at roughly ${formatPence(
+        cheapest.result.annualTrueCostPence
+      )} to ${formatPence(dearest.result.annualTrueCostPence)} a year across the ${towns.length} towns covered, depending on where you rent.`
+    : "In the UK, the true cost of renting is the median rent plus council tax, typical bills and the statutory capped deposit — worked out town by town.";
+
   return (
     <div className="space-y-10">
       <JsonLd data={webSiteLd({ name: "RentMath", url: siteUrl })} />
+      <JsonLd data={speakableLd({ url: siteUrl })} />
 
       <section className="space-y-4">
         <h1 className="text-h1 font-bold tracking-tight text-balance text-ink">
@@ -33,6 +50,12 @@ export default function HomePage() {
           the capped deposit to show the real annual cost of a UK tenancy — town by town, with a
           source and a date on every figure.
         </p>
+      </section>
+
+      {/* GEO entry point: the speakableLd selector targets h1 + .mf-speakable, so the one-sentence
+          factual answer below carries mf-speakable to be the home page's voice/AI-extractable lead. */}
+      <section id="mf-answer-anchor" className="mf-speakable">
+        <AnswerLead answer={homeAnswer} />
       </section>
 
       <section>
@@ -85,8 +108,11 @@ export default function HomePage() {
       <InertAffiliateSlot />
 
       <EmailCaptureSlot
-        formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
+        brandName="RentMath"
         hook="Get notified when rent and council-tax figures are updated"
+        description="monthly UK renting-cost update"
+        source="home"
+        privacyHref="/privacy"
       />
 
       <FamilyLinks />

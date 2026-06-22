@@ -141,7 +141,7 @@ export function buildTownFaqs(
       question: `How much deposit can a landlord ask for in ${town.townName}?`,
       answer: `Under the Tenant Fees Act 2019 the deposit is capped at ${result.depositCapWeeks} weeks' rent — here about ${formatPence(
         result.depositPence
-      )} on the median rent. (It is 6 weeks if your annual rent is £50,000 or more.)`
+      )} on the median rent. (It is 6 weeks if your annual rent is £50,000 or more.) This cap applies in England only — the deposit cap differs in Wales, Scotland and Northern Ireland.`
     },
     {
       question: `How much do I need upfront to move in to a ${town.townName} rental?`,
