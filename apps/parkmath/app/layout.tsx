@@ -54,10 +54,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="relative bg-surface font-sans text-ink antialiased">
         <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded focus:bg-brand-accent focus:px-3 focus:py-2 focus:text-sm focus:font-semibold focus:text-white">Skip to content</a>
-        {/* Organization + founder graph, emitted site-wide. founder.sameAs is intentionally
-            omitted until Mike confirms a real profile URL — we never invent social links.
+        {/* Organization + founder graph, emitted site-wide. organisation.sameAs links the live
+            official ParkMath social profiles (verified live; see tools/social/accounts.md) so AI
+            knowledge graphs can anchor the entity. founder.sameAs is intentionally omitted until
+            Mike confirms a real personal profile URL — we never invent social links.
             [Mike to confirm]: add e.g. ["https://www.linkedin.com/in/…"] to founder.sameAs. */}
-        <JsonLd data={organizationLd({ siteUrl: SITE_URL, name: "ParkMath", logoUrl: `${SITE_URL}/opengraph-image`, founder: { name: "Mike", jobTitle: "Founder & editor" } })} />
+        <JsonLd data={organizationLd({ siteUrl: SITE_URL, name: "ParkMath", logoUrl: `${SITE_URL}/opengraph-image`, sameAs: [
+          "https://x.com/parkmathuk",
+          "https://www.instagram.com/parkmathuk/",
+          "https://www.threads.com/@parkmathuk",
+          "https://bsky.app/profile/parkmathuk.bsky.social"
+        ], founder: { name: "Mike", jobTitle: "Founder & editor" } })} />
         <noscript>
           <style>{`.mf-reveal{opacity:1;transform:none;transition:none}`}</style>
         </noscript>
