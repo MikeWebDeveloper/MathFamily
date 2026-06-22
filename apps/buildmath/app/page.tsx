@@ -1,9 +1,17 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { webSiteLd, JsonLd } from "@mathfamily/geo";
 import { EmailCaptureSlot, StatStrip } from "@mathfamily/ui";
-import { loadDataset, latestVerified } from "@/lib/content";
+import { loadDataset, latestVerified, snapshotNote } from "@/lib/content";
 import { CostEstimator } from "@/components/cost-estimator";
 import { FamilyLinks } from "@/components/family-links";
+
+export const metadata: Metadata = {
+  title: "What a UK extension or renovation really costs — BuildMath",
+  description:
+    "UK extension, loft, kitchen and bathroom build-cost ranges by region and finish level. Indicative £/m² figures from named public cost guides — every number sourced and date-stamped.",
+  alternates: { canonical: "/" }
+};
 
 export default function HomePage() {
   const { projectTypes, regions, finishLevels } = loadDataset();
@@ -25,7 +33,7 @@ export default function HomePage() {
       </section>
 
       <section>
-        <CostEstimator projects={projectTypes} regions={regions} finishLevels={finishLevels} />
+        <CostEstimator projects={projectTypes} regions={regions} finishLevels={finishLevels} snapshotNote={snapshotNote()} />
       </section>
 
       <section>
@@ -63,13 +71,17 @@ export default function HomePage() {
       </p>
 
       <EmailCaptureSlot
-        formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
+        brandName="BuildMath"
         hook="Get notified when UK build costs move"
+        description="occasional UK build-cost update"
+        source="home"
+        privacyHref="/privacy"
       />
 
       <p className="text-xs text-ink-muted">
-        Figures are public-guide build-cost ranges, last reviewed {latestVerified()}. Estimates only —
-        always get itemised written quotes before you commit.
+        Figures are indicative build-cost ranges transcribed from named public cost guides on{" "}
+        {latestVerified()} — not live-verified. Estimates only — re-check the live guide and always get
+        itemised written quotes before you commit.
       </p>
 
       <FamilyLinks />

@@ -42,3 +42,20 @@ export function resolveSlot(projectSlug: string): ResolvedSlot {
     disclosureRequired: true,
   };
 }
+
+/**
+ * Resolve a `/go/<...parts>?s=<surface>` catch-all path to a live trades-lead affiliate deeplink,
+ * or `null` when no partner is wired yet. Used by the shared `createGoRoute` handler.
+ *
+ * The first path part is the project slug (e.g. `/go/single-storey-extension?s=spoke`). Every
+ * partner is currently INERT (no live merchant IDs — gated), so this returns `null` and the shared
+ * go route fail-closes by 302-ing back to an on-site page (never a 404, never a bare affiliate
+ * link). When a partner is approved, flip `active: true` + a real `deeplinkTemplate` in
+ * partners.json and this starts returning a live deeplink with no other code change.
+ */
+export function resolveDeeplink(parts: string[], _surface: string): string | null {
+  const projectSlug = parts[0] ?? "";
+  if (!projectSlug) return null;
+  const slot = resolveSlot(projectSlug);
+  return slot.kind === "affiliate" && slot.url ? slot.url : null;
+}

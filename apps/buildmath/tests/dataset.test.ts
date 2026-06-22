@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { DATASET } from "../lib/data/dataset";
-import { projectAnswer, buildProjectFaqs } from "../lib/content";
-import { resolveSlot } from "../lib/partners";
+import { projectAnswer, buildProjectFaqs, snapshotNote } from "../lib/content";
+import { resolveSlot, resolveDeeplink } from "../lib/partners";
 
 describe("dataset integrity", () => {
   it("has between 5 and 10 project types (MVP spoke range)", () => {
@@ -68,5 +68,19 @@ describe("affiliate slot is inert (compliance)", () => {
     expect(slot.kind).toBe("inert");
     expect(slot.url).toBeNull();
     expect(slot.disclosureRequired).toBe(false);
+  });
+
+  it("resolveDeeplink (used by /go) returns null while all partners are inert — go route fails closed", () => {
+    expect(resolveDeeplink(["single-storey-extension"], "spoke-trades")).toBeNull();
+    expect(resolveDeeplink([], "home")).toBeNull();
+  });
+});
+
+describe("data honesty", () => {
+  it("snapshotNote is non-empty, says ranges are indicative/not-live-verified, and carries a date", () => {
+    const note = snapshotNote();
+    expect(note.toLowerCase()).toContain("indicative");
+    expect(note.toLowerCase()).toContain("not live-verified");
+    expect(note).toMatch(/\d{4}-\d{2}-\d{2}/);
   });
 });

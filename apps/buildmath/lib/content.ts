@@ -33,6 +33,15 @@ export function latestVerified(): string {
   return dates.sort().at(-1) ?? DATASET.lastUpdated;
 }
 
+/**
+ * Honest data-provenance note for the UI. This MVP dataset was transcribed OFFLINE from named
+ * public cost guides — it is NOT live-fetched/verified — so every surface that shows a figure must
+ * say so plainly. Do NOT imply these ranges are live-verified. See dataset.ts SOURCING POLICY.
+ */
+export function snapshotNote(): string {
+  return `Indicative ranges · transcribed ${latestVerified()} from named public UK cost guides, not live-verified — re-check the live guide and get written quotes before relying on these figures.`;
+}
+
 /** A one-sentence, figure-first answer for a project at the national-average / standard spec. */
 export function projectAnswer(project: ProjectType): string {
   const e = estimate({

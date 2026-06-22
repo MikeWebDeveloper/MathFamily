@@ -13,9 +13,11 @@ interface CostEstimatorProps {
   finishLevels: FinishLevel[];
   /** Optional fixed project (spoke pages lock the project and only vary region/finish/area). */
   lockedProjectSlug?: string;
+  /** Honest data-provenance note: figures are transcribed indicative ranges, not live-verified. */
+  snapshotNote?: string;
 }
 
-export function CostEstimator({ projects, regions, finishLevels, lockedProjectSlug }: CostEstimatorProps) {
+export function CostEstimator({ projects, regions, finishLevels, lockedProjectSlug, snapshotNote }: CostEstimatorProps) {
   const initialProject =
     projects.find((p) => p.slug === lockedProjectSlug) ?? projects[0]!;
   const defaultRegion = regions.find((r) => r.slug === "midlands") ?? regions[0]!;
@@ -136,9 +138,15 @@ export function CostEstimator({ projects, regions, finishLevels, lockedProjectSl
 
       <ul className="flex flex-wrap gap-2">
         <li><CaveatChip>Estimate only — get written quotes</CaveatChip></li>
-        <li><CaveatChip>Public-guide ranges, date-stamped</CaveatChip></li>
+        <li><CaveatChip>Indicative ranges — not live-verified</CaveatChip></li>
         {finish.slug === "premium" && <li><CaveatChip>Premium specs can exceed this range</CaveatChip></li>}
       </ul>
+
+      {snapshotNote && (
+        <p className="text-xs text-ink-muted" data-testid="snapshot-note">
+          {snapshotNote}
+        </p>
+      )}
 
       {!lockedProjectSlug && (
         <Link

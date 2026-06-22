@@ -38,7 +38,10 @@ export function TradesLeadSlot({ projectSlug, projectName }: TradesLeadSlotProps
     );
   }
 
-  // Live state (only reachable once a partner is approved + activated in partners.json).
+  // Live state (only reachable once a partner is approved + activated in partners.json). The CTA
+  // routes through the first-party /go redirect so every click is attributed (surface-tagged) and
+  // the affiliate deeplink is resolved server-side — never a bare affiliate link in the markup.
+  const goHref = `/go/${encodeURIComponent(projectSlug)}?s=spoke-trades`;
   return (
     <aside
       aria-label="Sponsored — find local trades"
@@ -54,7 +57,7 @@ export function TradesLeadSlot({ projectSlug, projectName }: TradesLeadSlotProps
       </div>
       <p className="mt-1 text-lg font-bold text-ink">{slot.partnerName}</p>
       <a
-        href={slot.url}
+        href={goHref}
         rel="sponsored noopener noreferrer"
         target="_blank"
         className="mt-3 inline-flex min-h-11 items-center rounded-full bg-brand-accent px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
