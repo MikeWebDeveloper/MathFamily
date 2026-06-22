@@ -76,6 +76,13 @@ export function buildDropOffFaqs(record: DropOffRecord, airportName: string): { 
       question: `How do I avoid the ${search} drop-off fee?`,
       answer: `Use the ${record.freeAlternative.name} — free for ${record.freeAlternative.minutesFree} minutes. ${record.freeAlternative.details}`
     });
+  } else if (!record.isFree) {
+    // No free forecourt alternative is published — answer honestly rather than imply one exists.
+    // Covers the "how to avoid the <airport> drop-off charge" query the title targets (e.g. Southend).
+    faqs.push({
+      question: `How do I avoid the ${search} drop-off fee?`,
+      answer: `${airportName} doesn't publish a free drop-off zone, so there's no way to use the forecourt without paying ${formatPence(record.bands[0]?.totalPence ?? 0)}. The honest options are to keep the stop under the ${record.maxStayMinutes ?? record.bands[0]?.upToMinutes ?? "allowed"}-minute limit, pre-book parking if you're staying longer than a quick drop-off, or use public transport to the terminal. Don't stop on the surrounding red routes${record.penaltyPence !== null ? ` — that risks a ${formatPence(record.penaltyPence)} penalty` : ""}.`
+    });
   }
   return faqs;
 }

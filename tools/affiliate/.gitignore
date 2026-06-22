@@ -1,0 +1,3 @@
+# Secrets + local snapshots — never commit.
+.env
+snapshots/

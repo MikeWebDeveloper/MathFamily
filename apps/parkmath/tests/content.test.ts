@@ -35,10 +35,14 @@ describe("buildDropOffFaqs", () => {
     // penalty/PCN question surfaces the £100 charge + its reduction
     expect(questions.some((q) => q.toLowerCase().includes("penalty") || q.toLowerCase().includes("don't pay"))).toBe(true);
   });
-  it("omits optional questions when data is null", () => {
-    // Bare record: flat single-band, no deadline / alt / penalty → only Q1 (how much) + Blue Badge.
+  it("omits data-driven optional questions when data is null, but still answers 'how to avoid' honestly", () => {
+    // Bare charging record: no deadline / alt / penalty. Q1 (how much) + Blue Badge + an honest
+    // "how do I avoid" answer (no free zone exists → say so, don't imply one). 3 FAQs.
     const sparse: DropOffRecord = { ...record, paymentDeadline: null, freeAlternative: null, penaltyPence: null, penaltyNotes: null, maxStayMinutes: null, bands: [{ upToMinutes: 1, totalPence: 700 }] };
-    expect(buildDropOffFaqs(sparse, "X")).toHaveLength(2);
+    const faqs = buildDropOffFaqs(sparse, "X");
+    expect(faqs).toHaveLength(3);
+    const avoid = faqs.find((f) => f.question.includes("avoid"));
+    expect(avoid?.answer).toContain("doesn't publish a free drop-off zone");
   });
   it("uses a different question set per airport (no two pages identical)", () => {
     // Stansted has a 2nd band + max stay; Heathrow is per-entry with a PCN; their FAQs must differ.

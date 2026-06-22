@@ -7,6 +7,7 @@ import { AnswerPassage, FreshnessBadge, OpenDataBand, PageHeading, StatStrip } f
 import { buildDropOffLeague, dropOffHubAnswer, dropOffIndexSummary, dropOffPerMinutePence, isPerEntryTariff } from "@/lib/content";
 import { SortableFeeTable, type DropOffRow } from "@/components/sortable-fee-table";
 import { DropOffLeagueTable } from "@/components/dropoff-league-table";
+import { HubBookingCta } from "@/components/hub-booking-cta";
 
 export const metadata: Metadata = {
   title: "UK airport drop-off charges 2026 — all airports compared (verified)",
@@ -150,6 +151,11 @@ export default function MasterTablePage() {
         </AnswerPassage>
         <DropOffLeagueTable league={league} />
       </section>
+
+      {/* Affiliate CTA — visually subordinate to the data table above. Fails closed (renders nothing
+          when no live affiliate link exists), routes through the tracked /go redirect, carries the
+          "Ad" disclosure + the neutrality line. Reuses resolveHeProduct/goLink — no hardcoded URL. */}
+      <HubBookingCta league={league} />
 
       <section className="space-y-2">
         <h2 className="text-lg font-semibold text-ink">Per-airport drop-off guides</h2>
