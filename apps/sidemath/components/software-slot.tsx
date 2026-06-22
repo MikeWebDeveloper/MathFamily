@@ -1,17 +1,21 @@
 import { resolveSoftwareSlot, DEFAULT_PARTNER_KEY } from "../lib/partners";
 
 /**
- * Inert accounting-software affiliate rail.
+ * Accounting-software affiliate rail — routed through the first-party `/go` surface.
  *
  * COMPLIANCE: this never renders a live outbound affiliate link while partners are
- * inactive (they all are in this repo). It shows a clearly-labelled "Ad / coming soon"
- * placeholder so the slot exists for layout + future monetisation, but nothing is
- * clickable to a merchant and no merchant ID is present. There is NO FCA-regulated
- * product here — only bookkeeping software.
+ * inactive (they all are in this repo). The CTA points at our own `/go/<partner>?s=<surface>`
+ * route, which logs the click intent and — because every partner is INERT — 302s back to an
+ * on-site page (createGoRoute fail-closed). So nothing leaves to a merchant and no merchant ID
+ * is present, but we still capture demand signal per surface for when a deal goes live. There is
+ * NO FCA-regulated product here — only bookkeeping software.
  */
 export function SoftwareSlot({ clickref = "home" }: { clickref?: string }) {
   const slot = resolveSoftwareSlot(DEFAULT_PARTNER_KEY, clickref);
   const isInert = slot.kind === "inert" || !slot.url;
+  // The CTA always travels through our own /go surface so the click is logged & attributed; the
+  // route resolves to a live deeplink only once a deal is wired, otherwise it lands back on-site.
+  const goHref = `/go/${DEFAULT_PARTNER_KEY}?s=${encodeURIComponent(clickref)}`;
 
   return (
     <aside
@@ -37,25 +41,13 @@ export function SoftwareSlot({ clickref = "home" }: { clickref?: string }) {
         change the figures we publish.
       </p>
 
-      {isInert ? (
-        <button
-          type="button"
-          disabled
-          aria-disabled="true"
-          className="mt-3 inline-flex min-h-11 cursor-not-allowed items-center rounded-full bg-ink/10 px-4 py-2 text-sm font-semibold text-ink-muted"
-        >
-          Coming soon
-        </button>
-      ) : (
-        <a
-          href={slot.url ?? "#"}
-          rel="sponsored noopener noreferrer"
-          target="_blank"
-          className="mt-3 inline-flex min-h-11 items-center rounded-full bg-brand-accent px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90"
-        >
-          Try {slot.partnerName} ↗
-        </a>
-      )}
+      <a
+        href={goHref}
+        rel="sponsored noopener noreferrer"
+        className="mf-press mt-3 inline-flex min-h-11 items-center rounded-full bg-brand-accent px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+      >
+        {isInert ? "See bookkeeping tools" : `Try ${slot.partnerName} ↗`}
+      </a>
     </aside>
   );
 }

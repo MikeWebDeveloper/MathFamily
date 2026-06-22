@@ -120,9 +120,11 @@ export default function HomePage() {
       </section>
 
       <EmailCaptureSlot
-        formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
+        brandName="SideMath"
         hook="Get notified when HMRC rates or thresholds change"
-        source="sidemath-home"
+        description="updates when UK self-employed tax rates or thresholds change"
+        source="home"
+        privacyHref="/privacy"
       />
 
       <FamilyLinks />

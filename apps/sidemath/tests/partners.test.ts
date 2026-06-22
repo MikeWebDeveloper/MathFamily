@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveSoftwareSlot, buildAffiliateUrl, DEFAULT_PARTNER_KEY } from "../lib/partners";
+import { resolveSoftwareSlot, buildAffiliateUrl, resolveDeeplink, DEFAULT_PARTNER_KEY } from "../lib/partners";
 import partnersJson from "../lib/partners.json";
 
 describe("partners.json (compliance)", () => {
@@ -31,5 +31,14 @@ describe("resolveSoftwareSlot", () => {
     expect(slot.kind).toBe("inert");
     expect(slot.partnerName).toBeNull();
     expect(slot.disclosureRequired).toBe(false);
+  });
+});
+
+describe("resolveDeeplink (/go fail-closed contract)", () => {
+  it("returns null while every partner is inert — /go falls back on-site, no bare affiliate link", () => {
+    expect(resolveDeeplink([DEFAULT_PARTNER_KEY], "home")).toBeNull();
+    expect(resolveDeeplink(["freeagent"], "trade-courier")).toBeNull();
+    expect(resolveDeeplink([], "")).toBeNull();
+    expect(resolveDeeplink(["does-not-exist"], "home")).toBeNull();
   });
 });

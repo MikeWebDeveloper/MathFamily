@@ -59,3 +59,21 @@ export function resolveSoftwareSlot(partnerKey: string, clickref: string): Resol
 
 /** The default partner shown in the rail (still inert). */
 export const DEFAULT_PARTNER_KEY = "freeagent";
+
+/**
+ * Deeplink resolver for the shared `/go/<...slug>?s=<surface>` route (createGoRoute).
+ *
+ * `parts[0]` is the partner key (e.g. "freeagent"); the rest is free clickref context. Returns the
+ * live affiliate deeplink, or `null` when there is no live deal yet — in which case createGoRoute
+ * STILL logs the click intent and 302s back to an on-site fallback (never a 404, never a bare link).
+ *
+ * COMPLIANCE: every partner ships inert (active:false, empty deeplinkTemplate), so this ALWAYS
+ * returns null in this repo — the rail/CTA stays INERT until a real merchant ID is gated in.
+ */
+export function resolveDeeplink(parts: string[], surface: string): string | null {
+  const partnerKey = parts[0] ?? DEFAULT_PARTNER_KEY;
+  // clickref carries the surface + any extra path context for attribution once a deal is live.
+  const clickref = [surface || "go", ...parts.slice(1)].filter(Boolean).join("-") || "go";
+  const slot = resolveSoftwareSlot(partnerKey, clickref);
+  return slot.kind === "affiliate" ? slot.url : null;
+}

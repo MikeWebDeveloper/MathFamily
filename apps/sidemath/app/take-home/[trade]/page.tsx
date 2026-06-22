@@ -135,9 +135,11 @@ export default async function TradePage({ params }: { params: Promise<{ trade: s
       </section>
 
       <EmailCaptureSlot
-        formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
+        brandName="SideMath"
         hook="Get notified when HMRC rates or thresholds change"
-        source={`sidemath-${t.slug}`}
+        description="updates when UK self-employed tax rates or thresholds change"
+        source={t.slug}
+        privacyHref="/privacy"
       />
 
       <p className="text-sm">

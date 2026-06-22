@@ -62,9 +62,11 @@ export default function TakeHomePage() {
       <SoftwareSlot clickref="take-home" />
 
       <EmailCaptureSlot
-        formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
+        brandName="SideMath"
         hook="Get notified when HMRC rates or thresholds change"
-        source="sidemath-take-home"
+        description="updates when UK self-employed tax rates or thresholds change"
+        source="take-home"
+        privacyHref="/privacy"
       />
 
       <SourcesBlock
