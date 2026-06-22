@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
-import { AnswerLead, AnswerPassage, Callout, FaqAccordion, FeeGrid, FreshnessBadge, PageHeading, SourcesBlock } from "@mathfamily/ui";
+import { AnswerLead, AnswerPassage, Callout, EmailCaptureSlot, FaqAccordion, FeeGrid, FreshnessBadge, PageHeading, SourcesBlock } from "@mathfamily/ui";
 import { NHS_BAND_CHARGES, NHS_NATIONS, latestVerifiedAt } from "@/lib/dental-data";
 
 export const metadata: Metadata = {
@@ -49,6 +49,13 @@ export default function NhsDentalChargesPage() {
         <PageHeading>NHS dental charges across the UK</PageHeading>
         <FreshnessBadge verifiedAt={verified} href={null} />
       </header>
+
+      {/* LEGAL (required on this NHS-named page): make the disaffiliation explicit and prominent. */}
+      <Callout variant="warning" title="Independent service — not the NHS">
+        DentalMath is an <strong>independent</strong> information service. It is{" "}
+        <strong>not affiliated with, endorsed by, or run by the NHS</strong>. For official guidance and
+        to book treatment, go to the NHS directly.
+      </Callout>
 
       <div id="mf-answer-anchor">
         <AnswerLead answer={answer}>
@@ -105,6 +112,14 @@ export default function NhsDentalChargesPage() {
         Check with your dentist or NHS for your own situation. See{" "}
         <Link href="/treatments" className="text-brand-accent underline underline-offset-4">NHS vs private costs by treatment →</Link>
       </p>
+
+      <EmailCaptureSlot
+        brandName="DentalMath"
+        hook="Get notified when NHS dental charges change"
+        description="UK dental-cost update when NHS charges change"
+        source="nhs-charges"
+        privacyHref="/privacy"
+      />
 
       <SourcesBlock
         sources={[

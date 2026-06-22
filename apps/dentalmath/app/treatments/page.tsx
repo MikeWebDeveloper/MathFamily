@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, datasetLd, itemListLd, JsonLd } from "@mathfamily/geo";
-import { FeeGrid, FreshnessBadge, OpenDataBand, PageHeading } from "@mathfamily/ui";
+import { EmailCaptureSlot, FeeGrid, FreshnessBadge, OpenDataBand, PageHeading } from "@mathfamily/ui";
 import { TREATMENTS, latestVerifiedAt } from "@/lib/dental-data";
 import { compareTreatment, formatRange } from "@/lib/dental-content";
 
@@ -77,6 +77,14 @@ export default function TreatmentsIndexPage() {
       <p className="text-sm text-ink-muted">
         NHS figures verified {verified}. Not medical or financial advice — check with your dentist or NHS.
       </p>
+
+      <EmailCaptureSlot
+        brandName="DentalMath"
+        hook="Get notified when NHS dental charges change"
+        description="UK dental-cost update when NHS charges change"
+        source="treatment"
+        privacyHref="/privacy"
+      />
 
       <OpenDataBand
         downloads={[{ href: "/data/dental-costs.csv", label: "Dental costs (CSV)" }]}

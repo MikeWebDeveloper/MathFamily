@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { formatPence } from "@mathfamily/engine";
 import { webSiteLd, JsonLd } from "@mathfamily/geo";
@@ -5,6 +6,14 @@ import { EmailCaptureSlot, FeeGrid, FreshnessBadge, StatStrip } from "@mathfamil
 import { FamilyLinks } from "@/components/family-links";
 import { NHS_BAND_CHARGES, TREATMENTS, latestVerifiedAt } from "@/lib/dental-data";
 import { compareTreatment, formatRange } from "@/lib/dental-content";
+
+export const metadata: Metadata = {
+  // Absolute title so the home page isn't suffixed by the "%s | DentalMath" layout template.
+  title: { absolute: "DentalMath — NHS vs private dental costs in the UK, verified" },
+  description:
+    "What NHS and private dental treatment really costs in the UK — NHS band charges vs typical private prices for check-ups, fillings, crowns and more, verified against official sources.",
+  alternates: { canonical: "/" }
+};
 
 export default function HomePage() {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3003";
@@ -78,8 +87,11 @@ export default function HomePage() {
       </p>
 
       <EmailCaptureSlot
-        formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
+        brandName="DentalMath"
         hook="Get notified when NHS dental charges change"
+        description="UK dental-cost update when NHS charges change"
+        source="home"
+        privacyHref="/privacy"
       />
 
       <p className="rounded-card bg-surface p-4 text-sm text-ink-muted">
