@@ -141,8 +141,11 @@ export default async function NetworkPage({
       </p>
 
       <EmailCaptureSlot
-        formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
+        brandName="RoamMath"
         hook={`Get notified when ${networkLabel} roaming in ${destination.countryName} changes`}
+        description={`update when ${networkLabel} roaming charges in ${destination.countryName} change`}
+        source="network"
+        privacyHref="/privacy"
       />
 
       <SourcesBlock

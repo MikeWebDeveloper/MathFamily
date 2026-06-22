@@ -194,8 +194,11 @@ export default async function CountryHubPage({ params }: { params: Promise<{ cou
       </p>
 
       <EmailCaptureSlot
-        formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
+        brandName="RoamMath"
         hook={`Get notified when ${destination.countryName} roaming charges change`}
+        description={`update when roaming charges for ${destination.countryName} change`}
+        source="country"
+        privacyHref="/privacy"
       />
 
       <SourcesBlock

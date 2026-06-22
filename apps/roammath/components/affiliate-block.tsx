@@ -1,6 +1,6 @@
 import { formatPence } from "@mathfamily/engine";
 import { EsimPickCard } from "@mathfamily/ui";
-import { resolveSlot } from "../lib/partners";
+import { resolveSlot, buildGoHref } from "../lib/partners";
 
 interface AffiliateBlockProps {
   providerName: string | null;
@@ -9,6 +9,8 @@ interface AffiliateBlockProps {
   bundleName: string | null;
   totalPence: number | null;
   countryName: string;
+  /** Surface tag for /go attribution, e.g. "country" | "network". Defaults to "country". */
+  surface?: string;
 }
 
 export function AffiliateBlock({
@@ -18,6 +20,7 @@ export function AffiliateBlock({
   bundleName,
   totalPence,
   countryName,
+  surface = "country",
 }: AffiliateBlockProps) {
   const slot = resolveSlot(providerName, countrySlug, officialUrl);
   const totalFormatted = totalPence !== null ? formatPence(totalPence) : null;
@@ -63,13 +66,16 @@ export function AffiliateBlock({
 
   // Live affiliate state (gated until partners go active): defer to the shared
   // EsimPickCard, which renders the sponsored disclosure + "Buy with …" CTA.
+  // Route the affiliate CTA through the first-party /go redirect so the click is
+  // surface-tagged + logged before we 302 to the partner deeplink (which itself
+  // stays INERT until partners.json is activated).
   return (
     <EsimPickCard
       providerName={slot.partnerName}
       bundleName={bundleName}
       totalFormatted={totalFormatted}
       countryName={countryName}
-      affiliateUrl={slot.url}
+      affiliateUrl={slot.partnerName ? buildGoHref(slot.partnerName, countrySlug, surface) : slot.url}
       disclosureRequired={slot.disclosureRequired}
     />
   );

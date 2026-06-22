@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { resolveSlot, buildAffiliateUrl } from "../lib/partners";
+import { resolveSlot, buildAffiliateUrl, buildGoHref, resolveDeeplink } from "../lib/partners";
 
 describe("buildAffiliateUrl", () => {
   test("substitutes {countrySlug} and {clickref}", () => {
@@ -51,5 +51,37 @@ describe("resolveSlot", () => {
   test("official fallback label is 'Check live eSIM prices'", () => {
     const result = resolveSlot(null, "spain", officialUrl);
     expect(result.label).toBe("Check live eSIM prices");
+  });
+});
+
+describe("buildGoHref", () => {
+  test("builds a first-party /go href with provider, country slug and surface", () => {
+    expect(buildGoHref("Airalo", "spain", "network")).toBe("/go/esim/airalo/spain?s=network");
+  });
+
+  test("lowercases + url-encodes the provider and omits the query when no surface", () => {
+    expect(buildGoHref("Holafly", "france", "")).toBe("/go/esim/holafly/france");
+  });
+});
+
+describe("resolveDeeplink (/go resolver)", () => {
+  test("returns null for non-esim path kinds (fail closed)", () => {
+    expect(resolveDeeplink(["baggage", "ryanair"], "airline")).toBeNull();
+  });
+
+  test("returns null when parts are incomplete", () => {
+    expect(resolveDeeplink(["esim"], "country")).toBeNull();
+    expect(resolveDeeplink(["esim", "airalo"], "country")).toBeNull();
+  });
+
+  test("returns null for an unknown provider", () => {
+    expect(resolveDeeplink(["esim", "nope", "spain"], "network")).toBeNull();
+  });
+
+  test("returns null while every partner is inert (active: false in partners.json)", () => {
+    // The whole eSIM rail is intentionally INERT today — no live deeplink, fail closed.
+    expect(resolveDeeplink(["esim", "airalo", "spain"], "network")).toBeNull();
+    expect(resolveDeeplink(["esim", "holafly", "france"], "country")).toBeNull();
+    expect(resolveDeeplink(["esim", "saily", "italy"], "network")).toBeNull();
   });
 });

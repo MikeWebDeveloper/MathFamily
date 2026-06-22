@@ -135,8 +135,11 @@ export default function RoamingIndexPage() {
       />
 
       <EmailCaptureSlot
-        formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
+        brandName="RoamMath"
         hook="Get notified when roaming charges change"
+        description="update when UK mobile roaming charges change"
+        source="roaming"
+        privacyHref="/privacy"
       />
     </article>
   );

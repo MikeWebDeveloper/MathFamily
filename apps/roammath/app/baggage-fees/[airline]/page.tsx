@@ -113,8 +113,11 @@ export default async function AirlineBaggagePage({ params }: { params: Promise<{
       </p>
 
       <EmailCaptureSlot
-        formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
+        brandName="RoamMath"
         hook={`Get notified when ${record.airlineName} baggage fees change`}
+        description={`update when ${record.airlineName} baggage fees change`}
+        source="airline"
+        privacyHref="/privacy"
       />
 
       <SourcesBlock

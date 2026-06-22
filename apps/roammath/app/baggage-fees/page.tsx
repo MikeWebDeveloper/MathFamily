@@ -98,8 +98,11 @@ export default function BaggageFeesIndexPage() {
       />
 
       <EmailCaptureSlot
-        formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
+        brandName="RoamMath"
         hook="Get notified when airline baggage fees change"
+        description="update when UK airline baggage fees change"
+        source="baggage"
+        privacyHref="/privacy"
       />
     </article>
   );

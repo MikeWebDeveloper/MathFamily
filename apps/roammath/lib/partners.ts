@@ -52,3 +52,32 @@ export function resolveSlot(
     disclosureRequired: true,
   };
 }
+
+/** Build the first-party `/go` href for an eSIM affiliate CTA. The CTA links to this on-site path;
+ *  the shared `/go` route logs the (surface-tagged) click, then resolves it via `resolveDeeplink`
+ *  below and 302s to the real deeplink — or, while inert, fails closed back on-site.
+ *  Shape: `/go/esim/<providerSlug>/<countrySlug>?s=<surface>`. */
+export function buildGoHref(providerName: string, countrySlug: string, surface: string): string {
+  const provider = encodeURIComponent(providerName.toLowerCase());
+  const country = encodeURIComponent(countrySlug);
+  const query = surface ? `?s=${encodeURIComponent(surface)}` : "";
+  return `/go/esim/${provider}/${country}${query}`;
+}
+
+/** Resolve the `/go` catch-all path parts (+ surface) to an exact eSIM affiliate deeplink, or null
+ *  when there is no live deal yet (the inert case → the /go route fails closed to an on-site page).
+ *  Parts shape: ["esim", "<providerSlug>", "<countrySlug>"]. Surface is currently informational —
+ *  it is logged by the /go route for per-page attribution but does not change the deeplink.
+ *
+ *  All eSIM partners are gated off in partners.json (`active: false`), so this returns null today;
+ *  the wiring is in place so the moment a partner is activated + its deeplinkTemplate filled, the
+ *  /go redirect goes live with zero further code change. */
+export function resolveDeeplink(parts: string[], _surface: string): string | null {
+  const [kind, providerSlug, countrySlug] = parts;
+  if (kind !== "esim" || !providerSlug || !countrySlug) return null;
+
+  const partner = (partnersJson.partners as Record<string, PartnerConfig>)[providerSlug.toLowerCase()];
+  if (!partner?.active || !partner.deeplinkTemplate.startsWith("http")) return null;
+
+  return buildAffiliateUrl(partner.deeplinkTemplate, countrySlug);
+}

@@ -133,8 +133,11 @@ export default function HomePage() {
       </p>
 
       <EmailCaptureSlot
-        formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
+        brandName="RoamMath"
         hook="Get notified when roaming charges change"
+        description="updates when UK roaming charges or airline baggage fees change"
+        source="home"
+        privacyHref="/privacy"
       />
 
       <FamilyLinks />

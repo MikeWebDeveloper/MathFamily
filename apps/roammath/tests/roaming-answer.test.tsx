@@ -62,7 +62,8 @@ function renderDisplay(
   days = 7,
   dataGb = 5,
   networkLabel = "EE",
-  countryName = "Spain"
+  countryName = "Spain",
+  countrySlug = "spain"
 ): string {
   const result = roamingTripCost([networkOption], esimBundles, days, dataGb);
   const heroAnswer = buildHeroAnswer(networkOption, networkLabel, countryName, days, result);
@@ -75,6 +76,7 @@ function renderDisplay(
       dataGb,
       result,
       esimSlot,
+      countrySlug,
       heroAnswer,
     })
   );
@@ -105,9 +107,14 @@ describe("RoamingAnswer affiliate disclosure before CTA", () => {
     expect(html).toContain("data-testid=\"affiliate-disclosure\"");
     expect(html).toContain("data-testid=\"esim-cta\"");
 
+    // The affiliate CTA is routed through the first-party /go redirect (surface-tagged), NOT the
+    // raw partner deeplink — so attribution is logged before the 302 to the (inert) partner link.
+    expect(html).toContain("/go/esim/airalo/spain?s=network");
+    expect(html).not.toContain("awin1.com");
+
     // Disclosure must appear before the CTA link in the markup
     const disclosureIdx = html.indexOf("data-testid=\"affiliate-disclosure\"");
-    const ctaLinkIdx = html.indexOf("awin1.com");
+    const ctaLinkIdx = html.indexOf("/go/esim/airalo/spain");
     expect(disclosureIdx).toBeGreaterThan(-1);
     expect(ctaLinkIdx).toBeGreaterThan(-1);
     expect(disclosureIdx).toBeLessThan(ctaLinkIdx);

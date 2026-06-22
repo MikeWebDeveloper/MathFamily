@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { formatPence, roamingTripCost, type NetworkRoamingOption, type EsimBundleOption, type RoamingTripResult } from "@mathfamily/engine";
 import { AnswerLead, CaveatChip, RangeSlider } from "@mathfamily/ui";
-import { type ResolvedSlot } from "../lib/partners";
+import { type ResolvedSlot, buildGoHref } from "../lib/partners";
 
 export interface RoamingAnswerProps {
   networkOption: NetworkRoamingOption;
@@ -53,6 +53,7 @@ export interface RoamingAnswerDisplayProps {
   dataGb: number;
   result: RoamingTripResult;
   esimSlot: ResolvedSlot;
+  countrySlug: string;
   heroAnswer: string;
   onDaysChange?: (v: number) => void;
   onDataGbChange?: (v: number) => void;
@@ -66,10 +67,17 @@ export function RoamingAnswerDisplay({
   dataGb,
   result,
   esimSlot,
+  countrySlug,
   heroAnswer,
   onDaysChange,
   onDataGbChange,
 }: RoamingAnswerDisplayProps) {
+  // Affiliate CTAs are routed through the first-party /go redirect so the click is surface-tagged
+  // (s=network) + logged before the 302 to the partner deeplink (INERT until partners.json is live).
+  const esimAffiliateHref =
+    esimSlot.kind === "affiliate" && esimSlot.partnerName
+      ? buildGoHref(esimSlot.partnerName, countrySlug, "network")
+      : esimSlot.url;
   const showEsimCta = result.esimChoice !== null && !networkOption.included;
 
   return (
@@ -197,7 +205,7 @@ export function RoamingAnswerDisplay({
                   We may earn a commission if you buy through our link — at no extra cost to you.
                 </p>
                 <a
-                  href={esimSlot.url}
+                  href={esimAffiliateHref}
                   className="inline-block rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand/90"
                   rel="sponsored noopener"
                   target="_blank"
@@ -245,7 +253,7 @@ export function RoamingAnswer({
   esimBundles,
   networkLabel,
   countryName,
-  countrySlug: _countrySlug,
+  countrySlug,
   esimSlot,
   defaultDays = 7,
   defaultDataGb = 5,
@@ -266,6 +274,7 @@ export function RoamingAnswer({
       dataGb={dataGb}
       result={result}
       esimSlot={esimSlot}
+      countrySlug={countrySlug}
       heroAnswer={heroAnswer}
       onDaysChange={setDays}
       onDataGbChange={setDataGb}
