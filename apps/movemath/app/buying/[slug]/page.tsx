@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd, speakableLd } from "@mathfamily/geo";
-import { AnswerCard, AnswerLead, FaqAccordion, FeeGrid, FreshnessBadge, PageHeading, SourcesBlock } from "@mathfamily/ui";
+import { AnswerCard, AnswerLead, EmailCaptureSlot, FaqAccordion, FeeGrid, FreshnessBadge, PageHeading, SourcesBlock } from "@mathfamily/ui";
 import { AffiliateSlot } from "@/components/affiliate-slot";
 import { MortgageSlot } from "@/components/mortgage-slot";
 import { AdviceDisclaimer } from "@/components/disclaimer";
@@ -113,9 +113,9 @@ export default async function SpokePage({ params }: { params: Promise<{ slug: st
       <section className="space-y-3">
         <h2 className="text-lg font-semibold text-ink">Get quotes for your move</h2>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <AffiliateSlot category="removals" clickref={`${m.slug}-removals`} />
-          <AffiliateSlot category="conveyancing" clickref={`${m.slug}-conveyancing`} />
-          <AffiliateSlot category="surveys" clickref={`${m.slug}-surveys`} />
+          <AffiliateSlot category="removals" surface={m.slug} />
+          <AffiliateSlot category="conveyancing" surface={m.slug} />
+          <AffiliateSlot category="surveys" surface={m.slug} />
           <MortgageSlot />
         </div>
       </section>
@@ -124,6 +124,14 @@ export default async function SpokePage({ params }: { params: Promise<{ slug: st
         <h2 className="text-xl font-semibold text-ink">Frequently asked questions</h2>
         <FaqAccordion items={faqs} />
       </section>
+
+      <EmailCaptureSlot
+        brandName="MoveMath"
+        hook="Get notified when Stamp Duty rules or moving costs change"
+        description="UK moving-cost & Stamp Duty updates"
+        source={m.slug}
+        privacyHref="/privacy"
+      />
 
       <p className="text-sm">
         <Link href="/buying" className="text-brand-accent underline underline-offset-4">
