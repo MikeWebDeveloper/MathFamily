@@ -1,0 +1,25 @@
+{
+  "partners": {
+    "removals": {
+      "name": "Removals quotes",
+      "category": "removals",
+      "active": false,
+      "deeplinkTemplate": "",
+      "trackingNote": "GREEN rail. Fill after a removals-comparison affiliate signup (e.g. reallymoving / Compare My Move). Use {clickref}."
+    },
+    "conveyancing": {
+      "name": "Conveyancing quotes",
+      "category": "conveyancing",
+      "active": false,
+      "deeplinkTemplate": "",
+      "trackingNote": "GREEN rail. Fill after a conveyancing-comparison affiliate signup. Use {clickref}."
+    },
+    "surveys": {
+      "name": "RICS survey quotes",
+      "category": "surveys",
+      "active": false,
+      "deeplinkTemplate": "",
+      "trackingNote": "GREEN rail. Fill after a surveyor-comparison affiliate signup. Use {clickref}."
+    }
+  }
+}
