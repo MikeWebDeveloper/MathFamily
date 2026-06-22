@@ -63,6 +63,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
         changeFrequency: "monthly" as const,
         priority: 0.7
       })),
+    { url: `${base}/airport-parking-options`, changeFrequency: "weekly" as const, priority: 0.85, lastModified: latestModified },
+    ...dropOffRecords.map((r) => ({
+      url: `${base}/airport-parking-options/${r.airportSlug}`,
+      lastModified: new Date(`${r.verifiedAt}T00:00:00Z`),
+      changeFrequency: "monthly" as const,
+      priority: 0.75
+    })),
     { url: `${base}/airport-parking`, changeFrequency: "weekly" as const, priority: 0.9, lastModified: latestParkingModified },
     ...parkingRecords.map((r) => ({
       url: `${base}/airport-parking/${r.airportSlug}`,

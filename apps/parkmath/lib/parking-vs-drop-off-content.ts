@@ -1,5 +1,5 @@
 import { formatPence } from "@mathfamily/engine";
-import { loadDropOffDataset, loadParkingDataset, type DropOffRecord, type ParkingRecord } from "@mathfamily/data";
+import { isPublicTransportAlt, loadDropOffDataset, loadParkingDataset, type DropOffRecord, type ParkingRecord } from "@mathfamily/data";
 
 /** Inputs needed to decide whether an airport can have a "parking vs drop-off" page.
  *  We need BOTH a real drop-off charge (a charging airport with a priced first band) AND
@@ -137,7 +137,9 @@ export function buildParkingVsDropOffFaqs(model: ParkingVsDropOffModel, dropOff:
   if (alt) {
     faqs.push({
       question: `Is there a way to avoid the ${airportName} drop-off charge altogether?`,
-      answer: `Yes — the ${alt.name} gives you ${alt.minutesFree} minutes free. ${alt.details} (Verified ${dropOff.verifiedAt}.)`
+      answer: isPublicTransportAlt(alt)
+        ? `Yes — arrive by the ${alt.name} instead of using the forecourt. ${alt.details} (Verified ${dropOff.verifiedAt}.)`
+        : `Yes — the ${alt.name} gives you ${alt.minutesFree} minutes free. ${alt.details} (Verified ${dropOff.verifiedAt}.)`
     });
   }
 

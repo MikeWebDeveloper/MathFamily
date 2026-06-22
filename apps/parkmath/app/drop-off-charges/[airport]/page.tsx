@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { loadAirports, loadDropOffDataset, loadParkingDataset, loadLoungeDataset, newsForAirport, type Airport, type DropOffRecord } from "@mathfamily/data";
+import { isPublicTransportAlt, loadAirports, loadDropOffDataset, loadParkingDataset, loadLoungeDataset, newsForAirport, type Airport, type DropOffRecord } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd, offerLd, speakableLd } from "@mathfamily/geo";
 import { AnswerCard, AnswerLead, AnswerPassage, CaveatChip, Callout, FaqAccordion, FreshnessBadge, LatestUpdates, MiniAnswerBar, PageHeading, SourceCitation, SourcesBlock, EmailCaptureSlot, UkMap, VerifiedStamp } from "@mathfamily/ui";
@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: { params: Promise<{ airport: 
   const structureWord = data.record.isFree ? "rules" : isPerEntryTariff(data.record) ? "per entry" : "time limit";
   return {
     title: `${sn} Airport drop-off charges 2026 — ${data.record.isFree ? "free" : `${headlineFee} fee`}, ${structureWord} & how to avoid it`,
-    description: `${sn} Airport drop-off charges: ${data.record.feeSummary}. How much it costs, the time limit, penalty, payment deadline, Blue Badge rules and how to avoid the fee — verified ${data.record.verifiedAt}.`,
+    description: `${sn} Airport drop-off charges: ${data.record.feeSummary}. How much it costs, the time limit, penalty, payment deadline, Blue Badge rules and how to avoid the fee. Current for 2026 — verified ${data.record.verifiedAt} against the official ${data.airport.name} page.`,
     alternates: { canonical: `/drop-off-charges/${airport}` }
   };
 }
@@ -92,12 +92,20 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
           <FreshnessBadge verifiedAt={pageVerifiedAt} deltaLabel={freshnessDelta(record) ?? undefined} />
           <SourceCitation url={record.sourceUrl} label={`Official ${airport.name} page`} />
         </div>
+        {/* Freshness moat, above the fold: answers the ranked "is this current information" query
+            and matches the verified-against-official-page snippet intent (intel §1, content spec §0). */}
+        <p className="text-sm text-ink-muted">
+          Yes, this is current information: {sn} Airport&apos;s drop-off charge was verified on{" "}
+          {new Date(`${pageVerifiedAt}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" })}{" "}
+          against the official {airport.name} page.
+        </p>
       </header>
 
       {!record.isFree ? (
         <div className="flex flex-wrap gap-2">
           {record.maxStayMinutes !== null ? <CaveatChip>Max stay {record.maxStayMinutes} min</CaveatChip> : null}
           {record.penaltyPence !== null ? <CaveatChip>{formatPence(record.penaltyPence)} penalty if unpaid</CaveatChip> : null}
+          {record.paymentDeadline && /online/i.test(record.paymentDeadline) ? <CaveatChip>Pay online — no barrier</CaveatChip> : null}
           {paymentDeadlineChip(record) ? <CaveatChip>{paymentDeadlineChip(record)}</CaveatChip> : null}
         </div>
       ) : null}
@@ -111,7 +119,7 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
       >
         {[
           ...(record.penaltyPence !== null ? [`Penalty if unpaid: ${formatPence(record.penaltyPence)}`] : []),
-          ...(record.freeAlternative ? [`Free alternative: ${record.freeAlternative.name} (${record.freeAlternative.minutesFree} min)`] : []),
+          ...(record.freeAlternative ? [`Free alternative: ${record.freeAlternative.name}${isPublicTransportAlt(record.freeAlternative) ? " (public transport)" : ` (${record.freeAlternative.minutesFree} min)`}`] : []),
           ...(record.paymentDeadline ? [`Pay by: ${record.paymentDeadline}`] : [])
         ]}
       </AnswerLead>
@@ -137,20 +145,20 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
       <AnswerPassage question={`What does it cost to drop someone off at ${airport.name}?`}>
         {record.isFree
           ? <>Dropping off at {airport.name} is free at the forecourt — no charge applies when using the designated drop-off zone. This is an official, date-stamped snapshot read directly from the airport's published page and verified {record.verifiedAt}.{record.freeAlternative ? <> The {record.freeAlternative.name} also provides free waiting for up to {record.freeAlternative.minutesFree} minutes.</> : " Always check the airport's own page for any changes before you travel."}</>
-          : <>{airport.name} levies a charge to use the drop-off forecourt: {record.feeSummary.charAt(0).toLowerCase()}{record.feeSummary.slice(1)}{bandPriceParenthetical(record) ? <> ({bandPriceParenthetical(record)})</> : ""}{record.penaltyPence !== null ? <>; unpaid visits incur a {formatPence(record.penaltyPence)} penalty charge</> : ""}. {record.freeAlternative ? <>A free alternative, {record.freeAlternative.name}, is available for {record.freeAlternative.minutesFree} minutes.</> : <>No published free-forecourt alternative is available.</>} All figures are official, date-stamped snapshots read from the airport's own published page and verified {record.verifiedAt}.</>}
+          : <>{airport.name} levies a charge to use the drop-off forecourt: {record.feeSummary.charAt(0).toLowerCase()}{record.feeSummary.slice(1)}{bandPriceParenthetical(record) ? <> ({bandPriceParenthetical(record)})</> : ""}{record.penaltyPence !== null ? <>; unpaid visits incur a {formatPence(record.penaltyPence)} penalty charge</> : ""}. {record.freeAlternative ? (isPublicTransportAlt(record.freeAlternative) ? <>A free alternative is to arrive by the {record.freeAlternative.name}, which reaches the terminal without using the forecourt.</> : <>A free alternative, {record.freeAlternative.name}, is available for {record.freeAlternative.minutesFree} minutes.</>) : <>No published free-forecourt alternative is available.</>} All figures are official, date-stamped snapshots read from the airport's own published page and verified {record.verifiedAt}.</>}
       </AnswerPassage>
 
       {trend ? <p className="text-sm font-medium text-warning">{trend}</p> : null}
 
       {timeLimitNote ? (
         <AnswerPassage question={`Is there a time limit on the ${sn} drop-off zone?`}>
-          {timeLimitNote}{record.paymentDeadline ? <> Payment is barrier-free: you can settle online by {record.paymentDeadline}.</> : null} These figures are read from the official {airport.name} page and verified {record.verifiedAt}.
+          {timeLimitNote}{record.paymentDeadline ? <> Payment is barrier-free: you can settle online by {record.paymentDeadline}.</> : null} (This drop-off charge is sometimes called the {sn} drop-off levy or kiss-and-fly charge.) These figures are read from the official {airport.name} page and verified {record.verifiedAt}.
         </AnswerPassage>
       ) : null}
 
       {record.freeAlternative ? (
         <Callout variant="free" title={`The free alternative: ${record.freeAlternative.name}`}>
-          Free for {record.freeAlternative.minutesFree} minutes. {record.freeAlternative.details}
+          {isPublicTransportAlt(record.freeAlternative) ? <>{record.freeAlternative.details}</> : <>Free for {record.freeAlternative.minutesFree} minutes. {record.freeAlternative.details}</>}
         </Callout>
       ) : null}
 
@@ -188,6 +196,11 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
         <section className="space-y-2">
           <h2 className="text-lg font-semibold text-ink">More at this airport</h2>
           <ul className="space-y-1 text-sm">
+            <li>
+              <Link href={`/airport-parking-options/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
+                Cheapest way to park or drop off at {airport.name}: all options compared →
+              </Link>
+            </li>
             {hasCompare ? (
               <li>
                 <Link href={`/parking-vs-drop-off/${airport.slug}`} className="text-brand-accent underline underline-offset-4">

@@ -72,4 +72,38 @@ describe("DropOffRecordSchema", () => {
   it("rejects a record with an unknown field (pentaltyPence typo)", () => {
     expect(() => DropOffRecordSchema.parse({ ...validRecord, pentaltyPence: 5000 })).toThrow();
   });
+
+  // Public-transport free alternative: minutesFree must be null, kind set.
+  it("accepts a public-transport free alternative with null minutesFree", () => {
+    expect(() =>
+      DropOffRecordSchema.parse({
+        ...validRecord,
+        freeAlternative: { name: "DLR", kind: "public-transport", minutesFree: null, details: "Train to the terminal." }
+      })
+    ).not.toThrow();
+  });
+  it("rejects a public-transport free alternative that fabricates minutesFree", () => {
+    expect(() =>
+      DropOffRecordSchema.parse({
+        ...validRecord,
+        freeAlternative: { name: "DLR", kind: "public-transport", minutesFree: 30, details: "Train to the terminal." }
+      })
+    ).toThrow();
+  });
+  it("rejects a car-park free alternative with null minutesFree", () => {
+    expect(() =>
+      DropOffRecordSchema.parse({
+        ...validRecord,
+        freeAlternative: { name: "Long Stay", kind: "car-park", minutesFree: null, details: "Free for a bit." }
+      })
+    ).toThrow();
+  });
+  it("accepts a legacy car-park free alternative with no kind field", () => {
+    expect(() =>
+      DropOffRecordSchema.parse({
+        ...validRecord,
+        freeAlternative: { name: "Long Stay", minutesFree: 30, details: "Free for 30 min." }
+      })
+    ).not.toThrow();
+  });
 });

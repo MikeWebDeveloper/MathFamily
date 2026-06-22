@@ -12,7 +12,9 @@ export interface DropOffTariff {
   perMinuteAfterPence: number | null; // published per-minute rate after the last band
   maxChargePence: number | null; // published cap on the total charge
   penaltyPence: number | null;
-  freeAlternative: { name: string; minutesFree: number } | null;
+  // minutesFree is null for public-transport alternatives (rail/DLR to the terminal), which have
+  // no "free minutes" concept; a positive integer for free car parks.
+  freeAlternative: { name: string; minutesFree: number | null } | null;
   verifiedAt: string; // YYYY-MM-DD
 }
 
@@ -52,9 +54,13 @@ export function quoteDropOff(tariff: DropOffTariff, stayMinutes: number, now: Da
     });
   }
   if (tariff.freeAlternative) {
+    const fa = tariff.freeAlternative;
     warnings.push({
       code: "FREE_ALTERNATIVE_EXISTS",
-      message: `${tariff.freeAlternative.name} is free for ${tariff.freeAlternative.minutesFree} minutes.`
+      message:
+        fa.minutesFree === null
+          ? `${fa.name} reaches the terminal without using the paid forecourt.`
+          : `${fa.name} is free for ${fa.minutesFree} minutes.`
     });
   }
 

@@ -23,5 +23,6 @@
   { "name": "Bournemouth", "slug": "bournemouth", "iata": "BOH", "region": "South West", "lat": 50.78, "lng": -1.8425 },
   { "name": "Norwich", "slug": "norwich", "iata": "NWI", "region": "East of England", "lat": 52.6758, "lng": 1.2828 },
   { "name": "Inverness", "slug": "inverness", "iata": "INV", "region": "Scotland", "lat": 57.5425, "lng": -4.0475 },
-  { "name": "Teesside International", "slug": "teesside", "iata": "MME", "region": "North East", "lat": 54.5092, "lng": -1.4294 }
+  { "name": "Teesside International", "slug": "teesside", "iata": "MME", "region": "North East", "lat": 54.5092, "lng": -1.4294 },
+  { "name": "Glasgow Prestwick", "slug": "prestwick", "iata": "PIK", "region": "Scotland", "lat": 55.5094, "lng": -4.5867 }
 ]

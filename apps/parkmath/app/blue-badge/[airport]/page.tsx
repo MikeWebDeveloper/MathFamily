@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { loadAirports, loadDropOffDataset, newsForAirport, type Airport, type DropOffRecord } from "@mathfamily/data";
+import { isPublicTransportAlt, loadAirports, loadDropOffDataset, newsForAirport, type Airport, type DropOffRecord } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, howToLd, JsonLd, speakableLd } from "@mathfamily/geo";
 import { AnswerLead, AnswerPassage, Callout, CaveatChip, EmailCaptureSlot, FaqAccordion, FreshnessBadge, LatestUpdates, MiniAnswerBar, PageHeading, SourceCitation, SourcesBlock } from "@mathfamily/ui";
@@ -147,13 +147,13 @@ export default async function BlueBadgePage({ params }: { params: Promise<{ airp
       ) : (
         <Callout variant="info" title="No specific process is published">
           {airport.name}&apos;s official page doesn&apos;t describe a Blue Badge claim process for the drop-off forecourt.
-          {record.freeAlternative ? <> If you need a free option, any driver can use the {record.freeAlternative.name} (free for {record.freeAlternative.minutesFree} minutes).</> : <> Contact the airport directly to ask about assistance.</>}
+          {record.freeAlternative ? (isPublicTransportAlt(record.freeAlternative) ? <> If you need a free option, any traveller can arrive by the {record.freeAlternative.name} instead of the forecourt.</> : <> If you need a free option, any driver can use the {record.freeAlternative.name} (free for {record.freeAlternative.minutesFree} minutes).</>) : <> Contact the airport directly to ask about assistance.</>}
         </Callout>
       )}
 
       {record.freeAlternative ? (
         <Callout variant="free" title={`Free for everyone: ${record.freeAlternative.name}`}>
-          Free for {record.freeAlternative.minutesFree} minutes for any driver — Blue Badge or not. {record.freeAlternative.details}
+          {isPublicTransportAlt(record.freeAlternative) ? <>Open to any traveller — Blue Badge or not. {record.freeAlternative.details}</> : <>Free for {record.freeAlternative.minutesFree} minutes for any driver — Blue Badge or not. {record.freeAlternative.details}</>}
         </Callout>
       ) : null}
 

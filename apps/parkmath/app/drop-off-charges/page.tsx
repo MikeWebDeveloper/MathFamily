@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { loadAirports, loadDropOffDataset } from "@mathfamily/data";
+import { isPublicTransportAlt, loadAirports, loadDropOffDataset } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, datasetLd, itemListLd, JsonLd, tableLd } from "@mathfamily/geo";
 import { AnswerPassage, FreshnessBadge, OpenDataBand, PageHeading, StatStrip } from "@mathfamily/ui";
@@ -53,7 +53,7 @@ export default function MasterTablePage() {
       perMin: perMinPence !== null ? `${formatPence(Math.round(perMinPence))}/min` : r.isFree ? "Free" : "Flat",
       timeLimit: r.isFree ? "—" : isPerEntryTariff(r) ? "Per entry" : `${r.bands[0]?.upToMinutes ?? "—"} min`,
       penalty: r.penaltyPence !== null ? formatPence(r.penaltyPence) : "—",
-      freeAlt: r.freeAlternative ? `${r.freeAlternative.name} (${r.freeAlternative.minutesFree} min)` : "—",
+      freeAlt: r.freeAlternative ? (isPublicTransportAlt(r.freeAlternative) ? `${r.freeAlternative.name} (public transport)` : `${r.freeAlternative.name} (${r.freeAlternative.minutesFree} min)`) : "—",
       sourceUrl: r.sourceUrl,
       verifiedAt: r.verifiedAt
     };
@@ -190,6 +190,17 @@ export default function MasterTablePage() {
               </li>
             ))}
         </ul>
+      </section>
+
+      <section className="space-y-2">
+        <h2 className="text-lg font-semibold text-ink">Parking for the trip, not just dropping off?</h2>
+        <p className="text-sm text-ink-muted">
+          See the cheapest way in and out of each airport — drop-off, the free alternative, drive-up gate parking, Park &amp;
+          Ride and Meet &amp; Greet, compared neutrally:{" "}
+          <Link href="/airport-parking-options" className="text-brand-accent underline underline-offset-4">
+            UK airport parking options compared →
+          </Link>
+        </p>
       </section>
 
       <section className="space-y-2 rounded-lg border border-ink/10 bg-surface-muted px-4 py-3 text-sm">
