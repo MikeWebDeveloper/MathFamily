@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { DENTAL_PARTNERS, resolveDentalSlot } from "../lib/partners";
+import { DENTAL_PARTNERS, resolveDentalSlot, resolveDeeplink } from "../lib/partners";
 
 describe("affiliate slot is inert by design", () => {
   it("resolves to an inert, inactive slot with no URL", () => {
@@ -15,5 +15,11 @@ describe("affiliate slot is inert by design", () => {
       expect(partner.active).toBe(false);
       expect(partner.deeplinkTemplate).toBe("");
     }
+  });
+
+  it("resolveDeeplink is fail-closed — always null so /go can never emit a live affiliate link", () => {
+    expect(resolveDeeplink([], "")).toBeNull();
+    expect(resolveDeeplink(["dental-plan"], "treatment")).toBeNull();
+    expect(resolveDeeplink(["anything", "deep"], "nhs-charges")).toBeNull();
   });
 });

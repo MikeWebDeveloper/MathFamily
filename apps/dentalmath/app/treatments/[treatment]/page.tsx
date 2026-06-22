@@ -6,6 +6,7 @@ import { breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
 import {
   AnswerLead,
   AnswerPassage,
+  EmailCaptureSlot,
   FaqAccordion,
   FeeGrid,
   FreshnessBadge,
@@ -123,6 +124,14 @@ export default async function TreatmentPage({ params }: { params: Promise<{ trea
         This page is general information, <strong className="font-semibold text-ink">not medical or financial advice</strong>.
         Costs and clinical suitability vary — always check with your dentist or NHS for your own situation.
       </p>
+
+      <EmailCaptureSlot
+        brandName="DentalMath"
+        hook="Get notified when NHS dental charges change"
+        description="UK dental-cost update when NHS charges change"
+        source="treatment"
+        privacyHref="/privacy"
+      />
 
       <p className="text-sm">
         <Link href="/treatments" className="text-brand-accent underline underline-offset-4">← All treatments</Link>
