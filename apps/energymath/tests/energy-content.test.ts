@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { REGIONS, getRegion } from "../lib/energy-data";
+import { REGIONS, GB_AVERAGE, getRegion } from "../lib/energy-data";
 import {
   regionPageModel,
   buildRegionFaqs,
@@ -21,6 +21,38 @@ describe("dataset integrity", () => {
       expect(r.verifiedAt).toMatch(/^\d{4}-\d{2}-\d{2}$/);
       expect(r.electricityUnitRatePence).toBeGreaterThan(0);
       expect(r.gasUnitRatePence).toBeGreaterThan(0);
+      expect(r.electricityStandingChargePence).toBeGreaterThan(0);
+      expect(r.gasStandingChargePence).toBeGreaterThan(0);
+    }
+  });
+
+  it("every region carries REAL verified Ofgem regional rates (not the GB-average placeholder)", () => {
+    // Guard against a silent regression back to seeding all regions with the GB average:
+    // at least one of the four rates must differ from the GB average for every region,
+    // and all 14 must be verified against an Ofgem source.
+    for (const r of REGIONS) {
+      expect(r.verified).toBe(true);
+      const differsFromGbAverage =
+        r.electricityUnitRatePence !== GB_AVERAGE.electricityUnitRatePence ||
+        r.electricityStandingChargePence !== GB_AVERAGE.electricityStandingChargePence ||
+        r.gasUnitRatePence !== GB_AVERAGE.gasUnitRatePence ||
+        r.gasStandingChargePence !== GB_AVERAGE.gasStandingChargePence;
+      expect(differsFromGbAverage).toBe(true);
+    }
+  });
+
+  it("regional rates sit in a sane band around the GB average (no transcription blunders)", () => {
+    // Per-region cap rates vary by a few pence around the GB average; anything wildly
+    // outside this band signals a copy/paste or unit error.
+    for (const r of REGIONS) {
+      expect(r.electricityUnitRatePence).toBeGreaterThan(22);
+      expect(r.electricityUnitRatePence).toBeLessThan(30);
+      expect(r.electricityStandingChargePence).toBeGreaterThan(35);
+      expect(r.electricityStandingChargePence).toBeLessThan(80);
+      expect(r.gasUnitRatePence).toBeGreaterThan(6);
+      expect(r.gasUnitRatePence).toBeLessThan(9);
+      expect(r.gasStandingChargePence).toBeGreaterThan(25);
+      expect(r.gasStandingChargePence).toBeLessThan(33);
     }
   });
 });

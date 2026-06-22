@@ -7,11 +7,25 @@
  *   source URL + verifiedAt date.
  * - Ofgem sets a SEPARATE cap for each of the 14 distribution regions; per-region
  *   unit rates and standing charges differ from the GB average. The exact per-region
- *   figures are published in Ofgem's regional cap tables. Where a precise current
- *   per-region figure could not be verified against an official table at build time,
- *   the region carries `verified: false` and a `// TODO: verify` marker, and the UI
- *   labels its numbers as ESTIMATED (anchored to the GB average) — never as verified.
+ *   figures are published in Ofgem's regional cap tables. All 14 regions below carry
+ *   their REAL per-region Direct Debit rates derived directly from Ofgem's official
+ *   "Final levelised cap rates model (Annex 9): 1 July to 30 September 2026" and are
+ *   marked `verified: true`.
  * - NEVER present an unverified number as verified. NEVER fabricate a precise price.
+ *
+ * DERIVATION (per region, Direct Debit, incl. 5% VAT):
+ * - Ofgem's Annex 9 tab "1a Levelised DTC" publishes, per region, the LEVELISED
+ *   "Other Payment Method" benchmark maximum charges in £/customer/year, excl. VAT,
+ *   as two points: "Nil kWh" (standing charge only) and "m" (at benchmark consumption).
+ *   In the levelised cap, "Other Payment Method" IS the Direct Debit method — its GB
+ *   average reconstructs EXACTLY to Ofgem's published DD consumer figures
+ *   (26.11p/kWh & 57.19p/day electricity; 7.33p/kWh & 29.04p/day gas), which is how
+ *   this derivation was validated.
+ * - standingChargePence = Nil(£) × 1.05 (VAT) ÷ 365 × 100
+ * - unitRatePence       = (m(£) − Nil(£)) × 1.05 (VAT) ÷ benchmarkKwh × 100
+ *   with benchmark consumption (P16b, May 2026 TDCV review): 2,500 kWh electricity
+ *   (single-rate) and 9,500 kWh gas.
+ * Source file: Annex 9, 1 Jul–30 Sep 2026 (linked from OFGEM_SOURCE_URL). Verified 2026-06-22.
  */
 
 export const CAP_PERIOD = "1 July to 30 September 2026";
@@ -125,45 +139,59 @@ export interface EnergyRegion {
 /**
  * The 14 GB electricity distribution regions Ofgem sets a separate cap for.
  *
- * IMPORTANT: only the GB-average figures are independently verified at build time.
- * Per-region precise figures vary by a few pence around the GB average. We could
- * not verify each region's exact current table offline, so every region below is
- * seeded with the VERIFIED GB-average rates and marked `verified: false` (i.e.
- * "regional figure not yet confirmed — shown as GB-average estimate"). This keeps
- * the data honest: real, sourced numbers, never fabricated regional precision.
- * // TODO: verify — replace each region's four rates with its exact Ofgem regional
- * // cap figure (Ofgem "Energy price cap by region" table) and flip verified: true.
+ * Every region below carries its REAL per-region Direct Debit rates derived from
+ * Ofgem's official "Final levelised cap rates model (Annex 9): 1 July to 30 September
+ * 2026" (the "1a Levelised DTC" tab, "Other Payment Method" block, which is the
+ * Direct Debit method in the levelised cap). All figures include 5% VAT. The
+ * derivation was validated because the GB average reconstructs EXACTLY to Ofgem's
+ * published DD figures (26.11/57.19 electricity, 7.33/29.04 gas). See file header.
+ *
+ * The `region` field documents Ofgem's own region label (which differs in wording
+ * from the consumer-friendly `name`): Ofgem "Northern" = North East England,
+ * "Midlands" = West Midlands, "Southern Western" = South West.
  */
-function regionSeed(slug: string, name: string, note?: string): EnergyRegion {
+function region(
+  slug: string,
+  name: string,
+  ofgemRegion: string,
+  elecUnit: number,
+  elecStanding: number,
+  gasUnit: number,
+  gasStanding: number
+): EnergyRegion {
   return {
     slug,
     name,
-    electricityUnitRatePence: GB_AVERAGE.electricityUnitRatePence,
-    electricityStandingChargePence: GB_AVERAGE.electricityStandingChargePence,
-    gasUnitRatePence: GB_AVERAGE.gasUnitRatePence,
-    gasStandingChargePence: GB_AVERAGE.gasStandingChargePence,
-    verified: false, // regional precision not yet confirmed — GB-average estimate
+    electricityUnitRatePence: elecUnit,
+    electricityStandingChargePence: elecStanding,
+    gasUnitRatePence: gasUnit,
+    gasStandingChargePence: gasStanding,
+    verified: true,
     sourceUrl: OFGEM_SOURCE_URL,
     verifiedAt: GB_VERIFIED_AT,
-    note
+    note: `Direct Debit, incl. VAT. Derived from Ofgem Annex 9 levelised cap rates (1 Jul–30 Sep 2026), region "${ofgemRegion}".`
   };
 }
 
+// Per-region Direct Debit rates (p/kWh unit rate, p/day standing charge), incl. VAT.
+// Source: Ofgem Annex 9 "1a Levelised DTC" (Other Payment Method = Direct Debit),
+// 1 Jul–30 Sep 2026. Verified 2026-06-22. GB average reconstructs to 26.11/57.19/7.33/29.04.
 export const REGIONS: EnergyRegion[] = [
-  regionSeed("london", "London"),
-  regionSeed("south-east", "South East"),
-  regionSeed("southern", "Southern"),
-  regionSeed("south-west", "South West"),
-  regionSeed("south-wales", "South Wales"),
-  regionSeed("eastern", "Eastern (East of England)"),
-  regionSeed("east-midlands", "East Midlands"),
-  regionSeed("west-midlands", "West Midlands"),
-  regionSeed("yorkshire", "Yorkshire"),
-  regionSeed("north-east", "North East"),
-  regionSeed("north-west", "North West"),
-  regionSeed("merseyside-north-wales", "Merseyside & North Wales"),
-  regionSeed("north-scotland", "North Scotland"),
-  regionSeed("south-scotland", "South Scotland")
+  //      slug                      name                        Ofgem region          elecU  elecSC  gasU  gasSC
+  region("london",                 "London",                   "London",             26.35, 44.78, 7.5,  29.52),
+  region("south-east",             "South East",               "South East",         26.67, 54.45, 7.39, 28.63),
+  region("southern",               "Southern",                 "Southern",           26.42, 49.7,  7.53, 28.53),
+  region("south-west",             "South West",               "Southern Western",   26.39, 57.89, 7.48, 28.68),
+  region("south-wales",            "South Wales",              "South Wales",        26.33, 57.84, 7.42, 29.3),
+  region("eastern",                "Eastern (East of England)","Eastern",            26.38, 53.94, 7.26, 28.7),
+  region("east-midlands",          "East Midlands",            "East Midlands",      25.1,  53.6,  7.19, 28.78),
+  region("west-midlands",          "West Midlands",            "Midlands",           25.33, 59.71, 7.27, 29.06),
+  region("yorkshire",              "Yorkshire",                "Yorkshire",          25.3,  64.38, 7.27, 29.12),
+  region("north-east",             "North East",               "Northern",           25.22, 64.29, 7.28, 29.15),
+  region("north-west",             "North West",               "North West",         26.13, 47.61, 7.24, 29.17),
+  region("merseyside-north-wales", "Merseyside & North Wales", "N Wales and Mersey", 27.66, 70.76, 7.28, 29.42),
+  region("north-scotland",         "North Scotland",           "Northern Scotland",  26.42, 57.55, 7.23, 29.22),
+  region("south-scotland",         "South Scotland",           "Southern Scotland",  25.85, 64.17, 7.23, 29.24)
 ];
 
 export const DATASET_VERSION = "0.1.0";
