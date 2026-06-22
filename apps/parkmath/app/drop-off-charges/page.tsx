@@ -122,6 +122,19 @@ export default function MasterTablePage() {
         citation={`ParkMath, "UK airport drop-off charges 2026", verified ${latestVerified}, parkmath.co.uk`}
       />
 
+      <aside className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-brand-accent/25 bg-blue-50/60 px-4 py-3 text-sm dark:bg-brand-accent/[0.06] dark:border-brand-accent/20">
+        <p className="text-ink-muted">
+          <span className="font-semibold text-ink">Run a site or blog?</span> Embed this always-current
+          table for free — it updates itself whenever a fee changes.
+        </p>
+        <Link
+          href="/embed"
+          className="inline-flex min-h-[40px] items-center gap-1 rounded-md border border-brand-accent/40 px-3 py-1.5 font-semibold text-brand-accent hover:bg-brand-accent/5"
+        >
+          Get the embed code →
+        </Link>
+      </aside>
+
       <section className="space-y-3">
         <h2 className="text-h2 font-semibold text-ink">Every UK airport, compared</h2>
         <p className="text-sm text-ink-muted">

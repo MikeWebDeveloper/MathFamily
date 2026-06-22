@@ -41,6 +41,7 @@ const FOOTER_NAV = [
   { label: "Lounges", href: "/airport-lounges" },
   { label: "About", href: "/about" },
   { label: "How we verify", href: "/methodology" },
+  { label: "Embed our data", href: "/embed" },
   { label: "Privacy", href: "/privacy" }
 ];
 
