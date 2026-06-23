@@ -135,8 +135,29 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
             </span>
           }
         />
-        <UkMap markers={[{ lat: airport.lat, lng: airport.lng, active: true }]} className="hidden h-[160px] w-auto self-center text-brand-strong sm:block" />
+        <UkMap markers={[{ lat: airport.lat, lng: airport.lng, active: true }]} className="hidden h-[160px] w-auto self-center text-brand-strong sm:block" aria-hidden />
       </div>
+
+      {/* Penalty stat chip — inline pair: charge tile + penalty tile, visible at a glance */}
+      {!record.isFree && record.penaltyPence !== null ? (
+        <div className="flex flex-wrap gap-3" role="region" aria-label="Charge and penalty at a glance">
+          <div className="flex items-center gap-2 rounded-lg border border-ink/10 bg-surface-muted px-3 py-2 text-sm">
+            <span className="font-bold text-ink">{formatPence(record.bands[0]?.totalPence ?? 0)}</span>
+            {record.bands[0] ? <span className="text-ink-muted">· {record.bands[0].upToMinutes} min</span> : null}
+            <span className="text-xs text-ink-muted/70 ml-1">charge</span>
+          </div>
+          <div className="flex items-center gap-2 rounded-lg border border-warning/30 bg-warning/8 px-3 py-2 text-sm">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-warning)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="shrink-0">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            <span className="font-bold text-warning">{formatPence(record.penaltyPence)}</span>
+            <span className="text-xs text-ink-muted/80">penalty if unpaid</span>
+          </div>
+        </div>
+      ) : null}
+
       <MiniAnswerBar
         summary={`${airport.iata} drop-off · ${record.isFree ? "Free" : record.feeSummary}`}
         verified

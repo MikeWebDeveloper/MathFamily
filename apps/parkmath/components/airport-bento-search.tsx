@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { CommandSearch, IataTile, Sparkline, TrendChip } from "@mathfamily/ui";
+import { CommandSearch, IataTile, Sparkline } from "@mathfamily/ui";
 import { formatPence } from "@mathfamily/engine";
 
 export interface AirportTile {
@@ -14,9 +14,9 @@ export interface AirportTile {
   priorPence: number | null;
 }
 
-/** The command-search hero + the tracked-airport bento grid. Trend chips and
- *  sparklines render only where a verified prior-year price exists — ParkMath
- *  never draws a curve it can't source. */
+/** The command-search hero + the tracked-airport bento grid. Sparklines render
+ *  only where a verified prior-year price exists — ParkMath never draws a curve
+ *  it can't source. */
 export function AirportBentoSearch({ airports }: { airports: AirportTile[] }) {
   const [query, setQuery] = useState("");
   const q = query.trim().toLowerCase();
@@ -24,7 +24,6 @@ export function AirportBentoSearch({ airports }: { airports: AirportTile[] }) {
     () => (q ? airports.filter((a) => a.name.toLowerCase().includes(q) || a.iata.toLowerCase() === q) : airports),
     [airports, q]
   );
-  const withTrend = airports.filter((a) => !a.isFree && a.priorPence != null).length;
 
   return (
     <section className="space-y-4">
@@ -40,12 +39,6 @@ export function AirportBentoSearch({ airports }: { airports: AirportTile[] }) {
         placeholder="Search your airport — e.g. Gatwick or LGW"
       />
 
-      {withTrend > 0 ? (
-        <p className="text-xs text-ink-muted">
-          Year-on-year change shown where a verified 2025 price exists ({withTrend} so far).
-        </p>
-      ) : null}
-
       {matches.length > 0 ? (
         <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           {matches.map((a) => {
@@ -54,17 +47,13 @@ export function AirportBentoSearch({ airports }: { airports: AirportTile[] }) {
               <li key={a.slug}>
                 <a
                   href={`/drop-off-charges/${a.slug}`}
-                  className="mf-card-lg mf-soft-lift mf-press mf-edge group flex h-full flex-col gap-3 p-4 outline-none focus-visible:ring-2 focus-visible:ring-brand-accent/40"
+                  className="mf-card-lg mf-soft-lift mf-press mf-edge group flex min-h-[44px] h-full flex-col gap-3 p-4 outline-none focus-visible:ring-2 focus-visible:ring-brand-accent/40"
                 >
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="flex items-center gap-2 text-sm font-semibold text-ink transition-colors group-hover:text-brand-accent">
-                      {a.name} <IataTile code={a.iata} />
+                  <div className="flex items-center gap-2">
+                    <span className="flex-1 min-w-0 flex items-center gap-2 text-sm font-semibold text-ink transition-colors group-hover:text-brand-accent">
+                      <span className="truncate">{a.name}</span>
+                      <IataTile code={a.iata} />
                     </span>
-                    {a.isFree ? (
-                      <span className="rounded-full bg-positive/10 px-2 py-0.5 text-[11px] font-bold text-positive">Free</span>
-                    ) : series ? (
-                      <TrendChip data={series} baseLabel="vs 2025" />
-                    ) : null}
                   </div>
                   <div className="flex items-end justify-between gap-2">
                     <span

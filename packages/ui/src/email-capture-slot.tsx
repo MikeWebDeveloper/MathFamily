@@ -134,7 +134,7 @@ export function EmailCaptureSlot({
           type="checkbox"
           name="consent"
           required
-          className="mt-0.5 size-4 shrink-0 rounded border-ink/30 text-brand-accent focus:ring-2 focus:ring-brand-accent/30"
+          className="mt-0.5 size-5 shrink-0 rounded border-ink/30 text-brand-accent focus:ring-2 focus:ring-brand-accent/30"
         />
         <span>
           Email me ParkMath&apos;s monthly UK drop-off fee update. I can unsubscribe any time. See our{" "}

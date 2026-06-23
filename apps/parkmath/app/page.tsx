@@ -173,17 +173,21 @@ export default function HomePage() {
         </a>
       </section>
 
-      {/* ── 7. PARTNER EXTRAS — calm, neutral-voice ── */}
-      <AffiliateExtras />
-
-      <RunwayDivider className="h-2 w-full text-brand-strong/15" />
-
-      {/* ── 8. EMAIL CAPTURE + FAMILY LINKS ── */}
-      <div className="mf-reveal space-y-8" style={{ "--mf-delay": "100ms" } as CSSProperties}>
+      {/* ── 7. EMAIL CAPTURE — above affiliate cards to lift email moat ── */}
+      <div className="mf-reveal" style={{ "--mf-delay": "90ms" } as CSSProperties}>
         <EmailCaptureSlot
           source="hub"
           hook="Drop-off fees change every January — get told when a UK airport's changes."
         />
+      </div>
+
+      {/* ── 8. PARTNER EXTRAS — calm, neutral-voice ── */}
+      <AffiliateExtras />
+
+      <RunwayDivider className="h-2 w-full text-brand-strong/15" />
+
+      {/* ── 9. FAMILY LINKS ── */}
+      <div className="mf-reveal" style={{ "--mf-delay": "100ms" } as CSSProperties}>
         <FamilyLinks />
       </div>
     </div>
