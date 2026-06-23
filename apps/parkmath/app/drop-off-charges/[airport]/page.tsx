@@ -140,7 +140,7 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
 
       {/* Penalty stat chip — inline pair: charge tile + penalty tile, visible at a glance */}
       {!record.isFree && record.penaltyPence !== null ? (
-        <div className="flex flex-wrap gap-3" aria-label="Fee summary">
+        <div className="flex flex-wrap gap-3" role="region" aria-label="Charge and penalty at a glance">
           <div className="flex items-center gap-2 rounded-lg border border-ink/10 bg-surface-muted px-3 py-2 text-sm">
             <span className="font-bold text-ink">{formatPence(record.bands[0]?.totalPence ?? 0)}</span>
             {record.bands[0] ? <span className="text-ink-muted">· {record.bands[0].upToMinutes} min</span> : null}
