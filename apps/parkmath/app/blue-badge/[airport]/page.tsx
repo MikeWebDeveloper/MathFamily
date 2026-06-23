@@ -6,6 +6,7 @@ import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, howToLd, JsonLd, speakableLd } from "@mathfamily/geo";
 import { AnswerLead, AnswerPassage, Callout, CaveatChip, EmailCaptureSlot, FaqAccordion, FreshnessBadge, LatestUpdates, MiniAnswerBar, PageHeading, SourceCitation, SourcesBlock } from "@mathfamily/ui";
 import { HolidayExtrasCard } from "@/components/holiday-extras-card";
+import { AirportContextLinks } from "@/components/airport-context-links";
 import { freshnessDelta } from "@/lib/content";
 import {
   blueBadgeAnswer,
@@ -17,7 +18,6 @@ import {
   classifyBlueBadge,
   qualifiesForBlueBadgePage
 } from "@/lib/blue-badge-content";
-import { airportHasParkingVsDropOff } from "@/lib/parking-vs-drop-off-content";
 
 export const dynamicParams = false;
 
@@ -177,35 +177,12 @@ export default async function BlueBadgePage({ params }: { params: Promise<{ airp
         hook={`Get notified when ${airport.name} changes its Blue Badge or drop-off policy`}
       />
 
-      <section className="space-y-2">
-        <h2 className="text-lg font-semibold text-ink">More at this airport</h2>
-        <ul className="space-y-1 text-sm">
-          <li>
-            <Link href={`/drop-off-charges/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
-              Full {airport.name} drop-off charge breakdown →
-            </Link>
-          </li>
-          {!record.isFree && record.freeAlternative ? (
-            <li>
-              <Link href={`/avoid-drop-off-charge/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
-                How to avoid the {airport.name} drop-off charge →
-              </Link>
-            </li>
-          ) : null}
-          {airportHasParkingVsDropOff(airport.slug) ? (
-            <li>
-              <Link href={`/parking-vs-drop-off/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
-                Parking vs drop-off at {airport.name}: which is cheaper? →
-              </Link>
-            </li>
-          ) : null}
-          <li>
-            <a href="/blue-badge" className="text-brand-accent underline underline-offset-4">
-              Blue Badge drop-off at every UK airport →
-            </a>
-          </li>
-        </ul>
-      </section>
+      <AirportContextLinks slug={airport.slug} airportName={airport.name} currentPage="blue-badge" />
+      <p>
+        <a href="/blue-badge" className="text-sm font-medium text-brand-accent underline underline-offset-4">
+          Blue Badge drop-off at every UK airport →
+        </a>
+      </p>
 
       {(() => {
         const updates = newsForAirport(airport.slug, 3);

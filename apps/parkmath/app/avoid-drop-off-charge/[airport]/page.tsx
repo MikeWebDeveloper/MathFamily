@@ -6,9 +6,9 @@ import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, howToLd, JsonLd, speakableLd } from "@mathfamily/geo";
 import { AnswerLead, AnswerPassage, Callout, CaveatChip, EmailCaptureSlot, FaqAccordion, FreshnessBadge, LatestUpdates, MiniAnswerBar, PageHeading, SourceCitation, SourcesBlock } from "@mathfamily/ui";
 import { HolidayExtrasCard } from "@/components/holiday-extras-card";
+import { AirportContextLinks } from "@/components/airport-context-links";
 import { freshnessDelta } from "@/lib/content";
 import { avoidAnswer, avoidLeadFacts, buildAvoidFaqs, buildAvoidSteps, qualifiesForAvoidPage } from "@/lib/avoid-content";
-import { airportHasParkingVsDropOff } from "@/lib/parking-vs-drop-off-content";
 
 export const dynamicParams = false;
 
@@ -148,23 +148,7 @@ export default async function AvoidDropOffPage({ params }: { params: Promise<{ a
         hook={`Get notified when ${airport.name} changes its drop-off fee`}
       />
 
-      <p>
-        <Link href={`/drop-off-charges/${airport.slug}`} className="text-sm font-medium text-brand-accent underline underline-offset-4">
-          Full {airport.name} drop-off charge breakdown →
-        </Link>
-      </p>
-      {airportHasParkingVsDropOff(airport.slug) ? (
-        <p>
-          <Link href={`/parking-vs-drop-off/${airport.slug}`} className="text-sm font-medium text-brand-accent underline underline-offset-4">
-            Parking vs drop-off at {airport.name}: which is cheaper? →
-          </Link>
-        </p>
-      ) : null}
-      <p>
-        <Link href={`/blue-badge/${airport.slug}`} className="text-sm font-medium text-brand-accent underline underline-offset-4">
-          Blue Badge drop-off at {airport.name}: is it free? →
-        </Link>
-      </p>
+      <AirportContextLinks slug={airport.slug} airportName={airport.name} currentPage="avoid" />
       <p>
         <a href="/avoid-drop-off-charge" className="text-sm font-medium text-brand-accent underline underline-offset-4">
           How to avoid the charge at every UK airport →

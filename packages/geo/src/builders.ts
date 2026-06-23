@@ -50,6 +50,7 @@ export function datasetLd(input: {
   dateModified: string;
   siteUrl: string;
   creatorName: string;
+  distribution?: { encodingFormat: string; contentUrl: string };
 }) {
   return {
     "@context": "https://schema.org",
@@ -59,7 +60,15 @@ export function datasetLd(input: {
     url: input.url,
     dateModified: input.dateModified,
     isAccessibleForFree: true,
-    creator: { "@type": "Organization" as const, "@id": `${input.siteUrl}/#organization`, name: input.creatorName }
+    license: "https://creativecommons.org/licenses/by/4.0/",
+    creator: { "@type": "Organization" as const, "@id": `${input.siteUrl}/#organization`, name: input.creatorName },
+    ...(input.distribution ? {
+      distribution: [{
+        "@type": "DataDownload" as const,
+        encodingFormat: input.distribution.encodingFormat,
+        contentUrl: input.distribution.contentUrl
+      }]
+    } : {})
   };
 }
 

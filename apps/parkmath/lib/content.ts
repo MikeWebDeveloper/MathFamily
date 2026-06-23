@@ -332,3 +332,31 @@ export function bandPriceParenthetical(record: DropOffRecord): string | null {
   if (record.feeSummary.toLowerCase().includes(phrase.toLowerCase())) return null;
   return `${price} for up to ${first.upToMinutes} minutes`;
 }
+
+/**
+ * Returns "levy" for airports where the official name uses "levy" language
+ * (Stansted's "airport levy" terminology matches GSC query "airport levy charges stansted" pos 7.9).
+ */
+export function dropOffLevyWord(airportSlug: string): string | null {
+  return airportSlug === "stansted" ? "levy" : null;
+}
+
+/**
+ * Returns a brand-specific modifier word for the title, where a branded term appears
+ * in a striking-distance GSC query not already covered by the airport name.
+ * - southend: "Express" (from GSC query "southend express drop off" pos 10.6)
+ */
+export function dropOffBrandModifier(airportSlug: string): string | null {
+  const map: Record<string, string> = {
+    southend: "Express",
+  };
+  return map[airportSlug] ?? null;
+}
+
+/**
+ * Bristol ranks for "bristol drop off fee" (pos 10.7) — add "& fee" alongside "charges"
+ * in the title to capture both query variants.
+ */
+export function dropOffAddFeeVariant(airportSlug: string): boolean {
+  return airportSlug === "bristol";
+}

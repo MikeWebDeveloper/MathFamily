@@ -76,7 +76,11 @@ export default function MasterTablePage() {
           url: `${siteUrl}/drop-off-charges`,
           dateModified: latestVerified,
           siteUrl,
-          creatorName: "ParkMath"
+          creatorName: "ParkMath",
+          distribution: {
+            encodingFormat: "text/csv",
+            contentUrl: `${siteUrl}/data/drop-off-charges.csv`
+          }
         })}
       />
       <JsonLd
@@ -163,6 +167,12 @@ export default function MasterTablePage() {
           )}
         </AnswerPassage>
         <DropOffLeagueTable league={league} />
+        <p className="text-sm text-ink-muted">
+          See the dedicated league table page:{" "}
+          <Link href="/airport-drop-off-league-table" className="text-brand-accent underline underline-offset-4">
+            UK airport drop-off charges ranked by cost per minute →
+          </Link>
+        </p>
       </section>
 
       {/* Affiliate CTA — visually subordinate to the data table above. Fails closed (renders nothing

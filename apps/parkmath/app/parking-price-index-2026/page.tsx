@@ -83,7 +83,11 @@ export default function PriceIndexPage() {
           url: `${siteUrl}/parking-price-index-2026`,
           dateModified: latestVerified,
           siteUrl,
-          creatorName: "ParkMath"
+          creatorName: "ParkMath",
+          distribution: {
+            encodingFormat: "text/csv",
+            contentUrl: `${siteUrl}/data/drop-off-charges.csv`
+          }
         })}
       />
 

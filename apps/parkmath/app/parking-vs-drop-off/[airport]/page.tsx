@@ -6,6 +6,7 @@ import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd, speakableLd } from "@mathfamily/geo";
 import { AnswerLead, AnswerPassage, Callout, CaveatChip, EmailCaptureSlot, FaqAccordion, FeeGrid, FreshnessBadge, LatestUpdates, MiniAnswerBar, PageHeading, SavesVerdict, SourceCitation, SourcesBlock, StatStrip } from "@mathfamily/ui";
 import { HolidayExtrasCard } from "@/components/holiday-extras-card";
+import { AirportContextLinks } from "@/components/airport-context-links";
 import {
   REFERENCE_DAYS,
   buildParkingVsDropOffFaqs,
@@ -159,23 +160,12 @@ export default async function ParkingVsDropOffPage({ params }: { params: Promise
         hook={`Get notified when ${airport.name} changes its parking or drop-off prices`}
       />
 
-      <nav aria-label="Related pages" className="space-y-2">
-        <p>
-          <Link href={`/airport-parking/${airport.slug}`} className="text-sm font-medium text-brand-accent underline underline-offset-4">
-            Full {airport.name} parking comparison — gate vs pre-book →
-          </Link>
-        </p>
-        <p>
-          <Link href={`/drop-off-charges/${airport.slug}`} className="text-sm font-medium text-brand-accent underline underline-offset-4">
-            Full {airport.name} drop-off charge breakdown →
-          </Link>
-        </p>
-        <p>
-          <Link href="/parking-vs-drop-off" className="text-sm font-medium text-brand-accent underline underline-offset-4">
-            Park or drop off? Compare every UK airport →
-          </Link>
-        </p>
-      </nav>
+      <AirportContextLinks slug={airport.slug} airportName={airport.name} currentPage="parking-vs-drop-off" />
+      <p>
+        <Link href="/parking-vs-drop-off" className="text-sm font-medium text-brand-accent underline underline-offset-4">
+          Park or drop off? Compare every UK airport →
+        </Link>
+      </p>
 
       {(() => {
         const updates = newsForAirport(airport.slug, 3);

@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { isPublicTransportAlt, loadAirports, loadDropOffDataset, loadParkingDataset, loadLoungeDataset, newsForAirport, type Airport, type DropOffRecord } from "@mathfamily/data";
+import { isPublicTransportAlt, loadAirports, loadDropOffDataset, newsForAirport, type Airport, type DropOffRecord } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd, offerLd, speakableLd } from "@mathfamily/geo";
 import { AnswerCard, AnswerLead, AnswerPassage, CaveatChip, Callout, FaqAccordion, FreshnessBadge, LatestUpdates, MiniAnswerBar, PageHeading, SourceCitation, SourcesBlock, EmailCaptureSlot, UkMap, VerifiedStamp } from "@mathfamily/ui";
 import { DropOffCalculator } from "@/components/drop-off-calculator";
 import { DropOffParkingBridge } from "@/components/drop-off-bridge";
 import { HolidayExtrasCard } from "@/components/holiday-extras-card";
-import { bandPriceParenthetical, buildDropOffFaqs, dropOffTimeLimitNote, freshnessDelta, isPerEntryTariff, paymentDeadlineChip, searchName, trendNote } from "@/lib/content";
-import { airportHasParkingVsDropOff } from "@/lib/parking-vs-drop-off-content";
+import { AirportContextLinks } from "@/components/airport-context-links";
+import { bandPriceParenthetical, buildDropOffFaqs, dropOffAddFeeVariant, dropOffBrandModifier, dropOffLevyWord, dropOffTimeLimitNote, freshnessDelta, isPerEntryTariff, paymentDeadlineChip, searchName, trendNote } from "@/lib/content";
 
 export const dynamicParams = false;
 
@@ -32,8 +32,11 @@ export async function generateMetadata({ params }: { params: Promise<{ airport: 
   const sn = searchName(data.airport.name);
   const headlineFee = data.record.isFree ? "free" : formatPence(data.record.bands[0]?.totalPence ?? 0);
   const structureWord = data.record.isFree ? "rules" : isPerEntryTariff(data.record) ? "per entry" : "time limit";
+  const levyWord = dropOffLevyWord(data.airport.slug);
+  const brandMod = dropOffBrandModifier(data.airport.slug);
+  const addFee = dropOffAddFeeVariant(data.airport.slug);
   return {
-    title: `${sn} Airport drop-off charges 2026 — ${data.record.isFree ? "free" : `${headlineFee} fee`}, ${structureWord} & how to avoid it`,
+    title: `${sn}${brandMod ? ` ${brandMod}` : ''} Airport drop-off charges${levyWord ? ` & ${levyWord}` : ''}${addFee ? ' & fee' : ''} 2026 — ${data.record.isFree ? "free" : `${headlineFee} fee`}, ${structureWord} & how to avoid it`,
     description: `${sn} Airport drop-off charges: ${data.record.feeSummary}. How much it costs, the time limit, penalty, payment deadline, Blue Badge rules and how to avoid the fee. Current for 2026 — verified ${data.record.verifiedAt} against the official ${data.airport.name} page.`,
     alternates: { canonical: `/drop-off-charges/${airport}` }
   };
@@ -49,9 +52,6 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
   const timeLimitNote = dropOffTimeLimitNote(record);
   const trend = trendNote(record);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-  const hasParking = loadParkingDataset().records.some((r) => r.airportSlug === slug);
-  const hasLounge = loadLoungeDataset().records.some((r) => r.airportSlug === slug);
-  const hasCompare = airportHasParkingVsDropOff(slug);
   const latestNews = newsForAirport(airport.slug, 1)[0];
   const pageVerifiedAt = latestNews && latestNews.verifiedAt > record.verifiedAt ? latestNews.verifiedAt : record.verifiedAt;
   const priceValidUntil = new Date(new Date(`${record.verifiedAt}T00:00:00Z`).getTime() + 60 * 86_400_000)
@@ -213,44 +213,7 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
         <FaqAccordion items={faqs} />
       </section>
 
-      {(
-        <section className="space-y-2">
-          <h2 className="text-lg font-semibold text-ink">More at this airport</h2>
-          <ul className="space-y-1 text-sm">
-            <li>
-              <Link href={`/airport-parking-options/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
-                Cheapest way to park or drop off at {airport.name}: all options compared →
-              </Link>
-            </li>
-            {hasCompare ? (
-              <li>
-                <Link href={`/parking-vs-drop-off/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
-                  Parking vs drop-off at {airport.name}: which is cheaper? →
-                </Link>
-              </li>
-            ) : null}
-            {hasParking ? (
-              <li>
-                <Link href={`/airport-parking/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
-                  Parking at {airport.name} compared →
-                </Link>
-              </li>
-            ) : null}
-            {hasLounge ? (
-              <li>
-                <Link href={`/airport-lounges/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
-                  Lounges at {airport.name} — prices &amp; Priority Pass →
-                </Link>
-              </li>
-            ) : null}
-            <li>
-              <Link href={`/blue-badge/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
-                Blue Badge drop-off at {airport.name}: is it free? →
-              </Link>
-            </li>
-          </ul>
-        </section>
-      )}
+      <AirportContextLinks slug={airport.slug} airportName={airport.name} currentPage="drop-off" />
 
       <EmailCaptureSlot
         source="drop-off-charges"

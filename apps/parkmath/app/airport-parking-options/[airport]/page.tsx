@@ -5,9 +5,9 @@ import { loadAirports, loadDropOffDataset, type Airport } from "@mathfamily/data
 import { breadcrumbLd, faqPageLd, JsonLd, speakableLd, tableLd } from "@mathfamily/geo";
 import { AnswerLead, AnswerPassage, FaqAccordion, FreshnessBadge, MiniAnswerBar, PageHeading, SourceCitation, SourcesBlock, EmailCaptureSlot } from "@mathfamily/ui";
 import { BookingOptions } from "@/components/booking-options";
+import { AirportContextLinks } from "@/components/airport-context-links";
 import { parkingCtaModel } from "@/lib/parking-content";
 import { searchName } from "@/lib/content";
-import { airportHasParkingVsDropOff } from "@/lib/parking-vs-drop-off-content";
 import { buildOptionRows, buildOptionsFaqs, optionsAnswer, optionsInputs, type OptionRow } from "@/lib/options-content";
 
 export const dynamicParams = false;
@@ -154,37 +154,7 @@ export default async function AirportParkingOptionsPage({ params }: { params: Pr
         hook={`Get notified when ${airport.name} parking prices change`}
       />
 
-      <section className="space-y-2">
-        <h2 className="text-lg font-semibold text-ink">More at this airport</h2>
-        <ul className="space-y-1 text-sm">
-          <li>
-            <Link href={`/drop-off-charges/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
-              Full {airport.name} drop-off charge breakdown →
-            </Link>
-          </li>
-          {!dropOff.isFree && dropOff.freeAlternative ? (
-            <li>
-              <Link href={`/avoid-drop-off-charge/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
-                How to avoid the {airport.name} drop-off charge →
-              </Link>
-            </li>
-          ) : null}
-          {airportHasParkingVsDropOff(airport.slug) ? (
-            <li>
-              <Link href={`/parking-vs-drop-off/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
-                Parking vs drop-off at {airport.name}: which is cheaper? →
-              </Link>
-            </li>
-          ) : null}
-          {parking ? (
-            <li>
-              <Link href={`/airport-parking/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
-                {airport.name} parking prices compared →
-              </Link>
-            </li>
-          ) : null}
-        </ul>
-      </section>
+      <AirportContextLinks slug={airport.slug} airportName={airport.name} currentPage="options" />
 
       <SourcesBlock
         sources={[{ label: `Official ${airport.name} drop-off page`, url: dropOff.sourceUrl, verifiedAt: dropOff.verifiedAt }]}
