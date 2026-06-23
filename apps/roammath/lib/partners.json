@@ -1,5 +1,5 @@
 {
-  "partners": {
+  "esim": {
     "airalo": {
       "name": "Airalo",
       "active": false,
@@ -17,6 +17,34 @@
       "active": false,
       "deeplinkTemplate": "",
       "trackingNote": "fill after holafly.com/affiliate signup"
+    }
+  },
+  "car-hire": {
+    "discoverCars": {
+      "name": "DiscoverCars",
+      "active": false,
+      "deeplinkTemplate": "",
+      "trackingNote": "TODO-MIKE: fill after signup at partners.discovercars.com — AWIN publisher ID required. Use {countrySlug} and {clickref} as placeholders. Template will be: https://www.awin1.com/cread.php?awinmid=TODO&awinaffid=TODO&clickref={clickref}&ued=https://discovercars.com/car-hire/{countrySlug}"
+    },
+    "rentalCars": {
+      "name": "RentalCars",
+      "active": false,
+      "deeplinkTemplate": "",
+      "trackingNote": "TODO-MIKE: fill after AWIN signup for RentalCars (mid ~5547). Template: https://www.awin1.com/cread.php?awinmid=TODO&awinaffid=TODO&clickref={clickref}&ued=https://www.rentalcars.com/SearchResults.do?country={countrySlug}"
+    }
+  },
+  "travel-insurance": {
+    "coverForYou": {
+      "name": "CoverForYou",
+      "active": false,
+      "deeplinkTemplate": "",
+      "trackingNote": "TODO-MIKE: fill after AWIN signup for CoverForYou (travel insurance, mid ~15978). Template: https://www.awin1.com/cread.php?awinmid=TODO&awinaffid=TODO&clickref={clickref}&ued=https://www.coverforyou.com/"
+    },
+    "holidayExtras": {
+      "name": "Holiday Extras",
+      "active": false,
+      "deeplinkTemplate": "",
+      "trackingNote": "TODO-MIKE: fill after AWIN signup for Holiday Extras (travel insurance, mid ~1250). Template: https://www.awin1.com/cread.php?awinmid=TODO&awinaffid=TODO&clickref={clickref}&ued=https://www.holidayextras.com/travel-insurance.html"
     }
   }
 }

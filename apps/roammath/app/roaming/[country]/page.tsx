@@ -7,6 +7,7 @@ import { breadcrumbLd, faqPageLd, JsonLd, speakableLd } from "@mathfamily/geo";
 import { AnswerLead, AnswerPassage, CountryFlag, FaqAccordion, FeeGrid, FreshnessBadge, MiniAnswerBar, PageHeading, RegionMap, SavesVerdict, SourceCitation, SourcesBlock } from "@mathfamily/ui";
 import { RoamingCalculator } from "@/components/roaming-calculator";
 import { AffiliateBlock } from "@/components/affiliate-block";
+import { TravelRailBlock } from "@/components/travel-rail-block";
 import { buildRoamingFaqs, roamingPageModel, NETWORK_LABELS } from "@/lib/roaming-content";
 
 export const dynamicParams = false;
@@ -143,6 +144,8 @@ export default async function CountryHubPage({ params }: { params: Promise<{ cou
         }
       />
 
+      <TravelRailBlock countrySlug={destination.countrySlug} countryName={destination.countryName} kind="car-hire" />
+
       {esim ? (
         <AffiliateBlock
           providerName={m.esimChoice?.provider ?? null}
@@ -186,6 +189,8 @@ export default async function CountryHubPage({ params }: { params: Promise<{ cou
         <h2 className="text-xl font-semibold text-ink">Frequently asked questions</h2>
         <FaqAccordion items={faqs} />
       </section>
+
+      <TravelRailBlock countrySlug={destination.countrySlug} countryName={destination.countryName} kind="travel-insurance" />
 
       <p className="text-sm">
         <Link href="/roaming" className="text-brand-accent underline underline-offset-4">
