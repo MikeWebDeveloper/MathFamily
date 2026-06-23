@@ -47,7 +47,7 @@ export function AirportBentoSearch({ airports }: { airports: AirportTile[] }) {
               <li key={a.slug}>
                 <a
                   href={`/drop-off-charges/${a.slug}`}
-                  className="mf-card-lg mf-soft-lift mf-press mf-edge group flex h-full flex-col gap-3 p-4 outline-none focus-visible:ring-2 focus-visible:ring-brand-accent/40"
+                  className="mf-card-lg mf-soft-lift mf-press mf-edge group flex min-h-[44px] h-full flex-col gap-3 p-4 outline-none focus-visible:ring-2 focus-visible:ring-brand-accent/40"
                 >
                   <div className="flex items-center gap-2">
                     <span className="flex-1 min-w-0 flex items-center gap-2 text-sm font-semibold text-ink transition-colors group-hover:text-brand-accent">
