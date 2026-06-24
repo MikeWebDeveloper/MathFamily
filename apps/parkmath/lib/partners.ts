@@ -155,6 +155,52 @@ export function resolveParkingMerchant(
   return null;
 }
 
+export interface ParkingMerchantOption {
+  partnerId: string;
+  partnerName: string;
+  /** The exact tracked AWIN deep link (also rebuilt server-side by the /go route — byte-identical). */
+  url: string;
+  termsUrl: string | null;
+}
+
+/** Resolve EVERY joined, active merchant that genuinely serves this airport (has a verified per-airport
+ *  parking link), each as its own tracked option — the multi-option, commission-blind presentation.
+ *
+ *  Honesty contract:
+ *   - COVERAGE: a merchant only appears for an airport where `resolvePartnerProduct(...,"parking",...)`
+ *     returns a real per-airport deep link (fail-closed). A merchant with no verified page for the
+ *     airport is omitted — never a broken/misleading link.
+ *   - ORDERING is commission-blind: options are sorted ALPHABETICALLY by merchant name, a neutral
+ *     criterion with no relation to payout. (We do NOT consult `airportOverrides` ordering here — that
+ *     was the single-primary preference order; multi-option presentation must not inherit a ranking.)
+ *
+ *  Returns [] when the slot is inactive or no merchant covers the airport (caller falls back to the
+ *  official-site option only). */
+export function resolveAllParkingMerchants(
+  airportSlug: string,
+  clickrefSuffix: string,
+): ParkingMerchantOption[] {
+  const slot = config.slots.find((s) => s.id === "parking-prebook");
+  if (!slot?.active) return [];
+  // Off-airport contexts (slug "home"/empty) have no per-airport options block — return [] so callers
+  // fall back to the official/generic option rather than listing every merchant's generic page.
+  if (!airportSlug || airportSlug === "home") return [];
+  // Consider every partner that could ever serve the slot (default list ∪ all override lists), so a
+  // merchant is shown wherever it genuinely covers the airport — not only where it was the primary.
+  const candidates = new Set<string>(slot.partnerIds);
+  for (const list of Object.values(slot.airportOverrides ?? {})) {
+    for (const id of list) candidates.add(id);
+  }
+  const options: ParkingMerchantOption[] = [];
+  for (const partnerId of candidates) {
+    const r = resolvePartnerProduct(partnerId, "parking", airportSlug, clickrefSuffix);
+    if (r) options.push({ partnerId, partnerName: r.partnerName, url: r.url, termsUrl: r.termsUrl });
+  }
+  // Commission-blind, transparent ordering: alphabetical by merchant name.
+  options.sort((a, b) => a.partnerName.localeCompare(b.partnerName));
+  return options;
+}
+
 // ─── First-party affiliate-click measurement ────────────────────────────────
 // Components render a first-party `/go/...` path instead of the raw awin1.com link. The redirect
 // route (app/go/[airport]/[target]/route.ts) records a lightweight click event server-side, then
@@ -163,15 +209,24 @@ export function resolveParkingMerchant(
 
 /** The set of redirect targets the /go route understands. A bare HeProduct (parking/lounge/hotels/
  *  transfers) resolves the per-airport merchant (parking) or HE (other products); "parking-prebook"
- *  resolves via resolveSlot (the booking-options "Pre-book & save" CTA, which uses the slot). */
-export type GoTarget = HeProduct | "parking-prebook";
+ *  resolves via resolveSlot (the booking-options "Pre-book & save" CTA, which uses the slot); a
+ *  `parking:<partnerId>` form targets ONE specific merchant's per-airport parking deep link (the
+ *  multi-option booking block — each merchant option is its own tracked redirect). */
+export type GoTarget = HeProduct | "parking-prebook" | `parking:${string}`;
 
 /** Build the first-party redirect path a CTA links to. `surface` becomes the clickref suffix once
  *  the route rebuilds the AWIN link, so per-page/product attribution is preserved end to end.
- *  e.g. goLink("dropoff", "gatwick", "parking") → "/go/gatwick/parking?s=dropoff". */
+ *  e.g. goLink("dropoff", "gatwick", "parking") → "/go/gatwick/parking?s=dropoff".
+ *  Per-merchant: goLink("parking", "gatwick", "parking:aph") → "/go/gatwick/parking%3Aaph?s=parking".
+ *  Convenience: pass a partnerId via the `parking:` prefix to deep-link one specific merchant. */
 export function goLink(surface: string, airportSlug: string, target: GoTarget): string {
   const path = `/go/${encodeURIComponent(airportSlug)}/${encodeURIComponent(target)}`;
   return surface ? `${path}?s=${encodeURIComponent(surface)}` : path;
+}
+
+/** The /go path that deep-links one specific merchant's per-airport parking page (multi-option block). */
+export function goLinkMerchant(surface: string, airportSlug: string, partnerId: string): string {
+  return goLink(surface, airportSlug, `parking:${partnerId}` as GoTarget);
 }
 
 /** Server-side: rebuild the exact AWIN deep link for a /go redirect, or null if the target is
@@ -189,6 +244,13 @@ export function resolveGoTarget(
   if (target === "parking") {
     // Per-airport merchant (APH override airports → APH, else Holiday Extras), fail-closed.
     const r = resolveParkingMerchant(airportSlug, surface);
+    return r ? { url: r.url } : null;
+  }
+  if (target.startsWith("parking:")) {
+    // Multi-option: one specific merchant's per-airport parking deep link. Fail-closed (404) if that
+    // merchant has no verified page for this airport — never a broken/misleading affiliate redirect.
+    const partnerId = target.slice("parking:".length);
+    const r = resolvePartnerProduct(partnerId, "parking", airportSlug, surface);
     return r ? { url: r.url } : null;
   }
   if (target === "lounge" || target === "hotels" || target === "transfers") {
