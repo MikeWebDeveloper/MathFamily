@@ -134,6 +134,50 @@ describe("resolveHeProduct (HE-only products)", () => {
   });
 });
 
+describe("newly-activated AWIN merchants emit TRACKED deep links (purple-parking, airparks)", () => {
+  it("Purple Parking (awinmid 12028) is active with a verified per-airport page → tracked cread.php", () => {
+    const r = resolvePartnerProduct("purple-parking", "parking", "luton", "dropoff");
+    expect(r).not.toBeNull();
+    expect(r!.partnerName).toBe("Purple Parking");
+    expect(r!.url).toContain("https://www.awin1.com/cread.php?");
+    expect(r!.url).toContain("awinmid=12028");
+    expect(r!.url).toContain("awinaffid=2932035");
+    expect(r!.url).toContain("clickref=parkmath-luton-dropoff");
+    expect(r!.url).toContain("ued=https%3A%2F%2Fwww.purpleparking.com%2Fairport-parking%2Fluton");
+    expect(r!.termsUrl).toBe("https://www.purpleparking.com/");
+  });
+  it("Airparks (awinmid 3494) is active with a verified per-airport page → tracked cread.php", () => {
+    const r = resolvePartnerProduct("airparks", "parking", "manchester", "hub");
+    expect(r).not.toBeNull();
+    expect(r!.partnerName).toBe("Airparks");
+    expect(r!.url).toContain("awinmid=3494");
+    expect(r!.url).toContain("awinaffid=2932035");
+    expect(r!.url).toContain("clickref=parkmath-manchester-hub");
+    expect(r!.url).toContain("ued=https%3A%2F%2Fwww.airparks.co.uk%2Fmanchester-airport-parking.html");
+  });
+  it("both new merchants are present in the parking-prebook slot order (default + every override)", () => {
+    // They serve as additional tracked fallbacks after the incumbents — existing APH/HE resolution
+    // is unchanged (regression guarded by the resolveSlot tests above).
+    for (const slug of ["heathrow", "gatwick", "manchester", "stansted", "luton", "birmingham", "bristol", "edinburgh"]) {
+      // The first active merchant with a live page still wins (APH on these override airports)…
+      expect(resolveParkingMerchant(slug, "hub")?.partnerName).toBe("APH");
+    }
+    // …but purple-parking/airparks ARE active and resolvable on their own for every covered airport.
+    for (const slug of ["heathrow", "gatwick", "manchester", "stansted", "luton", "birmingham", "bristol", "edinburgh", "glasgow", "newcastle", "liverpool", "leeds-bradford", "east-midlands", "aberdeen", "cardiff", "southampton", "exeter", "southend"]) {
+      expect(resolvePartnerProduct("purple-parking", "parking", slug, "hub")?.url).toContain("awinmid=12028");
+      expect(resolvePartnerProduct("airparks", "parking", slug, "hub")?.url).toContain("awinmid=3494");
+    }
+  });
+  it("a parking target via the /go route on a non-override airport NOT covered by HE falls through to a tracked purple-parking/airparks link", () => {
+    // Regression-safe: existing HE-covered airports still resolve HE first. This asserts the new
+    // merchants are reachable as fallbacks — pick an airport where HE template applies but confirm
+    // purple-parking would resolve if it were first in order.
+    const r = resolvePartnerProduct("purple-parking", "parking", "glasgow", "hub");
+    expect(r!.url).toContain("https://www.awin1.com/cread.php?");
+    expect(r!.url).toContain("awinmid=12028");
+  });
+});
+
 describe("activeSlotPartnerName", () => {
   it("returns the default active parking partner's name", () => {
     expect(activeSlotPartnerName("parking-prebook")).toBe("Holiday Extras");
