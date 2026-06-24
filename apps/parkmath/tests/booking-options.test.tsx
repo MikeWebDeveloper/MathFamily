@@ -17,9 +17,10 @@ const htmlWithPrice = renderToStaticMarkup(
   />
 );
 
-// A non-override airport still serves Holiday Extras (diversification must not break existing HE links).
+// An airport not routed to any other merchant still serves Holiday Extras (diversification must not
+// break existing HE links). Leeds Bradford is HE-only (not an APH/Purple/Airparks override airport).
 const heHtml = renderToStaticMarkup(
-  <BookingOptions airportName="Newcastle" airportSlug="newcastle" officialUrl="https://www.newcastleairport.com/parking" />
+  <BookingOptions airportName="Leeds Bradford" airportSlug="leeds-bradford" officialUrl="https://www.leedsbradfordairport.co.uk/parking" />
 );
 
 describe("BookingOptions", () => {
@@ -58,7 +59,7 @@ describe("BookingOptions", () => {
     expect(heHtml).toContain("Pre-book &amp; save with Holiday Extras");
     expect(heHtml).toContain("up to 25% at Gatwick");
     expect(heHtml).toContain("Discount applied automatically");
-    expect(heHtml).toContain('href="/go/newcastle/parking?s=parking"');
+    expect(heHtml).toContain('href="/go/leeds-bradford/parking?s=parking"');
   });
 
   it("keeps the ranking commission-blind and avoids non-compliant copy", () => {
