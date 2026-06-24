@@ -1,4 +1,4 @@
-import { goLink, resolveHeProduct, resolveParkingMerchant, type HeProduct } from "../lib/partners";
+import { goLink, goLinkMerchant, resolveAllParkingMerchants, resolveHeProduct, type HeProduct } from "../lib/partners";
 
 function discountLine(merchant: string, product: HeProduct): string {
   if (merchant === "Holiday Extras") {
@@ -16,29 +16,94 @@ export function HolidayExtrasCard({ product, airportName, airportSlug, surface, 
   surface: string;
   extras?: HeProduct[];
 }) {
-  // The primary product resolves per-airport: for "parking" this is the diversified merchant
-  // (APH on its override airports, Holiday Extras elsewhere); for HE-only products (lounge etc.)
-  // it stays Holiday Extras. Null ⇒ fail closed (render nothing).
   const isParking = product === "parking";
-  const parkingMerchant = isParking ? resolveParkingMerchant(airportSlug, surface) : null;
+
+  // Parking: multi-option, commission-blind. Show EVERY joined merchant that genuinely serves this
+  // airport (verified per-airport link), as its own tracked option — no single primary, the traveller
+  // chooses. Alphabetical by name, fail-closed (a merchant with no page here is omitted). HE-only
+  // products (lounge/hotels/transfers) stay on Holiday Extras.
+  const parkingMerchants = isParking ? resolveAllParkingMerchants(airportSlug, surface) : [];
   const heProduct = !isParking ? resolveHeProduct(product, airportSlug, surface) : null;
 
-  if (isParking && !parkingMerchant) return null;
+  if (isParking && parkingMerchants.length === 0) return null;
   if (!isParking && !heProduct) return null;
 
-  const merchant = isParking ? parkingMerchant!.partnerName : "Holiday Extras";
-  const termsUrl = isParking ? (parkingMerchant!.termsUrl ?? "https://www.aph.com/") : "https://www.holidayextras.com/airport-parking.html";
-  const productLabel = isParking ? "parking" : heProduct!.productLabel;
-  const primaryHref = goLink(surface, airportSlug, product);
-
   // "Also from Holiday Extras" upsell — HE-only products (hotels/lounge/transfers). These stay on HE
-  // regardless of the primary parking merchant, and are labelled as Holiday Extras explicitly.
+  // regardless of the parking merchants, and are labelled as Holiday Extras explicitly.
   const extraLinks = (extras ?? [])
     .map((p) => {
       const r = resolveHeProduct(p, airportSlug, `${surface}-${p}`);
       return r ? { product: p, href: goLink(`${surface}-${p}`, airportSlug, p), productLabel: r.productLabel } : null;
     })
     .filter((r): r is { product: HeProduct; href: string; productLabel: string } => r !== null);
+
+  if (isParking) {
+    const multi = parkingMerchants.length > 1;
+    return (
+      <section aria-label={`Pre-book ${airportName} parking`} className="rounded-card border border-brand-accent/30 bg-blue-50 dark:bg-brand-accent/[0.08] dark:border-brand-accent/20 p-4">
+        <div className="mb-2 flex items-center justify-between gap-2">
+          <span className="rounded border border-ink-muted/40 px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Ad</span>
+          <span className="text-xs text-ink-muted">{multi ? "Compare our partners" : parkingMerchants[0]!.partnerName}</span>
+        </div>
+
+        <h3 className="font-semibold text-ink">Pre-book {airportName} parking</h3>
+        <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-ink">
+          <li>✓ Free cancellation</li>
+          <li>✓ Compare every car park</li>
+          <li>✓ No code needed</li>
+        </ul>
+
+        <ul className="mt-3 space-y-2">
+          {parkingMerchants.map((m) => (
+            <li key={m.partnerId} className="sm:flex sm:items-center sm:justify-between sm:gap-3">
+              <a
+                href={m.termsUrl ?? "https://www.holidayextras.com/airport-parking.html"}
+                rel="noopener noreferrer"
+                target="_blank"
+                className="text-sm text-ink-muted underline underline-offset-4"
+              >
+                {m.partnerName} terms ↗
+              </a>
+              <a
+                href={goLinkMerchant(surface, airportSlug, m.partnerId)}
+                rel="sponsored noopener noreferrer"
+                target="_blank"
+                className="mt-2 inline-block whitespace-nowrap rounded-card bg-brand-accent px-4 py-2 text-sm font-semibold text-white sm:mt-0 sm:shrink-0"
+              >
+                Book parking with {m.partnerName} ↗
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        {extraLinks.length > 0 ? (
+          <p className="mt-3 text-xs text-ink-muted">
+            Also from Holiday Extras:{" "}
+            {extraLinks.map((r, i) => (
+              <span key={r.productLabel}>
+                {i > 0 ? " · " : ""}
+                <a href={r.href} rel="sponsored noopener noreferrer" target="_blank" className="underline underline-offset-4">
+                  airport {r.productLabel}s
+                </a>
+              </span>
+            ))}
+          </p>
+        ) : null}
+
+        <p className="mt-2 text-xs text-ink-muted">
+          Affiliate links (Ad) — we show every partner that serves {airportName}, ordered alphabetically.
+          If you book through one, ParkMath earns a commission at no cost to you; the order is not influenced
+          by payout and never affects which option we show as cheapest.
+        </p>
+      </section>
+    );
+  }
+
+  // ── HE-only product variant (lounge / hotels / transfers) — unchanged single-merchant card ──
+  const merchant = "Holiday Extras";
+  const termsUrl = "https://www.holidayextras.com/airport-parking.html";
+  const productLabel = heProduct!.productLabel;
+  const primaryHref = goLink(surface, airportSlug, product);
 
   return (
     <section aria-label={`Pre-book ${productLabel} with ${merchant}`} className="rounded-card border border-brand-accent/30 bg-blue-50 dark:bg-brand-accent/[0.08] dark:border-brand-accent/20 p-4">
@@ -77,20 +142,6 @@ export function HolidayExtrasCard({ product, airportName, airportSlug, surface, 
           Book {productLabel} — free cancellation ↗
         </a>
       </div>
-
-      {extraLinks.length > 0 ? (
-        <p className="mt-3 text-xs text-ink-muted">
-          Also from Holiday Extras:{" "}
-          {extraLinks.map((r, i) => (
-            <span key={r.productLabel}>
-              {i > 0 ? " · " : ""}
-              <a href={r.href} rel="sponsored noopener noreferrer" target="_blank" className="underline underline-offset-4">
-                airport {r.productLabel}s
-              </a>
-            </span>
-          ))}
-        </p>
-      ) : null}
 
       <p className="mt-2 text-xs text-ink-muted">
         Affiliate links (Ad) — if you book through {merchant}, ParkMath earns a commission, at no cost to you. It
