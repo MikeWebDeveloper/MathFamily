@@ -130,17 +130,17 @@ describe("ParkingAnswer SSR at defaultDays=7", () => {
     expect(html).toContain("Save £273.00 vs the £315.00 drive-up gate price");
   });
 
-  it("affiliate CTA (Book my parking) appears before the official site link (Go to airport site)", () => {
-    const affiliateIdx = html.indexOf("Book my parking");
+  it("affiliate options (Book parking with …) appear before the official site link (Go to airport site)", () => {
+    const affiliateIdx = html.indexOf("Book parking with");
     const officialIdx = html.indexOf("Go to airport site");
     expect(affiliateIdx).toBeGreaterThan(-1);
     expect(officialIdx).toBeGreaterThan(-1);
     expect(affiliateIdx).toBeLessThan(officialIdx);
   });
 
-  it("disclosure appears before the affiliate CTA", () => {
+  it("disclosure appears before the affiliate options", () => {
     const disclosureIdx = html.indexOf("never changes our ranking");
-    const ctaIdx = html.indexOf("Book my parking");
+    const ctaIdx = html.indexOf("Book parking with");
     expect(disclosureIdx).toBeGreaterThan(-1);
     expect(ctaIdx).toBeGreaterThan(-1);
     expect(disclosureIdx).toBeLessThan(ctaIdx);

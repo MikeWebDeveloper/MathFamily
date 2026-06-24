@@ -4,7 +4,9 @@ import {
   airportParkingUrl,
   buildAwinLink,
   goLink,
+  goLinkMerchant,
   heAirportParkingUrl,
+  resolveAllParkingMerchants,
   resolveGoTarget,
   resolveHeProduct,
   resolveParkingMerchant,
@@ -193,6 +195,85 @@ describe("newly-activated AWIN merchants emit TRACKED deep links (purple-parking
       expect(resolvePartnerProduct("purple-parking", "parking", slug, "hub")?.url).toContain("awinmid=12028");
       expect(resolvePartnerProduct("airparks", "parking", slug, "hub")?.url).toContain("awinmid=3494");
     }
+  });
+});
+
+describe("resolveAllParkingMerchants — multi-option, commission-blind presentation", () => {
+  it("an airport covered by all four joined merchants returns all four, alphabetical by name", () => {
+    const opts = resolveAllParkingMerchants("gatwick", "options");
+    expect(opts.map((o) => o.partnerName)).toEqual(["Airparks", "APH", "Holiday Extras", "Purple Parking"]);
+  });
+
+  it("each option is a tracked AWIN cread.php deep link with the right awinmid/affid/clickref/ued", () => {
+    const byName = Object.fromEntries(resolveAllParkingMerchants("gatwick", "options").map((o) => [o.partnerName, o]));
+    expect(byName["APH"]!.url).toContain("awinmid=1478");
+    expect(byName["Airparks"]!.url).toContain("awinmid=3494");
+    expect(byName["Holiday Extras"]!.url).toContain("awinmid=3496");
+    expect(byName["Purple Parking"]!.url).toContain("awinmid=12028");
+    for (const o of Object.values(byName)) {
+      expect(o.url).toContain("https://www.awin1.com/cread.php?");
+      expect(o.url).toContain("awinaffid=2932035");
+      expect(o.url).toContain("clickref=parkmath-gatwick-options");
+    }
+    // ued points at each merchant's verified per-airport Gatwick page.
+    expect(byName["APH"]!.url).toContain("ued=https%3A%2F%2Fwww.aph.com%2Fgatwick-airport-parking.html");
+    expect(byName["Purple Parking"]!.url).toContain("ued=https%3A%2F%2Fwww.purpleparking.com%2Fgatwick-airport-parking");
+  });
+
+  it("ORDERING is purely alphabetical (commission-blind) — independent of airportOverrides primary order", () => {
+    // glasgow's override put Purple Parking PRIMARY; the multi-option list must NOT inherit that — it
+    // is alphabetical, so APH comes first regardless of who was the single primary.
+    const opts = resolveAllParkingMerchants("glasgow", "options");
+    expect(opts.map((o) => o.partnerName)).toEqual(["Airparks", "APH", "Holiday Extras", "Purple Parking"]);
+  });
+
+  it("OMITS a merchant with no verified per-airport page (HE-only airport → exactly one option)", () => {
+    // norwich: only Holiday Extras has a template-covered page; APH/Purple/Airparks fail closed.
+    const opts = resolveAllParkingMerchants("norwich", "options");
+    expect(opts.map((o) => o.partnerName)).toEqual(["Holiday Extras"]);
+  });
+
+  it("never emits a non-covering merchant (belfast-international is HE-only)", () => {
+    const names = resolveAllParkingMerchants("belfast-international", "options").map((o) => o.partnerName);
+    expect(names).toEqual(["Holiday Extras"]);
+  });
+
+  it("returns [] for a non-airport context (slug 'home') so callers fall back to the official option", () => {
+    expect(resolveAllParkingMerchants("home", "options")).toEqual([]);
+  });
+});
+
+describe("goLinkMerchant + /go per-merchant parking target", () => {
+  it("builds /go/<airport>/parking:<partnerId>?s=<surface> (colon url-encoded)", () => {
+    expect(goLinkMerchant("options", "gatwick", "aph")).toBe("/go/gatwick/parking%3Aaph?s=options");
+    expect(goLinkMerchant("parking", "glasgow", "purple-parking")).toBe("/go/glasgow/parking%3Apurple-parking?s=parking");
+  });
+
+  it("the /go route rebuilds the EXACT per-merchant deep link the option used (byte-identical)", () => {
+    const opt = resolveAllParkingMerchants("gatwick", "options").find((o) => o.partnerName === "Purple Parking")!;
+    const viaGo = resolveGoTarget("parking:purple-parking", "gatwick", "options");
+    expect(viaGo).not.toBeNull();
+    expect(viaGo!.url).toBe(opt.url);
+    expect(viaGo!.url).toContain("awinmid=12028");
+  });
+
+  it("APH/HE/Purple/Airparks per-merchant targets each rebuild the right cread.php link", () => {
+    expect(resolveGoTarget("parking:aph", "manchester", "options")!.url).toContain("awinmid=1478");
+    expect(resolveGoTarget("parking:holiday-extras", "manchester", "options")!.url).toContain("awinmid=3496");
+    expect(resolveGoTarget("parking:purple-parking", "manchester", "options")!.url).toContain("awinmid=12028");
+    expect(resolveGoTarget("parking:airparks", "manchester", "options")!.url).toContain("awinmid=3494");
+  });
+
+  it("fail-closed: a per-merchant target for an airport the merchant does NOT cover returns null (404)", () => {
+    // norwich is HE-only — APH has no verified page, so /go must 404 rather than emit a broken link.
+    expect(resolveGoTarget("parking:aph", "norwich", "options")).toBeNull();
+    expect(resolveGoTarget("parking:purple-parking", "norwich", "options")).toBeNull();
+    // HE still resolves on norwich (template coverage).
+    expect(resolveGoTarget("parking:holiday-extras", "norwich", "options")!.url).toContain("awinmid=3496");
+  });
+
+  it("fail-closed: an unknown partnerId returns null", () => {
+    expect(resolveGoTarget("parking:not-a-merchant", "gatwick", "options")).toBeNull();
   });
 });
 

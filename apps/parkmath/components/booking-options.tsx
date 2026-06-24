@@ -1,7 +1,5 @@
-import { goLink, resolveSlot, type SlotId } from "../lib/partners";
+import { goLinkMerchant, resolveAllParkingMerchants } from "../lib/partners";
 import type { ParkingCtaModel } from "../lib/parking-content";
-
-const PARKING_SLOT: SlotId = "parking-prebook";
 
 export function BookingOptions({
   airportName,
@@ -15,7 +13,7 @@ export function BookingOptions({
   airportName: string;
   airportSlug: string;
   officialUrl: string;
-  /** Optional: cheapest pre-book price in pence, shown in the affiliate CTA.
+  /** Optional: cheapest pre-book price in pence, shown once above the options (a guide figure).
    *  Ignored when `cta` is provided (the model decides what is honest to show). */
   price?: number;
   /** Optional: duration in days, shown beside the price figure. */
@@ -31,16 +29,19 @@ export function BookingOptions({
    *  click attribution-blind. */
   surface?: string;
 }) {
-  const he = resolveSlot(PARKING_SLOT, airportSlug, officialUrl);
-  const hasAffiliate = he.kind === "affiliate";
-  // Merchant is resolved per-airport (Holiday Extras by default, APH on its override airports), so
-  // all merchant-facing copy and the Terms link must come from the resolver, never hardcoded.
-  const merchant = he.partnerName ?? "our partner";
-  const termsUrl = he.termsUrl ?? officialUrl;
-  // The 10%-off / "up to 25% Gatwick" promo is a Holiday Extras offer only — never claim it for APH.
-  const isHolidayExtras = he.partnerName === "Holiday Extras";
+  // Multi-option, commission-blind presentation: every joined merchant that GENUINELY serves this
+  // airport (verified per-airport link) becomes its own tracked option. Ordering is alphabetical by
+  // merchant name — never by commission. A merchant with no verified page here is omitted (fail-closed),
+  // so we never render a broken/misleading affiliate link.
+  const merchants = resolveAllParkingMerchants(airportSlug, surface);
+  const hasAffiliate = merchants.length > 0;
 
-  // Resolve the honest price to surface: prefer the cta model (which suppresses the gate-only
+  // A 10%-off / "up to 25% Gatwick" promo is a Holiday Extras offer only — never claim it for others.
+  const HE_DISCOUNT_NOTE =
+    "10% off most Holiday Extras car parks — up to 25% at Gatwick (Meet & Greet North). Discount applied automatically, no code.";
+
+  // Resolve the honest guide price to surface ONCE (not per-merchant — the figure is from our own
+  // dataset, not a specific merchant's quote): prefer the cta model (which suppresses the gate-only
   // price), and fall back to the legacy price/days props for callers that don't pass a model.
   const ctaPrice = cta ? cta.pricePence ?? undefined : price;
   const ctaDays = cta ? cta.days : days;
@@ -70,42 +71,76 @@ export function BookingOptions({
 
       {hasAffiliate ? (
         <>
-          <div className="rounded-card border border-brand-accent/30 bg-blue-50 dark:bg-brand-accent/[0.08] dark:border-brand-accent/20 p-4">
-            <div className="flex items-center justify-between gap-2">
-              <h3 className="font-semibold text-ink">Pre-book &amp; save with {merchant}</h3>
-              <span className="rounded border border-ink-muted/40 px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Ad</span>
+          <div className="rounded-card border border-brand-accent/30 bg-blue-50 dark:bg-brand-accent/[0.08] dark:border-brand-accent/20 p-4 space-y-4">
+            <div className="space-y-1">
+              <div className="flex items-center justify-between gap-2">
+                <h3 className="font-semibold text-ink">
+                  Pre-book &amp; save{merchants.length > 1 ? " — compare our partners" : ` with ${merchants[0]!.partnerName}`}
+                </h3>
+                <span className="rounded border border-ink-muted/40 px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Ad</span>
+              </div>
+              <ul className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-ink">
+                <li>✓ Free cancellation (cancel to arrival)</li>
+                <li>✓ No code needed</li>
+                <li>✓ Compare every car park in one place</li>
+              </ul>
+              {savingStr ? (
+                <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-positive/10 px-3 py-1 text-sm font-semibold text-positive">
+                  <span aria-hidden>✓</span>
+                  {savingStr}
+                </p>
+              ) : null}
+              {/* Affiliate disclosure — calm, honest, BEFORE the links; states the commission-blind ordering. */}
+              <p className="mt-2 text-xs text-ink-muted">
+                We earn a commission if you book through these links. We show every partner that serves{" "}
+                {airportName}, ordered alphabetically — the order is not influenced by payout, and it
+                never changes our ranking or which park we show as cheapest.
+              </p>
             </div>
-            <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-ink">
-              <li>✓ Free cancellation (cancel to arrival)</li>
-              <li>✓ No code needed</li>
-              <li>✓ Compare every car park in one place</li>
+
+            <ul className="space-y-3">
+              {merchants.map((m) => {
+                const isHolidayExtras = m.partnerName === "Holiday Extras";
+                return (
+                  <li
+                    key={m.partnerId}
+                    className="rounded-card border border-ink/10 bg-card p-3 sm:flex sm:items-center sm:justify-between sm:gap-4"
+                  >
+                    <div className="min-w-0">
+                      <p className="font-semibold text-ink">{m.partnerName}</p>
+                      <p className="mt-0.5 text-sm text-ink-muted">
+                        {isHolidayExtras
+                          ? HE_DISCOUNT_NOTE
+                          : `Compare on-airport, Park & Ride and Meet & Greet at ${m.partnerName} — free cancellation, no code needed.`}{" "}
+                        <a
+                          href={m.termsUrl ?? officialUrl}
+                          rel="noopener noreferrer"
+                          target="_blank"
+                          className="underline underline-offset-4"
+                        >
+                          Terms ↗
+                        </a>
+                      </p>
+                    </div>
+                    <a
+                      href={goLinkMerchant(surface, airportSlug, m.partnerId)}
+                      rel="sponsored noopener noreferrer"
+                      target="_blank"
+                      className="mt-3 inline-block whitespace-nowrap rounded-card bg-brand-accent px-4 py-2 text-sm font-semibold text-white sm:mt-0 sm:shrink-0"
+                    >
+                      Book parking with {m.partnerName} ↗
+                    </a>
+                  </li>
+                );
+              })}
             </ul>
-            <p className="mt-2 text-sm text-ink-muted">
-              {isHolidayExtras
-                ? "10% off most Holiday Extras car parks — up to 25% at Gatwick (Meet & Greet North). Discount applied automatically, no code."
-                : `Compare on-airport, Park & Ride and Meet & Greet at ${merchant} — free cancellation, no code needed.`}{" "}
-              <a href={termsUrl} rel="noopener noreferrer" target="_blank" className="underline underline-offset-4">
-                Terms ↗
-              </a>
-            </p>
-            {savingStr ? (
-              <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-positive/10 px-3 py-1 text-sm font-semibold text-positive">
-                <span aria-hidden>✓</span>
-                {savingStr}
+
+            {priceStr ? (
+              <p className="text-xs text-ink-muted">
+                Our cheapest tracked pre-book price for {airportName} is {priceStr} — actual prices vary by
+                partner and date.
               </p>
             ) : null}
-            <p className="mt-2 text-xs text-ink-muted">
-              We earn a commission only if you book the &ldquo;Ad&rdquo; option — it never changes our ranking or which park
-              we show as cheapest.
-            </p>
-            <a
-              href={goLink(surface, airportSlug, "parking")}
-              rel="sponsored noopener noreferrer"
-              target="_blank"
-              className="mt-3 inline-block rounded-card bg-brand-accent px-4 py-2 text-sm font-semibold text-white"
-            >
-              Book my parking{priceStr ? ` — ${priceStr}` : ""} — free cancellation ↗
-            </a>
           </div>
 
           <div className="rounded-card border border-ink/10 bg-card p-4">

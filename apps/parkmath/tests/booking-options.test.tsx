@@ -3,6 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { BookingOptions } from "../components/booking-options";
 import type { ParkingCtaModel } from "../lib/parking-content";
 
+// Gatwick is covered by ALL FOUR joined merchants (APH, Airparks, Holiday Extras, Purple Parking).
 const html = renderToStaticMarkup(
   <BookingOptions airportName="Gatwick" airportSlug="gatwick" officialUrl="https://www.gatwickairport.com/parking" />
 );
@@ -17,13 +18,22 @@ const htmlWithPrice = renderToStaticMarkup(
   />
 );
 
-// An airport not routed to any other merchant still serves Holiday Extras (diversification must not
-// break existing HE links). Leeds Bradford is HE-only (not an APH/Purple/Airparks override airport).
-const heHtml = renderToStaticMarkup(
-  <BookingOptions airportName="Leeds Bradford" airportSlug="leeds-bradford" officialUrl="https://www.leedsbradfordairport.co.uk/parking" />
+// Norwich is an HE-only airport (no APH/Purple/Airparks verified per-airport page) — so it must show
+// exactly ONE merchant option (Holiday Extras) and never a broken link to a non-covering merchant.
+const heOnlyHtml = renderToStaticMarkup(
+  <BookingOptions airportName="Norwich" airportSlug="norwich" officialUrl="https://www.norwichairport.co.uk/parking" />
 );
 
-describe("BookingOptions", () => {
+/** All "Book parking with X" merchant labels, in DOM order. */
+function merchantOrder(markup: string): string[] {
+  const out: string[] = [];
+  const re = /Book parking with ([A-Za-z ]+?) ↗/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(markup)) !== null) out.push(m[1]!.trim());
+  return out;
+}
+
+describe("BookingOptions — multi-option, commission-blind presentation", () => {
   it("renders the official route as a non-sponsored equal-weight button", () => {
     expect(html).toContain("Book direct with the airport");
     expect(html).toContain("Go to airport site");
@@ -31,35 +41,71 @@ describe("BookingOptions", () => {
     expect(html).not.toContain('href="https://www.gatwickairport.com/parking" rel="sponsored');
   });
 
-  it("Gatwick is an APH override airport: renders the APH route with Ad + first-party deep link", () => {
-    // Gatwick now serves APH (diversification), so the merchant name is APH and no HE-specific
-    // discount claim appears (no fabricated promo for a merchant that didn't offer it).
-    expect(html).toContain(">Ad<");
-    expect(html).toContain("Pre-book &amp; save with APH");
-    expect(html).toContain("Free cancellation (cancel to arrival)");
-    expect(html).not.toContain("up to 25% at Gatwick"); // HE-only promo — must not be claimed for APH
-    // Click measurement: the CTA links to the first-party /go redirect, NOT a bare awin1.com link.
-    // The route rebuilds the exact AWIN deep link (awinmid/clickref/ued) server-side before the 302.
+  it("an airport served by N merchants emits N tracked 'Book parking with <merchant>' options", () => {
+    // Gatwick → all four joined merchants, each its own option.
+    const order = merchantOrder(html);
+    expect(order).toEqual(["Airparks", "APH", "Holiday Extras", "Purple Parking"]);
+  });
+
+  it("each merchant option is a separate first-party /go redirect (per-merchant, surface-tagged)", () => {
+    // NOT bare awin1.com links — the /go route rebuilds the exact AWIN deep link server-side, then 302s.
     expect(html).not.toContain("https://www.awin1.com/cread.php?");
-    // Attribution fix: the CTA now carries its surface (?s=parking) so the rebuilt AWIN clickref is
-    // parkmath-gatwick-parking — parking-spoke clicks are distinguishable from hub/dropoff/options.
-    expect(html).toContain('href="/go/gatwick/parking?s=parking"');
-    expect(html).toContain("Book my parking");
+    // Per-merchant target form parking:<partnerId>, url-encoded (":" → %3A), carrying the surface.
+    expect(html).toContain('href="/go/gatwick/parking%3Aaph?s=parking"');
+    expect(html).toContain('href="/go/gatwick/parking%3Aairparks?s=parking"');
+    expect(html).toContain('href="/go/gatwick/parking%3Aholiday-extras?s=parking"');
+    expect(html).toContain('href="/go/gatwick/parking%3Apurple-parking?s=parking"');
     expect(html).toContain('rel="sponsored noopener noreferrer"');
   });
 
-  it("the parking CTA is surface-tagged (?s=parking) so its clicks are attribution-distinct", () => {
-    // Regression guard for the Day-60-honesty fix: an empty surface (the old bug) made every
-    // booking-options click attribution-blind. The default surface MUST be present.
-    expect(html).toContain("?s=parking");
-    expect(html).not.toContain('href="/go/gatwick/parking-prebook"');
+  it("ORDERING is commission-blind: options are alphabetical by merchant name", () => {
+    const order = merchantOrder(html);
+    const sorted = [...order].sort((a, b) => a.localeCompare(b));
+    expect(order).toEqual(sorted);
   });
 
-  it("a non-override airport still renders the Holiday Extras route with its compliant discount copy", () => {
-    expect(heHtml).toContain("Pre-book &amp; save with Holiday Extras");
-    expect(heHtml).toContain("up to 25% at Gatwick");
-    expect(heHtml).toContain("Discount applied automatically");
-    expect(heHtml).toContain('href="/go/leeds-bradford/parking?s=parking"');
+  it("omits any merchant that does NOT genuinely serve the airport (no broken/misleading link)", () => {
+    // Norwich is HE-only: exactly one option, and only Holiday Extras.
+    const order = merchantOrder(heOnlyHtml);
+    expect(order).toEqual(["Holiday Extras"]);
+    expect(heOnlyHtml).not.toContain("parking%3Aaph");
+    expect(heOnlyHtml).not.toContain("parking%3Apurple-parking");
+    expect(heOnlyHtml).not.toContain("parking%3Aairparks");
+    expect(heOnlyHtml).toContain('href="/go/norwich/parking%3Aholiday-extras?s=parking"');
+  });
+
+  it("never fabricates the Holiday-Extras-only discount promo for another merchant", () => {
+    // The "up to 25% at Gatwick" line is an HE offer — it must appear at most once (HE's row), never
+    // attached to APH/Airparks/Purple Parking.
+    const occurrences = html.split("up to 25% at Gatwick").length - 1;
+    expect(occurrences).toBe(1);
+  });
+
+  it("carries the affiliate disclosure + commission-blind ordering note before the options", () => {
+    expect(html).toContain("We earn a commission if you book through these links");
+    expect(html).toContain("ordered alphabetically");
+    expect(html).toContain("never changes our ranking");
+    const disclosureIdx = html.indexOf("We earn a commission if you book through these links");
+    const firstOptionIdx = html.indexOf("Book parking with");
+    expect(disclosureIdx).toBeGreaterThan(-1);
+    expect(firstOptionIdx).toBeGreaterThan(-1);
+    expect(disclosureIdx).toBeLessThan(firstOptionIdx);
+  });
+
+  it("Ad label appears before the affiliate options (disclosure-before-CTA ordering)", () => {
+    const adIdx = html.indexOf(">Ad<");
+    const ctaIdx = html.indexOf("Book parking with");
+    expect(adIdx).toBeGreaterThan(-1);
+    expect(ctaIdx).toBeGreaterThan(-1);
+    expect(adIdx).toBeLessThan(ctaIdx);
+  });
+
+  it("affiliate options appear before the official site block (affiliate first/primary)", () => {
+    const affiliateIdx = html.indexOf("Book parking with");
+    const officialIdx = html.indexOf("Go to airport site");
+    expect(affiliateIdx).toBeGreaterThan(-1);
+    expect(officialIdx).toBeGreaterThan(-1);
+    expect(affiliateIdx).toBeLessThan(officialIdx);
   });
 
   it("keeps the ranking commission-blind and avoids non-compliant copy", () => {
@@ -69,37 +115,11 @@ describe("BookingOptions", () => {
     expect(html).not.toContain("up to 75%");
   });
 
-  // P2 ordering requirements
-  it("affiliate block appears before the official site block (affiliate first/primary)", () => {
-    const affiliateIdx = html.indexOf("Book my parking");
-    const officialIdx = html.indexOf("Go to airport site");
-    expect(affiliateIdx).toBeGreaterThan(-1);
-    expect(officialIdx).toBeGreaterThan(-1);
-    expect(affiliateIdx).toBeLessThan(officialIdx);
-  });
-
-  it("disclosure text appears before the affiliate CTA link", () => {
-    const disclosureIdx = html.indexOf("never changes our ranking");
-    const ctaIdx = html.indexOf("Book my parking");
-    expect(disclosureIdx).toBeGreaterThan(-1);
-    expect(ctaIdx).toBeGreaterThan(-1);
-    expect(disclosureIdx).toBeLessThan(ctaIdx);
-  });
-
-  it("Ad label appears before the affiliate CTA (disclosure-before-CTA ordering)", () => {
-    const adIdx = html.indexOf(">Ad<");
-    const ctaIdx = html.indexOf("Book my parking");
-    expect(adIdx).toBeGreaterThan(-1);
-    expect(ctaIdx).toBeGreaterThan(-1);
-    expect(adIdx).toBeLessThan(ctaIdx);
-  });
-
-  it("shows price and days in the CTA when price and days props provided", () => {
+  it("shows the cheapest guide price once when price and days props are provided", () => {
     expect(htmlWithPrice).toContain("from £42.00 for 7 days");
   });
 
-  it("does not show price string when price/days are omitted", () => {
-    // baseline html without price should not include "from £"
+  it("does not show a guide price string when price/days are omitted", () => {
     expect(html).not.toContain("from £");
   });
 
@@ -110,11 +130,11 @@ describe("BookingOptions", () => {
     );
     expect(out).toContain("from £42.00 for 7 days");
     expect(out).toContain("Save £273.00 vs the £315.00 drive-up gate price");
+    // Manchester is a 4-merchant airport — still multi-option even with a cta model.
+    expect(merchantOrder(out)).toEqual(["Airparks", "APH", "Holiday Extras", "Purple Parking"]);
   });
 
   it("gate-only cta (Stansted case): suppresses the price AND makes no saving claim", () => {
-    // Only the drive-up gate price exists for this duration — never present it as a 'from' pre-book
-    // figure, and never imply a saving that doesn't exist.
     const gateOnlyCta: ParkingCtaModel = { state: "gate-only", pricePence: null, gatePence: 33600, savingVsGatePence: null, days: 7 };
     const out = renderToStaticMarkup(
       <BookingOptions airportName="Stansted" airportSlug="stansted" officialUrl="https://x" cta={gateOnlyCta} />
@@ -122,7 +142,7 @@ describe("BookingOptions", () => {
     expect(out).not.toContain("from £");
     expect(out).not.toContain("£336.00");
     expect(out).not.toContain("Save £");
-    // The CTA still renders (just without a fabricated price).
-    expect(out).toContain("Book my parking");
+    // The options still render (just without a fabricated price).
+    expect(out).toContain("Book parking with");
   });
 });
