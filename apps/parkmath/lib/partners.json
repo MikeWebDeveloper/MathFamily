@@ -43,24 +43,88 @@
         }
       }
     },
-    "purple-parking": { "name": "Purple Parking", "awinmid": "12028", "active": false },
-    "airparks": { "name": "Airparks", "awinmid": "3494", "active": false },
+    "purple-parking": {
+      "name": "Purple Parking", "awinmid": "12028", "active": true,
+      "termsUrl": "https://www.purpleparking.com/",
+      "landingUrl": "https://www.purpleparking.com/airport-parking",
+      "products": {
+        "parking": { "url": "https://www.purpleparking.com/airport-parking", "label": "parking" }
+      },
+      "airportParkingUrl": {
+        "byAirport": {
+          "heathrow":      "https://www.purpleparking.com/airport-parking/london-heathrow",
+          "gatwick":       "https://www.purpleparking.com/gatwick-airport-parking",
+          "manchester":    "https://www.purpleparking.com/manchester-airport-parking",
+          "stansted":      "https://www.purpleparking.com/airport-parking/london-stansted",
+          "luton":         "https://www.purpleparking.com/airport-parking/luton",
+          "birmingham":    "https://www.purpleparking.com/airport-parking/birmingham",
+          "bristol":       "https://www.purpleparking.com/airport-parking/bristol-international",
+          "edinburgh":     "https://www.purpleparking.com/airport-parking/edinburgh",
+          "glasgow":       "https://www.purpleparking.com/airport-parking/glasgow",
+          "newcastle":     "https://www.purpleparking.com/airport-parking/newcastle-international",
+          "liverpool":     "https://www.purpleparking.com/airport-parking/liverpool-international",
+          "leeds-bradford":"https://www.purpleparking.com/airport-parking/leeds-bradford",
+          "east-midlands": "https://www.purpleparking.com/airport-parking/east-midlands",
+          "aberdeen":      "https://www.purpleparking.com/airport-parking/aberdeen",
+          "cardiff":       "https://www.purpleparking.com/airport-parking/cardiff",
+          "southampton":   "https://www.purpleparking.com/airport-parking/southampton-international",
+          "exeter":        "https://www.purpleparking.com/airport-parking/exeter",
+          "southend":      "https://www.purpleparking.com/airport-parking/southend"
+        }
+      }
+    },
+    "airparks": {
+      "name": "Airparks", "awinmid": "3494", "active": true,
+      "termsUrl": "https://www.airparks.co.uk/",
+      "landingUrl": "https://www.airparks.co.uk/airport-parking.html",
+      "products": {
+        "parking": { "url": "https://www.airparks.co.uk/airport-parking.html", "label": "parking" }
+      },
+      "airportParkingUrl": {
+        "byAirport": {
+          "heathrow":      "https://www.airparks.co.uk/heathrow-parking.html",
+          "gatwick":       "https://www.airparks.co.uk/gatwick-parking.html",
+          "manchester":    "https://www.airparks.co.uk/manchester-airport-parking.html",
+          "stansted":      "https://www.airparks.co.uk/stansted-parking.html",
+          "luton":         "https://www.airparks.co.uk/luton-airport-parking.html",
+          "birmingham":    "https://www.airparks.co.uk/birmingham-airport-parking.html",
+          "bristol":       "https://www.airparks.co.uk/bristol-airport-parking.html",
+          "edinburgh":     "https://www.airparks.co.uk/edinburgh-airport-parking.html",
+          "glasgow":       "https://www.airparks.co.uk/glasgow-airport-parking.html",
+          "newcastle":     "https://www.airparks.co.uk/newcastle-airport-parking.html",
+          "liverpool":     "https://www.airparks.co.uk/liverpool-airport-parking.html",
+          "leeds-bradford":"https://www.airparks.co.uk/leeds-bradford-airport-parking.html",
+          "east-midlands": "https://www.airparks.co.uk/east-midlands-airport-parking.html",
+          "aberdeen":      "https://www.airparks.co.uk/aberdeen-airport-parking.html",
+          "cardiff":       "https://www.airparks.co.uk/cardiff-airport-parking.html",
+          "southampton":   "https://www.airparks.co.uk/southampton-airport-parking.html",
+          "exeter":        "https://www.airparks.co.uk/exeter-airport-parking.html",
+          "southend":      "https://www.airparks.co.uk/southend-airport-parking.html"
+        }
+      }
+    },
     "priority-pass": { "name": "Priority Pass", "awinmid": null, "active": false }
   },
   "slots": [
     {
       "id": "parking-prebook",
-      "partnerIds": ["holiday-extras"],
+      "partnerIds": ["holiday-extras", "purple-parking", "airparks"],
       "active": true,
       "airportOverrides": {
-        "heathrow":   ["aph", "holiday-extras"],
-        "gatwick":    ["aph", "holiday-extras"],
-        "manchester": ["aph", "holiday-extras"],
-        "stansted":   ["aph", "holiday-extras"],
-        "luton":      ["aph", "holiday-extras"],
-        "birmingham": ["aph", "holiday-extras"],
-        "bristol":    ["aph", "holiday-extras"],
-        "edinburgh":  ["aph", "holiday-extras"]
+        "heathrow":   ["aph", "holiday-extras", "purple-parking", "airparks"],
+        "gatwick":    ["aph", "holiday-extras", "purple-parking", "airparks"],
+        "manchester": ["aph", "holiday-extras", "purple-parking", "airparks"],
+        "stansted":   ["aph", "holiday-extras", "purple-parking", "airparks"],
+        "luton":      ["aph", "holiday-extras", "purple-parking", "airparks"],
+        "birmingham": ["aph", "holiday-extras", "purple-parking", "airparks"],
+        "bristol":    ["aph", "holiday-extras", "purple-parking", "airparks"],
+        "edinburgh":  ["aph", "holiday-extras", "purple-parking", "airparks"],
+        "glasgow":      ["purple-parking", "holiday-extras", "airparks"],
+        "newcastle":    ["purple-parking", "holiday-extras", "airparks"],
+        "aberdeen":     ["purple-parking", "holiday-extras", "airparks"],
+        "liverpool":    ["airparks", "holiday-extras", "purple-parking"],
+        "cardiff":      ["airparks", "holiday-extras", "purple-parking"],
+        "southend":     ["airparks", "holiday-extras", "purple-parking"]
       }
     },
     { "id": "lounge-membership", "partnerIds": ["priority-pass"], "active": false }
