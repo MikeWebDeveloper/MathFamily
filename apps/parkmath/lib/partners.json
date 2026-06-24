@@ -118,7 +118,13 @@
         "luton":      ["aph", "holiday-extras", "purple-parking", "airparks"],
         "birmingham": ["aph", "holiday-extras", "purple-parking", "airparks"],
         "bristol":    ["aph", "holiday-extras", "purple-parking", "airparks"],
-        "edinburgh":  ["aph", "holiday-extras", "purple-parking", "airparks"]
+        "edinburgh":  ["aph", "holiday-extras", "purple-parking", "airparks"],
+        "glasgow":      ["purple-parking", "holiday-extras", "airparks"],
+        "newcastle":    ["purple-parking", "holiday-extras", "airparks"],
+        "aberdeen":     ["purple-parking", "holiday-extras", "airparks"],
+        "liverpool":    ["airparks", "holiday-extras", "purple-parking"],
+        "cardiff":      ["airparks", "holiday-extras", "purple-parking"],
+        "southend":     ["airparks", "holiday-extras", "purple-parking"]
       }
     },
     { "id": "lounge-membership", "partnerIds": ["priority-pass"], "active": false }

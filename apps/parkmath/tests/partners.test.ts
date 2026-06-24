@@ -73,11 +73,12 @@ describe("resolveSlot — per-airport merchant override (diversification)", () =
     expect(r.url).toContain("awinmid=1478");
     expect(r.url).toContain("ued=https%3A%2F%2Fwww.aph.com%2Fheathrow-airport%2Fparking%2F");
   });
-  it("a non-override airport still resolves to Holiday Extras (existing HE links unbroken)", () => {
-    const r = resolveSlot("parking-prebook", "newcastle", "https://newcastleairport.com");
+  it("an unrouted airport still resolves to Holiday Extras (existing HE links unbroken)", () => {
+    // leeds-bradford is HE-only (not an APH/Purple/Airparks override airport).
+    const r = resolveSlot("parking-prebook", "leeds-bradford", "https://leedsbradfordairport.co.uk");
     expect(r.partnerName).toBe("Holiday Extras");
     expect(r.url).toContain("awinmid=3496");
-    expect(r.url).toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Fnewcastle-airport-parking.html");
+    expect(r.url).toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Fleeds-bradford-airport-parking.html");
   });
   it("lounge-membership stays official while inactive", () => {
     const r = resolveSlot("lounge-membership", "gatwick", "https://www.prioritypass.com");
@@ -87,14 +88,14 @@ describe("resolveSlot — per-airport merchant override (diversification)", () =
   });
   it("carries a merchant-specific termsUrl", () => {
     expect(resolveSlot("parking-prebook", "gatwick", "x").termsUrl).toBe("https://www.aph.com/");
-    expect(resolveSlot("parking-prebook", "newcastle", "x").termsUrl).toBe("https://www.holidayextras.com/airport-parking.html");
+    expect(resolveSlot("parking-prebook", "leeds-bradford", "x").termsUrl).toBe("https://www.holidayextras.com/airport-parking.html");
   });
 });
 
 describe("resolveParkingMerchant", () => {
-  it("picks APH on an override airport and HE otherwise", () => {
+  it("picks APH on an override airport and HE on an unrouted airport", () => {
     expect(resolveParkingMerchant("manchester", "hub")?.partnerName).toBe("APH");
-    expect(resolveParkingMerchant("liverpool", "hub")?.partnerName).toBe("Holiday Extras");
+    expect(resolveParkingMerchant("east-midlands", "hub")?.partnerName).toBe("Holiday Extras");
   });
   it("builds the airport-specific clickref + deep link", () => {
     const r = resolveParkingMerchant("manchester", "hub");
@@ -155,26 +156,43 @@ describe("newly-activated AWIN merchants emit TRACKED deep links (purple-parking
     expect(r!.url).toContain("clickref=parkmath-manchester-hub");
     expect(r!.url).toContain("ued=https%3A%2F%2Fwww.airparks.co.uk%2Fmanchester-airport-parking.html");
   });
-  it("both new merchants are present in the parking-prebook slot order (default + every override)", () => {
-    // They serve as additional tracked fallbacks after the incumbents — existing APH/HE resolution
-    // is unchanged (regression guarded by the resolveSlot tests above).
+  it("APH stays primary on its override airports (existing links unbroken)", () => {
     for (const slug of ["heathrow", "gatwick", "manchester", "stansted", "luton", "birmingham", "bristol", "edinburgh"]) {
-      // The first active merchant with a live page still wins (APH on these override airports)…
       expect(resolveParkingMerchant(slug, "hub")?.partnerName).toBe("APH");
     }
-    // …but purple-parking/airparks ARE active and resolvable on their own for every covered airport.
+  });
+  it("Purple Parking is now the PRIMARY serving merchant on its routed airports → CTA emits a tracked 12028 link", () => {
+    for (const slug of ["glasgow", "newcastle", "aberdeen"]) {
+      const r = resolveParkingMerchant(slug, "hub");
+      expect(r?.partnerName).toBe("Purple Parking");
+      expect(r!.url).toContain("https://www.awin1.com/cread.php?");
+      expect(r!.url).toContain("awinmid=12028");
+      expect(r!.url).toContain(`clickref=parkmath-${slug}-hub`);
+    }
+  });
+  it("Airparks is now the PRIMARY serving merchant on its routed airports → CTA emits a tracked 3494 link", () => {
+    for (const slug of ["liverpool", "cardiff", "southend"]) {
+      const r = resolveParkingMerchant(slug, "hub");
+      expect(r?.partnerName).toBe("Airparks");
+      expect(r!.url).toContain("awinmid=3494");
+      expect(r!.url).toContain(`clickref=parkmath-${slug}-hub`);
+    }
+  });
+  it("the /go parking route now 302-resolves to purple-parking / airparks deep links on the routed airports", () => {
+    expect(resolveGoTarget("parking", "glasgow", "hub")!.url).toContain("awinmid=12028");
+    expect(resolveGoTarget("parking", "liverpool", "hub")!.url).toContain("awinmid=3494");
+  });
+  it("an HE-only airport NOT routed to a new merchant still serves Holiday Extras (no regression)", () => {
+    expect(resolveParkingMerchant("leeds-bradford", "hub")?.partnerName).toBe("Holiday Extras");
+    expect(resolveParkingMerchant("east-midlands", "hub")?.partnerName).toBe("Holiday Extras");
+    expect(resolveParkingMerchant("southampton", "hub")?.partnerName).toBe("Holiday Extras");
+    expect(resolveParkingMerchant("exeter", "hub")?.partnerName).toBe("Holiday Extras");
+  });
+  it("both new merchants resolve a tracked link on every airport they cover", () => {
     for (const slug of ["heathrow", "gatwick", "manchester", "stansted", "luton", "birmingham", "bristol", "edinburgh", "glasgow", "newcastle", "liverpool", "leeds-bradford", "east-midlands", "aberdeen", "cardiff", "southampton", "exeter", "southend"]) {
       expect(resolvePartnerProduct("purple-parking", "parking", slug, "hub")?.url).toContain("awinmid=12028");
       expect(resolvePartnerProduct("airparks", "parking", slug, "hub")?.url).toContain("awinmid=3494");
     }
-  });
-  it("a parking target via the /go route on a non-override airport NOT covered by HE falls through to a tracked purple-parking/airparks link", () => {
-    // Regression-safe: existing HE-covered airports still resolve HE first. This asserts the new
-    // merchants are reachable as fallbacks — pick an airport where HE template applies but confirm
-    // purple-parking would resolve if it were first in order.
-    const r = resolvePartnerProduct("purple-parking", "parking", "glasgow", "hub");
-    expect(r!.url).toContain("https://www.awin1.com/cread.php?");
-    expect(r!.url).toContain("awinmid=12028");
   });
 });
 
@@ -216,10 +234,10 @@ describe("resolveGoTarget — rebuilds the EXACT AWIN deep link (attribution pre
     expect(viaGo!.url).toContain("awinmid=1478");
     expect(viaGo!.url).toContain("clickref=parkmath-heathrow-dropoff");
   });
-  it("parking target on a non-override airport rebuilds the HE deep link", () => {
-    const viaGo = resolveGoTarget("parking", "liverpool", "dropoff");
+  it("parking target on an unrouted airport rebuilds the HE deep link", () => {
+    const viaGo = resolveGoTarget("parking", "east-midlands", "dropoff");
     expect(viaGo!.url).toContain("awinmid=3496");
-    expect(viaGo!.url).toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Fliverpool-airport-parking.html");
+    expect(viaGo!.url).toContain("ued=https%3A%2F%2Fwww.holidayextras.com%2Feast-midlands-airport-parking.html");
   });
   it("an HE product target rebuilds the same URL resolveHeProduct produced (with surface clickref)", () => {
     const direct = resolveHeProduct("hotels", "gatwick", "dropoff-hotels");
