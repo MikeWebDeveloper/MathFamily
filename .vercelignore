@@ -7,6 +7,9 @@ node_modules
 **/.playwright-mcp
 .git
 *.png
+# Social cards must ship to the CDN so upload-post can fetch them by public URL
+!apps/parkmath/public/social/
+!apps/parkmath/public/social/*.png
 graphify-out
 tools/reels
 apps/roammath
