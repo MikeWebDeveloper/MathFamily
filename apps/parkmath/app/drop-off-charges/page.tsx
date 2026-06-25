@@ -32,6 +32,20 @@ export default function MasterTablePage() {
   const league = buildDropOffLeague(records, nameFor);
   const hubAnswer = dropOffHubAnswer(league, latestVerified);
 
+  // Most-searched drop-off pages (curated): point concentrated internal-link equity from this
+  // high-authority hub at the airports with the most real search demand, using natural
+  // "[airport] drop-off charge" anchor text. Resolved from the dataset (never hardcoded) and
+  // rendered only when the record exists, so it stays correct if data changes.
+  const featuredSlugs = ["stansted", "southend", "bristol"];
+  const featured = featuredSlugs
+    .map((slug) => records.find((r) => r.airportSlug === slug))
+    .filter((r): r is (typeof records)[number] => Boolean(r))
+    .map((r) => ({
+      slug: r.airportSlug,
+      name: nameFor(r.airportSlug),
+      fee: r.isFree ? "Free" : formatPence(r.bands[0]?.totalPence ?? 0)
+    }));
+
   // Headline stats for the strip (the data-PR "most & least expensive" hook).
   const charging = league.filter((e) => !e.isFree);
   const byFee = [...charging].sort((a, b) => a.feePence - b.feePence);
@@ -121,6 +135,25 @@ export default function MasterTablePage() {
         downloads={[{ href: "/data/drop-off-charges.csv", label: "Drop-off charges (CSV)" }]}
         citation={`ParkMath, "UK airport drop-off charges 2026", verified ${latestVerified}, parkmath.co.uk`}
       />
+
+      {featured.length > 0 ? (
+        <section className="space-y-2" aria-label="Most-searched airport drop-off charges">
+          <h2 className="text-base font-semibold text-ink">Most-searched drop-off charges</h2>
+          <ul className="flex flex-wrap gap-2 text-sm">
+            {featured.map((f) => (
+              <li key={f.slug}>
+                <Link
+                  href={`/drop-off-charges/${f.slug}`}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-brand-accent/30 bg-brand-accent/[0.04] px-3 py-1.5 font-medium text-brand-accent hover:bg-brand-accent/10"
+                >
+                  {f.name} drop-off charge
+                  <span className="text-xs font-normal text-ink-muted">{f.fee}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       <aside className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-brand-accent/25 bg-blue-50/60 px-4 py-3 text-sm dark:bg-brand-accent/[0.06] dark:border-brand-accent/20">
         <p className="text-ink-muted">
