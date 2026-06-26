@@ -43,9 +43,16 @@ export async function generateMetadata({ params }: { params: Promise<{ airport: 
   if (!data) return {};
   const { airport: a, record } = data;
   const status = blueBadgeStatusLabel(record).toLowerCase();
+  // Per-airport SEO override (CTR fix on page-1 quick-win pages): front-match the literal searched
+  // query and lead with the free option, replacing the generic "is it free?" template where the
+  // dataset carries an explicit override. Never affects any price/policy figure on the page.
+  const title = record.blueBadgeSeoTitle ?? `Blue Badge drop-off at ${a.name} 2026 — is it free?`;
+  const description =
+    record.blueBadgeSeoDescription ??
+    `Blue Badge drop-off at ${a.name}: ${status}. The exact policy, how to claim it, and the free option for everyone — read from the official ${a.name} page, verified ${record.verifiedAt}.`;
   return {
-    title: `Blue Badge drop-off at ${a.name} 2026 — is it free?`,
-    description: `Blue Badge drop-off at ${a.name}: ${status}. The exact policy, how to claim it, and the free option for everyone — read from the official ${a.name} page, verified ${record.verifiedAt}.`,
+    title,
+    description,
     alternates: { canonical: `/blue-badge/${airport}` }
   };
 }

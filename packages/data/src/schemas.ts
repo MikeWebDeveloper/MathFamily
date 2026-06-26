@@ -53,7 +53,19 @@ export const DropOffRecordSchema = z
       .nullable(),
     priorYearFeePence: z.number().int().nonnegative().nullable(),
     sourceUrl: HttpUrl,
-    verifiedAt: IsoDate
+    verifiedAt: IsoDate,
+    // Optional per-airport SEO metadata overrides. PURELY for the SERP `<title>`/`<meta>` label —
+    // they NEVER change a price, fee, policy or any displayed figure (those still come from the
+    // fields above). When present, the route's `generateMetadata` uses them verbatim in place of
+    // the generated template; when absent the template is used unchanged. We keep two pairs because
+    // the same record powers two different pages with different intent:
+    //   - seoTitle / seoDescription          → /drop-off-charges/[airport]
+    //   - blueBadgeSeoTitle / blueBadgeSeoDescription → /blue-badge/[airport]
+    // Used to front-match the literal searched query on the page-1 quick-win pages (GSC CTR fix).
+    seoTitle: z.string().min(1).optional(),
+    seoDescription: z.string().min(1).optional(),
+    blueBadgeSeoTitle: z.string().min(1).optional(),
+    blueBadgeSeoDescription: z.string().min(1).optional()
   })
   .refine((r) => r.isFree || r.bands.length > 0, { message: "non-free airports need at least one tariff band" });
 export type DropOffRecord = z.infer<typeof DropOffRecordSchema>;

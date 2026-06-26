@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isPublicTransportAlt, loadAirports, loadDropOffDataset, loadParkingDataset, loadLoungeDataset, newsForAirport, type Airport, type DropOffRecord } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
-import { breadcrumbLd, faqPageLd, JsonLd, offerLd, speakableLd } from "@mathfamily/geo";
+import { breadcrumbLd, faqPageLd, JsonLd, speakableLd } from "@mathfamily/geo";
 import { AnswerCard, AnswerLead, AnswerPassage, CaveatChip, Callout, FaqAccordion, FreshnessBadge, LatestUpdates, MiniAnswerBar, PageHeading, SourceCitation, SourcesBlock, EmailCaptureSlot, UkMap, VerifiedStamp } from "@mathfamily/ui";
 import { DropOffCalculator } from "@/components/drop-off-calculator";
 import { DropOffParkingBridge } from "@/components/drop-off-bridge";
@@ -32,9 +32,19 @@ export async function generateMetadata({ params }: { params: Promise<{ airport: 
   const sn = searchName(data.airport.name);
   const headlineFee = data.record.isFree ? "free" : formatPence(data.record.bands[0]?.totalPence ?? 0);
   const structureWord = data.record.isFree ? "rules" : isPerEntryTariff(data.record) ? "per entry" : "time limit";
+  // Per-airport SEO override (CTR fix on page-1 quick-win pages): when the dataset carries an
+  // explicit seoTitle/seoDescription for this airport, use it verbatim to front-match the literal
+  // searched query; otherwise fall back to the generated template. These fields NEVER affect any
+  // price/policy — they only relabel the SERP entry.
+  const title =
+    data.record.seoTitle ??
+    `${sn} Airport drop-off charges 2026 — ${data.record.isFree ? "free" : `${headlineFee} fee`}, ${structureWord} & how to avoid it`;
+  const description =
+    data.record.seoDescription ??
+    `${sn} Airport drop-off charges: ${data.record.feeSummary}. How much it costs, the time limit, penalty, payment deadline, Blue Badge rules and how to avoid the fee. Current for 2026 — verified ${data.record.verifiedAt} against the official ${data.airport.name} page.`;
   return {
-    title: `${sn} Airport drop-off charges 2026 — ${data.record.isFree ? "free" : `${headlineFee} fee`}, ${structureWord} & how to avoid it`,
-    description: `${sn} Airport drop-off charges: ${data.record.feeSummary}. How much it costs, the time limit, penalty, payment deadline, Blue Badge rules and how to avoid the fee. Current for 2026 — verified ${data.record.verifiedAt} against the official ${data.airport.name} page.`,
+    title,
+    description,
     alternates: { canonical: `/drop-off-charges/${airport}` }
   };
 }
@@ -54,9 +64,6 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
   const hasCompare = airportHasParkingVsDropOff(slug);
   const latestNews = newsForAirport(airport.slug, 1)[0];
   const pageVerifiedAt = latestNews && latestNews.verifiedAt > record.verifiedAt ? latestNews.verifiedAt : record.verifiedAt;
-  const priceValidUntil = new Date(new Date(`${record.verifiedAt}T00:00:00Z`).getTime() + 60 * 86_400_000)
-    .toISOString()
-    .slice(0, 10);
 
   return (
     <article className="space-y-8">
@@ -68,19 +75,10 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
           { name: airport.name, url: `${siteUrl}/drop-off-charges/${airport.slug}` }
         ])}
       />
-      {!record.isFree && record.bands[0] ? (
-        <JsonLd
-          data={offerLd({
-            name: `${airport.name} drop-off charge`,
-            description: `${airport.name} drop-off forecourt charge — ${record.feeSummary}. Official, date-stamped price verified ${record.verifiedAt}.`,
-            image: `${siteUrl}/drop-off-charges/${airport.slug}/opengraph-image`,
-            url: `${siteUrl}/drop-off-charges/${airport.slug}`,
-            pricePence: record.bands[0].totalPence,
-            priceValidUntil,
-            brand: airport.name
-          })}
-        />
-      ) : null}
+      {/* Product+Offer JSON-LD removed (2026-06-26 SEO audit): a government/airport access fee is not
+          a purchasable Product/Offer, so modelling it as InStock gave no rich-result benefit on an
+          independent data site and was the page's one genuine schema-misuse/quality risk. FAQPage +
+          BreadcrumbList do all the SERP work. */}
       <JsonLd data={speakableLd({ url: `${siteUrl}/drop-off-charges/${airport.slug}` })} />
 
       <header className="space-y-3">
@@ -173,7 +171,7 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
 
       {timeLimitNote ? (
         <AnswerPassage question={`Is there a time limit on the ${sn} drop-off zone?`}>
-          {timeLimitNote}{record.paymentDeadline ? <> Payment is barrier-free: you can settle online by {record.paymentDeadline}.</> : null} (This drop-off charge is sometimes called the {sn} drop-off levy or kiss-and-fly charge.) These figures are read from the official {airport.name} page and verified {record.verifiedAt}.
+          {timeLimitNote}{record.paymentDeadline ? <> Payment is barrier-free: you can settle online by {record.paymentDeadline}.</> : null} This {sn} drop-off charge is sometimes called the {sn} drop-off levy, the {sn} airport levy charge, or the kiss-and-fly charge — they all refer to the same forecourt fee. These figures are read from the official {airport.name} page and verified {record.verifiedAt}.
         </AnswerPassage>
       ) : null}
 
