@@ -1,0 +1,284 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { loadAirports, loadDropOffDataset } from "@mathfamily/data";
+import { formatPence } from "@mathfamily/engine";
+import { breadcrumbLd, datasetLd, newsArticleLd, tableLd, JsonLd } from "@mathfamily/geo";
+import { FreshnessBadge, OpenDataBand, PageHeading, SourcesBlock, StatStrip } from "@mathfamily/ui";
+import { buildPriceIndex, dropOffIndexSummary } from "@/lib/content";
+
+/**
+ * The UK Airport Drop-Off Price Index — the canonical, citable reference page.
+ * Every figure is read straight from the verified dataset (no new/fabricated prices); each row
+ * carries its own official source link + verified date. Schema is Dataset + Table + Article only
+ * (NO Product/Offer — this is an independent data reference, not a merchant). NO affiliate links.
+ * This is the linkable asset journalists / the Commons Library can cite verbatim.
+ */
+export const metadata: Metadata = {
+  title: "UK Airport Drop-Off Price Index 2026 — every airport ranked, verified",
+  description:
+    "The UK Airport Drop-Off Price Index: every major UK airport's drop-off (kiss-and-fly) charge ranked cheapest to dearest, each figure date-stamped and sourced to the airport's own official page. Free to cite, with the raw dataset to download.",
+  alternates: { canonical: "/drop-off-charges/price-index" }
+};
+
+export default function PriceIndexPage() {
+  const airports = new Map(loadAirports().map((a) => [a.slug, a]));
+  const nameFor = (slug: string) => airports.get(slug)?.name ?? slug;
+  const iataFor = (slug: string) => airports.get(slug)?.iata ?? "???";
+  const dataset = loadDropOffDataset();
+  const records = dataset.records;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const pageUrl = `${siteUrl}/drop-off-charges/price-index`;
+
+  const rows = buildPriceIndex(records, nameFor, iataFor);
+
+  // Last-updated = the most recent verified date across all rows (the dataset's freshness floor),
+  // plus the oldest row date so readers see the full freshness window honestly.
+  const verifiedDates = records.map((r) => r.verifiedAt).sort();
+  const latestVerified = verifiedDates.at(-1) ?? dataset.lastUpdated;
+  const oldestVerified = verifiedDates[0];
+
+  // Headline figures — derived ONLY from the ranked rows above (no new prices).
+  const charging = rows.filter((r) => !r.isFree);
+  const cheapest = charging[0]; // rows are cheapest-first
+  const dearest = charging[charging.length - 1];
+  const freeCount = rows.filter((r) => r.isFree).length;
+  const worstPerMin = [...rows]
+    .filter((r) => r.perMinutePence !== null)
+    .sort((a, b) => (b.perMinutePence ?? 0) - (a.perMinutePence ?? 0))[0];
+
+  // Year-on-year movers (only rows that carry a verified prior-year figure).
+  const movers = rows.filter((r) => r.yoy !== null && !r.yoy.startsWith("Unchanged"));
+
+  const summary = dropOffIndexSummary(
+    records.map((r) => ({ name: nameFor(r.airportSlug), isFree: r.isFree, feePence: r.bands[0]?.totalPence ?? 0 }))
+  );
+
+  const tableColumns = ["Rank", "Airport", "Drop-off fee", "Time included", "£/min", "Penalty if unpaid", "Free alternative", "Verified", "Source"];
+
+  const fmtDate = (d: string) =>
+    new Date(`${d}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
+  const fmtLongDate = (d: string) =>
+    new Date(`${d}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
+
+  // Article description — the lift-able citation sentence.
+  const articleDescription =
+    `As of ${fmtLongDate(latestVerified)}, ${charging.length} of the ${rows.length} largest UK airports charge to drop a passenger off` +
+    `${freeCount ? `, while ${freeCount} remain free` : ""}. ` +
+    `${dearest ? `The dearest is ${dearest.airportName} at ${dearest.fee}; ` : ""}${cheapest ? `the cheapest charge is ${cheapest.airportName} at ${cheapest.fee}.` : ""}`;
+
+  return (
+    <article className="space-y-8">
+      <JsonLd
+        data={breadcrumbLd([
+          { name: "Home", url: siteUrl },
+          { name: "Drop-off charges", url: `${siteUrl}/drop-off-charges` },
+          { name: "UK Airport Drop-Off Price Index", url: pageUrl }
+        ])}
+      />
+      <JsonLd
+        data={datasetLd({
+          name: "UK Airport Drop-Off Price Index 2026",
+          description: `Drop-off (kiss-and-fly) charges at ${rows.length} UK airports — fee, time allowance, £-per-minute, penalty and the free alternative — each verified against the airport's own official page and date-stamped. Free to cite and download.`,
+          url: pageUrl,
+          dateModified: latestVerified,
+          siteUrl,
+          creatorName: "ParkMath"
+        })}
+      />
+      <JsonLd
+        data={tableLd({
+          about: "UK Airport Drop-Off Price Index 2026 — every airport ranked cheapest to dearest",
+          url: pageUrl,
+          columns: tableColumns,
+          rowCount: rows.length,
+          dateModified: latestVerified
+        })}
+      />
+      <JsonLd
+        data={newsArticleLd({
+          headline: "UK Airport Drop-Off Price Index 2026",
+          description: articleDescription,
+          url: pageUrl,
+          datePublished: oldestVerified ?? latestVerified,
+          dateModified: latestVerified,
+          sourceUrl: `${siteUrl}/methodology`,
+          siteUrl,
+          imageUrl: `${siteUrl}/opengraph-image`,
+          publisherName: "ParkMath",
+          authorName: "ParkMath",
+          authorJobTitle: "UK airport pricing data desk"
+        })}
+      />
+
+      <header className="space-y-3">
+        <PageHeading>The UK Airport Drop-Off Price Index</PageHeading>
+        <FreshnessBadge verifiedAt={latestVerified} oldestRowDate={oldestVerified} />
+        <p className="mf-speakable text-lead text-ink">
+          {articleDescription} Every figure below is read directly from each airport&apos;s own
+          official drop-off page and date-stamped &mdash; cite it as &ldquo;the ParkMath UK Airport
+          Drop-Off Price Index&rdquo;.
+        </p>
+        <p className="text-sm text-ink-muted">
+          Last updated <strong className="text-ink">{fmtLongDate(latestVerified)}</strong>
+          {oldestVerified && oldestVerified !== latestVerified ? (
+            <> &middot; oldest row verified {fmtDate(oldestVerified)}</>
+          ) : null}
+          . Maintained continuously &mdash; see <Link href="#methodology" className="text-brand-accent underline underline-offset-4">how we verify</Link>.
+        </p>
+      </header>
+
+      {dearest && cheapest ? (
+        <StatStrip
+          stats={[
+            { label: "Dearest drop-off", value: dearest.fee, note: dearest.airportName },
+            { label: "Cheapest charge", value: cheapest.fee, note: cheapest.airportName },
+            ...(worstPerMin && worstPerMin.perMinutePence !== null
+              ? [{ label: "Worst £/min", value: formatPence(Math.round(worstPerMin.perMinutePence)), note: worstPerMin.airportName }]
+              : []),
+            { label: "Drop off free", value: `${freeCount} of ${rows.length}`, note: "airports" }
+          ]}
+        />
+      ) : null}
+
+      <OpenDataBand
+        downloads={[{ href: "/data/drop-off-charges.csv", label: "Full dataset (CSV)" }]}
+        citation={`ParkMath, "UK Airport Drop-Off Price Index 2026", verified ${latestVerified}, ${siteUrl}/drop-off-charges/price-index`}
+      />
+
+      <section className="space-y-3">
+        <h2 className="text-h2 font-semibold text-ink">The full index — every UK airport, cheapest to dearest</h2>
+        <p className="text-sm text-ink-muted">
+          {summary} Ranked by the headline (standard) drop-off fee. Free airports lead the table; flat
+          per-entry tariffs show &ldquo;Per entry&rdquo; rather than a per-minute figure. Tap any
+          source link to open that airport&apos;s own page.
+        </p>
+        <div className="overflow-x-auto rounded-lg border border-ink/10">
+          <table className="w-full min-w-[760px] border-collapse text-sm">
+            <caption className="sr-only">
+              UK Airport Drop-Off Price Index 2026 — every UK airport ranked cheapest to dearest, each
+              figure verified against the airport&apos;s official page and date-stamped.
+            </caption>
+            <thead>
+              <tr className="border-b border-ink/15 bg-surface-muted text-left">
+                <th scope="col" className="px-3 py-2 font-semibold text-ink">#</th>
+                <th scope="col" className="px-3 py-2 font-semibold text-ink">Airport</th>
+                <th scope="col" className="px-3 py-2 font-semibold text-ink">Drop-off fee</th>
+                <th scope="col" className="px-3 py-2 font-semibold text-ink">Time included</th>
+                <th scope="col" className="px-3 py-2 font-semibold text-ink">£/min</th>
+                <th scope="col" className="px-3 py-2 font-semibold text-ink">Penalty if unpaid</th>
+                <th scope="col" className="px-3 py-2 font-semibold text-ink">Free alternative</th>
+                <th scope="col" className="px-3 py-2 font-semibold text-ink">Verified</th>
+                <th scope="col" className="px-3 py-2 font-semibold text-ink">Source</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((r) => (
+                <tr key={r.airportSlug} className="border-b border-ink/8 last:border-0 hover:bg-surface-muted/50">
+                  <td className="px-3 py-2 tabular-nums text-ink-muted">{r.rank}</td>
+                  <th scope="row" className="px-3 py-2 text-left font-medium text-ink">
+                    <Link href={`/drop-off-charges/${r.airportSlug}`} className="text-brand-accent underline underline-offset-4 hover:opacity-80">
+                      {r.airportName}
+                    </Link>{" "}
+                    <span className="font-mono text-xs text-ink-muted">{r.iata}</span>
+                  </th>
+                  <td className="px-3 py-2 font-semibold tabular-nums text-ink">{r.fee}</td>
+                  <td className="px-3 py-2 tabular-nums text-ink-muted">{r.timeLabel}</td>
+                  <td className="px-3 py-2 tabular-nums text-ink-muted">{r.perMinLabel}</td>
+                  <td className="px-3 py-2 tabular-nums text-ink-muted">{r.penaltyLabel}</td>
+                  <td className="px-3 py-2 text-ink-muted">{r.freeAlternative}</td>
+                  <td className="px-3 py-2 tabular-nums text-ink-muted">
+                    <time dateTime={r.verifiedAt}>{fmtDate(r.verifiedAt)}</time>
+                  </td>
+                  <td className="px-3 py-2">
+                    <a
+                      href={r.sourceUrl}
+                      target="_blank"
+                      rel="noopener nofollow"
+                      className="text-brand-accent underline underline-offset-4 hover:opacity-80"
+                    >
+                      Official page<span className="sr-only"> for {r.airportName} (opens the airport&apos;s own drop-off page)</span> ↗
+                    </a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="text-xs text-ink-muted">
+          &ldquo;Drop-off fee&rdquo; is the standard headline charge for the shortest paid stay. Long-stay
+          tiers, per-minute overstay rates and Blue Badge concessions are covered on each airport&apos;s
+          own page. £/min is the headline fee divided by the minutes it buys (shown only for time-based
+          tariffs).
+        </p>
+      </section>
+
+      {movers.length > 0 ? (
+        <section className="space-y-2">
+          <h2 className="text-h2 font-semibold text-ink">Year-on-year movers</h2>
+          <p className="text-sm text-ink-muted">
+            Where we hold a verified prior-year price, here is how the drop-off charge has moved into 2026:
+          </p>
+          <ul className="space-y-1 text-sm text-ink-muted">
+            {movers.map((m) => (
+              <li key={m.airportSlug}>
+                <Link href={`/drop-off-charges/${m.airportSlug}`} className="font-medium text-ink underline underline-offset-4 hover:text-brand-accent">
+                  {m.airportName}
+                </Link>
+                : {m.yoy}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
+      <section id="methodology" className="space-y-2 rounded-lg border border-ink/10 bg-surface-muted px-4 py-4 text-sm">
+        <h2 className="text-h2 font-semibold text-ink">How we verify (methodology)</h2>
+        <p className="text-ink-muted">
+          Every fee in this index is read directly from the airport&apos;s own official drop-off /
+          &ldquo;dropping off&rdquo; page &mdash; never from a third-party aggregator, money-saving
+          page or our own memory. Each row records the exact date we last checked it (the
+          &ldquo;Verified&rdquo; column) and links to the source we read. We re-check the dataset on a
+          rolling basis and never republish a price we haven&apos;t confirmed, which is why some figures
+          here differ from older guides still quoting last year&apos;s charge.
+        </p>
+        <ul className="ml-4 list-disc space-y-1 text-ink-muted">
+          <li>Figures are the published standard drop-off charge in pounds sterling, current for 2026.</li>
+          <li>&ldquo;Free alternative&rdquo; is a free option named on the airport&apos;s own page (a free waiting car park, or rail/tram reaching the terminal) &mdash; not an off-site third party.</li>
+          <li>The full machine-readable dataset is free to download (CSV) and free to cite. Attribution: &ldquo;ParkMath UK Airport Drop-Off Price Index&rdquo; with a link to this page.</li>
+          <li>Found a fee that has changed? It is corrected here within days. See our full <Link href="/methodology" className="text-brand-accent underline underline-offset-4">verification method</Link>.</li>
+        </ul>
+      </section>
+
+      <section className="space-y-2">
+        <h2 className="text-lg font-semibold text-ink">Go deeper</h2>
+        <ul className="space-y-1 text-sm">
+          <li>
+            <Link href="/drop-off-charges" className="text-brand-accent underline underline-offset-4">
+              Sortable league table: filter every UK airport drop-off charge by fee or £/min →
+            </Link>
+          </li>
+          <li>
+            <Link href="/airport-parking-options" className="text-brand-accent underline underline-offset-4">
+              Cheapest way in and out of each airport: drop-off vs parking, compared →
+            </Link>
+          </li>
+          <li>
+            <Link href="/parking-price-index-2026" className="text-brand-accent underline underline-offset-4">
+              The 2026 UK airport parking price index →
+            </Link>
+          </li>
+          <li>
+            <Link href="/embed" className="text-brand-accent underline underline-offset-4">
+              Embed this always-current data on your own site (free) →
+            </Link>
+          </li>
+        </ul>
+      </section>
+
+      <SourcesBlock
+        sources={[{ label: "Each airport's official drop-off page (linked per row above)", url: `${siteUrl}/drop-off-charges`, verifiedAt: latestVerified }]}
+        method="Every figure is each airport's own officially published drop-off charge, read from the source linked in its row and re-verified on the date shown. Nothing is scraped from third-party aggregators; nothing is republished unverified."
+      />
+    </article>
+  );
+}

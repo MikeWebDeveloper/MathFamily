@@ -136,6 +136,23 @@ export default function MasterTablePage() {
         citation={`ParkMath, "UK airport drop-off charges 2026", verified ${latestVerified}, parkmath.co.uk`}
       />
 
+      <aside className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-ink/10 bg-surface-muted px-4 py-3 text-sm">
+        <p className="text-ink-muted">
+          <span className="font-semibold text-ink">Citing these figures?</span> The ranked, date-stamped
+          reference is the{" "}
+          <Link href="/drop-off-charges/price-index" className="text-brand-accent underline underline-offset-4">
+            UK Airport Drop-Off Price Index
+          </Link>{" "}
+          — every airport, cheapest to dearest, each fee sourced to its official page.
+        </p>
+        <Link
+          href="/drop-off-charges/price-index"
+          className="inline-flex min-h-[40px] items-center gap-1 rounded-md border border-brand-accent/40 px-3 py-1.5 font-semibold text-brand-accent hover:bg-brand-accent/5"
+        >
+          Open the Price Index →
+        </Link>
+      </aside>
+
       {featured.length > 0 ? (
         <section className="space-y-2" aria-label="Most-searched airport drop-off charges">
           <h2 className="text-base font-semibold text-ink">Most-searched drop-off charges</h2>
@@ -242,7 +259,11 @@ export default function MasterTablePage() {
           Each row is read directly from the airport&apos;s own official drop-off page and re-verified on the date shown — tap
           the ✓ in any row to open that source. We never republish a price we haven&apos;t checked, which is why the figures
           here differ from the older aggregator and money-saving pages. Found a fee that&apos;s changed? It&apos;ll be reflected
-          here within days. See also our{" "}
+          here within days. For the ranked, citable reference see the{" "}
+          <Link href="/drop-off-charges/price-index" className="text-brand-accent underline underline-offset-4">
+            UK Airport Drop-Off Price Index
+          </Link>{" "}
+          or our{" "}
           <Link href="/parking-price-index-2026" className="text-brand-accent underline underline-offset-4">
             2026 UK airport parking price index
           </Link>

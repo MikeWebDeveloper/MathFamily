@@ -268,6 +268,11 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
         </a>
       </p>
       <p>
+        <Link href="/drop-off-charges/price-index" className="text-sm font-medium text-brand-accent underline underline-offset-4">
+          See where {sn} ranks in the UK Airport Drop-Off Price Index →
+        </Link>
+      </p>
+      <p>
         <Link href={`/abroad/${airport.slug}`} className="text-sm font-medium text-brand-accent underline underline-offset-4">
           Going abroad from {airport.name}? See the full travel cost →
         </Link>

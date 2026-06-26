@@ -332,3 +332,79 @@ export function bandPriceParenthetical(record: DropOffRecord): string | null {
   if (record.feeSummary.toLowerCase().includes(phrase.toLowerCase())) return null;
   return `${price} for up to ${first.upToMinutes} minutes`;
 }
+
+/**
+ * One citable row of the UK Airport Drop-Off Price Index — every figure read straight from the
+ * record (NO new/derived prices beyond the per-minute metric the league already exposes), each
+ * carrying its own source URL + verified date so the row is independently citable.
+ */
+export interface PriceIndexRow {
+  rank: number;
+  airportSlug: string;
+  airportName: string;
+  iata: string;
+  isFree: boolean;
+  feePence: number; // 0 when free — the HEADLINE band only
+  fee: string; // "Free" | "£10.00"
+  upToMinutes: number | null; // band[0].upToMinutes; null when free/per-entry
+  timeLabel: string; // "10 min" | "Per entry" | "—"
+  perMinutePence: number | null;
+  perMinLabel: string; // "£1.00/min" | "Flat" | "Free"
+  penaltyPence: number | null;
+  penaltyLabel: string; // "£100.00" | "—"
+  freeAlternative: string; // human label or "—"
+  yoy: string | null; // trendNote, when a prior-year figure exists
+  sourceUrl: string;
+  verifiedAt: string;
+}
+
+/**
+ * Build the ranked Price Index: free airports first (rank ascending), then charging airports
+ * cheapest→dearest by HEADLINE fee. Pure + unit-tested. Reuses the same band/per-minute logic as
+ * the league table so the two never disagree. `nameFor`/`iataFor` resolve airport metadata so this
+ * stays correct if the dataset changes. NEVER invents or rounds a published price.
+ */
+export function buildPriceIndex(
+  records: DropOffRecord[],
+  nameFor: (slug: string) => string,
+  iataFor: (slug: string) => string
+): PriceIndexRow[] {
+  const sorted = [...records].sort((a, b) => {
+    // Free airports first (a £0 forecourt is the cheapest possible "fee").
+    if (a.isFree && !b.isFree) return -1;
+    if (b.isFree && !a.isFree) return 1;
+    const fa = a.bands[0]?.totalPence ?? 0;
+    const fb = b.bands[0]?.totalPence ?? 0;
+    if (fa !== fb) return fa - fb; // cheapest charge first
+    return nameFor(a.airportSlug).localeCompare(nameFor(b.airportSlug));
+  });
+  return sorted.map((r, i) => {
+    const first = r.bands[0];
+    const perEntry = !r.isFree && isPerEntryTariff(r);
+    const perMin = dropOffPerMinutePence(r);
+    const feePence = r.isFree ? 0 : (first?.totalPence ?? 0);
+    return {
+      rank: i + 1,
+      airportSlug: r.airportSlug,
+      airportName: nameFor(r.airportSlug),
+      iata: iataFor(r.airportSlug),
+      isFree: r.isFree,
+      feePence,
+      fee: r.isFree ? "Free" : formatPence(feePence),
+      upToMinutes: r.isFree || perEntry ? null : (first?.upToMinutes ?? null),
+      timeLabel: r.isFree ? "—" : perEntry ? "Per entry" : first ? `${first.upToMinutes} min` : "—",
+      perMinutePence: perMin,
+      perMinLabel: perMin !== null ? `${formatPence(Math.round(perMin))}/min` : r.isFree ? "Free" : "Flat",
+      penaltyPence: r.penaltyPence,
+      penaltyLabel: r.penaltyPence !== null ? formatPence(r.penaltyPence) : "—",
+      freeAlternative: r.freeAlternative
+        ? isPublicTransportAlt(r.freeAlternative)
+          ? `${r.freeAlternative.name} (public transport)`
+          : `${r.freeAlternative.name} (${r.freeAlternative.minutesFree} min)`
+        : "—",
+      yoy: trendNote(r),
+      sourceUrl: r.sourceUrl,
+      verifiedAt: r.verifiedAt
+    };
+  });
+}
