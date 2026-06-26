@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { DropOffRecord, LoungeRecord, PriorityPassTier } from "@mathfamily/data";
-import { bandPriceParenthetical, buildDropOffFaqs, buildDropOffLeague, buildLoungeFaqs, dearestDropOff, dropOffHubAnswer, dropOffIndexSummary, dropOffPerMinutePence, dropOffTimeLimitNote, freshnessDelta, isPerEntryTariff, paymentDeadlineChip, searchName, trendNote } from "../lib/content";
+import { bandPriceParenthetical, buildDropOffFaqs, buildDropOffLeague, buildLoungeFaqs, buildPriceIndex, dearestDropOff, dropOffHubAnswer, dropOffIndexSummary, dropOffPerMinutePence, dropOffTimeLimitNote, freshnessDelta, isPerEntryTariff, paymentDeadlineChip, searchName, trendNote } from "../lib/content";
 
 const record: DropOffRecord = {
   airportSlug: "gatwick",
@@ -308,5 +308,44 @@ describe("buildLoungeFaqs", () => {
     const faqs = buildLoungeFaqs(sparse, "Leeds Bradford", ppTiers);
     expect(faqs[0]?.answer).toContain("aren't published");
     expect(faqs.some((f) => f.question.toLowerCase().includes("worth it"))).toBe(false);
+  });
+});
+
+describe("buildPriceIndex", () => {
+  const free: DropOffRecord = { ...record, airportSlug: "birmingham", isFree: true, bands: [], penaltyPence: null, priorYearFeePence: null };
+  const cheap: DropOffRecord = { ...record, airportSlug: "teesside", bands: [{ upToMinutes: 10, totalPence: 250 }], penaltyPence: null, priorYearFeePence: null };
+  const dear: DropOffRecord = { ...record, airportSlug: "stansted", bands: [{ upToMinutes: 15, totalPence: 1000 }], penaltyPence: null, priorYearFeePence: null };
+  const nameFor = (s: string) => ({ birmingham: "Birmingham", teesside: "Teesside", stansted: "London Stansted", gatwick: "London Gatwick" }[s] ?? s);
+  const iataFor = (s: string) => ({ birmingham: "BHX", teesside: "MME", stansted: "STN", gatwick: "LGW" }[s] ?? "???");
+
+  it("ranks free airports first, then cheapest charge to dearest", () => {
+    const rows = buildPriceIndex([dear, cheap, free], nameFor, iataFor);
+    expect(rows.map((r) => r.airportSlug)).toEqual(["birmingham", "teesside", "stansted"]);
+    expect(rows.map((r) => r.rank)).toEqual([1, 2, 3]);
+  });
+
+  it("never invents a price — reuses the verified figures verbatim", () => {
+    const rows = buildPriceIndex([cheap], nameFor, iataFor);
+    expect(rows[0]?.fee).toBe("£2.50");
+    expect(rows[0]?.feePence).toBe(250);
+    expect(rows[0]?.sourceUrl).toBe(cheap.sourceUrl);
+    expect(rows[0]?.verifiedAt).toBe(cheap.verifiedAt);
+  });
+
+  it("labels free airports and carries the IATA + source per row", () => {
+    const rows = buildPriceIndex([free], nameFor, iataFor);
+    expect(rows[0]?.fee).toBe("Free");
+    expect(rows[0]?.isFree).toBe(true);
+    expect(rows[0]?.iata).toBe("BHX");
+    expect(rows[0]?.timeLabel).toBe("—");
+  });
+
+  it("surfaces a year-on-year note only where a prior-year figure exists", () => {
+    // `record` carries priorYearFeePence 700 → 1000 (up £3.00)
+    const rows = buildPriceIndex([record, cheap], nameFor, iataFor);
+    const gatwick = rows.find((r) => r.airportSlug === "gatwick");
+    const teesside = rows.find((r) => r.airportSlug === "teesside");
+    expect(gatwick?.yoy).toMatch(/Up £3.*£7.*→.*£10/);
+    expect(teesside?.yoy).toBeNull();
   });
 });
