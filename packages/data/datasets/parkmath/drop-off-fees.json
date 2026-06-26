@@ -52,7 +52,9 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://www.gatwickairport.com/transport-options/drop-off.html",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-06-10",
+      "blueBadgeSeoTitle": "Gatwick Blue Badge drop-off — free if registered 2026",
+      "blueBadgeSeoDescription": "Blue Badge holders get the £10 Gatwick drop-off charge waived — register your number plate online first (free 30-minute session). Read from the official Gatwick page, verified 2026-06-10."
     },
     {
       "airportSlug": "manchester",
@@ -116,7 +118,10 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://www.stanstedairport.com/parking/pick-up-and-drop-off/",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-06-10",
+      "seoDescription": "Stansted Airport drop-off charges: £10 for up to 15 minutes, £28 over 15 minutes. This drop-off fee is also called the Stansted airport levy or drop-off levy. Time limit, Blue Badge rules and the free Mid Stay drop-off zone — verified 2026-06-10 against the official Stansted page.",
+      "blueBadgeSeoTitle": "Stansted Blue Badge drop-off 2026 — free zone available",
+      "blueBadgeSeoDescription": "Standard Stansted drop-off charges apply for Blue Badge holders (with a max-stay extension if needed), but the Mid Stay car park free drop-off zone (60 min) is free for everyone. Read from the official Stansted page, verified 2026-06-10."
     },
     {
       "airportSlug": "luton",
@@ -190,7 +195,9 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://www.birminghamairport.co.uk/parking/drop-off-and-pick-up/",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-06-10",
+      "blueBadgeSeoTitle": "Birmingham Airport Blue Badge drop-off — free 30 min",
+      "blueBadgeSeoDescription": "Blue Badge holders get the first 30 minutes free in Premium Set Down at Birmingham Airport — validate at the NCP Customer Service cabin with the badge and vehicle registration. Read from the official Birmingham page, verified 2026-06-10."
     },
     {
       "airportSlug": "glasgow",
@@ -258,7 +265,9 @@
       },
       "priorYearFeePence": 700,
       "sourceUrl": "https://www.bristolairport.co.uk/parking/drop-off-and-pick-up/",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-06-10",
+      "seoTitle": "Bristol drop-off fee 2026 — £8.50 charge, £100 penalty",
+      "seoDescription": "Bristol Airport drop-off fee: £8.50 for up to 10 minutes, £100 penalty if unpaid. Also called the Bristol airport drop-off levy. Free Waiting Zone (1 hr) and Blue Badge rules — verified 2026-06-10 against the official Bristol page."
     },
     {
       "airportSlug": "belfast-international",
@@ -335,7 +344,9 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://www.newcastleairport.com/car-parking/picking-up-dropping-off/",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-06-10",
+      "blueBadgeSeoTitle": "Newcastle Airport Blue Badge drop-off — free zone available",
+      "blueBadgeSeoDescription": "Newcastle Airport publishes no specific Blue Badge drop-off concession, but the Airport Waiting Zone at Callerton Parkway is free for 90 minutes for everyone, with a free 24/7 shuttle bus. Read from the official Newcastle page, verified 2026-06-10."
     },
     {
       "airportSlug": "liverpool",
@@ -614,7 +625,9 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://londonsouthendairport.com/getting-to-and-from/pick-up-drop-off",
-      "verifiedAt": "2026-06-22"
+      "verifiedAt": "2026-06-22",
+      "seoTitle": "Southend drop-off charge 2026 — £8, pay online, no barrier",
+      "seoDescription": "Southend Airport Express Drop-off: £8 for up to 10 minutes, directly opposite the terminal. Pay online by midnight the following day — barrierless ANPR, no barrier. Also called the airport drop-off levy. Verified 2026-06-22 against the official Southend page."
     },
     {
       "airportSlug": "bournemouth",
