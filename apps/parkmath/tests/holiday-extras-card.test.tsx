@@ -5,9 +5,10 @@ import { HolidayExtrasCard } from "../components/holiday-extras-card";
 const dropoff = renderToStaticMarkup(
   <HolidayExtrasCard product="parking" airportName="Gatwick" airportSlug="gatwick" surface="dropoff" extras={["hotels", "lounge", "transfers"]} />
 );
-// Norwich is HE-only — the parking card must show exactly one option (Holiday Extras), no broken links.
+// Belfast International is HE-only (Park BCP has no verified page there → fail closed) — the
+// parking card must show exactly one option (Holiday Extras), no broken links.
 const heOnly = renderToStaticMarkup(
-  <HolidayExtrasCard product="parking" airportName="Norwich" airportSlug="norwich" surface="dropoff" extras={["hotels", "lounge", "transfers"]} />
+  <HolidayExtrasCard product="parking" airportName="Belfast International" airportSlug="belfast-international" surface="dropoff" extras={["hotels", "lounge", "transfers"]} />
 );
 const lounge = renderToStaticMarkup(
   <HolidayExtrasCard product="lounge" airportName="Gatwick" airportSlug="gatwick" surface="lounge" />
@@ -24,8 +25,9 @@ function merchantOrder(markup: string): string[] {
 describe("HolidayExtrasCard", () => {
   it("drop-off parking card: multi-merchant — every covered merchant is its own tracked option (alphabetical)", () => {
     expect(dropoff).toContain(">Ad<");
-    // Gatwick → all four merchants, alphabetical, each its own per-merchant /go redirect.
-    expect(merchantOrder(dropoff)).toEqual(["Airparks", "APH", "Holiday Extras", "Purple Parking"]);
+    // Gatwick → all five merchants, alphabetical, each its own per-merchant /go redirect.
+    // Park BCP (awinmid 3495) joined 2026-06-26; sorts between Holiday Extras and Purple Parking.
+    expect(merchantOrder(dropoff)).toEqual(["Airparks", "APH", "Holiday Extras", "Park BCP", "Purple Parking"]);
     // Click measurement: links go through the first-party /go redirect, not a bare awin1.com link.
     expect(dropoff).not.toContain("https://www.awin1.com/cread.php?");
     expect(dropoff).toContain('href="/go/gatwick/parking%3Aaph?s=dropoff"');
@@ -40,9 +42,10 @@ describe("HolidayExtrasCard", () => {
 
   it("HE-only airport: parking card shows exactly one option and no broken non-covering link", () => {
     expect(merchantOrder(heOnly)).toEqual(["Holiday Extras"]);
-    expect(heOnly).toContain('href="/go/norwich/parking%3Aholiday-extras?s=dropoff"');
+    expect(heOnly).toContain('href="/go/belfast-international/parking%3Aholiday-extras?s=dropoff"');
     expect(heOnly).not.toContain("parking%3Aaph");
     expect(heOnly).not.toContain("parking%3Apurple-parking");
+    expect(heOnly).not.toContain("parking%3Apark-bcp");
   });
 
   it("lounge card: Ad, first-party lounge link carrying the lounge surface", () => {

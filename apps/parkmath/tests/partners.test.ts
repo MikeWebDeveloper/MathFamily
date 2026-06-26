@@ -199,9 +199,11 @@ describe("newly-activated AWIN merchants emit TRACKED deep links (purple-parking
 });
 
 describe("resolveAllParkingMerchants — multi-option, commission-blind presentation", () => {
-  it("an airport covered by all four joined merchants returns all four, alphabetical by name", () => {
+  it("an airport covered by all joined merchants returns them all, alphabetical by name", () => {
+    // Park BCP (awinmid 3495) joined 2026-06-26 with a verified per-airport page; it sorts
+    // alphabetically between "Holiday Extras" and "Purple Parking".
     const opts = resolveAllParkingMerchants("gatwick", "options");
-    expect(opts.map((o) => o.partnerName)).toEqual(["Airparks", "APH", "Holiday Extras", "Purple Parking"]);
+    expect(opts.map((o) => o.partnerName)).toEqual(["Airparks", "APH", "Holiday Extras", "Park BCP", "Purple Parking"]);
   });
 
   it("each option is a tracked AWIN cread.php deep link with the right awinmid/affid/clickref/ued", () => {
@@ -224,13 +226,14 @@ describe("resolveAllParkingMerchants — multi-option, commission-blind presenta
     // glasgow's override put Purple Parking PRIMARY; the multi-option list must NOT inherit that — it
     // is alphabetical, so APH comes first regardless of who was the single primary.
     const opts = resolveAllParkingMerchants("glasgow", "options");
-    expect(opts.map((o) => o.partnerName)).toEqual(["Airparks", "APH", "Holiday Extras", "Purple Parking"]);
+    expect(opts.map((o) => o.partnerName)).toEqual(["Airparks", "APH", "Holiday Extras", "Park BCP", "Purple Parking"]);
   });
 
-  it("OMITS a merchant with no verified per-airport page (HE-only airport → exactly one option)", () => {
-    // norwich: only Holiday Extras has a template-covered page; APH/Purple/Airparks fail closed.
+  it("OMITS a merchant with no verified per-airport page (norwich: HE + Park BCP only)", () => {
+    // norwich: Holiday Extras (template) + Park BCP (verified per-airport page, joined 2026-06-26)
+    // cover it; APH/Purple/Airparks have no verified Norwich page → fail closed (omitted).
     const opts = resolveAllParkingMerchants("norwich", "options");
-    expect(opts.map((o) => o.partnerName)).toEqual(["Holiday Extras"]);
+    expect(opts.map((o) => o.partnerName)).toEqual(["Holiday Extras", "Park BCP"]);
   });
 
   it("never emits a non-covering merchant (belfast-international is HE-only)", () => {

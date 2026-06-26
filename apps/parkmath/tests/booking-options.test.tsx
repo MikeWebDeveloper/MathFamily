@@ -3,7 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { BookingOptions } from "../components/booking-options";
 import type { ParkingCtaModel } from "../lib/parking-content";
 
-// Gatwick is covered by ALL FOUR joined merchants (APH, Airparks, Holiday Extras, Purple Parking).
+// Gatwick is covered by ALL joined merchants (APH, Airparks, Holiday Extras, Park BCP, Purple Parking).
 const html = renderToStaticMarkup(
   <BookingOptions airportName="Gatwick" airportSlug="gatwick" officialUrl="https://www.gatwickairport.com/parking" />
 );
@@ -18,10 +18,10 @@ const htmlWithPrice = renderToStaticMarkup(
   />
 );
 
-// Norwich is an HE-only airport (no APH/Purple/Airparks verified per-airport page) — so it must show
-// exactly ONE merchant option (Holiday Extras) and never a broken link to a non-covering merchant.
+// Belfast International is an HE-only airport (no APH/Purple/Airparks/Park BCP verified per-airport
+// page) — so it must show exactly ONE merchant option (Holiday Extras) and never a broken link.
 const heOnlyHtml = renderToStaticMarkup(
-  <BookingOptions airportName="Norwich" airportSlug="norwich" officialUrl="https://www.norwichairport.co.uk/parking" />
+  <BookingOptions airportName="Belfast International" airportSlug="belfast-international" officialUrl="https://www.belfastairport.com/parking" />
 );
 
 /** All "Book parking with X" merchant labels, in DOM order. */
@@ -42,9 +42,9 @@ describe("BookingOptions — multi-option, commission-blind presentation", () =>
   });
 
   it("an airport served by N merchants emits N tracked 'Book parking with <merchant>' options", () => {
-    // Gatwick → all four joined merchants, each its own option.
+    // Gatwick → all joined merchants, each its own option (Park BCP joined 2026-06-26).
     const order = merchantOrder(html);
-    expect(order).toEqual(["Airparks", "APH", "Holiday Extras", "Purple Parking"]);
+    expect(order).toEqual(["Airparks", "APH", "Holiday Extras", "Park BCP", "Purple Parking"]);
   });
 
   it("each merchant option is a separate first-party /go redirect (per-merchant, surface-tagged)", () => {
@@ -65,13 +65,14 @@ describe("BookingOptions — multi-option, commission-blind presentation", () =>
   });
 
   it("omits any merchant that does NOT genuinely serve the airport (no broken/misleading link)", () => {
-    // Norwich is HE-only: exactly one option, and only Holiday Extras.
+    // Belfast International is HE-only: exactly one option, and only Holiday Extras.
     const order = merchantOrder(heOnlyHtml);
     expect(order).toEqual(["Holiday Extras"]);
     expect(heOnlyHtml).not.toContain("parking%3Aaph");
     expect(heOnlyHtml).not.toContain("parking%3Apurple-parking");
     expect(heOnlyHtml).not.toContain("parking%3Aairparks");
-    expect(heOnlyHtml).toContain('href="/go/norwich/parking%3Aholiday-extras?s=parking"');
+    expect(heOnlyHtml).not.toContain("parking%3Apark-bcp");
+    expect(heOnlyHtml).toContain('href="/go/belfast-international/parking%3Aholiday-extras?s=parking"');
   });
 
   it("never fabricates the Holiday-Extras-only discount promo for another merchant", () => {
@@ -130,8 +131,8 @@ describe("BookingOptions — multi-option, commission-blind presentation", () =>
     );
     expect(out).toContain("from £42.00 for 7 days");
     expect(out).toContain("Save £273.00 vs the £315.00 drive-up gate price");
-    // Manchester is a 4-merchant airport — still multi-option even with a cta model.
-    expect(merchantOrder(out)).toEqual(["Airparks", "APH", "Holiday Extras", "Purple Parking"]);
+    // Manchester is a multi-merchant airport — still multi-option even with a cta model (incl. Park BCP).
+    expect(merchantOrder(out)).toEqual(["Airparks", "APH", "Holiday Extras", "Park BCP", "Purple Parking"]);
   });
 
   it("gate-only cta (Stansted case): suppresses the price AND makes no saving claim", () => {
