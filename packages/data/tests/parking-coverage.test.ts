@@ -2,13 +2,18 @@ import { describe, expect, it } from "vitest";
 import { loadAirports, loadParkingDataset, freshnessReport } from "../src/index";
 
 describe("parking dataset", () => {
-  it("covers all 9 launch airports with no duplicates", () => {
-    // newcastle is deliberately absent: it publishes no static parking prices anywhere on
-    // its official domain (booking-widget only, Cloudflare-protected). Add it back when an
-    // official dated quote is obtained — see docs/verification/2026-06-parking-research-notes.md.
-    const expected = ["heathrow", "gatwick", "manchester", "stansted", "luton", "edinburgh", "birmingham", "glasgow", "bristol"].sort();
+  it("covers the verified parking airports with no duplicates", () => {
+    // The verified parking roster, kept in sync with the dataset. newcastle/leeds-bradford/
+    // liverpool/teesside were added once official dated quotes were obtained — see
+    // docs/verification/2026-06-parking-research-notes.md.
+    const expected = [
+      "heathrow", "gatwick", "manchester", "stansted", "luton", "edinburgh",
+      "birmingham", "glasgow", "bristol", "newcastle", "leeds-bradford", "liverpool", "teesside"
+    ].sort();
     const slugs = loadParkingDataset().records.map((r) => r.airportSlug).sort();
     expect(slugs).toEqual(expected);
+    // No duplicate slugs.
+    expect(new Set(slugs).size).toBe(slugs.length);
   });
   it("every slug is a known airport", () => {
     const known = new Set(loadAirports().map((a) => a.slug));

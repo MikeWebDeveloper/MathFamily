@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { DropOffRecord, ParkingRecord } from "@mathfamily/data";
-import { buildOptionRows, buildOptionsFaqs, optionsAnswer } from "../lib/options-content";
+import { buildBreakEvenModel, buildOptionRows, buildOptionsFaqs, optionsAnswer } from "../lib/options-content";
 
 const dropOff: DropOffRecord = {
   airportSlug: "gatwick",
@@ -77,15 +77,89 @@ describe("optionsAnswer", () => {
 });
 
 describe("buildOptionsFaqs", () => {
-  it("answers the cheapest-way question from verified data", () => {
+  it("leads with the winnable decision query and answers it from verified data", () => {
     const faqs = buildOptionsFaqs(dropOff, parking, "London Gatwick");
-    expect(faqs[0]?.question).toContain("cheapest way");
+    expect(faqs[0]?.question).toMatch(/cheaper to park or get dropped off/i);
     expect(faqs[0]?.answer).toContain("Verified 2026-06-22");
+    expect(faqs[0]?.answer).not.toMatch(/from £\d/i); // never a fabricated pre-book figure
+  });
+  it("still answers the cheapest-way question from verified data", () => {
+    const faqs = buildOptionsFaqs(dropOff, parking, "London Gatwick");
+    const cheapest = faqs.find((f) => /cheapest way/i.test(f.question));
+    expect(cheapest?.answer).toContain("Verified 2026-06-22");
   });
   it("explains Meet & Greet vs Park & Ride without quoting an unverifiable price", () => {
     const faqs = buildOptionsFaqs(dropOff, parking, "London Gatwick");
     const mg = faqs.find((f) => /Meet & Greet or Park & Ride/i.test(f.question));
     expect(mg?.answer).toMatch(/never quote a price we can't verify/i);
     expect(mg?.answer).not.toMatch(/from £/i);
+  });
+});
+
+describe("buildBreakEvenModel", () => {
+  // gate-only parking (£89/7d ≈ £12.71/day), no prebook snapshot — the common case.
+  const gateOnly = parking; // £89 for 7 days
+
+  // A parking record WITH a real, dated pre-book snapshot (Stansted-shaped: £48/day gate, £9/day prebook).
+  const withPrebook: ParkingRecord = {
+    airportSlug: "stansted",
+    products: [
+      { name: "Mid Stay (gate)", productType: "gate", prices: [{ days: 3, totalPence: 14400 }, { days: 7, totalPence: 33600 }, { days: 14, totalPence: 67200 }], snapshotDate: null, notes: null },
+      { name: "Long Stay (pre-book)", productType: "prebook", prices: [{ days: 8, totalPence: 7199 }], snapshotDate: "2026-06-10", notes: null }
+    ],
+    sourceUrl: "https://www.stanstedairport.com/parking",
+    verifiedAt: "2026-06-22"
+  } as unknown as ParkingRecord;
+
+  it("returns null when there is no gate tariff to anchor a crossover", () => {
+    expect(buildBreakEvenModel(dropOff, null, "London Gatwick")).toBeNull();
+  });
+
+  it("builds verified rows: free alternative, drop-off and gate parking are all official", () => {
+    const m = buildBreakEvenModel(dropOff, gateOnly, "London Gatwick")!;
+    expect(m).not.toBeNull();
+    const free = m.rows.find((r) => r.id === "free-alternative");
+    const gate = m.rows.find((r) => r.id === "gate-parking");
+    expect(free?.cost).toBe("Free");
+    expect(free?.source).toBe("official");
+    expect(gate?.source).toBe("official");
+    expect(gate?.cost).toContain("£89");
+  });
+
+  it("NEVER fabricates a Park & Ride / Meet & Greet price: priceless affiliate rows when no snapshot", () => {
+    const m = buildBreakEvenModel(dropOff, gateOnly, "London Gatwick")!;
+    const pr = m.rows.find((r) => r.id === "pre-book");
+    const mg = m.rows.find((r) => r.id === "meet-greet");
+    expect(pr?.cost).toBeNull();
+    expect(pr?.source).toBe("affiliate");
+    expect(mg?.cost).toBeNull();
+    expect(mg?.source).toBe("affiliate");
+    expect(m.hasPrebookSnapshot).toBe(false);
+    // The headline never asserts a "from £<digit>" pre-book figure when we have no snapshot.
+    expect(m.headline).not.toMatch(/from £\d/i);
+  });
+
+  it("uses a REAL dated pre-book snapshot when the dataset carries one (Stansted-shaped)", () => {
+    const m = buildBreakEvenModel({ ...dropOff, airportSlug: "stansted" }, withPrebook, "Stansted")!;
+    const pr = m.rows.find((r) => r.id === "pre-book");
+    expect(pr?.source).toBe("official");
+    expect(pr?.cost).toContain("£71.99");
+    expect(pr?.cost).toContain("2026-06-10"); // the snapshot date is shown — datedness is honest
+    expect(m.hasPrebookSnapshot).toBe(true);
+    // The crossover headline quotes the verified per-day saving vs the gate.
+    expect(m.headline).toMatch(/%/);
+    expect(m.headline).toContain("2026-06-10");
+  });
+
+  it("headline crossover is built from verified figures and names the free alternative", () => {
+    const m = buildBreakEvenModel(dropOff, gateOnly, "London Gatwick")!;
+    expect(m.headline).toContain("Long Stay car park"); // the free alternative
+    expect(m.headline).toMatch(/£/);
+  });
+
+  it("omits the free-alternative row when the airport has none (never invents one)", () => {
+    const noAlt = { ...dropOff, freeAlternative: null };
+    const m = buildBreakEvenModel(noAlt, gateOnly, "London Gatwick")!;
+    expect(m.rows.some((r) => r.id === "free-alternative")).toBe(false);
   });
 });

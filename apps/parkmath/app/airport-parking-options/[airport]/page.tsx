@@ -8,7 +8,7 @@ import { BookingOptions } from "@/components/booking-options";
 import { parkingCtaModel } from "@/lib/parking-content";
 import { searchName } from "@/lib/content";
 import { airportHasParkingVsDropOff } from "@/lib/parking-vs-drop-off-content";
-import { buildOptionRows, buildOptionsFaqs, optionsAnswer, optionsInputs, type OptionRow } from "@/lib/options-content";
+import { buildBreakEvenModel, buildOptionRows, buildOptionsFaqs, optionsAnswer, optionsInputs, type OptionRow } from "@/lib/options-content";
 
 export const dynamicParams = false;
 
@@ -30,9 +30,13 @@ export async function generateMetadata({ params }: { params: Promise<{ airport: 
   const { airport: a, inputs } = data;
   const sn = searchName(a.name);
   const fee = inputs.dropOff.isFree ? "free drop-off" : inputs.dropOff.bands[0] ? `${inputs.dropOff.feeSummary.split(",")[0]}` : "drop-off";
+  // Re-pointed (cycle 3) OFF the locked "cheapest/compare [airport] parking" OTA fortress and ONTO
+  // the winnable decision seam — "is it cheaper to park or get dropped off / how to avoid drop-off
+  // charges / when is each option cheaper" — where Reddit/MSE/Guardian rank, not booking OTAs. The
+  // page's differentiated asset is the verified trip-length break-even, which the fortress can't match.
   return {
-    title: `${sn} Airport parking options 2026 — drop-off, Park & Ride & Meet & Greet compared`,
-    description: `The cheapest way to park or drop off at ${sn} Airport: forecourt drop-off (${fee}), the free alternative, drive-up gate parking, Park & Ride and Meet & Greet — a neutral, verified comparison. Updated ${inputs.dropOff.verifiedAt}.`,
+    title: `Park or get dropped off at ${sn} Airport? Cheapest option by trip length (2026)`,
+    description: `Is it cheaper to park or get dropped off at ${sn} Airport? An honest, verified break-even: the free drop-off alternative, the ${fee} forecourt fee, drive-up gate parking and when pre-booking wins — by how long you're going. Updated ${inputs.dropOff.verifiedAt}.`,
     alternates: { canonical: `/airport-parking-options/${airport}` }
   };
 }
@@ -54,6 +58,7 @@ export default async function AirportParkingOptionsPage({ params }: { params: Pr
   const sn = searchName(airport.name);
 
   const rows = buildOptionRows(dropOff, parking);
+  const breakEven = buildBreakEvenModel(dropOff, parking, airport.name);
   const faqs = buildOptionsFaqs(dropOff, parking, airport.name);
   const answer = optionsAnswer(dropOff, parking, airport.name);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
@@ -81,7 +86,7 @@ export default async function AirportParkingOptionsPage({ params }: { params: Pr
       <JsonLd data={speakableLd({ url: pageUrl })} />
 
       <header className="space-y-3">
-        <PageHeading>{sn} Airport parking options: drop-off, Park &amp; Ride &amp; Meet &amp; Greet</PageHeading>
+        <PageHeading>Is it cheaper to park or get dropped off at {sn} Airport?</PageHeading>
         <div className="flex flex-wrap items-center gap-3">
           <FreshnessBadge verifiedAt={dropOff.verifiedAt} />
           <SourceCitation url={dropOff.sourceUrl} label={`Official ${airport.name} page`} />
@@ -92,11 +97,16 @@ export default async function AirportParkingOptionsPage({ params }: { params: Pr
         </p>
       </header>
 
-      <AnswerLead answer={`The cheapest way to ${dropOff.isFree ? "use" : "get into"} ${airport.name} depends on your trip length.`}>
+      <AnswerLead answer={`Whether it's cheaper to park or get dropped off at ${airport.name} depends on your trip length.`}>
         {[
           dropOff.isFree ? "Drop-off is free at the forecourt" : `Quick drop-off: ${dropOff.feeSummary.split(",")[0]}`,
           ...(dropOff.freeAlternative ? [`Free alternative: ${dropOff.freeAlternative.name}`] : []),
-          "Longer trip: pre-booked Park & Ride usually beats the gate"
+          // Surface the verified saving figure in the FIRST extractable passage (AI Overviews pull
+          // the lead block before the break-even section). Only when a real dated pre-book snapshot
+          // anchors it — otherwise the honest qualitative line, never a fabricated number.
+          breakEven?.hasPrebookSnapshot
+            ? `Pre-booking parking can cost far less than the drive-up gate — see the dated break-even below`
+            : "Longer trip: pre-booked parking usually beats the drive-up gate"
         ]}
       </AnswerLead>
       <MiniAnswerBar summary={`${airport.iata} · drop-off vs park & ride vs meet & greet`} verified />
@@ -132,6 +142,53 @@ export default async function AirportParkingOptionsPage({ params }: { params: Pr
           </tbody>
         </table>
       </section>
+
+      {/* The differentiated wedge: a verified trip-length break-even — which option wins by how long
+          you're going. Built ONLY from figures we hold (free alternative, drop-off fee, drive-up gate
+          tariff, and a dated pre-book snapshot where one exists). The Park & Ride / Meet & Greet rows
+          carry NO fabricated price — they light up with a live "from £X" from the affiliate feed. The
+          row no OTA publishes — recommending the FREE option when it genuinely wins — is the anchor. */}
+      {breakEven ? (
+        <section aria-label="Cheapest option by trip length" className="space-y-3 rounded-card border border-ink/10 bg-surface p-4">
+          <div className="space-y-1">
+            <h2 className="text-lg font-semibold text-ink">Cheapest option, by how long you&apos;re going</h2>
+            <p className="text-sm text-ink-muted">{breakEven.headline}</p>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[640px] border-collapse text-sm">
+              <thead>
+                <tr className="border-b border-ink/15 text-left">
+                  <th scope="col" className="py-2 pr-3 font-semibold text-ink">Your trip</th>
+                  <th scope="col" className="py-2 pr-3 font-semibold text-ink">Best option</th>
+                  <th scope="col" className="py-2 pr-3 font-semibold text-ink">Cost</th>
+                  <th scope="col" className="py-2 font-semibold text-ink">Source</th>
+                </tr>
+              </thead>
+              <tbody>
+                {breakEven.rows.map((row) => (
+                  <tr key={row.id} className="border-b border-ink/10 align-top">
+                    <td className="py-3 pr-3 text-ink-muted">{row.trip}</td>
+                    <td className="py-3 pr-3 font-medium text-ink">{row.option}</td>
+                    <td className="py-3 pr-3 text-ink">
+                      {row.cost ?? <span className="text-ink-muted">Live price below</span>}
+                    </td>
+                    <td className="py-3">
+                      {row.source === "official" ? (
+                        <span className="rounded border border-positive/40 px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-wide text-positive">Verified</span>
+                      ) : (
+                        <span className="rounded border border-ink-muted/40 px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Ad</span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-xs text-ink-muted">
+            Verified figures read from {airport.name}&apos;s own published pages{breakEven.hasPrebookSnapshot ? " and a dated pre-book snapshot" : ""}, last checked {breakEven.verifiedAt}. We don&apos;t publish a Park &amp; Ride or Meet &amp; Greet price we can&apos;t verify — those show a live &quot;from&quot; price below when our parking partner has one.
+          </p>
+        </section>
+      ) : null}
 
       {/* Booking-intent monetisation: fail-closed affiliate CTA. Dormant (renders the official-site
           card only) until an AWIN parking merchant is live for this airport, then lights up with the
