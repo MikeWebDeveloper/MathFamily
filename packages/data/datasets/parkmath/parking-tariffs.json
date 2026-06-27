@@ -262,24 +262,6 @@
       ],
       "sourceUrl": "https://www.teessideinternational.com/teesside-airport-parking/",
       "verifiedAt": "2026-06-27"
-    },
-    {
-      "airportSlug": "southend",
-      "products": [
-        {
-          "productType": "gate",
-          "name": "Long Stay — Turn up and park (drive-up)",
-          "prices": [
-            { "days": 3, "totalPence": 13500 },
-            { "days": 7, "totalPence": 31500 },
-            { "days": 14, "totalPence": 63000 }
-          ],
-          "snapshotDate": null,
-          "notes": "Official 'Turn up and park' Long Stay tariff: £45.00 per 0-24 hours. 3/7/14-day totals computed on a flat £45/24h basis (3d=£135; 7d=£315; 14d=£630). FLAG: the official page publishes Long Stay turn-up as a single '£45 / 0-24 hrs' figure with NO separately published per-additional-day Long Stay rate (the only 'each additional 24 hours £65' line on the page sits under the SHORT STAY block and was NOT applied), so these totals rest on a flat-rate assumption. FLAG: Southend operates more than one long-stay car park at different rates; the headline official turn-up figure (£45) is used. Verified 2026-06-27 against the official londonsouthendairport.com parking page (two independent fetch methods agreed on £45)."
-        }
-      ],
-      "sourceUrl": "https://londonsouthendairport.com/getting-to-and-from/parking/",
-      "verifiedAt": "2026-06-27"
     }
   ]
 }
