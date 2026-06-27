@@ -130,49 +130,6 @@ export function parkingVsDropOffDecisionH1(airportName: string): string {
   return `Is it cheaper to park or get dropped off at ${airportName}?`;
 }
 
-/** HowTo decision steps for the parking-vs-drop-off page. 3-4 honest steps built ONLY from the model
- *  and the drop-off record; no fabricated figures. Mirrors the wording in buildParkingVsDropOffFaqs so
- *  the structured data stays consistent with the on-page copy. */
-export function buildParkingVsDropOffHowToSteps(model: ParkingVsDropOffModel, dropOff: DropOffRecord, airportName: string): { name: string; text: string }[] {
-  const fee = formatPence(model.dropOffFeePence);
-  const park = formatPence(model.parkingPence);
-  const perDay = formatPence(model.perDayPence);
-  const steps: { name: string; text: string }[] = [];
-
-  steps.push({
-    name: "Decide if the car is staying",
-    text: `At ${airportName}, leaving the car for the trip means ${park} for ${model.parkingDays}-day drive-up parking; a single forecourt drop-off is just ${fee}. The right answer depends entirely on whether the car stays.`
-  });
-
-  const alt = dropOff.freeAlternative;
-  steps.push({
-    name: "If you're only dropping off",
-    text:
-      `Use the forecourt: the one-off ${fee} drop-off charge beats paying for parking you won't use.` +
-      (alt
-        ? isPublicTransportAlt(alt)
-          ? ` Or avoid it entirely by arriving via the ${alt.name}.`
-          : ` Or avoid it entirely with the ${alt.name} (free for ${alt.minutesFree} minutes).`
-        : "")
-  });
-
-  steps.push({
-    name: "If you're parking for the trip",
-    text: `${model.parkingDays}-day drive-up parking is ${park} (about ${perDay} per 24h), and pre-booking online is usually cheaper than that drive-up gate rate.${model.parkingMinutesPerDropOff !== null ? ` For scale, one ${fee} drop-off only buys about ${model.parkingMinutesPerDropOff} minutes of parking.` : ""}`
-  });
-
-  if (alt) {
-    steps.push({
-      name: "Or avoid both",
-      text: isPublicTransportAlt(alt)
-        ? `Skip the forecourt charge and the car park: arrive by the ${alt.name}. ${alt.details}`
-        : `Skip the forecourt charge and the car park: the ${alt.name} is free for ${alt.minutesFree} minutes. ${alt.details}`
-    });
-  }
-
-  return steps;
-}
-
 /** Data-driven FAQs. Each answer is built only from verified record fields + the model. */
 export function buildParkingVsDropOffFaqs(model: ParkingVsDropOffModel, dropOff: DropOffRecord, airportName: string): { question: string; answer: string }[] {
   const fee = formatPence(model.dropOffFeePence);

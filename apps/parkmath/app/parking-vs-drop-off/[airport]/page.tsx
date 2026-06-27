@@ -3,13 +3,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isPublicTransportAlt, loadAirports, loadDropOffDataset, loadParkingDataset, newsForAirport, type Airport, type DropOffRecord, type ParkingRecord } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
-import { breadcrumbLd, faqPageLd, howToLd, JsonLd, speakableLd } from "@mathfamily/geo";
+import { breadcrumbLd, faqPageLd, JsonLd, speakableLd } from "@mathfamily/geo";
 import { AnswerLead, AnswerPassage, Callout, CaveatChip, EmailCaptureSlot, FaqAccordion, FeeGrid, FreshnessBadge, LatestUpdates, MiniAnswerBar, PageHeading, SavesVerdict, SourceCitation, SourcesBlock, StatStrip } from "@mathfamily/ui";
 import { HolidayExtrasCard } from "@/components/holiday-extras-card";
 import {
   REFERENCE_DAYS,
   buildParkingVsDropOffFaqs,
-  buildParkingVsDropOffHowToSteps,
   parkingEquivalenceLine,
   parkingVsDropOffAnswer,
   parkingVsDropOffDecisionDescription,
@@ -93,14 +92,10 @@ export default async function ParkingVsDropOffPage({ params }: { params: Promise
         ])}
       />
       <JsonLd data={speakableLd({ url: pageUrl })} />
-      <JsonLd
-        data={howToLd({
-          name: parkingVsDropOffDecisionH1(airport.name),
-          description: parkingVsDropOffAnswer(model, airport.name),
-          url: pageUrl,
-          steps: buildParkingVsDropOffHowToSteps(model, dropOff, airport.name)
-        })}
-      />
+      {/* HowTo JSON-LD intentionally NOT emitted: Google retired HowTo rich results (Sep 2023) so it
+          earns zero SERP benefit, and its steps duplicate the FAQPage's decision Q&A on the same page
+          (a duplicate-structured-data quality risk). FAQPage carries the decision intent for AI/LLM
+          citation; BreadcrumbList + speakable do the rest. (SEO schema audit, cycle 3.) */}
 
       <header className="space-y-3">
         <PageHeading>{parkingVsDropOffDecisionH1(airport.name)}</PageHeading>
