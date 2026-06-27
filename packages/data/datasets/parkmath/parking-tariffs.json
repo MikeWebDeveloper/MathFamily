@@ -1,6 +1,6 @@
 {
-  "version": "1.0.0",
-  "lastUpdated": "2026-06-10",
+  "version": "1.1.0",
+  "lastUpdated": "2026-06-27",
   "records": [
     {
       "airportSlug": "heathrow",
@@ -190,6 +190,96 @@
       ],
       "sourceUrl": "https://www.glasgowairport.com/at-the-airport/airport-services/parking/long-stay/",
       "verifiedAt": "2026-06-10"
+    },
+    {
+      "airportSlug": "newcastle",
+      "products": [
+        {
+          "productType": "gate",
+          "name": "Long Stay — Turn Up & Park (drive-up)",
+          "prices": [
+            { "days": 3, "totalPence": 12000 },
+            { "days": 7, "totalPence": 28000 },
+            { "days": 14, "totalPence": 56000 }
+          ],
+          "snapshotDate": null,
+          "notes": "Official 'Turn Up & Park price' table for the Long Stay car park: up to 24h £50.00, 2 days £80.00, 3 days £120.00, 4 days £160.00, then £40.00 per day (or part) thereafter. Published 3-day total used directly (£120). 7-day computed from the published 4-day base plus the official £40/day (£160 + 3x£40 = £280); 14-day from the 7-day plus 7x£40 (£280 + £280 = £560). Verified 2026-06-27 against the official newcastleairport.com parking-options page."
+        }
+      ],
+      "sourceUrl": "https://www.newcastleairport.com/car-parking/car-parking-options/",
+      "verifiedAt": "2026-06-27"
+    },
+    {
+      "airportSlug": "leeds-bradford",
+      "products": [
+        {
+          "productType": "gate",
+          "name": "Long Stay — Turn up on the day (drive-up)",
+          "prices": [
+            { "days": 3, "totalPence": 9300 },
+            { "days": 7, "totalPence": 16500 },
+            { "days": 14, "totalPence": 29100 }
+          ],
+          "snapshotDate": null,
+          "notes": "Official 'Turn up on the day pricing' for Long Stay: 1st day £57.00, each additional day £18.00. 3/7/14-day totals computed from those official rates (3d=57+2x18=£93; 7d=57+6x18=£165; 14d=57+13x18=£291). Verified 2026-06-27 against the official leedsbradfordairport.co.uk /parking page ('What are your parking prices?' → 'Turn up on the day pricing'). FLAG: prices are JS-rendered inside an accordion on the official page; read by expanding that panel. Stale third-party figures (e.g. £57/£74/£91 +£17/day) were rejected in favour of the current official £18/day rate."
+        }
+      ],
+      "sourceUrl": "https://www.leedsbradfordairport.co.uk/parking",
+      "verifiedAt": "2026-06-27"
+    },
+    {
+      "airportSlug": "liverpool",
+      "products": [
+        {
+          "productType": "gate",
+          "name": "Long Stay — Gate Rate (non-booked / drive-up)",
+          "prices": [
+            { "days": 3, "totalPence": 12000 },
+            { "days": 7, "totalPence": 16000 },
+            { "days": 14, "totalPence": 35000 }
+          ],
+          "snapshotDate": null,
+          "notes": "Official 'Gate Rate tariff for non-booked parking' for Long Stay: up to 1 day £60.00, 2 days £100.00, 3 days £120.00, 4 days £130.00, 5 days £140.00, 6 days £150.00, 7 days £160.00, 8 days £170.00, then £30.00 per 24h (or part) thereafter. Published 3-day (£120) and 7-day (£160) totals used directly; 14-day computed from the published 8-day base plus 6x£30 (£170 + £180 = £350). Verified 2026-06-27 against the official liverpoolairport.com long-stay page. FLAG: price table is JS-rendered; read via headless render of the official page."
+        }
+      ],
+      "sourceUrl": "https://www.liverpoolairport.com/parking/long-stay",
+      "verifiedAt": "2026-06-27"
+    },
+    {
+      "airportSlug": "teesside",
+      "products": [
+        {
+          "productType": "gate",
+          "name": "Main car park — Standard turn-up and park (drive-up)",
+          "prices": [
+            { "days": 3, "totalPence": 8200 },
+            { "days": 7, "totalPence": 10500 },
+            { "days": 14, "totalPence": 21000 }
+          ],
+          "snapshotDate": null,
+          "notes": "Official 'Standard turn-up and park rates' table: up to 24h £36.00, 2 days £72.00, 3 days £82.00, 4 days £87.00, 5 days £93.00, 6 days £99.00, 7 days £105.00, 8 days £120.00, 9 days £135.00, 10 days £150.00, 11 days £165.00, then £15.00 per day thereafter. Published 3-day (£82) and 7-day (£105) totals used directly; 14-day computed from the published 11-day base plus 3x£15 (£165 + £45 = £210). The separate lower 'Pre-bookable online rates' table was NOT used. Verified 2026-06-27 against the official teessideinternational.com parking page (independently cross-checked the same day)."
+        }
+      ],
+      "sourceUrl": "https://www.teessideinternational.com/teesside-airport-parking/",
+      "verifiedAt": "2026-06-27"
+    },
+    {
+      "airportSlug": "southend",
+      "products": [
+        {
+          "productType": "gate",
+          "name": "Long Stay — Turn up and park (drive-up)",
+          "prices": [
+            { "days": 3, "totalPence": 13500 },
+            { "days": 7, "totalPence": 31500 },
+            { "days": 14, "totalPence": 63000 }
+          ],
+          "snapshotDate": null,
+          "notes": "Official 'Turn up and park' Long Stay tariff: £45.00 per 0-24 hours. 3/7/14-day totals computed on a flat £45/24h basis (3d=£135; 7d=£315; 14d=£630). FLAG: the official page publishes Long Stay turn-up as a single '£45 / 0-24 hrs' figure with NO separately published per-additional-day Long Stay rate (the only 'each additional 24 hours £65' line on the page sits under the SHORT STAY block and was NOT applied), so these totals rest on a flat-rate assumption. FLAG: Southend operates more than one long-stay car park at different rates; the headline official turn-up figure (£45) is used. Verified 2026-06-27 against the official londonsouthendairport.com parking page (two independent fetch methods agreed on £45)."
+        }
+      ],
+      "sourceUrl": "https://londonsouthendairport.com/getting-to-and-from/parking/",
+      "verifiedAt": "2026-06-27"
     }
   ]
 }

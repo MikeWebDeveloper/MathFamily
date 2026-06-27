@@ -1,5 +1,6 @@
 import { formatPence } from "@mathfamily/engine";
 import { isPublicTransportAlt, loadDropOffDataset, loadParkingDataset, type DropOffRecord, type ParkingRecord } from "@mathfamily/data";
+import { resolveParkingMerchant } from "./partners";
 
 /** Inputs needed to decide whether an airport can have a "parking vs drop-off" page.
  *  We need BOTH a real drop-off charge (a charging airport with a priced first band) AND
@@ -133,6 +134,16 @@ export function buildParkingVsDropOffFaqs(model: ParkingVsDropOffModel, dropOff:
     });
   }
 
+  // Targets the literal "[airport] drop off vs park" / "when is parking cheaper" decision query with
+  // the honest both-sides split — the precision the Reddit/MSE incumbents lack. Data-backed only.
+  faqs.push({
+    question: `${airportName}: drop off vs park — when is each cheaper?`,
+    answer:
+      `Drop off when you're only running someone to the terminal and leaving: the ${fee} forecourt charge is a one-off and beats paying for parking you won't use. ` +
+      `Park when you're flying yourself and the car has to stay — ${model.parkingDays}-day drive-up parking is ${park} (about ${formatPence(model.perDayPence)} per 24h), and a single ${fee} drop-off only covers ${model.parkingMinutesPerDropOff !== null ? `about ${model.parkingMinutesPerDropOff} minutes of it` : "a few minutes of it"}. ` +
+      `Pre-booking parking online is usually cheaper than the drive-up gate price. Both figures verified ${model.verifiedAt} against the airport's own pages.`
+  });
+
   const alt = dropOff.freeAlternative;
   if (alt) {
     faqs.push({
@@ -155,18 +166,29 @@ export function buildParkingVsDropOffFaqs(model: ParkingVsDropOffModel, dropOff:
  *  Honest, intent-aware: dropping off is cheapest, but the ~half of readers who WILL park
  *  need an in-flow path to the parking decision. Every number traces to a dataset value.
  *
- *  `hasComparison` ⇒ the airport qualifies for a parking-vs-drop-off page (both a real
- *  drop-off fee AND a verified drive-up gate price exist), so the bridge can carry the
- *  concrete "park N days = £X" figure and link to that decision page. When false, the
- *  bridge still renders if a parking page exists (`hasParking`), but with no fabricated
- *  comparison — it just links onward to the parking page. If neither exists, no bridge. */
+ *  Three honest tiers, in descending strength:
+ *   1. `hasComparison` ⇒ the airport qualifies for a parking-vs-drop-off page (both a real
+ *      drop-off fee AND a verified drive-up gate price exist), so the bridge carries the
+ *      concrete "park N days = £X" figure and links to that decision page.
+ *   2. `hasParking` ⇒ a plain `/airport-parking/[airport]` page exists (a verified parking
+ *      tariff, even if not the comparison) — link onward there, no fabricated figure.
+ *   3. `affiliateOnly` ⇒ no parking page yet, but the airport DOES charge to drop off (so a
+ *      "park or drop off?" decision is live for this audience) AND a verified affiliate parking
+ *      deep link resolves for it — so we surface a parking-decision CTA straight to `/go/.../parking`
+ *      instead of dead-ending the drop-off audience. No price is shown (we don't have an official
+ *      tariff yet), only an honest "compare parking" hand-off. This de-gates the funnel for the
+ *      16 airports that pull drop-off traffic but have no parking tariff record.
+ *  If none of the three apply (e.g. free drop-off with no parking page and no affiliate link), no bridge. */
 export interface DropOffParkingBridge {
   /** Render the bridge at all (true when there is somewhere honest to send a parker). */
   show: boolean;
-  /** A parking-vs-drop-off decision page exists for this airport. */
+  /** A parking-vs-drop-off decision page exists for this airport (tier 1). */
   hasComparison: boolean;
-  /** A plain airport-parking page exists for this airport. */
+  /** A plain airport-parking page exists for this airport (tier 1 or 2). */
   hasParking: boolean;
+  /** No parking page, but the airport charges to drop off AND an affiliate parking link resolves —
+   *  surface a direct `/go/.../parking` decision CTA rather than dead-ending the audience (tier 3). */
+  affiliateOnly: boolean;
   /** Reference parking days the figure covers (only when hasComparison). */
   parkingDays: number;
   /** Drive-up gate parking price for the reference duration, integer pence (only when hasComparison). */
@@ -179,8 +201,9 @@ export interface DropOffParkingBridge {
 
 /** Build the drop-off → parking decision bridge for an airport slug. Pure over the datasets.
  *  Never fabricates: the comparison figure is only present when both real figures exist; the
- *  bridge degrades to a plain onward link when only a parking page exists, and to nothing when
- *  the airport is free-drop-off with no parking page. */
+ *  bridge degrades to a plain onward link when only a parking page exists, to a direct affiliate
+ *  parking CTA when the airport charges to drop off but has no tariff yet (de-gated funnel), and to
+ *  nothing when there is no honest path at all. */
 export function dropOffParkingBridge(slug: string): DropOffParkingBridge {
   const dropOff = loadDropOffDataset().records.find((r) => r.airportSlug === slug);
   const parking = loadParkingDataset().records.find((r) => r.airportSlug === slug);
@@ -193,6 +216,7 @@ export function dropOffParkingBridge(slug: string): DropOffParkingBridge {
       show: true,
       hasComparison: true,
       hasParking: true,
+      affiliateOnly: false,
       parkingDays: model.parkingDays,
       parkingPence: model.parkingPence,
       dropOffFeePence: model.dropOffFeePence,
@@ -200,10 +224,32 @@ export function dropOffParkingBridge(slug: string): DropOffParkingBridge {
     };
   }
 
+  if (hasParking) {
+    // A parking page exists (e.g. a free-drop-off airport with a parking tariff): onward link, no figure.
+    return {
+      show: true,
+      hasComparison: false,
+      hasParking: true,
+      affiliateOnly: false,
+      parkingDays: REFERENCE_DAYS,
+      parkingPence: null,
+      dropOffFeePence: null,
+      verifiedAt: null
+    };
+  }
+
+  // No parking page. De-gate the funnel: if the airport actually CHARGES to drop off (a live
+  // "park or drop off?" decision) AND a verified affiliate parking deep link resolves for it, send
+  // the audience straight to the parking comparison via the tracked /go redirect rather than
+  // dead-ending. Fail-closed: if no affiliate link resolves (resolveParkingMerchant → null), no bridge.
+  const charges = Boolean(dropOff && !dropOff.isFree);
+  const affiliateResolves = charges && resolveParkingMerchant(slug, "dropoff-degated") !== null;
+
   return {
-    show: hasParking,
+    show: affiliateResolves,
     hasComparison: false,
-    hasParking,
+    hasParking: false,
+    affiliateOnly: affiliateResolves,
     parkingDays: REFERENCE_DAYS,
     parkingPence: null,
     dropOffFeePence: null,

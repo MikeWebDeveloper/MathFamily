@@ -169,12 +169,13 @@ describe("parkingVsDropOffIndexSummary", () => {
 });
 
 describe("dropOffParkingBridge (drop-off → parking decision bridge)", () => {
-  it("carries the concrete comparison figure when the airport qualifies (charged drop-off + gate price)", () => {
+  it("tier 1: carries the concrete comparison figure when the airport qualifies (charged drop-off + gate price)", () => {
     // gatwick: charged drop-off AND a verified 7-day drive-up gate price → full comparison bridge.
     const b = dropOffParkingBridge("gatwick");
     expect(b.show).toBe(true);
     expect(b.hasComparison).toBe(true);
     expect(b.hasParking).toBe(true);
+    expect(b.affiliateOnly).toBe(false);
     expect(b.parkingDays).toBe(REFERENCE_DAYS);
     expect(b.parkingPence).not.toBeNull();
     expect(b.dropOffFeePence).not.toBeNull();
@@ -184,22 +185,38 @@ describe("dropOffParkingBridge (drop-off → parking decision bridge)", () => {
     expect(Number.isInteger(b.dropOffFeePence!)).toBe(true);
   });
 
-  it("degrades to a plain onward link (no figure) for a FREE drop-off airport that still has a parking page", () => {
+  it("tier 2: degrades to a plain onward link (no figure) for a FREE drop-off airport that still has a parking page", () => {
     // birmingham: free drop-off (excluded from comparison) but a parking page exists.
     const b = dropOffParkingBridge("birmingham");
     expect(b.show).toBe(true);
     expect(b.hasComparison).toBe(false);
     expect(b.hasParking).toBe(true);
+    expect(b.affiliateOnly).toBe(false);
     // No fabricated comparison numbers when there is nothing honest to compare.
     expect(b.parkingPence).toBeNull();
     expect(b.dropOffFeePence).toBeNull();
     expect(b.verifiedAt).toBeNull();
   });
 
-  it("renders nothing when there is no parking page to send a parker to (charged drop-off, no parking data)", () => {
-    // norwich: charged drop-off but no parking record at all → no bridge.
+  it("tier 3 (de-gated funnel): surfaces an affiliate-only parking CTA for a CHARGED drop-off airport with no parking page", () => {
+    // norwich: charged drop-off, no parking record — but a verified affiliate parking link resolves
+    // (Holiday Extras' per-airport template), so the audience is funnelled onward via /go, not dead-ended.
     const b = dropOffParkingBridge("norwich");
+    expect(b.show).toBe(true);
+    expect(b.affiliateOnly).toBe(true);
+    expect(b.hasComparison).toBe(false);
+    expect(b.hasParking).toBe(false);
+    // Still no fabricated price — we don't have an official tariff for this airport yet.
+    expect(b.parkingPence).toBeNull();
+    expect(b.dropOffFeePence).toBeNull();
+    expect(b.verifiedAt).toBeNull();
+  });
+
+  it("renders nothing for a FREE drop-off airport with no parking page (no live park-or-drop-off decision)", () => {
+    // inverness: free drop-off AND no parking record → no honest parking decision to surface → no bridge.
+    const b = dropOffParkingBridge("inverness");
     expect(b.show).toBe(false);
+    expect(b.affiliateOnly).toBe(false);
     expect(b.hasComparison).toBe(false);
     expect(b.hasParking).toBe(false);
     expect(b.parkingPence).toBeNull();
