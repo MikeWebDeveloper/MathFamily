@@ -37,12 +37,17 @@ describe("buildDropOffFaqs", () => {
   });
   it("omits data-driven optional questions when data is null, but still answers 'how to avoid' honestly", () => {
     // Bare charging record: no deadline / alt / penalty. Q1 (how much) + Q2 (conversational
-    // "how much does it cost") + Blue Badge + an honest "how do I avoid" answer (no free zone
-    // exists → say so, don't imply one). 4 FAQs.
+    // "how much does it cost") + Blue Badge + a pick-up Q-match (charging airport → same forecourt
+    // charge) + an honest "how do I avoid" answer (no free zone exists → say so). 5 FAQs.
     const sparse: DropOffRecord = { ...record, paymentDeadline: null, freeAlternative: null, penaltyPence: null, penaltyNotes: null, maxStayMinutes: null, bands: [{ upToMinutes: 1, totalPence: 700 }] };
     const faqs = buildDropOffFaqs(sparse, "X");
-    expect(faqs).toHaveLength(4);
+    expect(faqs).toHaveLength(5);
     expect(faqs.some((f) => f.question.startsWith("How much does it cost to drop off at"))).toBe(true);
+    // Pick-up Q-match present even with no free alternative, and never invents a free pick-up zone.
+    const pickup = faqs.find((f) => f.question.startsWith("How much is pick-up at"));
+    expect(pickup).toBeTruthy();
+    expect(pickup?.answer).toContain("same forecourt");
+    expect(pickup?.answer).not.toContain("free pick-up");
     const avoid = faqs.find((f) => f.question.includes("avoid"));
     expect(avoid?.answer).toContain("doesn't publish a free drop-off zone");
   });

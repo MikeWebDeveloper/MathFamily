@@ -45,7 +45,15 @@ export async function generateMetadata({ params }: { params: Promise<{ airport: 
   return {
     title,
     description,
-    alternates: { canonical: `/drop-off-charges/${airport}` }
+    alternates: { canonical: `/drop-off-charges/${airport}` },
+    // Per-page Open Graph: the root layout sets og:url to the site root, so without this every
+    // airport page emitted og:url=homepage (an authority/duplicate signal). Override to the page's
+    // own URL and mark it as an article with the verified date as modified_time.
+    openGraph: {
+      type: "article",
+      url: `/drop-off-charges/${airport}`,
+      modifiedTime: `${data.record.verifiedAt}T00:00:00Z`
+    }
   };
 }
 

@@ -87,6 +87,24 @@ export function buildDropOffFaqs(record: DropOffRecord, airportName: string): { 
     answer: record.blueBadgePolicy
   });
 
+  // Pick-up Q-match. GSC shows real, unaddressed pick-up demand on these pages ("free pick up
+  // <airport>", "how much is pick up at <airport>") — the official source page covers BOTH actions
+  // ("…/pick-up-and-drop-off/"), and pick-up uses the same forecourt charge. Answer is built only
+  // from verified fields: the forecourt charge applies equally, and any free alternative doubles as
+  // a free pick-up/waiting zone. Never fabricates a separate pick-up tariff.
+  if (!record.isFree) {
+    const alt = record.freeAlternative;
+    const freeLine = alt
+      ? isPublicTransportAlt(alt)
+        ? ` For a free pick-up, arrive by the ${alt.name} instead of the forecourt.`
+        : ` For free pick-up, the ${alt.name} gives ${alt.minutesFree} minutes free.`
+      : "";
+    faqs.push({
+      question: `How much is pick-up at ${search} Airport?`,
+      answer: `Pick-up uses the same forecourt as drop-off, so the same charge applies: ${record.feeSummary.charAt(0).toLowerCase()}${record.feeSummary.slice(1)}.${freeLine} Verified ${record.verifiedAt} against the official ${airportName} page.`.trim()
+    });
+  }
+
   if (record.freeAlternative) {
     const alt = record.freeAlternative;
     faqs.push({
