@@ -134,6 +134,16 @@ export default function PriceIndexPage() {
         })}
       />
 
+      <nav aria-label="Breadcrumb" className="text-sm text-ink-muted">
+        <ol className="flex flex-wrap items-center gap-1">
+          <li><a href="/" className="hover:text-brand-accent transition-colors">ParkMath</a></li>
+          <li aria-hidden="true" className="text-ink-muted/50">/</li>
+          <li><a href="/drop-off-charges" className="hover:text-brand-accent transition-colors">Drop-off charges</a></li>
+          <li aria-hidden="true" className="text-ink-muted/50">/</li>
+          <li aria-current="page" className="text-ink font-medium">Price Index</li>
+        </ol>
+      </nav>
+
       <header className="space-y-3">
         <PageHeading>The UK Airport Drop-Off Price Index</PageHeading>
         <FreshnessBadge verifiedAt={latestVerified} oldestRowDate={oldestVerified} />
@@ -256,7 +266,24 @@ export default function PriceIndexPage() {
           per-entry tariffs show &ldquo;Per entry&rdquo; rather than a per-minute figure. Tap any
           source link to open that airport&apos;s own page.
         </p>
-        <div className="overflow-x-auto rounded-lg border border-ink/10">
+        {/* Mobile card view — rank, airport, fee only */}
+        <div className="md:hidden space-y-2">
+          {rows.map((r) => (
+            <div key={r.airportSlug} className="flex items-center justify-between gap-3 rounded-lg border border-ink/8 bg-card px-4 py-3">
+              <div className="flex items-center gap-3 min-w-0">
+                <span className="text-xs font-medium text-ink-muted w-5 shrink-0">{r.rank}</span>
+                <Link href={`/drop-off-charges/${r.airportSlug}`} className="font-medium text-brand-accent underline underline-offset-4 hover:opacity-80 truncate">
+                  {r.airportName}
+                </Link>
+              </div>
+              <span className="mf-num font-bold text-ink shrink-0 text-base">{r.fee}</span>
+            </div>
+          ))}
+          <p className="text-xs text-ink-muted">Showing fee only. View full table on a wider screen or tap an airport for complete details.</p>
+        </div>
+
+        {/* Desktop full table */}
+        <div className="hidden md:block overflow-x-auto rounded-lg border border-ink/10">
           <table className="w-full min-w-[860px] border-collapse text-sm">
             <caption className="sr-only">
               UK Airport Drop-Off Price Index 2026 — every UK airport ranked cheapest to dearest, each

@@ -5,4 +5,21 @@
 @theme {
   --font-sans: var(--font-plex-sans), "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, monospace;
+  /* ParkMath accent override — teal-green for data-trust editorial */
+  --color-brand-accent: #1A6B52;
+  --color-surface: #FAFAF9;
+  --color-ink: #111111;
+  /* Stat size override — unmissable prices (56px → 100px) */
+  --text-stat: clamp(3.5rem, 1.5rem + 6.25vw, 6.25rem);
+  --text-stat--line-height: 1;
+}
+
+:root {
+  --pm-accent-hover: #155940;
+  --pm-accent-subtle: #EAF4F0;
+  --pm-accent-subtle-text: #1A6B52;
+  --pm-text-secondary: #555550;
+  --pm-text-tertiary: #888882;
+  --pm-border: rgba(0,0,0,0.08);
+  --pm-border-strong: rgba(0,0,0,0.16);
 }

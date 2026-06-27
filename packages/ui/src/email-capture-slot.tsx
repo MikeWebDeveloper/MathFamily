@@ -129,18 +129,19 @@ export function EmailCaptureSlot({
         </button>
       </div>
 
-      <label className="mt-3 flex items-start gap-2 text-xs text-ink-muted">
+      <div className="mt-3 flex items-start gap-2 text-xs text-ink-muted">
         <input
+          id="consent-email"
           type="checkbox"
           name="consent"
           required
           className="mt-0.5 size-5 shrink-0 rounded border-ink/30 text-brand-accent focus:ring-2 focus:ring-brand-accent/30"
         />
-        <span>
+        <label htmlFor="consent-email">
           Email me ParkMath&apos;s monthly UK drop-off fee update. I can unsubscribe any time. See our{" "}
           <a href={privacyHref} className="font-medium text-brand-accent underline underline-offset-2">privacy policy</a>.
-        </span>
-      </label>
+        </label>
+      </div>
 
       {status === "error" ? (
         <p className="mt-2 text-xs font-medium text-warning" role="alert">

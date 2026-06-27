@@ -9,12 +9,13 @@ function discountLine(merchant: string, product: HeProduct): string {
   return `Compare on-airport, Park & Ride and Meet & Greet at ${merchant} — book early to save, free cancellation.`;
 }
 
-export function HolidayExtrasCard({ product, airportName, airportSlug, surface, extras }: {
+export function HolidayExtrasCard({ product, airportName, airportSlug, surface, extras, savingsHint }: {
   product: HeProduct;
   airportName: string;
   airportSlug: string;
   surface: string;
   extras?: HeProduct[];
+  savingsHint?: string | null;
 }) {
   const isParking = product === "parking";
 
@@ -46,6 +47,9 @@ export function HolidayExtrasCard({ product, airportName, airportSlug, surface, 
           <span className="text-xs text-ink-muted">{multi ? "Compare our partners" : parkingMerchants[0]!.partnerName}</span>
         </div>
 
+        {savingsHint ? (
+          <p className="mb-2 text-sm font-semibold text-ink">{savingsHint}</p>
+        ) : null}
         <h3 className="font-semibold text-ink">Pre-book {airportName} parking</h3>
         <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-ink">
           <li>✓ Free cancellation</li>

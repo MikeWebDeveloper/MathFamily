@@ -1,19 +1,36 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BrandLogo } from "./brand-logo";
 import { ThemeToggle } from "./theme-toggle";
 
 export function SiteHeader({
   brandName,
   brandPrefix,
-  links
+  links,
+  currentPath
 }: {
   brandName: string;
   brandPrefix?: string;
   links: { label: string; href: string }[];
+  /** Optional: pass the current pathname (e.g. from Next.js usePathname or the page props) to
+   *  enable active-link highlighting. When omitted, the component reads window.location.pathname
+   *  on the client so SSR renders without active state and hydration applies it. */
+  currentPath?: string;
 }) {
   const [open, setOpen] = useState(false);
+  // SSR-safe: start with the prop value (can be passed from server), fall back to window on client.
+  const [pathname, setPathname] = useState(currentPath ?? "");
+
+  useEffect(() => {
+    // If no prop was provided, read the actual current path on the client.
+    if (!currentPath) {
+      setPathname(window.location.pathname);
+    }
+  }, [currentPath]);
+
+  const isActive = (href: string) => pathname ? (href === "/" ? pathname === "/" : pathname.startsWith(href)) : false;
+
   return (
     <header
       className="mf-header-shadow sticky top-0 z-40 border-b border-ink/10 bg-card/80 backdrop-blur-md"
@@ -28,15 +45,19 @@ export function SiteHeader({
 
         {/* Desktop / tablet inline nav */}
         <nav aria-label="Main" className="hidden items-center gap-5 text-sm font-medium text-ink-muted sm:flex">
-          {links.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              className="-my-2 inline-flex min-h-11 items-center whitespace-nowrap py-2 transition-colors hover:text-brand-accent"
-            >
-              {l.label}
-            </a>
-          ))}
+          {links.map((l) => {
+            const active = isActive(l.href);
+            return (
+              <a
+                key={l.href}
+                href={l.href}
+                aria-current={active ? "page" : undefined}
+                className={`-my-2 inline-flex min-h-11 items-center whitespace-nowrap py-2 transition-colors hover:text-brand-accent${active ? " font-semibold text-ink underline underline-offset-4 decoration-brand-accent/50" : ""}`}
+              >
+                {l.label}
+              </a>
+            );
+          })}
         </nav>
 
         <div className="flex items-center gap-1">
@@ -60,15 +81,19 @@ export function SiteHeader({
 
       {open ? (
         <nav id="mf-mobile-nav" aria-label="Mobile" className="border-t border-ink/10 bg-card px-4 pb-3 pt-1 sm:hidden">
-          {links.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              className="flex min-h-11 items-center border-b border-ink/5 text-sm font-medium text-ink last:border-b-0 hover:text-brand-accent"
-            >
-              {l.label}
-            </a>
-          ))}
+          {links.map((l) => {
+            const active = isActive(l.href);
+            return (
+              <a
+                key={l.href}
+                href={l.href}
+                aria-current={active ? "page" : undefined}
+                className={`flex min-h-11 items-center border-b border-ink/5 text-sm font-medium last:border-b-0 hover:text-brand-accent${active ? " font-semibold text-brand-accent" : " text-ink"}`}
+              >
+                {l.label}
+              </a>
+            );
+          })}
         </nav>
       ) : null}
     </header>

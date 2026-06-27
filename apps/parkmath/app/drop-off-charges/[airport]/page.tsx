@@ -9,7 +9,7 @@ import { DropOffCalculator } from "@/components/drop-off-calculator";
 import { DropOffParkingBridge } from "@/components/drop-off-bridge";
 import { HolidayExtrasCard } from "@/components/holiday-extras-card";
 import { bandPriceParenthetical, buildDropOffFaqs, dropOffTimeLimitNote, freshnessDelta, isPerEntryTariff, paymentDeadlineChip, searchName, trendNote } from "@/lib/content";
-import { airportHasParkingVsDropOff } from "@/lib/parking-vs-drop-off-content";
+import { airportHasParkingVsDropOff, dropOffParkingBridge } from "@/lib/parking-vs-drop-off-content";
 
 export const dynamicParams = false;
 
@@ -70,6 +70,7 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
   const hasParking = loadParkingDataset().records.some((r) => r.airportSlug === slug);
   const hasLounge = loadLoungeDataset().records.some((r) => r.airportSlug === slug);
   const hasCompare = airportHasParkingVsDropOff(slug);
+  const bridge = dropOffParkingBridge(slug);
   const latestNews = newsForAirport(airport.slug, 1)[0];
   const pageVerifiedAt = latestNews && latestNews.verifiedAt > record.verifiedAt ? latestNews.verifiedAt : record.verifiedAt;
 
@@ -88,6 +89,17 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
           independent data site and was the page's one genuine schema-misuse/quality risk. FAQPage +
           BreadcrumbList do all the SERP work. */}
       <JsonLd data={speakableLd({ url: `${siteUrl}/drop-off-charges/${airport.slug}` })} />
+
+      {/* Visible breadcrumb nav — BreadcrumbList JSON-LD already in head */}
+      <nav aria-label="Breadcrumb" className="text-sm text-ink-muted">
+        <ol className="flex flex-wrap items-center gap-1">
+          <li><a href="/" className="hover:text-brand-accent transition-colors">ParkMath</a></li>
+          <li aria-hidden="true" className="text-ink-muted/50">/</li>
+          <li><a href="/drop-off-charges" className="hover:text-brand-accent transition-colors">Drop-off charges</a></li>
+          <li aria-hidden="true" className="text-ink-muted/50">/</li>
+          <li aria-current="page" className="text-ink font-medium">{sn}</li>
+        </ol>
+      </nav>
 
       <header className="space-y-3">
         <PageHeading>{sn} Airport drop-off charges</PageHeading>
@@ -217,7 +229,18 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
         </section>
       ) : null}
 
-      <HolidayExtrasCard product="parking" surface="dropoff" airportName={airport.name} airportSlug={airport.slug} extras={["hotels", "lounge", "transfers"]} />
+      <HolidayExtrasCard
+        product="parking"
+        surface="dropoff"
+        airportName={airport.name}
+        airportSlug={airport.slug}
+        extras={["hotels", "lounge", "transfers"]}
+        savingsHint={
+          bridge.show && bridge.parkingPence !== null && bridge.dropOffFeePence !== null
+            ? `Gate parking at ${airport.name}: ${formatPence(bridge.parkingPence)} for ${bridge.parkingDays} days - pre-booking is typically cheaper. Avoid paying at the gate.`
+            : "Pre-book to save vs paying at the drive-up gate - free cancellation on most options."
+        }
+      />
       <section className="mf-reveal space-y-2">
         <h2 className="mf-underline-grow text-xl font-semibold text-ink">Frequently asked questions</h2>
         <FaqAccordion items={faqs} />

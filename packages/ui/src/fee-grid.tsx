@@ -23,7 +23,9 @@ export function FeeGrid({
 }) {
   const isNumeric = (j: number) => (numericColumns ? numericColumns.includes(j) : j > 0);
   const colHi = (j: number) => (j === highlightColumn ? " mf-col-hi" : "");
-  const numCell = "px-3 py-3 text-right text-sm font-medium text-ink mf-num sm:px-5 sm:py-3.5";
+  const numCell = (j: number) => j === 1
+    ? "px-3 py-3 text-right text-sm font-bold text-ink mf-num sm:px-5 sm:py-3.5"
+    : "px-3 py-3 text-right text-sm font-medium text-ink mf-num sm:px-5 sm:py-3.5";
   const proseCell = "px-3 py-3 text-left text-sm text-ink-muted sm:px-5 sm:py-3.5";
   const winnerRow =
     "mf-winner-row bg-brand-accent/[0.07] font-semibold odd:bg-brand-accent/[0.07] even:bg-brand-accent/[0.07]";
@@ -58,7 +60,7 @@ export function FeeGrid({
                       ) : cell}
                     </th>
                   ) : (
-                    <td key={j} className={`${isNumeric(j) ? numCell : proseCell}${colHi(j)}`}>{cell}</td>
+                    <td key={j} className={`${isNumeric(j) ? numCell(j) : proseCell}${colHi(j)}`}>{cell}</td>
                   )
                 )}
               </tr>
@@ -83,7 +85,7 @@ export function FeeGrid({
               )}
               {(() => {
                 const heroIdx = cells.findIndex((_, j) => j > 0 && isNumeric(j));
-                return heroIdx > 0 ? <span className="mf-num shrink-0 text-base font-semibold text-ink">{cells[heroIdx]}</span> : null;
+                return heroIdx > 0 ? <span className="mf-num shrink-0 text-lg font-bold text-ink">{cells[heroIdx]}</span> : null;
               })()}
             </div>
             <dl className="mt-1.5 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-xs">
