@@ -4,7 +4,7 @@ import { isPublicTransportAlt, loadAirports, loadDropOffDataset } from "@mathfam
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, datasetLd, itemListLd, JsonLd, tableLd } from "@mathfamily/geo";
 import { AnswerPassage, FreshnessBadge, OpenDataBand, PageHeading, StatStrip } from "@mathfamily/ui";
-import { buildDropOffLeague, dropOffHubAnswer, dropOffIndexSummary, dropOffPerMinutePence, isPerEntryTariff } from "@/lib/content";
+import { buildDropOffLeague, dropOffHubAnswer, dropOffIndexSummary, dropOffPerMinutePence, dropOffWorstCasePence, isPerEntryTariff } from "@/lib/content";
 import { SortableFeeTable, type DropOffRow } from "@/components/sortable-fee-table";
 import { DropOffLeagueTable } from "@/components/dropoff-league-table";
 import { HubBookingCta } from "@/components/hub-booking-cta";
@@ -45,6 +45,27 @@ export default function MasterTablePage() {
       name: nameFor(r.airportSlug),
       fee: r.isFree ? "Free" : formatPence(r.bands[0]?.totalPence ?? 0)
     }));
+
+  // Stansted keystone wedge — the flagship example for the hub's body-level internal link. The
+  // £28 worst-case is read honestly from the dataset (dropOffWorstCasePence → last band /
+  // maxChargePence) and the "from 19 March 2026" fact verbatim from penaltyNotes; renders only when
+  // a genuine over-stay step exists, so it never overstates.
+  const stanstedRecord = records.find((r) => r.airportSlug === "stansted") ?? null;
+  const stanstedHeadlinePence = stanstedRecord && !stanstedRecord.isFree ? stanstedRecord.bands[0]?.totalPence ?? 0 : 0;
+  const stanstedWorstPence = stanstedRecord ? dropOffWorstCasePence(stanstedRecord) : null;
+  const stanstedWedge =
+    stanstedRecord && stanstedWorstPence !== null && stanstedWorstPence > stanstedHeadlinePence
+      ? {
+          name: nameFor("stansted"),
+          headline: formatPence(stanstedHeadlinePence),
+          worst: formatPence(stanstedWorstPence),
+          timeIncluded: stanstedRecord.bands[0]?.upToMinutes ?? null,
+          effectiveDate:
+            stanstedRecord.penaltyNotes && /19 March 2026/.test(stanstedRecord.penaltyNotes)
+              ? "19 March 2026"
+              : null
+        }
+      : null;
 
   // Headline stats for the strip (the data-PR "most & least expensive" hook).
   const charging = league.filter((e) => !e.isFree);
@@ -170,6 +191,24 @@ export default function MasterTablePage() {
             ))}
           </ul>
         </section>
+      ) : null}
+
+      {stanstedWedge ? (
+        <aside className="rounded-lg border border-amber-300/70 bg-amber-50/70 px-4 py-3 text-sm dark:border-amber-400/30 dark:bg-amber-400/[0.07]">
+          <p className="text-ink">
+            <span className="font-semibold text-ink">
+              {stanstedWedge.name} now charges {stanstedWedge.worst} to drop off.
+            </span>{" "}
+            The {stanstedWedge.headline} forecourt teaser
+            {stanstedWedge.timeIncluded ? ` (up to ${stanstedWedge.timeIncluded} minutes)` : ""} steps up to{" "}
+            <strong className="text-ink">{stanstedWedge.worst}</strong> for longer stays
+            {stanstedWedge.effectiveDate ? ` from ${stanstedWedge.effectiveDate}` : ""} &mdash; while
+            most guides still quote the old figure.{" "}
+            <Link href="/drop-off-charges/stansted" className="font-semibold text-brand-accent underline underline-offset-4 hover:opacity-80">
+              See the full Stansted drop-off breakdown →
+            </Link>
+          </p>
+        </aside>
       ) : null}
 
       <aside className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-brand-accent/25 bg-blue-50/60 px-4 py-3 text-sm dark:bg-brand-accent/[0.06] dark:border-brand-accent/20">

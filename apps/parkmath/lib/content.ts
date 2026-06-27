@@ -204,6 +204,47 @@ export function dearestDropOff(
   return best;
 }
 
+/**
+ * The HONEST worst-case ("max / over-stay") drop-off cost for an airport, in pence — the figure
+ * the price-index headline buried by only reading `bands[0]`. This is the single most expensive
+ * amount the airport ITSELF publishes for staying as long as the drop-off forecourt allows:
+ *   - free airports → 0 (the forecourt is free however long you're allowed);
+ *   - otherwise the GREATER of the explicit `maxChargePence` cap (e.g. Gatwick £30) and the
+ *     dearest published band (the LAST band's `totalPence` — Stansted £28, Manchester £25,
+ *     Bristol £60);
+ *   - single-band airports → the headline fee itself (Heathrow £7, Southend £8): the headline IS
+ *     the worst case, so the column never overstates.
+ * NEVER extrapolates from `perMinuteAfterPence` (that would fabricate an unpublished figure). Every
+ * value returned traces to a literal published number in the record. Pure + unit-tested.
+ */
+export function dropOffWorstCasePence(
+  record: Pick<DropOffRecord, "isFree" | "bands" | "maxChargePence">
+): number | null {
+  if (record.isFree) return 0;
+  const lastBand = record.bands[record.bands.length - 1];
+  const bandMax = lastBand?.totalPence ?? null;
+  const cap = record.maxChargePence ?? null;
+  if (bandMax === null && cap === null) return null;
+  return Math.max(bandMax ?? 0, cap ?? 0);
+}
+
+/** The airport with the dearest HONEST worst-case drop-off cost (the over-stay / max tier), the
+ *  press-hook the headline-only ranking hid (Stansted's £28, not its £10 headline). Mirrors
+ *  `dropOffWorstCasePence` so the index headline and table can never disagree. Returns null when
+ *  nothing charges. Pure + unit-tested. */
+export function dearestWorstCase(
+  records: Pick<DropOffRecord, "airportSlug" | "isFree" | "bands" | "maxChargePence">[]
+): { airportSlug: string; pence: number } | null {
+  let best: { airportSlug: string; pence: number } | null = null;
+  for (const r of records) {
+    if (r.isFree) continue;
+    const worst = dropOffWorstCasePence(r);
+    if (worst === null) continue;
+    if (best === null || worst > best.pence) best = { airportSlug: r.airportSlug, pence: worst };
+  }
+  return best;
+}
+
 export function trendNote(record: DropOffRecord): string | null {
   const current = record.bands[0]?.totalPence;
   if (record.isFree || current === undefined || record.priorYearFeePence === null) return null;
@@ -364,6 +405,14 @@ export interface PriceIndexRow {
   isFree: boolean;
   feePence: number; // 0 when free — the HEADLINE band only
   fee: string; // "Free" | "£10.00"
+  /** The honest worst-case (max / over-stay) cost in pence — the dearest tier the airport itself
+   *  publishes (last band or maxChargePence). 0 when free; equals feePence for single-band airports. */
+  worstCasePence: number | null;
+  /** Display label for the worst-case cost: "Free" | "£28.00" | "—" (when no max is published). */
+  worstCaseLabel: string;
+  /** True when the worst case is strictly dearer than the headline (a hidden over-stay step exists,
+   *  e.g. Stansted £10→£28) — lets the UI flag the airports whose real top price the headline hid. */
+  hasOverstayStep: boolean;
   upToMinutes: number | null; // band[0].upToMinutes; null when free/per-entry
   timeLabel: string; // "10 min" | "Per entry" | "—"
   perMinutePence: number | null;
@@ -401,6 +450,7 @@ export function buildPriceIndex(
     const perEntry = !r.isFree && isPerEntryTariff(r);
     const perMin = dropOffPerMinutePence(r);
     const feePence = r.isFree ? 0 : (first?.totalPence ?? 0);
+    const worstCasePence = dropOffWorstCasePence(r);
     return {
       rank: i + 1,
       airportSlug: r.airportSlug,
@@ -409,6 +459,9 @@ export function buildPriceIndex(
       isFree: r.isFree,
       feePence,
       fee: r.isFree ? "Free" : formatPence(feePence),
+      worstCasePence,
+      worstCaseLabel: r.isFree ? "Free" : worstCasePence !== null ? formatPence(worstCasePence) : "—",
+      hasOverstayStep: !r.isFree && worstCasePence !== null && worstCasePence > feePence,
       upToMinutes: r.isFree || perEntry ? null : (first?.upToMinutes ?? null),
       timeLabel: r.isFree ? "—" : perEntry ? "Per entry" : first ? `${first.upToMinutes} min` : "—",
       perMinutePence: perMin,

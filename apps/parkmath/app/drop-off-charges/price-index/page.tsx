@@ -4,7 +4,7 @@ import { loadAirports, loadDropOffDataset } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, datasetLd, newsArticleLd, tableLd, JsonLd } from "@mathfamily/geo";
 import { FreshnessBadge, OpenDataBand, PageHeading, SourcesBlock, StatStrip } from "@mathfamily/ui";
-import { buildPriceIndex, dropOffIndexSummary } from "@/lib/content";
+import { buildPriceIndex, dearestWorstCase, dropOffIndexSummary } from "@/lib/content";
 
 /**
  * The UK Airport Drop-Off Price Index — the canonical, citable reference page.
@@ -39,12 +39,27 @@ export default function PriceIndexPage() {
 
   // Headline figures — derived ONLY from the ranked rows above (no new prices).
   const charging = rows.filter((r) => !r.isFree);
-  const cheapest = charging[0]; // rows are cheapest-first
-  const dearest = charging[charging.length - 1];
+  const cheapest = charging[0]; // rows are cheapest-first (by HEADLINE fee)
+  const dearest = charging[charging.length - 1]; // dearest HEADLINE fee
   const freeCount = rows.filter((r) => r.isFree).length;
   const worstPerMin = [...rows]
     .filter((r) => r.perMinutePence !== null)
     .sort((a, b) => (b.perMinutePence ?? 0) - (a.perMinutePence ?? 0))[0];
+
+  // The dearest WORST-CASE (max / over-stay) drop-off — the figure the headline-only ranking buried
+  // (Stansted's £28 over-15-min tier, not its £10 headline). Derived honestly from the dataset
+  // (last band / maxChargePence) via dearestWorstCase, then matched back to its ranked row so the
+  // callout reuses the same label/source as the table and can never disagree with it.
+  const dearestOverstaySel = dearestWorstCase(records);
+  const dearestOverstay = dearestOverstaySel
+    ? rows.find((r) => r.airportSlug === dearestOverstaySel.airportSlug) ?? null
+    : null;
+  // The Stansted keystone record + its ranked row — the flagship example for the wedge callout and
+  // internal link. The "from 19 March 2026" fact below is read verbatim from the record's
+  // penaltyNotes (never fabricated); the callout only renders when the worst case is a genuine
+  // over-stay step (worstCasePence > headline) so we never overstate.
+  const stanstedRecord = records.find((r) => r.airportSlug === "stansted") ?? null;
+  const stanstedRow = stanstedRecord ? rows.find((r) => r.airportSlug === "stansted") ?? null : null;
 
   // Year-on-year movers (only rows that carry a verified prior-year figure).
   const movers = rows.filter((r) => r.yoy !== null && !r.yoy.startsWith("Unchanged"));
@@ -53,18 +68,26 @@ export default function PriceIndexPage() {
     records.map((r) => ({ name: nameFor(r.airportSlug), isFree: r.isFree, feePence: r.bands[0]?.totalPence ?? 0 }))
   );
 
-  const tableColumns = ["Rank", "Airport", "Drop-off fee", "Time included", "£/min", "Penalty if unpaid", "Free alternative", "Verified", "Source"];
+  const tableColumns = ["Rank", "Airport", "Drop-off fee", "Time included", "Max / over-stay", "£/min", "Penalty if unpaid", "Free alternative", "Verified", "Source"];
 
   const fmtDate = (d: string) =>
     new Date(`${d}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
   const fmtLongDate = (d: string) =>
     new Date(`${d}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
 
-  // Article description — the lift-able citation sentence.
+  // Article description — the lift-able citation sentence. Leads with the worst-case wedge (the
+  // dearest over-stay drop-off the headline-only ranking hid, e.g. Stansted £28) when one exists,
+  // then the cheapest charge — every figure straight from the ranked rows (no new prices).
   const articleDescription =
     `As of ${fmtLongDate(latestVerified)}, ${charging.length} of the ${rows.length} largest UK airports charge to drop a passenger off` +
     `${freeCount ? `, while ${freeCount} remain free` : ""}. ` +
-    `${dearest ? `The dearest is ${dearest.airportName} at ${dearest.fee}; ` : ""}${cheapest ? `the cheapest charge is ${cheapest.airportName} at ${cheapest.fee}.` : ""}`;
+    `${
+      dearestOverstay && dearestOverstay.hasOverstayStep
+        ? `The dearest is ${dearestOverstay.airportName} at ${dearestOverstay.worstCaseLabel} if you stay past the included window (a ${dearestOverstay.fee} forecourt teaser); `
+        : dearest
+          ? `The dearest headline charge is ${dearest.airportName} at ${dearest.fee}; `
+          : ""
+    }${cheapest ? `the cheapest charge is ${cheapest.airportName} at ${cheapest.fee}.` : ""}`;
 
   return (
     <article className="space-y-8">
@@ -78,7 +101,7 @@ export default function PriceIndexPage() {
       <JsonLd
         data={datasetLd({
           name: "UK Airport Drop-Off Price Index 2026",
-          description: `Drop-off (kiss-and-fly) charges at ${rows.length} UK airports — fee, time allowance, £-per-minute, penalty and the free alternative — each verified against the airport's own official page and date-stamped. Free to cite and download.`,
+          description: `Drop-off (kiss-and-fly) charges at ${rows.length} UK airports — headline fee, time allowance, the worst-case over-stay/max charge, £-per-minute, penalty and the free alternative — each verified against the airport's own official page and date-stamped. Free to cite and download.`,
           url: pageUrl,
           dateModified: latestVerified,
           siteUrl,
@@ -130,7 +153,11 @@ export default function PriceIndexPage() {
       {dearest && cheapest ? (
         <StatStrip
           stats={[
-            { label: "Dearest drop-off", value: dearest.fee, note: dearest.airportName },
+            // The real headline: the dearest WORST-CASE (over-stay) drop-off in the UK — the figure
+            // a headline-only ranking hides. Stansted's £28 leads, not its £10 forecourt teaser.
+            ...(dearestOverstay
+              ? [{ label: "Dearest drop-off (max)", value: dearestOverstay.worstCaseLabel, note: dearestOverstay.airportName }]
+              : []),
             { label: "Cheapest charge", value: cheapest.fee, note: cheapest.airportName },
             ...(worstPerMin && worstPerMin.perMinutePence !== null
               ? [{ label: "Worst £/min", value: formatPence(Math.round(worstPerMin.perMinutePence)), note: worstPerMin.airportName }]
@@ -138,6 +165,60 @@ export default function PriceIndexPage() {
             { label: "Drop off free", value: `${freeCount} of ${rows.length}`, note: "airports" }
           ]}
         />
+      ) : null}
+
+      {/* Wedge callout #1 — the data hook the headline-only ranking buried: the dearest WORST-CASE
+          (over-stay / max) drop-off in the UK. Shown only when it isn't Stansted, since Stansted gets
+          its own keystone callout below (no duplication). Every figure is the row's own honest
+          max label + headline. */}
+      {dearestOverstay &&
+      dearestOverstay.hasOverstayStep &&
+      dearestOverstay.airportSlug !== "stansted" ? (
+        <aside className="rounded-lg border border-amber-300/70 bg-amber-50/70 px-4 py-3 text-sm dark:border-amber-400/30 dark:bg-amber-400/[0.07]">
+          <p className="text-ink">
+            <span className="font-semibold text-ink">The headline price hides the real top fee.</span>{" "}
+            The dearest worst-case UK drop-off isn&apos;t the airport with the highest{" "}
+            <em>headline</em> charge &mdash; it&apos;s{" "}
+            <Link
+              href={`/drop-off-charges/${dearestOverstay.airportSlug}`}
+              className="font-semibold text-brand-accent underline underline-offset-4 hover:opacity-80"
+            >
+              {dearestOverstay.airportName}
+            </Link>
+            , where a stay to the published maximum costs{" "}
+            <strong className="text-ink">{dearestOverstay.worstCaseLabel}</strong> (the forecourt
+            teaser is just {dearestOverstay.fee}). Tap the airport for the full breakdown.
+          </p>
+        </aside>
+      ) : null}
+
+      {/* Wedge callout #2 — the Stansted keystone / press hook, surfaced whenever Stansted carries a
+          genuine over-stay step (its £10 headline → £28 over-15-min tier), independent of who tops
+          the max ranking. The £28 and the "from 19 March 2026" fact are read verbatim from the
+          dataset (row label + penaltyNotes), never fabricated. This is the flagship internal link to
+          the Stansted keystone. */}
+      {stanstedRow && stanstedRecord && stanstedRow.hasOverstayStep ? (
+        <aside className="rounded-lg border border-amber-300/70 bg-amber-50/70 px-4 py-3 text-sm dark:border-amber-400/30 dark:bg-amber-400/[0.07]">
+          <p className="text-ink">
+            <span className="font-semibold text-ink">
+              {stanstedRow.airportName} now charges {stanstedRow.worstCaseLabel} to drop off.
+            </span>{" "}
+            The {stanstedRow.fee} forecourt teaser
+            {stanstedRow.timeLabel ? ` (up to ${stanstedRow.timeLabel})` : ""} steps up to{" "}
+            <strong className="text-ink">{stanstedRow.worstCaseLabel}</strong> for stays over the
+            included window
+            {stanstedRecord.penaltyNotes && /19 March 2026/.test(stanstedRecord.penaltyNotes)
+              ? " (from 19 March 2026)"
+              : ""}
+            , while most guides still quote the old figure.{" "}
+            <Link
+              href="/drop-off-charges/stansted"
+              className="font-semibold text-brand-accent underline underline-offset-4 hover:opacity-80"
+            >
+              See the full Stansted drop-off breakdown →
+            </Link>
+          </p>
+        </aside>
       ) : null}
 
       <OpenDataBand
@@ -153,7 +234,7 @@ export default function PriceIndexPage() {
           source link to open that airport&apos;s own page.
         </p>
         <div className="overflow-x-auto rounded-lg border border-ink/10">
-          <table className="w-full min-w-[760px] border-collapse text-sm">
+          <table className="w-full min-w-[860px] border-collapse text-sm">
             <caption className="sr-only">
               UK Airport Drop-Off Price Index 2026 — every UK airport ranked cheapest to dearest, each
               figure verified against the airport&apos;s official page and date-stamped.
@@ -164,6 +245,7 @@ export default function PriceIndexPage() {
                 <th scope="col" className="px-3 py-2 font-semibold text-ink">Airport</th>
                 <th scope="col" className="px-3 py-2 font-semibold text-ink">Drop-off fee</th>
                 <th scope="col" className="px-3 py-2 font-semibold text-ink">Time included</th>
+                <th scope="col" className="px-3 py-2 font-semibold text-ink">Max / over-stay</th>
                 <th scope="col" className="px-3 py-2 font-semibold text-ink">£/min</th>
                 <th scope="col" className="px-3 py-2 font-semibold text-ink">Penalty if unpaid</th>
                 <th scope="col" className="px-3 py-2 font-semibold text-ink">Free alternative</th>
@@ -183,6 +265,15 @@ export default function PriceIndexPage() {
                   </th>
                   <td className="px-3 py-2 font-semibold tabular-nums text-ink">{r.fee}</td>
                   <td className="px-3 py-2 tabular-nums text-ink-muted">{r.timeLabel}</td>
+                  <td className="px-3 py-2 tabular-nums">
+                    {r.hasOverstayStep ? (
+                      <span className="font-semibold text-amber-700 dark:text-amber-400" title="Dearest published tier — costs more than the headline if you stay past the included window">
+                        {r.worstCaseLabel}
+                      </span>
+                    ) : (
+                      <span className="text-ink-muted">{r.worstCaseLabel}</span>
+                    )}
+                  </td>
                   <td className="px-3 py-2 tabular-nums text-ink-muted">{r.perMinLabel}</td>
                   <td className="px-3 py-2 tabular-nums text-ink-muted">{r.penaltyLabel}</td>
                   <td className="px-3 py-2 text-ink-muted">{r.freeAlternative}</td>
@@ -205,10 +296,13 @@ export default function PriceIndexPage() {
           </table>
         </div>
         <p className="text-xs text-ink-muted">
-          &ldquo;Drop-off fee&rdquo; is the standard headline charge for the shortest paid stay. Long-stay
-          tiers, per-minute overstay rates and Blue Badge concessions are covered on each airport&apos;s
-          own page. £/min is the headline fee divided by the minutes it buys (shown only for time-based
-          tariffs).
+          &ldquo;Drop-off fee&rdquo; is the standard headline charge for the shortest paid stay.
+          &ldquo;Max / over-stay&rdquo; is the dearest amount the airport itself publishes for the
+          drop-off forecourt &mdash; the highest tariff band, or its stated maximum charge where one is
+          given (highlighted where it&apos;s dearer than the headline, e.g. Stansted&apos;s £28 over-15-min
+          step). It is read straight from the dataset, never extrapolated. Per-minute overstay rates and
+          Blue Badge concessions are covered on each airport&apos;s own page. £/min is the headline fee
+          divided by the minutes it buys (shown only for time-based tariffs).
         </p>
       </section>
 

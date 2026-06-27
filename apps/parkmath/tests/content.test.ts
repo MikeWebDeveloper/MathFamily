@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { DropOffRecord, LoungeRecord, PriorityPassTier } from "@mathfamily/data";
-import { bandPriceParenthetical, buildDropOffFaqs, buildDropOffLeague, buildLoungeFaqs, buildPriceIndex, dearestDropOff, dropOffHubAnswer, dropOffIndexSummary, dropOffPerMinutePence, dropOffTimeLimitNote, freshnessDelta, isPerEntryTariff, paymentDeadlineChip, searchName, trendNote } from "../lib/content";
+import { bandPriceParenthetical, buildDropOffFaqs, buildDropOffLeague, buildLoungeFaqs, buildPriceIndex, dearestDropOff, dearestWorstCase, dropOffHubAnswer, dropOffIndexSummary, dropOffPerMinutePence, dropOffTimeLimitNote, dropOffWorstCasePence, freshnessDelta, isPerEntryTariff, paymentDeadlineChip, searchName, trendNote } from "../lib/content";
 
 const record: DropOffRecord = {
   airportSlug: "gatwick",
@@ -352,5 +352,93 @@ describe("buildPriceIndex", () => {
     const teesside = rows.find((r) => r.airportSlug === "teesside");
     expect(gatwick?.yoy).toMatch(/Up £3.*£7.*→.*£10/);
     expect(teesside?.yoy).toBeNull();
+  });
+
+  it("surfaces the honest worst-case (max / over-stay) cost per row", () => {
+    // Stansted-style two-band record: headline £10/15min, over-stay £28 — the wedge the headline hid.
+    const stansted: DropOffRecord = {
+      ...record,
+      airportSlug: "stansted",
+      bands: [{ upToMinutes: 15, totalPence: 1000 }, { upToMinutes: 30, totalPence: 2800 }],
+      maxChargePence: null,
+      priorYearFeePence: null
+    };
+    const rows = buildPriceIndex([stansted, cheap, free], nameFor, iataFor);
+    const stn = rows.find((r) => r.airportSlug === "stansted");
+    expect(stn?.fee).toBe("£10"); // headline unchanged (formatPence drops .00 for whole pounds)
+    expect(stn?.worstCasePence).toBe(2800);
+    expect(stn?.worstCaseLabel).toBe("£28");
+    expect(stn?.hasOverstayStep).toBe(true);
+    // Single-band airport: worst case == headline, no over-stay flag.
+    const tee = rows.find((r) => r.airportSlug === "teesside");
+    expect(tee?.worstCasePence).toBe(250);
+    expect(tee?.worstCaseLabel).toBe("£2.50");
+    expect(tee?.hasOverstayStep).toBe(false);
+    // Free airport: worst case is free, never flagged.
+    const bhx = rows.find((r) => r.airportSlug === "birmingham");
+    expect(bhx?.worstCasePence).toBe(0);
+    expect(bhx?.worstCaseLabel).toBe("Free");
+    expect(bhx?.hasOverstayStep).toBe(false);
+  });
+});
+
+describe("dropOffWorstCasePence", () => {
+  it("is the dearest published band for a multi-band airport (Stansted £28)", () => {
+    expect(
+      dropOffWorstCasePence({
+        isFree: false,
+        bands: [{ upToMinutes: 15, totalPence: 1000 }, { upToMinutes: 30, totalPence: 2800 }],
+        maxChargePence: null
+      })
+    ).toBe(2800);
+  });
+
+  it("uses maxChargePence when it exceeds the published bands (Gatwick £10 headline, £30 cap)", () => {
+    // Gatwick has one £10 band but a maxChargePence of £30 — the cap is the honest worst case.
+    expect(
+      dropOffWorstCasePence({ isFree: false, bands: [{ upToMinutes: 10, totalPence: 1000 }], maxChargePence: 3000 })
+    ).toBe(3000);
+  });
+
+  it("equals the headline fee for a single-band airport with no cap (never overstates)", () => {
+    expect(
+      dropOffWorstCasePence({ isFree: false, bands: [{ upToMinutes: 10, totalPence: 800 }], maxChargePence: null })
+    ).toBe(800);
+  });
+
+  it("is 0 for free airports and null when nothing is published", () => {
+    expect(dropOffWorstCasePence({ isFree: true, bands: [], maxChargePence: null })).toBe(0);
+    expect(dropOffWorstCasePence({ isFree: false, bands: [], maxChargePence: null })).toBeNull();
+  });
+});
+
+describe("dearestWorstCase", () => {
+  it("picks the airport with the dearest worst-case, not the dearest headline", () => {
+    // Manchester's headline (£5) is cheaper than Gatwick's (£10), but its £25 over-stay tier beats
+    // Gatwick's £30 cap... so Gatwick should still win at £30. Verifies it ranks on the worst case.
+    const manchester = {
+      airportSlug: "manchester",
+      isFree: false,
+      bands: [{ upToMinutes: 5, totalPence: 500 }, { upToMinutes: 30, totalPence: 2500 }],
+      maxChargePence: null
+    };
+    const gatwick = {
+      airportSlug: "gatwick",
+      isFree: false,
+      bands: [{ upToMinutes: 10, totalPence: 1000 }],
+      maxChargePence: 3000
+    };
+    const stansted = {
+      airportSlug: "stansted",
+      isFree: false,
+      bands: [{ upToMinutes: 15, totalPence: 1000 }, { upToMinutes: 30, totalPence: 2800 }],
+      maxChargePence: null
+    };
+    const winner = dearestWorstCase([manchester, stansted, gatwick]);
+    expect(winner).toEqual({ airportSlug: "gatwick", pence: 3000 });
+  });
+
+  it("ignores free airports and returns null when nothing charges", () => {
+    expect(dearestWorstCase([{ airportSlug: "inverness", isFree: true, bands: [], maxChargePence: null }])).toBeNull();
   });
 });
