@@ -235,7 +235,7 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
             {hasCompare ? (
               <li>
                 <Link href={`/parking-vs-drop-off/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
-                  Parking vs drop-off at {airport.name}: which is cheaper? →
+                  Is it cheaper to park or get dropped off at {airport.name}? →
                 </Link>
               </li>
             ) : null}

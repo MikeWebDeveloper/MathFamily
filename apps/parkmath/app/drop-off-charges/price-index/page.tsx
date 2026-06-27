@@ -5,6 +5,7 @@ import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, datasetLd, newsArticleLd, tableLd, JsonLd } from "@mathfamily/geo";
 import { FreshnessBadge, OpenDataBand, PageHeading, SourcesBlock, StatStrip } from "@mathfamily/ui";
 import { buildPriceIndex, dearestWorstCase, dropOffIndexSummary } from "@/lib/content";
+import { buildIframeSnippet } from "@/lib/embed";
 
 /**
  * The UK Airport Drop-Off Price Index — the canonical, citable reference page.
@@ -226,6 +227,28 @@ export default function PriceIndexPage() {
         citation={`ParkMath, "UK Airport Drop-Off Price Index 2026", verified ${latestVerified}, ${siteUrl}/drop-off-charges/price-index`}
       />
 
+      {/* Passive backlink asset — surfaces the EXISTING /embed/drop-off-charges widget. The iframe
+          serves a self-contained doc with the ParkMath attribution baked in, so every embed is an
+          evergreen credit link. Snippet is rendered as escaped TEXT (JSX escapes it inside <code>),
+          never injected as raw HTML. */}
+      <section className="space-y-3 rounded-lg border border-ink/10 bg-surface-muted px-4 py-4">
+        <h2 className="text-h2 font-semibold text-ink">Embed this price index (free)</h2>
+        <p className="text-sm text-ink-muted">
+          Free to embed and always current &mdash; just credit ParkMath with a link back (the
+          attribution is already inside the widget). Paste this snippet where you want the table to
+          appear:
+        </p>
+        <pre className="overflow-x-auto rounded-md border border-ink/10 bg-white px-3 py-3 text-xs leading-relaxed text-ink dark:bg-card">
+          <code>{buildIframeSnippet(siteUrl)}</code>
+        </pre>
+        <p className="text-xs text-ink-muted">
+          Select all and copy.{" "}
+          <Link href="/embed" className="text-brand-accent underline underline-offset-4">
+            Pick a single airport or customise the embed →
+          </Link>
+        </p>
+      </section>
+
       <section className="space-y-3">
         <h2 className="text-h2 font-semibold text-ink">The full index — every UK airport, cheapest to dearest</h2>
         <p className="text-sm text-ink-muted">
@@ -349,6 +372,11 @@ export default function PriceIndexPage() {
           <li>
             <Link href="/drop-off-charges" className="text-brand-accent underline underline-offset-4">
               Sortable league table: filter every UK airport drop-off charge by fee or £/min →
+            </Link>
+          </li>
+          <li>
+            <Link href="/parking-vs-drop-off" className="text-brand-accent underline underline-offset-4">
+              Park or get dropped off? Which is cheaper at every UK airport →
             </Link>
           </li>
           <li>

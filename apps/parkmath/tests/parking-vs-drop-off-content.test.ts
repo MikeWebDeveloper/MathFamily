@@ -3,11 +3,15 @@ import type { DropOffRecord, ParkingRecord } from "@mathfamily/data";
 import {
   REFERENCE_DAYS,
   buildParkingVsDropOffFaqs,
+  buildParkingVsDropOffHowToSteps,
   dropOffFeePence,
   dropOffParkingBridge,
   gateParkingPence,
   parkingEquivalenceLine,
   parkingVsDropOffAnswer,
+  parkingVsDropOffDecisionDescription,
+  parkingVsDropOffDecisionH1,
+  parkingVsDropOffDecisionTitle,
   parkingVsDropOffIndexSummary,
   parkingVsDropOffLeadFacts,
   parkingVsDropOffModel,
@@ -150,6 +154,51 @@ describe("buildParkingVsDropOffFaqs", () => {
     const noAlt = { ...dropOff, freeAlternative: null };
     const faqs2 = buildParkingVsDropOffFaqs(parkingVsDropOffModel({ dropOff, parking })!, noAlt, "London Gatwick");
     expect(faqs2.some((f) => f.question.includes("avoid"))).toBe(false);
+  });
+});
+
+describe("decision-query title / H1 / description", () => {
+  it("title contains the literal decision phrasing + the airport name", () => {
+    const t = parkingVsDropOffDecisionTitle("London Stansted");
+    expect(t).toContain("cheaper to park or get dropped off");
+    expect(t).toContain("London Stansted");
+  });
+  it("H1 is the literal decision query for the airport", () => {
+    const h1 = parkingVsDropOffDecisionH1("London Stansted");
+    expect(h1).toBe("Is it cheaper to park or get dropped off at London Stansted?");
+    expect(h1).toContain("cheaper to park or get dropped off");
+  });
+  it("description leads with the answer and contains BOTH £ figures", () => {
+    const d = parkingVsDropOffDecisionDescription(parkingVsDropOffModel({ dropOff, parking })!, "London Gatwick");
+    expect(d).toContain("£10"); // one drop-off
+    expect(d).toContain("£230"); // 7-day drive-up parking
+    expect(d).toContain("London Gatwick");
+  });
+});
+
+describe("buildParkingVsDropOffHowToSteps", () => {
+  it("returns >=3 steps, each with a non-empty name and text", () => {
+    const steps = buildParkingVsDropOffHowToSteps(parkingVsDropOffModel({ dropOff, parking })!, dropOff, "London Gatwick");
+    expect(steps.length).toBeGreaterThanOrEqual(3);
+    for (const s of steps) {
+      expect(s.name.trim().length).toBeGreaterThan(0);
+      expect(s.text.trim().length).toBeGreaterThan(0);
+    }
+  });
+  it("the parking step references the per-day rate or the minutes-equivalence figure", () => {
+    const steps = buildParkingVsDropOffHowToSteps(parkingVsDropOffModel({ dropOff, parking })!, dropOff, "London Gatwick");
+    const parkingStep = steps.find((s) => /parking for the trip/i.test(s.name));
+    expect(parkingStep).toBeDefined();
+    // £32.86 per 24h (perDay) and/or the 438-minute equivalence — both trace to the model.
+    expect(/£32\.86|438 minutes/.test(parkingStep!.text)).toBe(true);
+  });
+  it("adds the 'avoid both' step only when a free alternative exists", () => {
+    const withAlt = buildParkingVsDropOffHowToSteps(parkingVsDropOffModel({ dropOff, parking })!, dropOff, "London Gatwick");
+    expect(withAlt.some((s) => /avoid both/i.test(s.name))).toBe(true);
+    const noAlt = { ...dropOff, freeAlternative: null };
+    const withoutAlt = buildParkingVsDropOffHowToSteps(parkingVsDropOffModel({ dropOff, parking })!, noAlt, "London Gatwick");
+    expect(withoutAlt.some((s) => /avoid both/i.test(s.name))).toBe(false);
+    expect(withoutAlt.length).toBeGreaterThanOrEqual(3);
   });
 });
 

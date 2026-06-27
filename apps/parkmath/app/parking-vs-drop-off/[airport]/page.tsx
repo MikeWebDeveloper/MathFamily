@@ -3,14 +3,18 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isPublicTransportAlt, loadAirports, loadDropOffDataset, loadParkingDataset, newsForAirport, type Airport, type DropOffRecord, type ParkingRecord } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
-import { breadcrumbLd, faqPageLd, JsonLd, speakableLd } from "@mathfamily/geo";
+import { breadcrumbLd, faqPageLd, howToLd, JsonLd, speakableLd } from "@mathfamily/geo";
 import { AnswerLead, AnswerPassage, Callout, CaveatChip, EmailCaptureSlot, FaqAccordion, FeeGrid, FreshnessBadge, LatestUpdates, MiniAnswerBar, PageHeading, SavesVerdict, SourceCitation, SourcesBlock, StatStrip } from "@mathfamily/ui";
 import { HolidayExtrasCard } from "@/components/holiday-extras-card";
 import {
   REFERENCE_DAYS,
   buildParkingVsDropOffFaqs,
+  buildParkingVsDropOffHowToSteps,
   parkingEquivalenceLine,
   parkingVsDropOffAnswer,
+  parkingVsDropOffDecisionDescription,
+  parkingVsDropOffDecisionH1,
+  parkingVsDropOffDecisionTitle,
   parkingVsDropOffLeadFacts,
   parkingVsDropOffModel,
   qualifiesForParkingVsDropOff
@@ -45,9 +49,16 @@ export async function generateMetadata({ params }: { params: Promise<{ airport: 
   if (!data) return {};
   const model = parkingVsDropOffModel({ dropOff: data.dropOff, parking: data.parking })!;
   return {
-    title: `Parking vs drop-off at ${data.airport.name}: which is cheaper? 2026`,
-    description: `${data.airport.name}: one drop-off is ${formatPence(model.dropOffFeePence)}, ${model.parkingDays}-day drive-up parking is ${formatPence(model.parkingPence)}. Honest, verified comparison — last verified ${model.verifiedAt}.`,
-    alternates: { canonical: `/parking-vs-drop-off/${airport}` }
+    title: parkingVsDropOffDecisionTitle(data.airport.name),
+    description: parkingVsDropOffDecisionDescription(model, data.airport.name),
+    alternates: { canonical: `/parking-vs-drop-off/${airport}` },
+    // Per-page Open Graph: override the layout's site-root og:url and mark the page as an article with
+    // the verified date as modified_time (matching the drop-off page pattern).
+    openGraph: {
+      type: "article",
+      url: `/parking-vs-drop-off/${airport}`,
+      modifiedTime: `${model.verifiedAt}T00:00:00Z`
+    }
   };
 }
 
@@ -82,9 +93,17 @@ export default async function ParkingVsDropOffPage({ params }: { params: Promise
         ])}
       />
       <JsonLd data={speakableLd({ url: pageUrl })} />
+      <JsonLd
+        data={howToLd({
+          name: parkingVsDropOffDecisionH1(airport.name),
+          description: parkingVsDropOffAnswer(model, airport.name),
+          url: pageUrl,
+          steps: buildParkingVsDropOffHowToSteps(model, dropOff, airport.name)
+        })}
+      />
 
       <header className="space-y-3">
-        <PageHeading>Parking vs drop-off at {airport.name}: which is cheaper?</PageHeading>
+        <PageHeading>{parkingVsDropOffDecisionH1(airport.name)}</PageHeading>
         <div className="flex flex-wrap items-center gap-3">
           <FreshnessBadge verifiedAt={pageVerifiedAt} />
           <SourceCitation url={dropOff.sourceUrl} label={`Official ${airport.name} drop-off`} />
