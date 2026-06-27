@@ -161,6 +161,14 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
         verified
       />
 
+      {/* Decision bridge, promoted to body level right after the answer (P0): a person reading the
+          drop-off fee is deciding HOW to access the airport = a parking buyer at the decision point.
+          This is the highest-visibility honest funnel point — it routes the drop-off moat audience
+          to the parking comparison / tracked /go affiliate. De-gated: fires for every charging airport
+          that resolves a parking link, not only the 8 with a full tariff. The free-alternative callout
+          (the trust + ranking asset) stays intact below. */}
+      <DropOffParkingBridge slug={airport.slug} airportName={airport.name} />
+
       <AnswerPassage question={`What does it cost to drop someone off at ${airport.name}?`}>
         {record.isFree
           ? <>Dropping off at {airport.name} is free at the forecourt — no charge applies when using the designated drop-off zone. This is an official, date-stamped snapshot read directly from the airport's published page and verified {record.verifiedAt}.{record.freeAlternative ? <> The {record.freeAlternative.name} also provides free waiting for up to {record.freeAlternative.minutesFree} minutes.</> : " Always check the airport's own page for any changes before you travel."}</>
@@ -180,10 +188,6 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
           {isPublicTransportAlt(record.freeAlternative) ? <>{record.freeAlternative.details}</> : <>Free for {record.freeAlternative.minutesFree} minutes. {record.freeAlternative.details}</>}
         </Callout>
       ) : null}
-
-      {/* Decision bridge: keep the free-alternative message above intact (trust + ranking asset);
-          ADD an honest, in-flow path for the segment that will actually park for the trip. */}
-      <DropOffParkingBridge slug={airport.slug} airportName={airport.name} />
 
       {!record.isFree && !isPerEntryTariff(record) ? (
         <DropOffCalculator tariff={record} airportName={airport.name} buildDate={new Date().toISOString()} />
