@@ -250,3 +250,24 @@ All figures from each airline's OWN published fee/baggage page. Most carriers pr
 - **Currency conversions** recorded with a "(converted)" item label or note: wizz-air excess (EUR 13/kg), vueling checked + oversized + excess (EUR), aer-lingus overweight (EUR 75 = published GBP 68 used), norwegian excess (USD 15/kg). FX 1 EUR = 0.864 GBP, 1 USD = 0.74 GBP.
 - **Omitted/null items**: jet2 22kg hold, wizz-air trolley + checked, british-airways extra/Basic hold bags, aer-lingus Saver checked, norwegian checked, emirates extra, lufthansa excess — none publish a fixed GBP figure or static range (calculator/route-dynamic only), recorded with null min/max per the no-invention rule.
 - **Long-haul included items** (Rule 2): BA, Virgin, Emirates, Lufthansa record cabin + first checked bag as Free (0/0) on standard/Economy fares, with the fare exceptions noted (BA Basic, Virgin/Lufthansa Light).
+
+---
+
+## 2026-06-28 — freshness SWEEP (eSIM re-quote, Airalo provider)
+
+Scheduled weekly sweep. **Method:** each Airalo country page (`airalo.com/<country>-esim`) re-fetched via WebFetch (UK egress → GBP, directly comparable to the dataset's `totalPence`, which is GBP pence). **r.jina.ai is NOT usable as a cross-check here** — its egress is US-geolocated and returns USD (e.g. "France eSIM, from $4.00 USD"), not comparable to the GBP figures without conversion. So Airalo's own page read in GBP is the single official source used.
+
+**Airalo (40 country bundles): 34 cleanly re-verified, 6 left unverified.**
+
+- **27 confirmed UNCHANGED** (snapshotDate → 2026-06-28, no price change): spain, italy, portugal, japan, usa, austria (5GB/30d £6.50), belgium, switzerland, cyprus, malta, turkey, canada, mexico, australia, new-zealand, uae, thailand, china, india, egypt, morocco, tunisia, norway, hungary, romania, montenegro, south-africa (5GB/30d £10.00).
+- **7 confirmed DRIFT** (Unlimited / 5-day; clean single-line reads; totalPence updated + snapshotDate → 2026-06-28):
+  - ireland, netherlands, poland, sweden, denmark, czechia: £15.00 → **£15.50** (1500 → 1550 pence)
+  - albania: £20.00 → **£20.50** (2000 → 2050 pence)
+  - These are selective per-country Airalo Unlimited rises — many other Unlimited/5-day countries held at £15.00 (switzerland, cyprus, malta, turkey, new-zealand, china, norway, hungary, romania, portugal), so it is not a global change.
+- **6 left UNVERIFIED (stored value kept, FLAGGED)** — all fixed-GB bundles whose Airalo page now defaults to the Unlimited tab, so the fetch could not read the specific GB row reliably:
+  - **france** (5GB/30d, stored £8.50): two reads CONFLICTED — first read showed 30d/5GB £12.50 (a row-misalignment artefact: it equalled the 10GB price), the second full-table read showed £9.00. Ambiguous → kept £8.50; likely a real +£0.50 drift to ~£9.00 but not written without a clean confirmation.
+  - germany (5GB/15d £8.50), greece (5GB/15d £9.00), croatia (5GB/15d £8.00), iceland (5GB/15d £9.00), bulgaria (5GB/7d £5.00): page exposed only Unlimited packages to the fetcher; fixed-GB rows not readable. Kept stored values.
+
+**Holafly + Saily bundles: NOT re-verified this sweep (NEEDS-HUMAN).** They are "(converted)" values sourced from holafly.com / saily.com (not airalo.com, the record's `sourceUrl`) and require live FX conversion. Re-quoting them reliably is out of scope for an unattended run. Their snapshotDates remain 2026-06-10 (a few older).
+
+**ParkMath (live brand) staleness check:** nothing older than 46 days — every drop-off, parking, lounge, priority-pass and news record was verified between 2026-06-10 and 2026-06-27. The two standing hard-blocked targets are already resolved: London City drop-off has a real record (verified 2026-06-22) and Newcastle Long Stay parking was added (verified 2026-06-27). No ParkMath changes this sweep.

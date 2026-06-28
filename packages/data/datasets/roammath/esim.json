@@ -1,6 +1,6 @@
 {
-  "version": "1.0.0",
-  "lastUpdated": "2026-06-10",
+  "version": "1.0.1",
+  "lastUpdated": "2026-06-28",
   "records": [
     {
       "countrySlug": "spain",
@@ -11,7 +11,7 @@
           "dataGb": null,
           "validityDays": 5,
           "totalPence": 1400,
-          "snapshotDate": "2026-06-10"
+          "snapshotDate": "2026-06-28"
         },
         {
           "provider": "holafly",
@@ -73,7 +73,7 @@
           "dataGb": null,
           "validityDays": 5,
           "totalPence": 1350,
-          "snapshotDate": "2026-06-10"
+          "snapshotDate": "2026-06-28"
         },
         {
           "provider": "holafly",
@@ -96,7 +96,7 @@
           "dataGb": null,
           "validityDays": 5,
           "totalPence": 1500,
-          "snapshotDate": "2026-06-10"
+          "snapshotDate": "2026-06-28"
         },
         {
           "provider": "holafly",
@@ -188,8 +188,8 @@
           "bundleName": "Ireland Unlimited / 5 days",
           "dataGb": null,
           "validityDays": 5,
-          "totalPence": 1500,
-          "snapshotDate": "2026-06-10"
+          "totalPence": 1550,
+          "snapshotDate": "2026-06-28"
         },
         {
           "provider": "holafly",
@@ -211,8 +211,8 @@
           "bundleName": "Netherlands Unlimited / 5 days",
           "dataGb": null,
           "validityDays": 5,
-          "totalPence": 1500,
-          "snapshotDate": "2026-06-10"
+          "totalPence": 1550,
+          "snapshotDate": "2026-06-28"
         },
         {
           "provider": "holafly",
@@ -243,7 +243,7 @@
           "dataGb": null,
           "validityDays": 5,
           "totalPence": 1200,
-          "snapshotDate": "2026-06-10"
+          "snapshotDate": "2026-06-28"
         },
         {
           "provider": "holafly",
@@ -266,7 +266,7 @@
           "dataGb": 5,
           "validityDays": 30,
           "totalPence": 650,
-          "snapshotDate": "2026-06-10"
+          "snapshotDate": "2026-06-28"
         },
         {
           "provider": "holafly",
@@ -289,7 +289,7 @@
           "dataGb": null,
           "validityDays": 5,
           "totalPence": 1500,
-          "snapshotDate": "2026-06-10"
+          "snapshotDate": "2026-06-28"
         },
         {
           "provider": "holafly",
@@ -311,8 +311,8 @@
           "bundleName": "Poland Unlimited / 5 days",
           "dataGb": null,
           "validityDays": 5,
-          "totalPence": 1500,
-          "snapshotDate": "2026-06-10"
+          "totalPence": 1550,
+          "snapshotDate": "2026-06-28"
         },
         {
           "provider": "holafly",
@@ -358,7 +358,7 @@
           "dataGb": null,
           "validityDays": 5,
           "totalPence": 1500,
-          "snapshotDate": "2026-06-10"
+          "snapshotDate": "2026-06-28"
         },
         {
           "provider": "holafly",
@@ -381,7 +381,7 @@
           "dataGb": null,
           "validityDays": 5,
           "totalPence": 1500,
-          "snapshotDate": "2026-06-10"
+          "snapshotDate": "2026-06-28"
         },
         {
           "provider": "holafly",
@@ -404,7 +404,7 @@
           "dataGb": null,
           "validityDays": 5,
           "totalPence": 1500,
-          "snapshotDate": "2026-06-10"
+          "snapshotDate": "2026-06-28"
         },
         {
           "provider": "holafly",
@@ -427,7 +427,7 @@
           "dataGb": null,
           "validityDays": 5,
           "totalPence": 1450,
-          "snapshotDate": "2026-06-10"
+          "snapshotDate": "2026-06-28"
         },
         {
           "provider": "holafly",
@@ -450,7 +450,7 @@
           "dataGb": null,
           "validityDays": 5,
           "totalPence": 2100,
-          "snapshotDate": "2026-06-10"
+          "snapshotDate": "2026-06-28"
         },
         {
           "provider": "holafly",
@@ -473,7 +473,7 @@
           "dataGb": null,
           "validityDays": 5,
           "totalPence": 1400,
-          "snapshotDate": "2026-06-10"
+          "snapshotDate": "2026-06-28"
         },
         {
           "provider": "holafly",
@@ -496,7 +496,7 @@
           "dataGb": null,
           "validityDays": 5,
           "totalPence": 1450,
-          "snapshotDate": "2026-06-10"
+          "snapshotDate": "2026-06-28"
         },
         {
           "provider": "holafly",
@@ -519,7 +519,7 @@
           "dataGb": null,
           "validityDays": 5,
           "totalPence": 1500,
-          "snapshotDate": "2026-06-10"
+          "snapshotDate": "2026-06-28"
         },
         {
           "provider": "holafly",
@@ -550,7 +550,7 @@
           "dataGb": null,
           "validityDays": 5,
           "totalPence": 1600,
-          "snapshotDate": "2026-06-10"
+          "snapshotDate": "2026-06-28"
         },
         {
           "provider": "holafly",
@@ -581,7 +581,7 @@
           "dataGb": null,
           "validityDays": 5,
           "totalPence": 1200,
-          "snapshotDate": "2026-06-10"
+          "snapshotDate": "2026-06-28"
         },
         {
           "provider": "holafly",
@@ -604,7 +604,7 @@
           "dataGb": null,
           "validityDays": 5,
           "totalPence": 1350,
-          "snapshotDate": "2026-06-10"
+          "snapshotDate": "2026-06-28"
         },
         {
           "provider": "holafly",
@@ -635,7 +635,7 @@
           "dataGb": null,
           "validityDays": 5,
           "totalPence": 1500,
-          "snapshotDate": "2026-06-10"
+          "snapshotDate": "2026-06-28"
         },
         {
           "provider": "holafly",
@@ -666,7 +666,7 @@
           "dataGb": null,
           "validityDays": 5,
           "totalPence": 2450,
-          "snapshotDate": "2026-06-10"
+          "snapshotDate": "2026-06-28"
         },
         {
           "provider": "holafly",
@@ -697,7 +697,7 @@
           "dataGb": 5,
           "validityDays": 30,
           "totalPence": 1000,
-          "snapshotDate": "2026-06-10"
+          "snapshotDate": "2026-06-28"
         },
         {
           "provider": "holafly",
@@ -728,7 +728,7 @@
           "dataGb": null,
           "validityDays": 5,
           "totalPence": 2300,
-          "snapshotDate": "2026-06-10"
+          "snapshotDate": "2026-06-28"
         },
         {
           "provider": "holafly",
@@ -751,7 +751,7 @@
           "dataGb": null,
           "validityDays": 5,
           "totalPence": 2250,
-          "snapshotDate": "2026-06-10"
+          "snapshotDate": "2026-06-28"
         },
         {
           "provider": "holafly",
@@ -782,7 +782,7 @@
           "dataGb": null,
           "validityDays": 5,
           "totalPence": 2200,
-          "snapshotDate": "2026-06-10"
+          "snapshotDate": "2026-06-28"
         },
         {
           "provider": "holafly",
@@ -813,7 +813,7 @@
           "dataGb": null,
           "validityDays": 5,
           "totalPence": 1500,
-          "snapshotDate": "2026-06-10"
+          "snapshotDate": "2026-06-28"
         },
         {
           "provider": "holafly",
@@ -866,8 +866,8 @@
           "bundleName": "Sweden Unlimited / 5 days",
           "dataGb": null,
           "validityDays": 5,
-          "totalPence": 1500,
-          "snapshotDate": "2026-06-10"
+          "totalPence": 1550,
+          "snapshotDate": "2026-06-28"
         },
         {
           "provider": "holafly",
@@ -889,8 +889,8 @@
           "bundleName": "Denmark Unlimited / 5 days",
           "dataGb": null,
           "validityDays": 5,
-          "totalPence": 1500,
-          "snapshotDate": "2026-06-10"
+          "totalPence": 1550,
+          "snapshotDate": "2026-06-28"
         },
         {
           "provider": "holafly",
@@ -912,8 +912,8 @@
           "bundleName": "Czech Republic Unlimited / 5 days",
           "dataGb": null,
           "validityDays": 5,
-          "totalPence": 1500,
-          "snapshotDate": "2026-06-10"
+          "totalPence": 1550,
+          "snapshotDate": "2026-06-28"
         },
         {
           "provider": "holafly",
@@ -936,7 +936,7 @@
           "dataGb": null,
           "validityDays": 5,
           "totalPence": 1500,
-          "snapshotDate": "2026-06-10"
+          "snapshotDate": "2026-06-28"
         },
         {
           "provider": "holafly",
@@ -959,7 +959,7 @@
           "dataGb": null,
           "validityDays": 5,
           "totalPence": 1500,
-          "snapshotDate": "2026-06-10"
+          "snapshotDate": "2026-06-28"
         },
         {
           "provider": "holafly",
@@ -1004,8 +1004,8 @@
           "bundleName": "Albania Unlimited / 5 days",
           "dataGb": null,
           "validityDays": 5,
-          "totalPence": 2000,
-          "snapshotDate": "2026-06-10"
+          "totalPence": 2050,
+          "snapshotDate": "2026-06-28"
         },
         {
           "provider": "holafly",
@@ -1028,7 +1028,7 @@
           "dataGb": null,
           "validityDays": 5,
           "totalPence": 2200,
-          "snapshotDate": "2026-06-10"
+          "snapshotDate": "2026-06-28"
         },
         {
           "provider": "holafly",
