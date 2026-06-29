@@ -50,6 +50,10 @@ export function datasetLd(input: {
   dateModified: string;
   siteUrl: string;
   creatorName: string;
+  /** Optional licence URL (e.g. CC BY 4.0). Clears GSC's "missing field license" warning and signals
+   *  the data is openly reusable — which makes it more citable in Google Dataset Search and by data
+   *  desks/journalists. Backwards-compatible: omitted callers emit the same JSON-LD as before. */
+  license?: string;
 }) {
   return {
     "@context": "https://schema.org",
@@ -59,6 +63,7 @@ export function datasetLd(input: {
     url: input.url,
     dateModified: input.dateModified,
     isAccessibleForFree: true,
+    ...(input.license ? { license: input.license } : {}),
     creator: { "@type": "Organization" as const, "@id": `${input.siteUrl}/#organization`, name: input.creatorName }
   };
 }
