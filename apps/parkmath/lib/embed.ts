@@ -156,7 +156,9 @@ export function buildEmbedWidgetHtml(opts: EmbedWidgetOptions): string {
   const single = opts.airportSlug ? buildCard(opts) : null;
   const inner = single ?? buildTable(opts);
   const title = single ? "Airport drop-off charge" : "UK airport drop-off charges 2026";
-  const hubUrl = `${opts.siteUrl}/drop-off-charges`;
+  // Attribution points at the canonical, citable Price Index (the press / "cite us" asset) so every
+  // embed consolidates link equity on one URL rather than splitting it with the hub.
+  const indexUrl = `${opts.siteUrl}/drop-off-charges/price-index`;
   const verified = formatVerifiedDate(opts.verifiedAt);
   const cls = bodyClass(opts.theme);
 
@@ -177,8 +179,8 @@ export function buildEmbedWidgetHtml(opts: EmbedWidgetOptions): string {
   </div>
   ${inner}
   <div class="pm-attr">
-    <span>Source: <a href="${hubUrl}" target="_blank" rel="noopener">ParkMath</a> &mdash; verified UK airport fees</span>
-    <a href="${hubUrl}" target="_blank" rel="noopener">parkmath.co.uk &rarr;</a>
+    <span>Source: <a href="${indexUrl}" target="_blank" rel="noopener">ParkMath</a> &mdash; verified UK airport fees</span>
+    <a href="${indexUrl}" target="_blank" rel="noopener">parkmath.co.uk &rarr;</a>
   </div>
 </div>
 <script>${RESIZE_SCRIPT}</script>

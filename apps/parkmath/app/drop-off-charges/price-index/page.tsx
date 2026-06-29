@@ -32,6 +32,14 @@ export default function PriceIndexPage() {
 
   const rows = buildPriceIndex(records, nameFor, iataFor);
 
+  // Highest real search-demand spokes (from GSC): route this index's incoming link authority straight
+  // to the airport pages that already pull the most impressions, with natural descriptive anchors.
+  // Resolved from the ranked rows (never hardcoded); rendered only where the row exists.
+  const demandSlugs = ["stansted", "heathrow", "southend", "bristol"];
+  const demandRows = demandSlugs
+    .map((s) => rows.find((r) => r.airportSlug === s))
+    .filter((r): r is (typeof rows)[number] => Boolean(r));
+
   // Last-updated = the most recent verified date across all rows (the dataset's freshness floor),
   // plus the oldest row date so readers see the full freshness window honestly.
   const verifiedDates = records.map((r) => r.verifiedAt).sort();
@@ -106,7 +114,8 @@ export default function PriceIndexPage() {
           url: pageUrl,
           dateModified: latestVerified,
           siteUrl,
-          creatorName: "ParkMath"
+          creatorName: "ParkMath",
+          license: "https://creativecommons.org/licenses/by/4.0/"
         })}
       />
       <JsonLd
@@ -356,6 +365,29 @@ export default function PriceIndexPage() {
         </p>
       </section>
 
+      {demandRows.length > 0 ? (
+        <section className="space-y-2" aria-label="Most-searched airport drop-off charges">
+          <h2 className="text-lg font-semibold text-ink">Most-searched airport drop-off charges</h2>
+          <p className="text-sm text-ink-muted">
+            Jump straight to the airports people look up most &mdash; the full fee, time bands, penalty
+            and free alternative, each date-stamped against the official source:
+          </p>
+          <ul className="flex flex-wrap gap-2 text-sm">
+            {demandRows.map((r) => (
+              <li key={r.airportSlug}>
+                <Link
+                  href={`/drop-off-charges/${r.airportSlug}`}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-brand-accent/30 bg-brand-accent/[0.04] px-3 py-1.5 font-medium text-brand-accent hover:bg-brand-accent/10"
+                >
+                  {r.airportName} drop-off charge
+                  <span className="text-xs font-normal text-ink-muted">{r.fee}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
       {movers.length > 0 ? (
         <section className="space-y-2">
           <h2 className="text-h2 font-semibold text-ink">Year-on-year movers</h2>
@@ -388,7 +420,7 @@ export default function PriceIndexPage() {
         <ul className="ml-4 list-disc space-y-1 text-ink-muted">
           <li>Figures are the published standard drop-off charge in pounds sterling, current for 2026.</li>
           <li>&ldquo;Free alternative&rdquo; is a free option named on the airport&apos;s own page (a free waiting car park, or rail/tram reaching the terminal) &mdash; not an off-site third party.</li>
-          <li>The full machine-readable dataset is free to download (CSV) and free to cite. Attribution: &ldquo;ParkMath UK Airport Drop-Off Price Index&rdquo; with a link to this page.</li>
+          <li>The full machine-readable dataset is free to download (CSV) and free to reuse or embed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener" className="text-brand-accent underline underline-offset-4">CC BY 4.0</a> &mdash; just attribute &ldquo;ParkMath UK Airport Drop-Off Price Index&rdquo; with a link to this page.</li>
           <li>Found a fee that has changed? It is corrected here within days. See our full <Link href="/methodology" className="text-brand-accent underline underline-offset-4">verification method</Link>.</li>
         </ul>
       </section>

@@ -42,8 +42,8 @@ describe("buildEmbedWidgetHtml — full table", () => {
     expect(html).not.toMatch(/src="https?:\/\/(?!parkmath)/); // no third-party scripts/images
   });
 
-  it("always carries an attribution link back to ParkMath's hub", () => {
-    expect(html).toContain('href="https://parkmath.co.uk/drop-off-charges"');
+  it("always carries an attribution link back to ParkMath's Price Index (the canonical citable asset)", () => {
+    expect(html).toContain('href="https://parkmath.co.uk/drop-off-charges/price-index"');
     expect(html).toContain("ParkMath");
   });
 
@@ -71,7 +71,7 @@ describe("buildEmbedWidgetHtml — single airport card", () => {
     expect(html).toContain("£10");
     expect(html).toContain("Stansted");
     expect(html).not.toContain("London City"); // not the whole table
-    expect(html).toContain('href="https://parkmath.co.uk/drop-off-charges"');
+    expect(html).toContain('href="https://parkmath.co.uk/drop-off-charges/price-index"');
   });
 
   it("falls back to the full table when the slug is unknown", () => {
