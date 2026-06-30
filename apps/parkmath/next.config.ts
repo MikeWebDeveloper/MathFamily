@@ -61,6 +61,28 @@ const nextConfig: NextConfig = {
         headers: [...commonHeaders, { key: "Content-Security-Policy", value: cspEmbed }]
       }
     ];
+  },
+  // Canonicalise common short URLs that would otherwise 404 — permanent (308) so link equity passes
+  // to the canonical. /price-index is the well-known short form of the price-index page; bare airport
+  // slugs map to their canonical drop-off-charges page. The airport set mirrors the drop-off dataset
+  // (packages/data/datasets/parkmath/drop-off-fees.json) and is constrained inline so a real top-level
+  // route (/about, /news, …) is never shadowed. The canonical pages themselves are left untouched.
+  async redirects() {
+    const dropOffAirports = [
+      "heathrow", "gatwick", "manchester", "stansted", "luton", "edinburgh",
+      "birmingham", "glasgow", "bristol", "belfast-international", "newcastle",
+      "liverpool", "london-city", "leeds-bradford", "east-midlands", "aberdeen",
+      "belfast-city", "southampton", "cardiff", "exeter", "southend",
+      "bournemouth", "norwich", "inverness", "teesside", "prestwick",
+    ];
+    return [
+      { source: "/price-index", destination: "/drop-off-charges/price-index", permanent: true },
+      {
+        source: `/:airport(${dropOffAirports.join("|")})`,
+        destination: "/drop-off-charges/:airport",
+        permanent: true,
+      },
+    ];
   }
 };
 
