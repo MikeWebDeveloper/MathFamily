@@ -111,7 +111,8 @@ export default function MasterTablePage() {
           url: `${siteUrl}/drop-off-charges`,
           dateModified: latestVerified,
           siteUrl,
-          creatorName: "ParkMath"
+          creatorName: "ParkMath",
+          license: "https://creativecommons.org/licenses/by/4.0/"
         })}
       />
       <JsonLd
