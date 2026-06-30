@@ -83,7 +83,8 @@ export default function PriceIndexPage() {
           url: `${siteUrl}/parking-price-index-2026`,
           dateModified: latestVerified,
           siteUrl,
-          creatorName: "ParkMath"
+          creatorName: "ParkMath",
+          license: "https://creativecommons.org/licenses/by/4.0/"
         })}
       />
 
