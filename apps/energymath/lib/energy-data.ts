@@ -51,25 +51,29 @@ export const GB_AVERAGE = {
   gasUnitRatePence: 7.33, // p/kWh
   gasStandingChargePence: 29.04, // p/day
   /** Ofgem headline: typical dual-fuel Direct Debit bill for the period. */
-  typicalDualFuelAnnualPounds: 1862
+  typicalDualFuelAnnualPounds: 1663
 } as const;
 
 /**
  * Typical Domestic Consumption Values (TDCV) — medium household.
- * The £1,862 headline is built on the long-standing medium TDCV of 2,700 kWh
- * electricity / 11,500 kWh gas per year. Ofgem is reviewing these downward
- * (proposed 2,500 / 9,500 from a later review) — see TDCV_NOTE. We keep the
- * established medium values as the calculator default so the home-page estimate
- * reconciles with Ofgem's published typical bill.
- * Source: Ofgem TDCV. // TODO: verify exact TDCV in force for this cap period.
+ * Ofgem's "Review of typical domestic consumption values" (decision published
+ * 27 May 2026) took effect **1 July 2026**: the medium TDCV moved from
+ * 2,700 → 2,500 kWh electricity and 11,500 → 9,500 kWh gas per year, which in
+ * turn moves the headline "typical" dual-fuel bill from £1,862 (old basis) to
+ * £1,663 (new basis) for the same 1 Jul–30 Sep 2026 unit rates/standing charges.
+ * Re-verified live against Ofgem's price-cap announcement + MoneySavingExpert
+ * on TDCV_VERIFIED_AT below — see research/energymath-data-reverify-2026-07-01.md.
+ * Source: Ofgem TDCV review.
  */
 export const TDCV = {
-  electricityKwhPerYear: 2700,
-  gasKwhPerYear: 11500
+  electricityKwhPerYear: 2500,
+  gasKwhPerYear: 9500
 } as const;
 
+export const TDCV_VERIFIED_AT = "2026-07-01";
+
 export const TDCV_NOTE =
-  "Typical (medium) usage: 2,700 kWh electricity and 11,500 kWh gas per year. Ofgem is reviewing these values downward — your own usage from a recent bill gives the most accurate estimate.";
+  "Typical (medium) usage: 2,500 kWh electricity and 9,500 kWh gas per year (Ofgem's updated TDCV, in force from 1 July 2026). Your own usage from a recent bill gives the most accurate estimate.";
 
 export type HomeSize = "flat" | "small" | "medium" | "large";
 
@@ -99,8 +103,8 @@ export const USAGE_PROFILES: UsageProfile[] = [
     id: "small",
     label: "Small house / 2–3 bed",
     description: "2–3 people, small-to-mid home",
-    electricityKwhPerYear: 2700, // Ofgem medium TDCV (verified)
-    gasKwhPerYear: 11500 // Ofgem medium TDCV (verified)
+    electricityKwhPerYear: 2500, // Ofgem medium TDCV (verified, in force from 1 Jul 2026)
+    gasKwhPerYear: 9500 // Ofgem medium TDCV (verified, in force from 1 Jul 2026)
   },
   {
     id: "medium",

@@ -39,7 +39,7 @@ export function buildRegionFaqs(region: EnergyRegion): { question: string; answe
   return [
     {
       question: `What is the typical energy bill in ${region.name}?`,
-      answer: `On the Ofgem price cap for ${CAP_PERIOD}, a medium-usage household (2,700 kWh electricity, 11,500 kWh gas a year) in ${region.name} pays roughly ${formatPounds(
+      answer: `On the Ofgem price cap for ${CAP_PERIOD}, a medium-usage household (${TDCV.electricityKwhPerYear.toLocaleString()} kWh electricity, ${TDCV.gasKwhPerYear.toLocaleString()} kWh gas a year) in ${region.name} pays roughly ${formatPounds(
         m.totalPounds
       )} a year — about ${formatPounds(m.monthlyPounds)} a month. Your actual bill depends on how much energy you use. ${verifiedNote}`
     },
