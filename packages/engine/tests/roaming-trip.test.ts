@@ -51,4 +51,13 @@ describe("roamingTripCost", () => {
     expect(() => roamingTripCost(networks, esims, -4, Number.NaN)).not.toThrow();
     expect(roamingTripCost(networks, esims, -4, Number.NaN).days).toBe(1);
   });
+  it("does not double-period a fairUseNote that already ends with a full stop", () => {
+    const periodTerminated = networks.map((n) =>
+      n.network === "o2" ? { ...n, fairUseNote: "25GB cap." } : n
+    );
+    const r = roamingTripCost(periodTerminated, esims, 7, 5);
+    const fairUse = r.warnings.find((w) => w.code === "FAIR_USE");
+    expect(fairUse?.message).toBe("O2: 25GB cap.");
+    expect(fairUse?.message.includes("..")).toBe(false);
+  });
 });

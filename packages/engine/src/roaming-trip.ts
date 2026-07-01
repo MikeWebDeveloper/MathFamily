@@ -1,3 +1,5 @@
+import { terminate } from "./money";
+
 export interface NetworkRoamingOption {
   network: string;
   included: boolean;
@@ -79,7 +81,7 @@ export function roamingTripCost(
   }
   const fairUse = networks.find((n) => n.included && n.fairUseNote);
   if (fairUse?.fairUseNote) {
-    warnings.push({ code: "FAIR_USE", message: `${fairUse.network.toUpperCase()}: ${fairUse.fairUseNote}.` });
+    warnings.push({ code: "FAIR_USE", message: terminate(`${fairUse.network.toUpperCase()}: ${fairUse.fairUseNote}`) });
   }
 
   let verdict: RoamingTripResult["verdict"] = "unknown";

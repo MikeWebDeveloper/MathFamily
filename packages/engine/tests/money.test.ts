@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatPence } from "../src/money";
+import { formatPence, terminate } from "../src/money";
 
 describe("formatPence", () => {
   it("formats whole pounds without decimals", () => {
@@ -22,5 +22,14 @@ describe("formatPence", () => {
   });
   it("throws on negative input", () => {
     expect(() => formatPence(-100)).toThrow();
+  });
+});
+
+describe("terminate", () => {
+  it("appends a full stop to a sentence with none", () => {
+    expect(terminate("25GB limit")).toBe("25GB limit.");
+  });
+  it("does not add a second full stop when one is already present", () => {
+    expect(terminate("25GB cap.")).toBe("25GB cap.");
   });
 });

@@ -1,4 +1,4 @@
-import { roamingTripCost, formatPence, type RoamingTripResult } from "@mathfamily/engine";
+import { roamingTripCost, formatPence, terminate, type RoamingTripResult } from "@mathfamily/engine";
 import type { EsimCountry, RoamingDestination } from "@mathfamily/data";
 
 export const NETWORK_LABELS: Record<string, string> = {
@@ -74,14 +74,6 @@ function joinNames(names: string[]): string {
   if (names.length <= 1) return names[0] ?? "";
   if (names.length === 2) return `${names[0]} and ${names[1]}`;
   return `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
-}
-
-/** Appends a single trailing full stop, never a second one. Several `fairUseNote` values in
- *  the dataset already end with their own period (e.g. "...25GB cap."), so blindly
- *  concatenating a literal "." after them produced a double-period ("...cap..") in the
- *  rendered FAQPage JSON-LD across ~160 destination/network pages. */
-function terminate(sentence: string): string {
-  return sentence.endsWith(".") ? sentence : `${sentence}.`;
 }
 
 export function buildRoamingFaqs(

@@ -19,6 +19,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     { url: base, changeFrequency: "weekly" as const, priority: 1, lastModified: latestRoamingModified },
     { url: `${base}/roaming`, changeFrequency: "weekly" as const, priority: 0.9, lastModified: latestRoamingModified },
+    { url: `${base}/methodology`, changeFrequency: "monthly" as const, priority: 0.6, lastModified: latestRoamingModified },
     ...destinations.map((d) => {
       const destVerified = d.perNetwork
         .map((n) => networkSourcesByNetwork.get(n.network)?.verifiedAt ?? "")
