@@ -1,0 +1,23 @@
+{
+  "awin": {
+    "publisherId": "FILL_AFTER_AWIN_SIGNUP"
+  },
+  "partners": {
+    "priority-pass": {
+      "name": "Priority Pass",
+      "awinmid": "60243",
+      "active": false,
+      "landingUrl": "",
+      "termsUrl": ""
+    }
+  },
+  "slots": [
+    {
+      "id": "primary",
+      "partnerIds": [
+        "priority-pass"
+      ],
+      "active": false
+    }
+  ]
+}
