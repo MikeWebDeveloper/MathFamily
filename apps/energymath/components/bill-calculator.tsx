@@ -11,12 +11,13 @@ import {
   formatPounds,
   formatPoundsPrecise
 } from "../lib/energy-calc";
+import { AffiliateBlock } from "./affiliate-block";
 
 /** AnimatedNumber counts up an integer and renders it via the supplied formatter.
  *  EnergyMath figures are in pounds, so we pass the rounded pound value through the
  *  numeric slot and format it with formatPounds — same count-up the calculators use. */
 function PoundsCountUp({ pounds }: { pounds: number }) {
-  return <AnimatedNumber pence={Math.round(pounds)} render={(v) => (v === null ? "—" : formatPounds(v))} dur={500} />;
+  return <AnimatedNumber pence={Math.round(pounds)} render={(v) => (v === null ? "N/A" : formatPounds(v))} dur={500} />;
 }
 
 type Mode = "bill" | "heat-pump" | "solar";
@@ -123,7 +124,7 @@ export function BillCalculator({ regions, profiles, defaultRegionSlug }: BillCal
                   key={p.id}
                   type="button"
                   onClick={() => setProfileId(p.id)}
-                  className={`min-h-10 rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
+                  className={`min-h-11 rounded-full px-3 py-1.5 text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-brand-accent ${
                     profileId === p.id
                       ? "bg-brand-accent text-white"
                       : "border border-ink/15 bg-surface text-ink hover:border-brand-accent/40"
@@ -142,9 +143,9 @@ export function BillCalculator({ regions, profiles, defaultRegionSlug }: BillCal
           {/* is-revealing: one-shot accent glow as the new figures land (tokens.css mf-glow-pulse),
               mirroring ParkMath's DropOffCalculator. Skipped under reduced motion. */}
           <div className={`flex flex-wrap gap-3 rounded-xl transition-none${revealing ? " is-revealing" : ""}`}>
-            <div className="min-w-44 flex-1 rounded-lg border border-brand-accent/20 bg-brand-accent/[0.06] p-3">
+            <div className="min-w-44 flex-1 rounded-lg border border-brand-accent/20 bg-brand-accent/[0.06] p-4">
               <p className="text-xs font-medium text-brand-accent">Estimated annual bill</p>
-              <p className="text-2xl font-bold tracking-tight text-ink"><PoundsCountUp pounds={bill.totalPounds} /></p>
+              <p className="mf-num-display text-stat font-bold tracking-tight text-ink"><PoundsCountUp pounds={bill.totalPounds} /></p>
               <p className="text-xs text-ink-muted">
                 {formatPoundsPrecise(bill.monthlyPounds)}/month · dual fuel
               </p>
@@ -175,7 +176,7 @@ export function BillCalculator({ regions, profiles, defaultRegionSlug }: BillCal
                 key={p.id}
                 type="button"
                 onClick={() => setProfileId(p.id)}
-                className={`min-h-10 rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
+                className={`min-h-11 rounded-full px-3 py-1.5 text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-brand-accent ${
                   profileId === p.id
                     ? "bg-brand-accent text-white"
                     : "border border-ink/15 bg-surface text-ink hover:border-brand-accent/40"
@@ -188,22 +189,30 @@ export function BillCalculator({ regions, profiles, defaultRegionSlug }: BillCal
           <div className={`flex flex-wrap gap-3 rounded-xl transition-none${revealing ? " is-revealing" : ""}`}>
             <div className="min-w-40 flex-1 rounded-lg border border-ink/10 bg-surface p-3">
               <p className="text-xs font-medium text-ink-muted">Gas boiler heating</p>
-              <p className="text-2xl font-bold text-ink"><PoundsCountUp pounds={heatPump.boilerHeatingCostPounds} />/yr</p>
+              <p className="text-xl font-bold text-ink"><PoundsCountUp pounds={heatPump.boilerHeatingCostPounds} />/yr</p>
             </div>
             <div className="min-w-40 flex-1 rounded-lg border border-ink/10 bg-surface p-3">
               <p className="text-xs font-medium text-ink-muted">Heat pump heating</p>
-              <p className="text-2xl font-bold text-ink"><PoundsCountUp pounds={heatPump.heatPumpHeatingCostPounds} />/yr</p>
+              <p className="text-xl font-bold text-ink"><PoundsCountUp pounds={heatPump.heatPumpHeatingCostPounds} />/yr</p>
             </div>
-            <div className="min-w-44 flex-1 rounded-lg border border-brand-accent/20 bg-brand-accent/[0.06] p-3">
+            <div className="min-w-44 flex-1 rounded-lg border border-brand-accent/20 bg-brand-accent/[0.06] p-4">
               <p className="text-xs font-medium text-brand-accent">
                 {heatPump.cheaper === "heat-pump" ? "Heat pump saves" : "Boiler cheaper by"}
               </p>
-              <p className="text-2xl font-bold text-ink">
-                <PoundsCountUp pounds={Math.abs(heatPump.annualSavingPounds)} />/yr
+              {/* "/yr" stays a small sibling span, not part of the stat-scale number — inheriting
+                  text-stat + the mono figure font would blow the suffix up to the same huge size. */}
+              <p className="text-stat font-bold text-ink">
+                <PoundsCountUp pounds={Math.abs(heatPump.annualSavingPounds)} />
+                <span className="ml-1 text-lg font-semibold text-ink-muted">/yr</span>
               </p>
               <p className="text-xs text-ink-muted">running cost only</p>
             </div>
           </div>
+
+          {/* Highest-intent moment for the heat-pump rail: right after the visitor sees their own
+              heat-pump-vs-boiler numbers. GreenMatch/heat-pump — inert until lib/partners.json is
+              flipped active (see lib/partners.ts). */}
+          <AffiliateBlock category="heat-pump" regionSlug={region.slug} surface="home-heat-pump-calc" />
         </div>
       )}
 
@@ -244,18 +253,20 @@ export function BillCalculator({ regions, profiles, defaultRegionSlug }: BillCal
           <div className={`flex flex-wrap gap-3 rounded-xl transition-none${revealing ? " is-revealing" : ""}`}>
             <div className="min-w-40 flex-1 rounded-lg border border-ink/10 bg-surface p-3">
               <p className="text-xs font-medium text-ink-muted">Annual generation</p>
-              <p className="text-2xl font-bold text-ink">
+              <p className="text-xl font-bold text-ink">
                 {Math.round(solar.annualGenerationKwh).toLocaleString("en-GB")} kWh
               </p>
             </div>
             <div className="min-w-40 flex-1 rounded-lg border border-ink/10 bg-surface p-3">
               <p className="text-xs font-medium text-ink-muted">Annual benefit</p>
-              <p className="text-2xl font-bold text-ink"><PoundsCountUp pounds={solar.annualBenefitPounds} /></p>
+              <p className="text-xl font-bold text-ink"><PoundsCountUp pounds={solar.annualBenefitPounds} /></p>
             </div>
-            <div className="min-w-44 flex-1 rounded-lg border border-brand-accent/20 bg-brand-accent/[0.06] p-3">
+            <div className="min-w-44 flex-1 rounded-lg border border-brand-accent/20 bg-brand-accent/[0.06] p-4">
               <p className="text-xs font-medium text-brand-accent">Payback time</p>
-              <p className="text-2xl font-bold text-ink">
-                {solar.paybackYears != null ? `${solar.paybackYears.toFixed(1)} yrs` : "—"}
+              {/* "yrs" stays a small sibling span for the same reason as the heat-pump tile above. */}
+              <p className="mf-num-display text-stat font-bold text-ink">
+                {solar.paybackYears != null ? solar.paybackYears.toFixed(1) : "N/A"}
+                {solar.paybackYears != null ? <span className="ml-1 text-lg font-semibold text-ink-muted">yrs</span> : null}
               </p>
               <p className="text-xs text-ink-muted">indicative</p>
             </div>
@@ -264,6 +275,11 @@ export function BillCalculator({ regions, profiles, defaultRegionSlug }: BillCal
             Assumes ~900 kWh per kWp a year, 50% self-used at {region.electricityUnitRatePence}p/kWh,
             the rest exported at 15p/kWh. Indicative only — not a quote.
           </p>
+
+          {/* Highest-intent moment for the solar rail: right after the visitor sees their own
+              payback estimate. GreenMatch/solar — inert until lib/partners.json is flipped active
+              (see lib/partners.ts). */}
+          <AffiliateBlock category="solar" regionSlug={region.slug} surface="home-solar-calc" />
         </div>
       )}
 

@@ -1,11 +1,28 @@
 import partnersJson from "./partners.json";
 
 /**
- * Inert affiliate slot resolver — the GREEN rail (solar / heat-pump lead-gen +
- * energy switching). Every partner ships `active: false` with an empty deeplink,
- * so resolveSlot ALWAYS returns an inert "coming soon" slot in this MVP. No live
- * merchant IDs are present. A slot only becomes live when a partner is flipped
- * active AND given a real https deeplink (gated — a later, deliberate change).
+ * GreenMatch / Leads.io lead-gen affiliate integration — the GREEN rail (solar +
+ * heat-pump lead-gen, plus a separate "switching" slot for a later AWIN rail).
+ *
+ * RESEARCH (2026-07-01): GreenMatch (trading name of Leads.io Ltd, which also owns
+ * Boiler Guide / Solarguide / Windowsguide) is a UK solar/heat-pump/boiler quote
+ * aggregator — a strong intent match for this content. But its public "affiliate"
+ * language (greenmatch.co.uk/become-an-affiliate, /supplier-sign-up) signs up
+ * SUPPLIERS/installers who RECEIVE and PAY for leads — the opposite side of the
+ * marketplace from a referring content publisher. No self-serve content-publisher
+ * program, tracking-link format, or subid convention is publicly documented (no
+ * listing found on Awin/CJ/Partnerize/Rakuten/Adtraction either). This means the
+ * "free publisher signup, no traffic gate" framing needs a direct reply from
+ * GreenMatch/Leads.io before it can be treated as fact — see the trackingNote on
+ * each partners.json entry for exactly what Mike needs to get from them.
+ *
+ * Every partner ships `active: false` with an empty deeplink, so resolveSlot
+ * ALWAYS returns an inert "coming soon" slot right now — no live merchant IDs, no
+ * guessed URL, nothing fabricated. A slot only becomes live once a partner is
+ * flipped active AND given a real https deeplink built from the {regionSlug} /
+ * {clickref} placeholders (gated — a later, deliberate change once Mike has real
+ * GreenMatch dashboard values). Mirrors RoamMath's apps/roammath/lib/partners.ts
+ * (esim rail) and Refixto's lib/partners.ts (eHUB) in this same family.
  *
  * COMPLIANCE: only green/energy categories here — NO FCA-regulated rails
  * (mortgages, insurance, pensions, credit, funeral plans).

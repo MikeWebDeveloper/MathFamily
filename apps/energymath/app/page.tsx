@@ -71,18 +71,33 @@ export default function HomePage() {
           full breakdown (medium-usage estimate, {CAP_PERIOD}).
         </p>
         <nav aria-label="Regions" className="mf-reveal flex flex-wrap gap-2">
-          {ranked.map(({ region, estimate }) => (
-            <Link
-              key={region.slug}
-              href={`/region/${region.slug}`}
-              className="mf-press inline-flex min-h-11 items-center gap-2 rounded-full border border-ink/10 bg-card px-3 py-2 text-sm font-medium text-ink transition-colors hover:border-brand-accent/40 hover:bg-brand-accent/5"
-            >
-              {region.name}
-              <span className="text-xs font-semibold text-brand-accent">
-                ~{formatPounds(estimate.totalPounds)}/yr
-              </span>
-            </Link>
-          ))}
+          {ranked.map(({ region, estimate }, i) => {
+            // The cheapest region gets the family's reserved "one glow per page" treatment
+            // (tokens.css .mf-glow-winner: "reserve for the single recommended/cheapest element") —
+            // real semantic state (lowest price cap), not decoration.
+            const isCheapest = i === 0;
+            return (
+              <Link
+                key={region.slug}
+                href={`/region/${region.slug}`}
+                className={`mf-press inline-flex min-h-11 items-center gap-2 rounded-full border px-3 py-2 text-sm font-medium text-ink outline-none transition-colors focus-visible:ring-2 focus-visible:ring-brand-accent ${
+                  isCheapest
+                    ? "mf-glow-winner border-brand-accent/25 bg-brand-accent/[0.06]"
+                    : "border-ink/10 bg-card hover:border-brand-accent/40 hover:bg-brand-accent/5"
+                }`}
+              >
+                {isCheapest ? (
+                  <span className="rounded-full bg-brand-accent px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
+                    Cheapest
+                  </span>
+                ) : null}
+                {region.name}
+                <span className="text-xs font-semibold text-brand-accent">
+                  ~{formatPounds(estimate.totalPounds)}/yr
+                </span>
+              </Link>
+            );
+          })}
         </nav>
       </section>
 

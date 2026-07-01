@@ -48,7 +48,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AmbientBackdrop />
         <SiteHeader brandName="EnergyMath" brandPrefix="Energy" links={NAV} />
         <main className="mx-auto max-w-5xl px-4 py-8">{children}</main>
-        <SiteFooter brandName="EnergyMath" links={NAV} />
+        <SiteFooter
+          brandName="EnergyMath"
+          links={NAV}
+          disclaimerText="Prices change. Always check the current Ofgem price cap and your supplier's own tariff before switching. EnergyMath links to official sources on every page. Not financial advice."
+        />
         <SiteAnalytics />
       </body>
     </html>

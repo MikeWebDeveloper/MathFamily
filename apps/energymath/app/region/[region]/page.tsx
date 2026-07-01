@@ -93,7 +93,7 @@ export default async function RegionPage({ params }: { params: Promise<{ region:
         </Callout>
       ) : null}
 
-      <Callout variant="info" title="Heat pump vs gas boiler">
+      <Callout variant="info" title="Heat pump vs gas boiler" titleAs="h2">
         {heatPumpVerdictLine(region)}
       </Callout>
 
@@ -161,6 +161,7 @@ export default async function RegionPage({ params }: { params: Promise<{ region:
       <SourcesBlock
         sources={[{ label: "Ofgem energy price cap unit rates and standing charges", url: region.sourceUrl, verifiedAt: region.verifiedAt }]}
         method="Annual bills = usage (kWh) × unit rate + 365 × daily standing charge, per fuel, on Ofgem price-cap rates (Direct Debit, incl. VAT). Heat-pump comparison assumes a 90%-efficient boiler and a heat pump at SCOP 3.0, running cost only."
+        independenceText="we are not owned by any energy supplier, comparison site or lead-gen network. Any affiliate links are labelled Ad and earn us a commission. This never affects the figures we publish or which option we show as cheapest."
       />
 
       <FamilyLinks />

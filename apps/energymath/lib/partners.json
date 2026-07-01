@@ -1,25 +1,25 @@
 {
   "partners": {
     "solar": {
-      "name": "Solar quote partner",
+      "name": "GreenMatch",
       "category": "solar",
       "active": false,
       "deeplinkTemplate": "",
-      "trackingNote": "fill after solar lead-gen affiliate signup — gated, no live merchant ID yet"
+      "trackingNote": "GreenMatch (trading name of Leads.io Ltd) solar-panel quote funnel. As of 2026-07-01, GreenMatch/Leads.io does NOT publish a self-serve CONTENT-PUBLISHER affiliate program — their only public 'Become a Partner' pages (greenmatch.co.uk/become-an-affiliate, /supplier-sign-up) sign up SUPPLIERS/installers who BUY leads, the opposite side of the marketplace from a referring publisher. Mike must contact GreenMatch/Leads.io directly (their site contact form, or a partnerships/media enquiry to Leads.io) and ask specifically for a content-publisher / lead-referral arrangement, then get back: (1) a full tracking URL for the solar funnel with a publisher/partner-ID + subid or clickref placeholder, (2) confirmation this is genuinely pay-per-lead with no traffic minimum. Paste the resulting URL here using {regionSlug} and {clickref} placeholders exactly like every other MathFamily partners.json (e.g. \"https://www.greenmatch.co.uk/solar-panels?ref=<ourPublisherId>&subid={clickref}\") — do NOT use the supplier-sign-up link, that pays nothing for referred traffic."
     },
     "heatpump": {
-      "name": "Heat pump quote partner",
+      "name": "GreenMatch",
       "category": "heat-pump",
       "active": false,
       "deeplinkTemplate": "",
-      "trackingNote": "fill after heat-pump installer lead-gen signup — gated"
+      "trackingNote": "GreenMatch (trading name of Leads.io Ltd) heat-pump quote funnel — same publisher account as the 'solar' entry above, different landing path (greenmatch.co.uk/heat-pump vs /solar-panels). See the 'solar' entry's trackingNote for the full research finding: no public self-serve publisher signup exists as of 2026-07-01, Mike needs a direct reply from GreenMatch/Leads.io confirming the referral-payout mechanism before this can go live. Fill deeplinkTemplate with {regionSlug} and {clickref} placeholders once that reply lands."
     },
     "switching": {
       "name": "Energy switching partner",
       "category": "switching",
       "active": false,
       "deeplinkTemplate": "",
-      "trackingNote": "fill after energy switching affiliate signup — gated"
+      "trackingNote": "Secondary rail, not this task's focus. EDF/British Gas AWIN programs are the candidate — apply in parallel, don't block launch on approval (per company/mathfamily-launch-scout-2026-07-01.md). Fill after a real AWIN merchant approval."
     }
   }
 }

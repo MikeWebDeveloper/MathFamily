@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import { resolveSlot, buildAffiliateUrl, resolveDeeplink, type PartnerCategory } from "../lib/partners";
 import partnersJson from "../lib/partners.json";
 
@@ -32,6 +32,11 @@ describe("resolveSlot", () => {
       expect(slot.label).toBe("Coming soon");
     }
   });
+
+  it("names GreenMatch specifically for the solar and heat-pump slots (not a generic placeholder)", () => {
+    expect(partnersJson.partners.solar?.name).toBe("GreenMatch");
+    expect(partnersJson.partners.heatpump?.name).toBe("GreenMatch");
+  });
 });
 
 describe("buildAffiliateUrl", () => {
@@ -52,5 +57,57 @@ describe("resolveDeeplink (the /go resolver)", () => {
   it("returns null for an unknown category (fail-closed)", () => {
     expect(resolveDeeplink(["mortgage"], "home")).toBeNull();
     expect(resolveDeeplink([], "home")).toBeNull();
+  });
+});
+
+describe("go-live path (proves the wiring needs zero redesign once credentials land)", () => {
+  beforeEach(() => {
+    vi.resetModules();
+  });
+
+  afterEach(() => {
+    vi.doUnmock("../lib/partners.json");
+    vi.resetModules();
+  });
+
+  it("resolveSlot + resolveDeeplink both return the real GreenMatch URL once solar is flipped active", async () => {
+    // Simulates dropping real GreenMatch dashboard values into partners.json — no code change,
+    // only data. If this test passes, the "just needs credentials, not a redesign" claim is real.
+    vi.doMock("../lib/partners.json", () => ({
+      default: {
+        partners: {
+          solar: {
+            name: "GreenMatch",
+            category: "solar",
+            active: true,
+            deeplinkTemplate: "https://www.greenmatch.co.uk/solar-panels?ref=PUB123&subid={clickref}",
+            trackingNote: "live"
+          },
+          heatpump: {
+            name: "GreenMatch",
+            category: "heat-pump",
+            active: false,
+            deeplinkTemplate: "",
+            trackingNote: "still inert"
+          },
+          switching: { name: "x", category: "switching", active: false, deeplinkTemplate: "", trackingNote: "" }
+        }
+      }
+    }));
+
+    const live = await import("../lib/partners");
+
+    const slot = live.resolveSlot("solar", "london");
+    expect(slot.kind).toBe("affiliate");
+    expect(slot.url).toBe("https://www.greenmatch.co.uk/solar-panels?ref=PUB123&subid=energy-london");
+    expect(slot.disclosureRequired).toBe(true);
+    expect(slot.partnerName).toBe("GreenMatch");
+
+    // heat-pump stays inert independently — flipping one category doesn't leak the other.
+    expect(live.resolveSlot("heat-pump", "london").kind).toBe("inert");
+
+    expect(live.resolveDeeplink(["solar", "london"], "home-solar-calc")).toBe(
+      "https://www.greenmatch.co.uk/solar-panels?ref=PUB123&subid=energy-london"
+    );
   });
 });
