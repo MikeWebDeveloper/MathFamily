@@ -5,6 +5,8 @@ import {
   resolveTravelInsuranceSlot,
   buildAffiliateUrl,
   buildAwinLink,
+  goLink,
+  resolveGoTarget,
 } from "../lib/partners";
 
 describe("buildAffiliateUrl", () => {
@@ -129,5 +131,84 @@ describe("resolveTravelInsuranceSlot", () => {
   test("label is empty when no active partner", () => {
     const result = resolveTravelInsuranceSlot("germany");
     expect(result.label).toBe("");
+  });
+});
+
+describe("goLink", () => {
+  test("builds a /go path with the encoded target and surface query param", () => {
+    expect(goLink("hub", "spain", "esim:airalo")).toBe("/go/spain/esim%3Aairalo?s=hub");
+  });
+
+  test("omits the query string entirely when surface is empty", () => {
+    expect(goLink("", "spain", "car-hire")).toBe("/go/spain/car-hire");
+  });
+
+  test("encodes a country slug that needs it", () => {
+    expect(goLink("hub", "trinidad and tobago", "esim:saily")).toBe(
+      "/go/trinidad%20and%20tobago/esim%3Asaily?s=hub"
+    );
+  });
+});
+
+describe("resolveGoTarget — eSIM", () => {
+  test("known-but-inactive provider falls back to that provider's plain homepage (never a bare awin1.com/fabricated link)", () => {
+    const result = resolveGoTarget("esim:airalo", "spain");
+    expect(result).not.toBeNull();
+    expect(result!.isAffiliate).toBe(false);
+    expect(result!.url).toBe("https://www.airalo.com");
+  });
+
+  test("resolves saily and holafly to their own homepages too", () => {
+    expect(resolveGoTarget("esim:saily", "france")!.url).toBe("https://saily.com");
+    expect(resolveGoTarget("esim:holafly", "germany")!.url).toBe("https://esim.holafly.com");
+  });
+
+  test("unknown provider id is rejected (open-redirect guard), not silently redirected", () => {
+    expect(resolveGoTarget("esim:totallyMadeUpProvider", "spain")).toBeNull();
+  });
+});
+
+describe("resolveGoTarget — car-hire", () => {
+  test("bare 'car-hire' target falls back to the first candidate's (DiscoverCars) plain homepage when inactive", () => {
+    const result = resolveGoTarget("car-hire", "spain");
+    expect(result).not.toBeNull();
+    expect(result!.isAffiliate).toBe(false);
+    expect(result!.url).toBe("https://www.discovercars.com");
+  });
+
+  test("a specific known partner id falls back to THAT partner's homepage, not the default candidate", () => {
+    const result = resolveGoTarget("car-hire:rentalCars", "spain");
+    expect(result!.isAffiliate).toBe(false);
+    expect(result!.url).toBe("https://www.rentalcars.com");
+  });
+
+  test("unknown partner id is rejected outright (never falls through to a default homepage)", () => {
+    expect(resolveGoTarget("car-hire:notARealPartner", "spain")).toBeNull();
+  });
+});
+
+describe("resolveGoTarget — travel-insurance", () => {
+  test("bare 'travel-insurance' target falls back to the first candidate's (CoverForYou) plain homepage when inactive", () => {
+    const result = resolveGoTarget("travel-insurance", "spain");
+    expect(result!.isAffiliate).toBe(false);
+    expect(result!.url).toBe("https://www.coverforyou.com");
+  });
+
+  test("a specific known partner id falls back to THAT partner's homepage", () => {
+    const result = resolveGoTarget("travel-insurance:holidayExtras", "spain");
+    expect(result!.isAffiliate).toBe(false);
+    expect(result!.url).toBe("https://www.holidayextras.com/travel-insurance.html");
+  });
+
+  test("unknown partner id is rejected outright", () => {
+    expect(resolveGoTarget("travel-insurance:notARealPartner", "spain")).toBeNull();
+  });
+});
+
+describe("resolveGoTarget — malformed/unknown targets (open-redirect guard)", () => {
+  test("a completely unrecognized target string 404s (returns null) rather than guessing", () => {
+    expect(resolveGoTarget("something-else-entirely", "spain")).toBeNull();
+    expect(resolveGoTarget("", "spain")).toBeNull();
+    expect(resolveGoTarget("parking", "spain")).toBeNull(); // ParkMath-shaped target must not leak in here
   });
 });
