@@ -44,3 +44,5 @@ export * from "./compiled-byline";
 export * from "./answer-passage";
 export { EsimPickCard } from "./EsimPickCard";
 export type { EsimPickCardProps } from "./EsimPickCard";
+export { TravelRailCard } from "./TravelRailCard";
+export type { TravelRailCardProps } from "./TravelRailCard";
