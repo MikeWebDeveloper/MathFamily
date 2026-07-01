@@ -40,7 +40,8 @@ export async function generateMetadata({
   const m = regionPageModel(region);
   return {
     title: `${region.name} energy bills ${CAP_PERIOD.split(" to ")[1]?.slice(-4) ?? ""} — Ofgem price cap rates`.trim(),
-    description: `${m.answer} Unit rates, standing charges and a heat-pump vs boiler comparison.`
+    description: `${m.answer} Unit rates, standing charges and a heat-pump vs boiler comparison.`,
+    alternates: { canonical: `/region/${region.slug}` }
   };
 }
 
@@ -94,7 +95,12 @@ export default async function RegionPage({ params }: { params: Promise<{ region:
       ) : null}
 
       <Callout variant="info" title="Heat pump vs gas boiler" titleAs="h2">
-        {heatPumpVerdictLine(region)}
+        <p>{heatPumpVerdictLine(region)}</p>
+        <p className="mt-2">
+          <Link href="/heat-pump-vs-boiler" className="font-medium text-brand-accent underline underline-offset-4">
+            Full heat-pump vs boiler comparison, install cost and the Boiler Upgrade Scheme grant →
+          </Link>
+        </p>
       </Callout>
 
       <section className="space-y-2">
@@ -131,6 +137,12 @@ export default async function RegionPage({ params }: { params: Promise<{ region:
         <AffiliateBlock category="heat-pump" regionSlug={region.slug} surface="region" />
         <AffiliateBlock category="solar" regionSlug={region.slug} surface="region" />
       </div>
+
+      <p className="text-sm">
+        <Link href="/solar-payback" className="font-medium text-brand-accent underline underline-offset-4">
+          Solar panel payback: cost, export rate and years to break even →
+        </Link>
+      </p>
 
       <section className="space-y-2">
         <h2 className="text-xl font-semibold text-ink">Frequently asked questions</h2>

@@ -9,7 +9,8 @@ import { formatPounds } from "@/lib/energy-calc";
 export const metadata: Metadata = {
   title: `UK energy bills by region — Ofgem price cap ${CAP_PERIOD}`,
   description:
-    "Compare typical annual energy bills across all 14 UK distribution regions on the Ofgem price cap, with unit rates and standing charges for gas and electricity."
+    "Compare typical annual energy bills across all 14 UK distribution regions on the Ofgem price cap, with unit rates and standing charges for gas and electricity.",
+  alternates: { canonical: "/region" }
 };
 
 export default function RegionIndexPage() {

@@ -23,6 +23,8 @@ precise figures are being confirmed and are currently shown as GB-average estima
 - / — annual bill estimator (region × home size) with heat-pump-vs-boiler and solar-payback toggles (schema.org FAQPage + WebSite)
 - /region — all ${REGIONS.length} regions ranked by typical bill (schema.org Table)
 - /region/[region] — per-region hub: typical bill by home size, price-cap rates, heat-pump verdict, FAQ (schema.org FAQPage)
+- /heat-pump-vs-boiler — GB-average running-cost comparison by home size, install cost and the Boiler Upgrade Scheme grant, FAQ (schema.org FAQPage)
+- /solar-payback — GB-average payback by system size, install cost and Smart Export Guarantee export rate, FAQ (schema.org FAQPage)
 
 All figures are estimates based on the published Ofgem price cap — not personalised quotes
 and not financial advice. Cite the per-region page for a specific region; cite /region for

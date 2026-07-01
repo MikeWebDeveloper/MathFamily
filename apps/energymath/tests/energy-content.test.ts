@@ -1,11 +1,16 @@
 import { describe, expect, it } from "vitest";
-import { REGIONS, GB_AVERAGE, getRegion } from "../lib/energy-data";
+import { REGIONS, GB_AVERAGE, USAGE_PROFILES, getRegion } from "../lib/energy-data";
 import {
   regionPageModel,
   buildRegionFaqs,
   homeFaqs,
   sortRegionsByBill,
-  heatPumpVerdictLine
+  heatPumpVerdictLine,
+  nationalHeatPumpRows,
+  heatPumpPageModel,
+  buildHeatPumpFaqs,
+  nationalSolarRows,
+  buildSolarFaqs
 } from "../lib/energy-content";
 
 describe("dataset integrity", () => {
@@ -107,5 +112,83 @@ describe("heatPumpVerdictLine", () => {
   it("produces a sentence mentioning a heat pump or boiler", () => {
     const line = heatPumpVerdictLine(getRegion("london")!);
     expect(line.toLowerCase()).toMatch(/heat pump|boiler/);
+  });
+});
+
+describe("nationalHeatPumpRows", () => {
+  it("returns one row per profile, each with a boiler and heat-pump cost", () => {
+    const rows = nationalHeatPumpRows(USAGE_PROFILES);
+    expect(rows).toHaveLength(USAGE_PROFILES.length);
+    for (const row of rows) {
+      expect(row.comparison.boilerHeatingCostPounds).toBeGreaterThan(0);
+      expect(row.comparison.heatPumpHeatingCostPounds).toBeGreaterThan(0);
+      expect(["heat-pump", "boiler"]).toContain(row.comparison.cheaper);
+    }
+  });
+});
+
+describe("heatPumpPageModel", () => {
+  const model = heatPumpPageModel(USAGE_PROFILES);
+
+  it("answer mentions a pound figure and either a heat pump or boiler verdict", () => {
+    expect(model.answer).toMatch(/£[\d,]+/);
+    expect(model.answer.toLowerCase()).toMatch(/heat pump|boiler/);
+  });
+
+  it("net install cost is the indicative range minus the Boiler Upgrade Scheme grant, never negative", () => {
+    expect(model.netInstallLowPounds).toBeGreaterThanOrEqual(0);
+    expect(model.netInstallHighPounds).toBeGreaterThanOrEqual(model.netInstallLowPounds);
+  });
+
+  it("payback years are both null or both non-null (never a fabricated one-sided figure)", () => {
+    const bothNull = model.paybackYearsLow === null && model.paybackYearsHigh === null;
+    const bothNumbers = typeof model.paybackYearsLow === "number" && typeof model.paybackYearsHigh === "number";
+    expect(bothNull || bothNumbers).toBe(true);
+    if (bothNumbers) {
+      expect(model.paybackYearsLow!).toBeGreaterThan(0);
+      expect(model.paybackYearsHigh!).toBeGreaterThanOrEqual(model.paybackYearsLow!);
+    }
+  });
+});
+
+describe("buildHeatPumpFaqs", () => {
+  it("covers running cost, the Boiler Upgrade Scheme grant, and install cost", () => {
+    const faqs = buildHeatPumpFaqs();
+    const text = faqs.map((f) => `${f.question} ${f.answer}`.toLowerCase()).join(" ");
+    expect(text).toContain("boiler upgrade scheme");
+    expect(text).toMatch(/£7,500/);
+    expect(text).toContain("install");
+  });
+});
+
+describe("nationalSolarRows", () => {
+  it("returns one row per system size with a positive benefit and cost", () => {
+    const rows = nationalSolarRows([3, 4, 6]);
+    expect(rows).toHaveLength(3);
+    for (const row of rows) {
+      expect(row.typicalCostPounds).toBeGreaterThan(0);
+      expect(row.payback.annualBenefitPounds).toBeGreaterThan(0);
+      expect(row.payback.paybackYears).not.toBeNull();
+    }
+  });
+
+  it("bigger systems cost more and generate more", () => {
+    const [small, large] = nationalSolarRows([3, 6]);
+    expect(large!.typicalCostPounds).toBeGreaterThan(small!.typicalCostPounds);
+    expect(large!.payback.annualBenefitPounds).toBeGreaterThan(small!.payback.annualBenefitPounds);
+  });
+});
+
+describe("buildSolarFaqs", () => {
+  it("covers payback, the Smart Export Guarantee and system cost, with a sane payback range", () => {
+    const faqs = buildSolarFaqs();
+    const text = faqs.map((f) => `${f.question} ${f.answer}`.toLowerCase()).join(" ");
+    expect(text).toContain("smart export guarantee");
+    expect(text).toContain("payback");
+    const years = text.match(/roughly ([\d.]+)–([\d.]+) years/);
+    expect(years).not.toBeNull();
+    const [, low, high] = years!;
+    expect(Number(low)).toBeGreaterThan(0);
+    expect(Number(high)).toBeGreaterThanOrEqual(Number(low));
   });
 });

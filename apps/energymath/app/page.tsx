@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { webSiteLd, faqPageLd, JsonLd } from "@mathfamily/geo";
-import { ChapterDivider, EmailCaptureSlot, FaqAccordion, StatStrip } from "@mathfamily/ui";
+import { ChapterDivider, EmailCaptureSlot, FaqAccordion, NavTileGrid, StatStrip } from "@mathfamily/ui";
 import { BillCalculator } from "@/components/bill-calculator";
 import { AffiliateBlock } from "@/components/affiliate-block";
 import { FamilyLinks } from "@/components/family-links";
@@ -105,6 +105,27 @@ export default function HomePage() {
             );
           })}
         </nav>
+      </section>
+
+      <ChapterDivider label="Compare more" />
+
+      <section className="mf-reveal space-y-4">
+        <h2 className="text-xl font-semibold text-ink">Heat pump, boiler and solar comparisons</h2>
+        <NavTileGrid
+          variant="primary"
+          tiles={[
+            {
+              href: "/heat-pump-vs-boiler",
+              title: "Heat pump vs gas boiler",
+              descriptor: "Running cost by home size, install cost and the Boiler Upgrade Scheme grant"
+            },
+            {
+              href: "/solar-payback",
+              title: "Solar panel payback",
+              descriptor: "Install cost, export rate and years to break even, by system size"
+            }
+          ]}
+        />
       </section>
 
       <AffiliateBlock category="switching" regionSlug="london" surface="home" />

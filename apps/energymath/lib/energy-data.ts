@@ -204,3 +204,48 @@ export const DATASET_LAST_UPDATED = GB_VERIFIED_AT;
 export function getRegion(slug: string): EnergyRegion | undefined {
   return REGIONS.find((r) => r.slug === slug);
 }
+
+/**
+ * Boiler Upgrade Scheme (BUS) — England & Wales government grant toward a heat pump
+ * or biomass boiler, applied for by the installer and deducted from the quote.
+ * Source: gov.uk (GOV_SOURCE_URL) and Ofgem, which administers the scheme.
+ * Grants confirmed current as of BUS_VERIFIED_AT: £7,500 air-source/ground-source
+ * heat pump, £5,000 biomass boiler, £2,500 air-to-air heat pump (residential only,
+ * introduced in the scheme's April 2026 overhaul). Scheme extended to March 2030.
+ */
+export const BOILER_UPGRADE_SCHEME = {
+  airSourceGrantPounds: 7500,
+  groundSourceGrantPounds: 7500,
+  airToAirGrantPounds: 2500,
+  biomassGrantPounds: 5000,
+  schemeEndDate: "2030-03-31",
+  sourceUrl: "https://www.gov.uk/apply-boiler-upgrade-scheme/what-you-can-get",
+  ofgemSourceUrl: "https://www.ofgem.gov.uk/environmental-and-social-schemes/boiler-upgrade-scheme-bus"
+} as const;
+
+export const BUS_VERIFIED_AT = "2026-07-01";
+
+/**
+ * Indicative UK heat-pump install cost RANGE (before any Boiler Upgrade Scheme grant).
+ * Widely-cited market range for a domestic air-source heat pump, fully installed —
+ * NOT an Ofgem/gov.uk figure, so it is labelled "indicative" everywhere it's shown,
+ * same convention as the solar install-cost range below.
+ */
+export const HEAT_PUMP_INSTALL_COST_RANGE_POUNDS = { low: 7000, high: 13000 } as const;
+
+/**
+ * Smart Export Guarantee (SEG) — suppliers must offer a export tariff for small-scale
+ * generators (solar, wind) at a rate greater than zero; the rate itself is set by each
+ * supplier, not by Ofgem. Source: Ofgem SEG page. The typical/top-rate band below is
+ * indicative market context (not an official cap or floor) — energy-calc.ts's
+ * DEFAULT_EXPORT_RATE_PENCE (15p) sits inside this band and is what the payback figures
+ * on this site actually use.
+ */
+export const SEG_TYPICAL_RANGE_PENCE = { low: 5, high: 16.5 } as const;
+export const SEG_SOURCE_URL = "https://www.ofgem.gov.uk/environmental-and-social-schemes/smart-export-guarantee-seg";
+export const SEG_VERIFIED_AT = "2026-07-01";
+
+/** Indicative installed-cost range for a typical UK domestic solar PV system (per kWp),
+ *  used only as page context — the interactive calculator lets a visitor enter their own
+ *  quoted price. NOT an Ofgem/gov.uk figure. */
+export const SOLAR_COST_PER_KWP_RANGE_POUNDS = { low: 1400, high: 1900 } as const;

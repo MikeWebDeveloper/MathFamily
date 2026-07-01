@@ -16,11 +16,17 @@ export const metadata: Metadata = {
     template: "%s | EnergyMath"
   },
   description:
-    "Estimate your UK annual gas and electricity bill from the Ofgem price cap by region and home size, and compare a heat pump vs a gas boiler or solar payback — every rate sourced and date-stamped."
+    "Estimate your UK annual gas and electricity bill from the Ofgem price cap by region and home size, and compare a heat pump vs a gas boiler or solar payback — every rate sourced and date-stamped.",
+  // Sitewide canonical rollout (same pattern as Probate Navigator's app/layout.tsx): the
+  // homepage has no metadata export of its own (app/page.tsx), so it inherits this — without
+  // it, "/" would be one of the pages site-wide with zero <link rel="canonical">.
+  alternates: { canonical: "/" }
 };
 
 const NAV = [
   { label: "By region", href: "/region" },
+  { label: "Heat pump vs boiler", href: "/heat-pump-vs-boiler" },
+  { label: "Solar payback", href: "/solar-payback" },
   { label: "Privacy", href: "/privacy" }
 ];
 
