@@ -19,8 +19,8 @@ export function NavTile({ href, title, descriptor, icon, download, variant = "pr
         className="mf-edge mf-sheen mf-press group flex items-center gap-2.5 rounded-card bg-card p-4 text-sm outline-none transition-all duration-200 hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-brand-accent/40"
         style={{ boxShadow: "var(--shadow-card)" }}
       >
-        {icon ? <span aria-hidden className="shrink-0 text-brand-accent/80">{icon}</span> : null}
-        <span className="font-semibold text-ink transition-colors group-hover:text-brand-accent">{title}</span>
+        {icon ? <span aria-hidden className="shrink-0 text-accent-strong/80">{icon}</span> : null}
+        <span className="font-semibold text-ink transition-colors group-hover:text-accent-strong">{title}</span>
       </a>
     );
   }

@@ -1,5 +1,11 @@
 import { describe, test, expect } from "vitest";
-import { resolveSlot, resolveCarHireSlot, resolveTravelInsuranceSlot, buildAffiliateUrl } from "../lib/partners";
+import {
+  resolveSlot,
+  resolveCarHireSlot,
+  resolveTravelInsuranceSlot,
+  buildAffiliateUrl,
+  buildAwinLink,
+} from "../lib/partners";
 
 describe("buildAffiliateUrl", () => {
   test("substitutes {countrySlug} and {clickref}", () => {
@@ -51,6 +57,34 @@ describe("resolveSlot", () => {
   test("official fallback label is 'Check live eSIM prices'", () => {
     const result = resolveSlot(null, "spain", officialUrl);
     expect(result.label).toBe("Check live eSIM prices");
+  });
+});
+
+describe("buildAwinLink", () => {
+  test("builds a bare cread.php link with clickref and no destination", () => {
+    expect(
+      buildAwinLink({ awinmid: "3496", publisherId: "999999", clickref: "car-hire-spain" })
+    ).toBe("https://www.awin1.com/cread.php?awinmid=3496&awinaffid=999999&clickref=car-hire-spain");
+  });
+
+  test("percent-encodes a destination URL so its own query string cannot leak into the outer AWIN query", () => {
+    // Mirrors a realistic RentalCars-style destination: multiple params, own "&" and "=".
+    const url = buildAwinLink({
+      awinmid: "5547",
+      publisherId: "999999",
+      clickref: "car-hire-spain",
+      destinationUrl: "https://www.rentalcars.com/SearchResults.do?country=spain&pickupDate=2026-08-01",
+    });
+    expect(url).toContain(
+      "ued=https%3A%2F%2Fwww.rentalcars.com%2FSearchResults.do%3Fcountry%3Dspain%26pickupDate%3D2026-08-01"
+    );
+    // awinmid, awinaffid, clickref, ued — the destination's own "&" must be encoded, not a 5th top-level param.
+    expect(url.split("&")).toHaveLength(4);
+  });
+
+  test("omits ued entirely when no destination is given", () => {
+    const url = buildAwinLink({ awinmid: "1250", publisherId: "999999", clickref: "travel-insurance-france" });
+    expect(url).not.toContain("ued=");
   });
 });
 

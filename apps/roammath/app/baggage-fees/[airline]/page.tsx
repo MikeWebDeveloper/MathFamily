@@ -107,7 +107,7 @@ export default async function AirlineBaggagePage({ params }: { params: Promise<{
       </section>
 
       <p className="text-sm">
-        <Link href="/baggage-fees" className="text-brand-accent underline underline-offset-4">
+        <Link href="/baggage-fees" className="text-accent-strong underline underline-offset-4">
           ← All airlines
         </Link>
       </p>

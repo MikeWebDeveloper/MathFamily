@@ -4,47 +4,54 @@
       "name": "Airalo",
       "active": false,
       "deeplinkTemplate": "",
-      "trackingNote": "fill after partners.airalo.com signup — use {countrySlug} and {clickref} placeholders"
+      "trackingNote": "TODO-MIKE: fill after partners.airalo.com (Impact network) approval. Impact's own deep-link generator produces the full, already-encoded tracking URL for a given destination page — paste that whole URL here and only swap in {clickref} for whichever subid/sharedid parameter Impact assigns you. Do NOT hand-edit an already-encoded destination segment to inject {countrySlug} — if you want per-country destinations, generate one deep link per country in Impact's UI instead. Cookie window: confirm in the Impact dashboard (not published on Airalo's public affiliate page as of 2026-07)."
     },
     "saily": {
       "name": "Saily",
       "active": false,
       "deeplinkTemplate": "",
-      "trackingNote": "fill after saily.com/affiliate signup"
+      "trackingNote": "TODO-MIKE: fill after saily.com/affiliate signup (Nord Security program, ~30-day cookie per public docs). Same rule as Airalo — paste Saily's own generated tracking link, only substitute {clickref} into their subid param, don't hand-encode a destination."
     },
     "holafly": {
       "name": "Holafly",
       "active": false,
       "deeplinkTemplate": "",
-      "trackingNote": "fill after holafly.com/affiliate signup"
+      "trackingNote": "TODO-MIKE: fill after holafly.com/affiliate signup (apply via esim.holafly.com/affiliate-program — dashboard/network not public). Same rule as Airalo — paste Holafly's own generated tracking link, only substitute {clickref} into their subid param."
     }
+  },
+  "awin": {
+    "publisherId": ""
   },
   "car-hire": {
     "discoverCars": {
       "name": "DiscoverCars",
       "active": false,
-      "deeplinkTemplate": "",
-      "trackingNote": "TODO-MIKE: fill after signup at partners.discovercars.com — AWIN publisher ID required. Use {countrySlug} and {clickref} as placeholders. Template will be: https://www.awin1.com/cread.php?awinmid=TODO&awinaffid=TODO&clickref={clickref}&ued=https://discovercars.com/car-hire/{countrySlug}"
+      "awinmid": "",
+      "destinationTemplate": "https://discovercars.com/car-hire/{countrySlug}",
+      "trackingNote": "TODO-MIKE: fill awinmid after signup at partners.discovercars.com (AWIN), and set the shared awin.publisherId above from your AWIN account. buildAwinLink() combines awinmid + publisherId + destinationTemplate safely (percent-encoded) — do not hand-build a cread.php?...&ued=... string yourself."
     },
     "rentalCars": {
       "name": "RentalCars",
       "active": false,
-      "deeplinkTemplate": "",
-      "trackingNote": "TODO-MIKE: fill after AWIN signup for RentalCars (mid ~5547). Template: https://www.awin1.com/cread.php?awinmid=TODO&awinaffid=TODO&clickref={clickref}&ued=https://www.rentalcars.com/SearchResults.do?country={countrySlug}"
+      "awinmid": "",
+      "destinationTemplate": "https://www.rentalcars.com/SearchResults.do?country={countrySlug}",
+      "trackingNote": "TODO-MIKE: fill awinmid (~5547) after AWIN signup for RentalCars, and set the shared awin.publisherId above."
     }
   },
   "travel-insurance": {
     "coverForYou": {
       "name": "CoverForYou",
       "active": false,
-      "deeplinkTemplate": "",
-      "trackingNote": "TODO-MIKE: fill after AWIN signup for CoverForYou (travel insurance, mid ~15978). Template: https://www.awin1.com/cread.php?awinmid=TODO&awinaffid=TODO&clickref={clickref}&ued=https://www.coverforyou.com/"
+      "awinmid": "",
+      "destinationTemplate": "https://www.coverforyou.com/",
+      "trackingNote": "TODO-MIKE: fill awinmid (~15978) after AWIN signup for CoverForYou, and set the shared awin.publisherId above."
     },
     "holidayExtras": {
       "name": "Holiday Extras",
       "active": false,
-      "deeplinkTemplate": "",
-      "trackingNote": "TODO-MIKE: fill after AWIN signup for Holiday Extras (travel insurance, mid ~1250). Template: https://www.awin1.com/cread.php?awinmid=TODO&awinaffid=TODO&clickref={clickref}&ued=https://www.holidayextras.com/travel-insurance.html"
+      "awinmid": "",
+      "destinationTemplate": "https://www.holidayextras.com/travel-insurance.html",
+      "trackingNote": "TODO-MIKE: fill awinmid (~1250) after AWIN signup for Holiday Extras, and set the shared awin.publisherId above."
     }
   }
 }

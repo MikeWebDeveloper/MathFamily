@@ -72,4 +72,30 @@ describe("FeeGrid responsive + column typing", () => {
     );
     expect(container.querySelector("td.mf-col-hi")).not.toBeNull();
   });
+
+  describe("mobile card hero-figure label", () => {
+    it("adds no caption when the grid has a single numeric column (unambiguous)", () => {
+      const { container } = render(<FeeGrid columns={COLS} rows={ROWS} numericColumns={[1]} />);
+      const firstCard = container.querySelector('[data-testid="fee-grid-card"]')!;
+      // Only one dt/dd pair left (the "Free alternative" column) — no label duplicated next to the hero figure.
+      expect(firstCard.querySelectorAll("dt")).toHaveLength(1);
+      expect(firstCard.textContent).not.toContain("Fee");
+    });
+
+    it("labels the hero figure when the grid has 2+ numeric columns (ambiguous)", () => {
+      const { container } = render(
+        <FeeGrid
+          columns={["Airline", "Cabin bag", "Checked bag", "Verified"]}
+          numericColumns={[1, 2]}
+          rows={[["Ryanair", "£12-£60", "-", "2026-06-22"]]}
+        />,
+      );
+      const firstCard = container.querySelector('[data-testid="fee-grid-card"]')!;
+      expect(firstCard.textContent).toContain("Cabin bag");
+      expect(firstCard.textContent).toContain("£12-£60");
+      // the hero figure's caption is its own element, not folded into the <dl> (which only
+      // carries the remaining, non-hero columns)
+      expect(firstCard.querySelectorAll("dt")).toHaveLength(2); // Checked bag, Verified
+    });
+  });
 });

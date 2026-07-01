@@ -41,6 +41,41 @@ export function roamingPageModel(
   return { ...result, answer };
 }
 
+/** Names which network(s) are already fee-free and what everyone else pays for the same trip.
+ *  The SavesVerdict banner must never say "your network already includes roaming" without
+ *  saying which network — it sits directly under a table where 3 of 4 UK networks are usually
+ *  shown charging a daily rate, so an unnamed "your network" reads as contradicting the numbers
+ *  right above it. */
+export function networkIncludedVerdict(destination: RoamingDestination, m: RoamingPageModel): string {
+  const includedLabels = destination.perNetwork
+    .filter((n) => n.included)
+    .map((n) => NETWORK_LABELS[n.network] ?? n.network);
+  if (includedLabels.length === 0) return "";
+
+  const verb = includedLabels.length === 1 ? "already includes" : "already include";
+  const lead = `${joinNames(includedLabels)} ${verb} roaming in ${destination.countryName} — no daily charge applies.`;
+
+  const paidLabels = destination.perNetwork
+    .filter((n) => !n.included)
+    .map((n) => NETWORK_LABELS[n.network] ?? n.network);
+  const paidTotals = m.networkCosts
+    .filter((c) => !c.included && c.totalPence !== null)
+    .map((c) => c.totalPence!);
+
+  if (paidLabels.length === 0 || paidTotals.length === 0) return lead;
+
+  const min = Math.min(...paidTotals);
+  const max = Math.max(...paidTotals);
+  const range = min === max ? formatPence(min) : `${formatPence(min)} to ${formatPence(max)}`;
+  return `${lead} ${joinNames(paidLabels)} customers pay from ${range} for ${m.days} day${m.days === 1 ? "" : "s"}.`;
+}
+
+function joinNames(names: string[]): string {
+  if (names.length <= 1) return names[0] ?? "";
+  if (names.length === 2) return `${names[0]} and ${names[1]}`;
+  return `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
+}
+
 export function buildRoamingFaqs(
   destination: RoamingDestination,
   esim: EsimCountry | null,

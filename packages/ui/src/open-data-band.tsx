@@ -19,7 +19,7 @@ export function OpenDataBand({ downloads, citation }: OpenDataBandProps) {
             <a
               href={href}
               download
-              className="text-brand-accent underline underline-offset-4 hover:opacity-80"
+              className="text-accent-strong underline underline-offset-4 hover:opacity-80"
             >
               {label} →
             </a>

@@ -32,7 +32,7 @@ export function TravelRailCard({
 
   return (
     <div className="rounded-card border border-brand-accent/30 bg-brand-accent/[0.06] p-4 dark:border-brand-accent/20 dark:bg-brand-accent/[0.08]">
-      <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-brand-accent">
+      <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-accent-strong">
         {kind === "car-hire" ? "✦ Car hire" : "✦ Travel insurance"}
       </p>
       <p className="text-lg font-bold text-ink">{heading}</p>
@@ -41,7 +41,7 @@ export function TravelRailCard({
         href={affiliateUrl}
         rel="sponsored noopener noreferrer"
         target="_blank"
-        className="mt-4 inline-flex min-h-11 items-center rounded-full bg-brand-accent px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+        className="mt-4 inline-flex min-h-11 items-center rounded-full bg-accent-solid px-5 py-2.5 text-sm font-semibold text-white outline-none transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-brand-accent/50"
       >
         {ctaText} ↗
       </a>

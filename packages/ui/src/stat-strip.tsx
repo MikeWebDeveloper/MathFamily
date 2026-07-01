@@ -16,8 +16,13 @@ export function StatStrip({ stats }: { stats: { label: string; value: string; no
         {stats.map((s) => (
           <div key={s.label} className="min-w-0 px-3 py-4 sm:px-5">
             <dt className="text-[11px] font-semibold uppercase leading-tight tracking-wider text-white/65">{s.label}</dt>
-            <dd className="mf-num mt-1 text-2xl font-bold leading-none sm:text-3xl">{s.value}</dd>
-            {s.note ? <p className="mt-1 text-xs leading-snug text-white/70">{s.note}</p> : null}
+            {/* Note lives INSIDE the dd (not a sibling <p>) — a <dl> may only directly contain
+             *  dt/dd (optionally wrapped in one div per group); a stray <p> sibling fails axe's
+             *  definition-list rule. */}
+            <dd className="mt-1">
+              <span className="mf-num block text-2xl font-bold leading-none sm:text-3xl">{s.value}</span>
+              {s.note ? <span className="mt-1 block text-xs font-normal leading-snug text-white/70">{s.note}</span> : null}
+            </dd>
           </div>
         ))}
       </dl>

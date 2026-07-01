@@ -4,11 +4,11 @@ import { notFound } from "next/navigation";
 import { loadRoamingDataset, loadEsimDataset, NETWORKS, type RoamingDestination, type EsimCountry } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd, speakableLd } from "@mathfamily/geo";
-import { AnswerLead, AnswerPassage, CountryFlag, FaqAccordion, FeeGrid, FreshnessBadge, MiniAnswerBar, PageHeading, RegionMap, SavesVerdict, SourceCitation, SourcesBlock } from "@mathfamily/ui";
+import { AnswerLead, AnswerPassage, CountryFlag, FaqAccordion, FeeGrid, FreshnessBadge, MiniAnswerBar, PageHeading, SavesVerdict, SourceCitation, SourcesBlock } from "@mathfamily/ui";
 import { RoamingCalculator } from "@/components/roaming-calculator";
 import { AffiliateBlock } from "@/components/affiliate-block";
 import { TravelRailBlock } from "@/components/travel-rail-block";
-import { buildRoamingFaqs, roamingPageModel, NETWORK_LABELS } from "@/lib/roaming-content";
+import { buildRoamingFaqs, roamingPageModel, networkIncludedVerdict, NETWORK_LABELS } from "@/lib/roaming-content";
 
 export const dynamicParams = false;
 
@@ -116,13 +116,13 @@ export default async function CountryHubPage({ params }: { params: Promise<{ cou
       <div id="mf-answer-anchor">
         <AnswerLead answer={m.answer}>{networkFacts}</AnswerLead>
       </div>
-      <RegionMap iso2={destination.iso2} className="mx-auto -my-2 hidden w-full max-w-xl text-ink sm:block" />
       <MiniAnswerBar summary={miniSummary} verified />
 
+      {/* Repurposed as a methodology lead-in rather than restating the answer above verbatim
+       *  (the figure and per-network facts are already covered by AnswerLead) — the H2 itself
+       *  still targets the natural "how much is roaming in X" query phrasing for SEO/speakable. */}
       <AnswerPassage question={`How much is roaming in ${destination.countryName}?`}>
-        {m.answer}{esim && esim.bundles.length > 0
-          ? <> An eSIM is available as an alternative — prices start from {formatPence(Math.min(...esim.bundles.map((b) => b.totalPence)))} (see comparison below). All figures are verified against official network price guides and provider store pages.</>
-          : <> All figures are taken directly from the official UK network price guides and verified against published sources.</>}
+        It depends on your network. The table below compares all four UK networks{esim && esim.bundles.length > 0 ? " against the cheapest tracked eSIM" : ""}, and the calculator lets you price your own trip length and data allowance. Every figure is checked directly against official network price guides{esim ? " and provider store pages" : ""}, most recently {latestVerified}.
       </AnswerPassage>
 
       <RoamingCalculator
@@ -137,7 +137,7 @@ export default async function CountryHubPage({ params }: { params: Promise<{ cou
           m.verdict === "esim" && m.savingsPence > 0 && m.esimChoice
             ? `An eSIM (${m.esimChoice.provider}, ${m.esimChoice.bundleName}) saves ${formatPence(m.savingsPence)} vs the cheapest network daily pass for a 7-day trip.`
             : m.verdict === "network" && m.cheapestNetwork?.included
-              ? `Your network already includes roaming in ${destination.countryName} — no daily charge applies (fair-use limits apply).`
+              ? networkIncludedVerdict(destination, m)
               : m.cheapestNetwork?.totalPence != null
                 ? `Your network's daily pass is the best option for a 7-day trip at ${formatPence(m.cheapestNetwork.totalPence)}.`
                 : `Compare options above to find the best price for your trip to ${destination.countryName}.`
@@ -176,7 +176,7 @@ export default async function CountryHubPage({ params }: { params: Promise<{ cou
             <li key={network}>
               <Link
                 href={`/roaming/${destination.countrySlug}/${network}`}
-                className="font-medium text-brand-accent underline underline-offset-4"
+                className="font-medium text-accent-strong underline underline-offset-4"
               >
                 {NETWORK_LABELS[network]} roaming in {destination.countryName} →
               </Link>
@@ -193,7 +193,7 @@ export default async function CountryHubPage({ params }: { params: Promise<{ cou
       <TravelRailBlock countrySlug={destination.countrySlug} countryName={destination.countryName} kind="travel-insurance" />
 
       <p className="text-sm">
-        <Link href="/roaming" className="text-brand-accent underline underline-offset-4">
+        <Link href="/roaming" className="text-accent-strong underline underline-offset-4">
           ← All destinations
         </Link>
       </p>

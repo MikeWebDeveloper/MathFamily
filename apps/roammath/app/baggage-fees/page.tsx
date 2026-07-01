@@ -83,7 +83,7 @@ export default function BaggageFeesIndexPage() {
             <li key={r.airlineSlug}>
               <Link
                 href={`/baggage-fees/${r.airlineSlug}`}
-                className="font-medium text-brand-accent underline underline-offset-4"
+                className="font-medium text-accent-strong underline underline-offset-4"
               >
                 {r.airlineName} baggage fees →
               </Link>

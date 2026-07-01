@@ -125,7 +125,7 @@ export function RoamingAnswerDisplay({
             >
               <span className="flex min-w-0 items-start gap-2 text-sm font-medium text-ink">
                 {result.verdict === "network" ? (
-                  <span className="mt-0.5 shrink-0 rounded-full bg-brand-accent px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
+                  <span className="mt-0.5 shrink-0 rounded-full bg-accent-solid px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
                     Cheaper
                   </span>
                 ) : null}
@@ -148,7 +148,7 @@ export function RoamingAnswerDisplay({
             >
               <span className="flex min-w-0 items-start gap-2 text-sm font-medium text-ink">
                 {result.verdict === "esim" ? (
-                  <span className="mt-0.5 shrink-0 rounded-full bg-brand-accent px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
+                  <span className="mt-0.5 shrink-0 rounded-full bg-accent-solid px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
                     Cheaper
                   </span>
                 ) : null}
@@ -205,7 +205,7 @@ export function RoamingAnswerDisplay({
             ) : (
               <a
                 href={esimSlot.url}
-                className="text-sm text-brand-accent underline underline-offset-4"
+                className="text-sm text-accent-strong underline underline-offset-4"
                 rel="noopener"
                 target="_blank"
               >

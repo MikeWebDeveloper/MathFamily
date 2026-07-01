@@ -40,7 +40,7 @@ export default function RoamingIndexPage() {
       <Link
         key="dest"
         href={`/roaming/${dest.countrySlug}`}
-        className="inline-flex items-center gap-2 font-medium text-brand-accent underline-offset-4 hover:underline"
+        className="inline-flex items-center gap-2 font-medium text-accent-strong underline-offset-4 hover:underline"
       >
         <CountryFlag iso2={dest.iso2} size={16} />
         {dest.countryName}

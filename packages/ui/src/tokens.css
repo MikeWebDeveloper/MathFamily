@@ -20,6 +20,34 @@
      the navy hero card on the raw --color-brand. */
   --color-brand-strong: var(--color-brand);
 
+  /* --color-brand-accent itself is tuned for BACKGROUNDS/BORDERS/RINGS (3:1 is
+     enough there) and fails 4.5:1 as body-size TEXT in several apps' palettes —
+     e.g. RoamMath's teal #0d9488 measures ~3.7:1 on white AND ~3.9:1 on the dark
+     card. Never use --color-brand-accent as a text/link/icon colour directly.
+
+     --color-accent-strong: the readable-foreground twin of --color-brand-accent
+     (same pattern as --color-brand-strong above). Darkens in light mode,
+     lightens in dark mode, so it always clears 4.5:1 on --color-surface/--color-card
+     regardless of which app's accent hue is plugged in. Use for link/eyebrow/icon
+     text; keep the raw --color-brand-accent for tints, borders, rings (3:1 only). */
+  --color-accent-strong: color-mix(in srgb, var(--color-brand-accent) 78%, black);
+
+  /* --color-accent-solid: a FIXED dark shade for solid CTA buttons/badges that
+     carry white label text (e.g. "Buy with {Provider}"). Deliberately NOT
+     overridden in dark mode — the button is a fixed-colour pill regardless of
+     page theme, so its white text must keep ≥4.5:1 against this value in both
+     themes. (--color-accent-strong flips lighter in dark mode for on-surface
+     text, which would break white-on-button contrast if reused here.) */
+  --color-accent-solid: color-mix(in srgb, var(--color-brand-accent) 78%, black);
+
+  /* --color-positive itself (#16a34a) is also tuned as a BACKGROUND/BORDER/RING colour
+     (verified-badge dot, "Saves" strip) — as small TEXT it measures ~3.0-3.3:1 on white,
+     `bg-green-100` and its own low-opacity tint, all below the 4.5:1 AA floor (the amber
+     `--color-warning` sibling already clears 4.5:1 as text, so it needs no such twin).
+     --color-positive-strong darkens it in light mode for text/icon use; dark mode's
+     --color-positive (#4ade80) already clears AA as text, so it's left unmixed there. */
+  --color-positive-strong: color-mix(in srgb, var(--color-positive) 60%, black);
+
   /* Typography: IBM Plex Sans (UI) + IBM Plex Mono (verified numbers) */
   --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
@@ -74,6 +102,13 @@
   /* Lighten brand-as-foreground so navy/teal text reads on dark surfaces
      (≈5.7:1 on --color-card). bg-brand and the navy hero card keep raw brand. */
   --color-brand-strong: color-mix(in srgb, var(--color-brand) 42%, white);
+  /* Lighten accent-as-foreground too (≥6:1 on --color-card/--color-surface for
+     RoamMath's teal). --color-accent-solid is intentionally NOT overridden here. */
+  --color-accent-strong: color-mix(in srgb, var(--color-brand-accent) 65%, white);
+  /* Dark-mode --color-positive (#4ade80) already clears 4.5:1 unmixed (see comment
+     above) — cancel the light-mode darkening so text-positive-strong doesn't go
+     duller/harder-to-read on a dark surface. */
+  --color-positive-strong: var(--color-positive);
   /* shadows are invisible on dark — use a subtle inset light ring */
   --shadow-card: 0 0 0 1px rgb(148 163 184 / 0.12), 0 2px 8px -2px rgb(0 0 0 / 0.4);
   --shadow-raised: 0 0 0 1px rgb(148 163 184 / 0.15), 0 4px 16px -4px rgb(0 0 0 / 0.5);

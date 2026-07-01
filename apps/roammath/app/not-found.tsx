@@ -10,10 +10,10 @@ export default function NotFound() {
         different name — try one of these.
       </p>
       <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm font-medium">
-        <li><Link href="/roaming" className="text-brand-accent underline underline-offset-4">Roaming costs →</Link></li>
-        <li><Link href="/baggage-fees" className="text-brand-accent underline underline-offset-4">Baggage fees →</Link></li>
-        <li><Link href="/news" className="text-brand-accent underline underline-offset-4">Latest updates →</Link></li>
-        <li><Link href="/" className="text-brand-accent underline underline-offset-4">Home →</Link></li>
+        <li><Link href="/roaming" className="text-accent-strong underline underline-offset-4">Roaming costs →</Link></li>
+        <li><Link href="/baggage-fees" className="text-accent-strong underline underline-offset-4">Baggage fees →</Link></li>
+        <li><Link href="/news" className="text-accent-strong underline underline-offset-4">Latest updates →</Link></li>
+        <li><Link href="/" className="text-accent-strong underline underline-offset-4">Home →</Link></li>
       </ul>
     </section>
   );

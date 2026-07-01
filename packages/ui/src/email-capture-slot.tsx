@@ -52,7 +52,7 @@ export function EmailCaptureSlot({
             placeholder="you@example.com"
             className="w-full rounded-lg border border-ink/20 px-3 py-2 text-sm outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/30"
           />
-          <button type="submit" className="mf-press inline-flex min-h-11 items-center rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-white outline-none focus-visible:ring-2 focus-visible:ring-brand-accent/50">
+          <button type="submit" className="mf-press inline-flex min-h-11 items-center rounded-lg bg-accent-solid px-4 py-2 text-sm font-semibold text-white outline-none focus-visible:ring-2 focus-visible:ring-brand-accent/50">
             Notify me
           </button>
         </div>
@@ -123,7 +123,7 @@ export function EmailCaptureSlot({
         <button
           type="submit"
           disabled={status === "submitting"}
-          className="mf-press inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-white outline-none focus-visible:ring-2 focus-visible:ring-brand-accent/50 disabled:opacity-60"
+          className="mf-press inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg bg-accent-solid px-4 py-2 text-sm font-semibold text-white outline-none focus-visible:ring-2 focus-visible:ring-brand-accent/50 disabled:opacity-60"
         >
           {status === "submitting" ? "Adding…" : "Notify me"}
         </button>
@@ -135,11 +135,11 @@ export function EmailCaptureSlot({
           type="checkbox"
           name="consent"
           required
-          className="mt-0.5 size-5 shrink-0 rounded border-ink/30 text-brand-accent focus:ring-2 focus:ring-brand-accent/30"
+          className="mt-0.5 size-5 shrink-0 rounded border-ink/30 text-accent-strong focus:ring-2 focus:ring-brand-accent/30"
         />
         <label htmlFor="consent-email">
           Email me ParkMath&apos;s monthly UK drop-off fee update. I can unsubscribe any time. See our{" "}
-          <a href={privacyHref} className="font-medium text-brand-accent underline underline-offset-2">privacy policy</a>.
+          <a href={privacyHref} className="font-medium text-accent-strong underline underline-offset-2">privacy policy</a>.
         </label>
       </div>
 

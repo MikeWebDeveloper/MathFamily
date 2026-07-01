@@ -77,7 +77,7 @@ export default function HomePage() {
       <section className="space-y-4">
         <h1 className="text-h1 font-bold tracking-tight text-balance text-ink">
           What does your phone cost{" "}
-          <span className="text-brand-accent">abroad</span>?
+          <span className="text-accent-strong">abroad</span>?
         </h1>
         <p className="max-w-2xl text-lg text-ink-muted">
           UK mobile roaming charges for all four networks across 40 destinations, eSIM
@@ -120,13 +120,13 @@ export default function HomePage() {
       <p className="flex flex-wrap gap-6">
         <Link
           href="/roaming"
-          className="text-base font-semibold text-brand-accent underline underline-offset-4"
+          className="text-base font-semibold text-accent-strong underline underline-offset-4"
         >
           Compare all roaming charges →
         </Link>
         <Link
           href="/baggage-fees"
-          className="text-base font-semibold text-brand-accent underline underline-offset-4"
+          className="text-base font-semibold text-accent-strong underline underline-offset-4"
         >
           Airline baggage fees →
         </Link>

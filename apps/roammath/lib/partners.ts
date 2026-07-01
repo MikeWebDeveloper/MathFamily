@@ -8,17 +8,29 @@ export interface ResolvedSlot {
   disclosureRequired: boolean;
 }
 
-interface PartnerConfig {
+interface EsimPartnerConfig {
   name: string;
   active: boolean;
   deeplinkTemplate: string;
   trackingNote: string;
 }
 
+// AWIN-network partners (car hire + travel insurance) store their AWIN merchant id and a raw
+// (unencoded) destination template. The cread.php wrapper link is built by buildAwinLink() below —
+// never hand-templated — so the destination's own query string can never corrupt the AWIN redirect.
+interface AwinPartnerConfig {
+  name: string;
+  active: boolean;
+  awinmid: string;
+  destinationTemplate: string;
+  trackingNote: string;
+}
+
 interface PartnersJson {
-  esim: Record<string, PartnerConfig>;
-  "car-hire": Record<string, PartnerConfig>;
-  "travel-insurance": Record<string, PartnerConfig>;
+  esim: Record<string, EsimPartnerConfig>;
+  awin: { publisherId: string };
+  "car-hire": Record<string, AwinPartnerConfig>;
+  "travel-insurance": Record<string, AwinPartnerConfig>;
 }
 
 const partners = partnersJson as unknown as PartnersJson;
@@ -28,6 +40,28 @@ export function buildAffiliateUrl(template: string, countrySlug: string, clickre
   return template
     .replaceAll("{countrySlug}", countrySlug)
     .replaceAll("{clickref}", clickref);
+}
+
+/**
+ * Builds a bare, fully-tracked AWIN deep link (cread.php) with the destination ("ued") percent-encoded
+ * via URLSearchParams. A destination that itself carries a query string (e.g.
+ * ".../SearchResults.do?country=spain&pickupDate=2026-08-01") would otherwise leak its own "&"/"="
+ * into the outer AWIN query string if hand-templated as a plain string — the exact bug class this
+ * avoids. Mirrors ParkMath's lib/partners.ts buildAwinLink (same family, same AWIN pattern, same fix).
+ */
+export function buildAwinLink(args: {
+  awinmid: string;
+  publisherId: string;
+  clickref: string;
+  destinationUrl?: string;
+}): string {
+  const params = new URLSearchParams({
+    awinmid: args.awinmid,
+    awinaffid: args.publisherId,
+    clickref: args.clickref,
+  });
+  if (args.destinationUrl) params.set("ued", args.destinationUrl);
+  return `https://www.awin1.com/cread.php?${params.toString()}`;
 }
 
 const OFFICIAL_FALLBACK: ResolvedSlot = {
@@ -74,19 +108,31 @@ export function resolveSlot(
 }
 
 // ---------------------------------------------------------------------------
-// Car hire slot — tries discoverCars, falls back to rentalCars, then nothing
+// Shared AWIN slot resolver — car hire + travel insurance both read from an AWIN-network partner
+// list and share fail-closed + link-building logic. Tries each candidate in priority order; renders
+// nothing (OFFICIAL_FALLBACK, kind: "official", empty url) if none are active — callers (TravelRailBlock)
+// return null for kind !== "affiliate", so an inactive rail renders no card at all.
 // ---------------------------------------------------------------------------
 
-export function resolveCarHireSlot(countrySlug: string): ResolvedSlot {
-  const carHire = partners["car-hire"];
-
-  for (const key of ["discoverCars", "rentalCars"] as const) {
-    const partner = carHire[key];
-    if (partner?.active && partner.deeplinkTemplate.startsWith("http")) {
+function resolveAwinSlot(
+  candidates: (AwinPartnerConfig | undefined)[],
+  countrySlug: string,
+  clickrefPrefix: string,
+  label: string
+): ResolvedSlot {
+  for (const partner of candidates) {
+    if (partner?.active && partner.awinmid && partner.destinationTemplate.startsWith("http")) {
+      const destinationUrl = buildAffiliateUrl(partner.destinationTemplate, countrySlug, clickrefPrefix);
+      const clickref = `${clickrefPrefix}-${countrySlug}`;
       return {
         kind: "affiliate",
-        url: buildAffiliateUrl(partner.deeplinkTemplate, countrySlug, "car-hire"),
-        label: "Compare car hire prices",
+        url: buildAwinLink({
+          awinmid: partner.awinmid,
+          publisherId: partners.awin.publisherId,
+          clickref,
+          destinationUrl,
+        }),
+        label,
         partnerName: partner.name,
         disclosureRequired: true,
       };
@@ -97,24 +143,29 @@ export function resolveCarHireSlot(countrySlug: string): ResolvedSlot {
 }
 
 // ---------------------------------------------------------------------------
+// Car hire slot — tries discoverCars, falls back to rentalCars, then nothing
+// ---------------------------------------------------------------------------
+
+export function resolveCarHireSlot(countrySlug: string): ResolvedSlot {
+  const carHire = partners["car-hire"];
+  return resolveAwinSlot(
+    [carHire.discoverCars, carHire.rentalCars],
+    countrySlug,
+    "car-hire",
+    "Compare car hire prices"
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Travel insurance slot — tries coverForYou, falls back to holidayExtras
 // ---------------------------------------------------------------------------
 
 export function resolveTravelInsuranceSlot(countrySlug: string): ResolvedSlot {
   const travelInsurance = partners["travel-insurance"];
-
-  for (const key of ["coverForYou", "holidayExtras"] as const) {
-    const partner = travelInsurance[key];
-    if (partner?.active && partner.deeplinkTemplate.startsWith("http")) {
-      return {
-        kind: "affiliate",
-        url: buildAffiliateUrl(partner.deeplinkTemplate, countrySlug, "travel-insurance"),
-        label: "Get a travel insurance quote",
-        partnerName: partner.name,
-        disclosureRequired: true,
-      };
-    }
-  }
-
-  return { ...OFFICIAL_FALLBACK };
+  return resolveAwinSlot(
+    [travelInsurance.coverForYou, travelInsurance.holidayExtras],
+    countrySlug,
+    "travel-insurance",
+    "Get a travel insurance quote"
+  );
 }

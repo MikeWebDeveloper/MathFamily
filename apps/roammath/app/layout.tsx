@@ -39,7 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ScrollReveal />
         <AmbientBackdrop />
         <SiteHeader brandName="RoamMath" brandPrefix="Roam" links={NAV} />
-        <main className="mx-auto max-w-5xl px-4 py-8">{children}</main>
+        <main id="main-content" className="mx-auto max-w-5xl px-4 py-8">{children}</main>
         <SiteFooter brandName="RoamMath" links={NAV} />
         <SiteAnalytics />
       </body>

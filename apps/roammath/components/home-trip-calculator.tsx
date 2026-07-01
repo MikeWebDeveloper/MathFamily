@@ -79,7 +79,7 @@ export function HomeTripCalculator({ destinations, esimRecords }: HomeTripCalcul
                 onClick={() => setDataGb(gb)}
                 className={`min-h-10 rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
                   dataGb === gb
-                    ? "bg-brand-accent text-white"
+                    ? "bg-accent-solid text-white"
                     : "border border-ink/15 bg-surface text-ink hover:border-brand-accent/40"
                 }`}
               >
@@ -116,7 +116,7 @@ export function HomeTripCalculator({ destinations, esimRecords }: HomeTripCalcul
             {/* Best eSIM card */}
             {esimPick && (
               <div className="min-w-40 flex-1 rounded-lg border border-brand-accent/20 bg-brand-accent/[0.06] p-3">
-                <p className="text-xs font-medium text-brand-accent">Best eSIM</p>
+                <p className="text-xs font-medium text-accent-strong">Best eSIM</p>
                 <p className="text-2xl font-bold tracking-tight text-ink">
                   {formatPence(esimPick.totalPence)}
                 </p>
@@ -133,7 +133,7 @@ export function HomeTripCalculator({ destinations, esimRecords }: HomeTripCalcul
             )}
             <Link
               href={`/roaming/${destination.countrySlug}`}
-              className="text-sm font-semibold text-brand-accent underline underline-offset-4"
+              className="text-sm font-semibold text-accent-strong underline underline-offset-4"
             >
               See full breakdown for {destination.countryName} →
             </Link>

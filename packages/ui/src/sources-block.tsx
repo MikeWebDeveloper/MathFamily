@@ -11,7 +11,7 @@ export function SourcesBlock({
       <ul className="mt-2 space-y-1">
         {sources.map((s) => (
           <li key={s.url}>
-            <a href={s.url} rel="noopener noreferrer" target="_blank" className="underline decoration-dotted underline-offset-4 hover:text-brand-accent">
+            <a href={s.url} rel="noopener noreferrer" target="_blank" className="underline decoration-dotted underline-offset-4 hover:text-accent-strong">
               {s.label}
             </a>{" "}
             — verified {s.verifiedAt}

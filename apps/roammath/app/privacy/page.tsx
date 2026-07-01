@@ -13,7 +13,9 @@ export default function PrivacyPage() {
         email.
       </p>
       <p className="text-ink-muted">
-        Some pages may contain affiliate links in future, always labelled as such. Prices and fees shown are
+        Some pages may contain affiliate links (for eSIMs, car hire or travel insurance) — always clearly
+        labelled &quot;Affiliate link&quot; next to the link itself, and never affecting which option we show as
+        cheapest. Prices and fees shown are
         verified against official network, eSIM and airline pages on the date shown next to each figure, but always confirm with the
         provider before you travel. Nothing on this site is financial advice.
       </p>

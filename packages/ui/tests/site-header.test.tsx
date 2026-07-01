@@ -39,4 +39,21 @@ describe("SiteHeader responsive nav", () => {
     expect(screen.getByText("Math")).toBeDefined();
     expect(container.querySelector("a[aria-label='ParkMath home']")!.className).toContain("shrink-0");
   });
+
+  it("closes the mobile menu when Escape is pressed", () => {
+    render(<SiteHeader brandName="ParkMath" brandPrefix="Park" links={LINKS} />);
+    const btn = screen.getByRole("button", { name: /menu/i });
+    fireEvent.click(btn);
+    expect(btn.getAttribute("aria-expanded")).toBe("true");
+    fireEvent.keyDown(window, { key: "Escape" });
+    expect(btn.getAttribute("aria-expanded")).toBe("false");
+    expect(screen.queryByRole("navigation", { name: "Mobile" })).toBeNull();
+  });
+
+  it("renders a skip-to-content link targeting #main-content as the first focusable element", () => {
+    const { container } = render(<SiteHeader brandName="ParkMath" brandPrefix="Park" links={LINKS} />);
+    const skipLink = container.querySelector("a[href='#main-content']");
+    expect(skipLink).not.toBeNull();
+    expect(skipLink!.textContent).toMatch(/skip to content/i);
+  });
 });

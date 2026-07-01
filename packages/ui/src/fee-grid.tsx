@@ -56,7 +56,7 @@ export function FeeGrid({
                   j === 0 ? (
                     <th key={j} scope="row" className="px-5 py-3.5 font-semibold text-ink">
                       {rowHref?.(i) ? (
-                        <a href={rowHref(i)!} className="mf-press text-ink no-underline outline-none hover:text-brand-accent focus-visible:ring-2 focus-visible:ring-brand-accent/40">{cell}</a>
+                        <a href={rowHref(i)!} className="mf-press text-ink no-underline outline-none hover:text-accent-strong focus-visible:ring-2 focus-visible:ring-brand-accent/40">{cell}</a>
                       ) : cell}
                     </th>
                   ) : (
@@ -71,38 +71,49 @@ export function FeeGrid({
 
       {/* < md : card-rows — no horizontal scroll, each row is one tappable-feeling card */}
       <div data-testid="fee-grid-cards" className="divide-y divide-ink/5 md:hidden">
-        {rows.map((cells, i) => (
-          <div
-            key={i}
-            data-testid="fee-grid-card"
-            className={`px-4 py-3.5${rowHref?.(i) ? " relative" : ""} ${i === highlightRow ? winnerRow : ""}`}
-          >
-            <div className="flex items-baseline justify-between gap-3">
-              {rowHref?.(i) ? (
-                <a href={rowHref(i)!} className="mf-row-link font-semibold text-ink">{cells[0]}</a>
-              ) : (
-                <span className="font-semibold text-ink">{cells[0]}</span>
-              )}
-              {(() => {
-                const heroIdx = cells.findIndex((_, j) => j > 0 && isNumeric(j));
-                return heroIdx > 0 ? <span className="mf-num shrink-0 text-lg font-bold text-ink">{cells[heroIdx]}</span> : null;
-              })()}
+        {rows.map((cells, i) => {
+          // On a single-numeric-column grid (e.g. per-network roaming tables) the row's own
+          // context already disambiguates the hero figure, so no caption is needed. On a
+          // multi-numeric-column grid (e.g. cabin + checked bag fees) the hero figure is
+          // ambiguous without its column name — show a small caption for it there only.
+          const numericIdxs = cells.map((_, j) => j).filter((j) => j > 0 && isNumeric(j));
+          const heroIdx = numericIdxs[0] ?? -1;
+          const heroNeedsLabel = numericIdxs.length > 1;
+          return (
+            <div
+              key={i}
+              data-testid="fee-grid-card"
+              className={`px-4 py-3.5${rowHref?.(i) ? " relative" : ""} ${i === highlightRow ? winnerRow : ""}`}
+            >
+              <div className="flex items-baseline justify-between gap-3">
+                {rowHref?.(i) ? (
+                  <a href={rowHref(i)!} className="mf-row-link font-semibold text-ink">{cells[0]}</a>
+                ) : (
+                  <span className="font-semibold text-ink">{cells[0]}</span>
+                )}
+                {heroIdx > 0 ? (
+                  <span className="shrink-0 text-right">
+                    {heroNeedsLabel ? (
+                      <span className="block text-[11px] font-medium text-ink-muted">{columns[heroIdx]}</span>
+                    ) : null}
+                    <span className="mf-num block text-lg font-bold text-ink">{cells[heroIdx]}</span>
+                  </span>
+                ) : null}
+              </div>
+              <dl className="mt-1.5 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-xs">
+                {cells.map((cell, j) => {
+                  if (j === 0 || j === heroIdx) return null; // heroIdx already shown as the hero figure
+                  return (
+                    <div key={j} className="contents">
+                      <dt className="text-ink-muted">{columns[j]}</dt>
+                      <dd className={isNumeric(j) ? "mf-num text-right text-ink" : "text-ink"}>{cell}</dd>
+                    </div>
+                  );
+                })}
+              </dl>
             </div>
-            <dl className="mt-1.5 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-xs">
-              {cells.map((cell, j) => {
-                if (j === 0) return null;
-                const heroIdx = cells.findIndex((_, k) => k > 0 && isNumeric(k));
-                if (j === heroIdx) return null; // already shown as the hero figure
-                return (
-                  <div key={j} className="contents">
-                    <dt className="text-ink-muted">{columns[j]}</dt>
-                    <dd className={isNumeric(j) ? "mf-num text-right text-ink" : "text-ink"}>{cell}</dd>
-                  </div>
-                );
-              })}
-            </dl>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
