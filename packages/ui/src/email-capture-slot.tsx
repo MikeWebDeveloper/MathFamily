@@ -77,18 +77,20 @@ export function EmailCaptureSlot(props: EmailCaptureSlotProps) {
     if (!formAction) return null;
     return (
       <form action={formAction} method="post" className="rounded-card bg-surface p-6">
-        <p className="font-semibold text-ink">{hook}</p>
-        <div className="mt-3 flex gap-2">
-          <label htmlFor="email-capture-input" className="sr-only">Email address</label>
-          <input
-            id="email-capture-input"
-            type="email"
-            name="fields[email]"
-            required
-            placeholder="you@example.com"
-            className="w-full rounded-lg border border-ink/20 px-3 py-2 text-sm outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/30"
-          />
-          <button type="submit" className="mf-press inline-flex min-h-11 items-center rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-white outline-none focus-visible:ring-2 focus-visible:ring-brand-accent/50">
+        <h2 className="font-semibold text-ink">{hook}</h2>
+        <div className="mt-3 flex flex-col gap-1 sm:flex-row sm:items-end sm:gap-2">
+          <label htmlFor="email-capture-input" className="flex flex-1 flex-col gap-1">
+            <span className="text-xs font-medium text-ink-muted">Email address</span>
+            <input
+              id="email-capture-input"
+              type="email"
+              name="fields[email]"
+              required
+              placeholder="you@example.com"
+              className="w-full rounded-lg border border-ink/20 px-3 py-2 text-sm outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/30"
+            />
+          </label>
+          <button type="submit" className="mf-press inline-flex min-h-11 items-center justify-center rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-white outline-none focus-visible:ring-2 focus-visible:ring-brand-accent">
             Notify me
           </button>
         </div>
@@ -151,25 +153,27 @@ export function EmailCaptureSlot(props: EmailCaptureSlotProps) {
 
   return (
     <form action={action} method="post" onSubmit={onSubmit} className="rounded-card bg-surface p-6">
-      <p className="font-semibold text-ink">{hook}</p>
+      <h2 className="font-semibold text-ink">{hook}</h2>
       <input type="hidden" name="source" value={source ?? ""} />
       <input type="hidden" name="brand" value={brandName ?? ""} />
 
-      <div className="mt-3 flex flex-col gap-2 sm:flex-row">
-        <label htmlFor="email-capture-input" className="sr-only">Email address</label>
-        <input
-          id="email-capture-input"
-          type="email"
-          name="email"
-          required
-          autoComplete="email"
-          placeholder="you@example.com"
-          className="w-full rounded-lg border border-ink/20 px-3 py-2 text-sm outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/30"
-        />
+      <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-end">
+        <label htmlFor="email-capture-input" className="flex flex-1 flex-col gap-1">
+          <span className="text-xs font-medium text-ink-muted">Email address</span>
+          <input
+            id="email-capture-input"
+            type="email"
+            name="email"
+            required
+            autoComplete="email"
+            placeholder="you@example.com"
+            className="w-full rounded-lg border border-ink/20 px-3 py-2 text-sm outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/30"
+          />
+        </label>
         <button
           type="submit"
           disabled={status === "submitting"}
-          className="mf-press inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-white outline-none focus-visible:ring-2 focus-visible:ring-brand-accent/50 disabled:opacity-60"
+          className="mf-press inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-white outline-none focus-visible:ring-2 focus-visible:ring-brand-accent disabled:opacity-60"
         >
           {status === "submitting" ? "Adding…" : "Notify me"}
         </button>

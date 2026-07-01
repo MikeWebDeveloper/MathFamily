@@ -34,8 +34,8 @@ describe("SiteHeader with logo", () => {
 });
 
 describe("SiteFooter family lockup", () => {
-  it("renders the =Math family line", () => {
+  it("renders the Math family line (icon glyph carries the '=', text does not repeat it)", () => {
     render(<SiteFooter brandName="ParkMath" links={[]} />);
-    expect(screen.getByText(/=Math family/)).toBeDefined();
+    expect(screen.getByText(/Math family/)).toBeDefined();
   });
 });

@@ -34,7 +34,11 @@ export function ScrollReveal() {
             }
           }
         },
-        { rootMargin: "0px 0px -8% 0px", threshold: 0.05 }
+        // Generous rootMargin: reveal ~200px BEFORE a section enters the viewport
+        // (rather than requiring it to already be 8% in), so a fast flick/jump
+        // scroll can't outrun the observer and leave content visibly blank —
+        // the section is already revealed by the time it's actually on-screen.
+        { rootMargin: "200px 0px", threshold: 0 }
       );
       nodes.forEach((n) => observer?.observe(n));
     }

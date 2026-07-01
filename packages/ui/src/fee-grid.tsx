@@ -54,7 +54,7 @@ export function FeeGrid({
                   j === 0 ? (
                     <th key={j} scope="row" className="px-5 py-3.5 font-semibold text-ink">
                       {rowHref?.(i) ? (
-                        <a href={rowHref(i)!} className="mf-press text-ink no-underline outline-none hover:text-brand-accent focus-visible:ring-2 focus-visible:ring-brand-accent/40">{cell}</a>
+                        <a href={rowHref(i)!} className="mf-press text-ink no-underline outline-none hover:text-brand-accent focus-visible:ring-2 focus-visible:ring-brand-accent">{cell}</a>
                       ) : cell}
                     </th>
                   ) : (

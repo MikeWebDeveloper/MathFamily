@@ -14,7 +14,7 @@ function fmtDate(iso: string) {
 export function NewsCard({ item, href, headingLevel = "h3" }: { item: NewsItem; href: string; headingLevel?: "h2" | "h3" }) {
   return (
     <article className="mf-edge mf-sheen mf-press rounded-card bg-card p-4 transition-all duration-200 hover:-translate-y-0.5 sm:p-5" style={{ boxShadow: "var(--shadow-card)" }}>
-      <a href={href} className="block outline-none focus-visible:ring-2 focus-visible:ring-brand-accent/40">
+      <a href={href} className="block outline-none focus-visible:ring-2 focus-visible:ring-brand-accent">
         <div className="flex items-center gap-2 text-xs">
           <span className="rounded-full bg-brand/5 px-2 py-0.5 font-semibold text-brand-strong ring-1 ring-brand-strong/15">{CATEGORY_LABEL[item.category]}</span>
           <time dateTime={item.publishedAt} className="text-ink-muted">{fmtDate(item.publishedAt)}</time>

@@ -1,4 +1,16 @@
-export function SiteFooter({ brandName, links }: { brandName: string; links: { label: string; href: string }[] }) {
+export function SiteFooter({
+  brandName,
+  links,
+  disclaimerText
+}: {
+  brandName: string;
+  links: { label: string; href: string }[];
+  /** Per-brand override for the price-change disclaimer. Defaults to the travel/airport
+   *  copy (ParkMath, RoamMath and other travel-adjacent apps keep the historical default
+   *  untouched); non-travel apps (EnergyMath etc.) should pass their own domain-accurate
+   *  sentence rather than inherit copy that doesn't apply to them. */
+  disclaimerText?: string;
+}) {
   return (
     <footer className="mt-16 border-t border-ink/10 bg-surface">
       <div className="mx-auto max-w-5xl space-y-4 px-4 py-8 text-sm text-ink-muted">
@@ -8,12 +20,12 @@ export function SiteFooter({ brandName, links }: { brandName: string; links: { l
           ))}
         </nav>
         <p>
-          Prices change — always verify against the official airport page before you travel. {brandName} links to
-          official sources on every page. Not financial advice.
+          {disclaimerText ??
+            `Prices change. Always verify against the official airport page before you travel. ${brandName} links to official sources on every page. Not financial advice.`}
         </p>
         <p className="flex items-center gap-2">
           <span aria-hidden className="inline-flex h-4 w-4 items-center justify-center rounded bg-brand text-[10px] font-bold leading-none text-white">=</span>
-          <span>Part of the <strong className="font-semibold text-ink">=Math family</strong> of UK cost calculators.</span>
+          <span>Part of the <strong className="font-semibold text-ink">Math family</strong> of UK cost calculators.</span>
         </p>
       </div>
     </footer>
