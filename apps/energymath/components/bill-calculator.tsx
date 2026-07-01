@@ -103,7 +103,7 @@ export function BillCalculator({ regions, profiles, defaultRegionSlug }: BillCal
           <select
             value={regionSlug}
             onChange={(e) => setRegionSlug(e.target.value)}
-            className="min-h-10 rounded-lg border border-ink/15 bg-surface px-3 py-2 text-sm text-ink"
+            className="min-h-11 rounded-lg border border-ink/15 bg-surface px-3 py-2 text-sm text-ink"
           >
             {regions.map((r) => (
               <option key={r.slug} value={r.slug}>

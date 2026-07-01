@@ -87,7 +87,13 @@ export default function HomePage() {
                 }`}
               >
                 {isCheapest ? (
-                  <span className="rounded-full bg-brand-accent px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
+                  // WCAG AA fix: white-on-bg-brand-accent (#ea580c) measures 3.56:1 at this
+                  // 10px size (well below the 4.5:1 normal-text threshold — 10px bold is nowhere
+                  // near the 18.66px-bold "large text" cutoff, so 3:1 doesn't apply here). A
+                  // scoped darker fill (orange-700 #c2410c, same hue family) clears 5.18:1
+                  // without touching the shared --color-brand-accent token used as CTA fill
+                  // elsewhere (that's a separate systemic call, tracked for Mike).
+                  <span className="rounded-full bg-orange-700 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
                     Cheapest
                   </span>
                 ) : null}
