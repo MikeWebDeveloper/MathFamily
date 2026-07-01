@@ -68,7 +68,11 @@ export function AffiliateBlock({
             href={goHref}
             rel="sponsored noopener"
             target="_blank"
-            className="mt-2 inline-flex min-h-11 items-center rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-white outline-none hover:bg-brand-accent/90 focus-visible:ring-2 focus-visible:ring-brand-accent"
+            // WCAG AA fix: white-on-bg-brand-accent (#ea580c) measures 3.56:1 at 14px/semibold
+            // (under the 18.66px-bold large-text cutoff, so 4.5:1 applies). Dormant until a
+            // partner goes live (see file header), but fixed now with the same scoped
+            // orange-700 fill (5.22:1) used elsewhere so it doesn't silently fail on launch.
+            className="mt-2 inline-flex min-h-11 items-center rounded-lg bg-orange-700 px-4 py-2 text-sm font-semibold text-white outline-none hover:bg-orange-700/90 focus-visible:ring-2 focus-visible:ring-brand-accent"
           >
             {slot.label}
           </a>

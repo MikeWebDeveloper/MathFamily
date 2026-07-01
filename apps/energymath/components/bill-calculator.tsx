@@ -124,9 +124,15 @@ export function BillCalculator({ regions, profiles, defaultRegionSlug }: BillCal
                   key={p.id}
                   type="button"
                   onClick={() => setProfileId(p.id)}
+                  // WCAG AA fix: white-on-bg-brand-accent (#ea580c) measures 3.56:1 at this
+                  // 14px/500 weight (well under the 18.66px-bold large-text cutoff, so 4.5:1
+                  // applies). Same scoped darker fill used for the homepage "Cheapest" badge
+                  // (orange-700 #c2410c, same hue family) — doesn't touch the shared
+                  // --color-brand-accent token used as CTA fill elsewhere. This is the
+                  // pre-selected default state visible above the fold on first page load.
                   className={`min-h-11 rounded-full px-3 py-1.5 text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-brand-accent ${
                     profileId === p.id
-                      ? "bg-brand-accent text-white"
+                      ? "bg-orange-700 text-white"
                       : "border border-ink/15 bg-surface text-ink hover:border-brand-accent/40"
                   }`}
                 >
@@ -176,9 +182,11 @@ export function BillCalculator({ regions, profiles, defaultRegionSlug }: BillCal
                 key={p.id}
                 type="button"
                 onClick={() => setProfileId(p.id)}
+                // WCAG AA fix: same white-on-bg-brand-accent failure (3.56:1) as the segmented
+                // control above — scoped to bg-orange-700 (5.22:1), see comment there.
                 className={`min-h-11 rounded-full px-3 py-1.5 text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-brand-accent ${
                   profileId === p.id
-                    ? "bg-brand-accent text-white"
+                    ? "bg-orange-700 text-white"
                     : "border border-ink/15 bg-surface text-ink hover:border-brand-accent/40"
                 }`}
               >
