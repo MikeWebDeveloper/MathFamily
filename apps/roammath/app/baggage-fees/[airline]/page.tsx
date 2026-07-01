@@ -22,7 +22,8 @@ export async function generateMetadata({ params }: { params: Promise<{ airline: 
   if (!record) return {};
   return {
     title: `${record.airlineName} baggage fees 2026 — cabin & checked bag prices`,
-    description: `${baggageAnswer(record)} Verified against official ${record.airlineName} fee pages.`
+    description: `${baggageAnswer(record)} Verified against official ${record.airlineName} fee pages.`,
+    alternates: { canonical: `/baggage-fees/${airline}` }
   };
 }
 

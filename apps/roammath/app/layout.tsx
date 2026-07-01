@@ -14,12 +14,22 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: "RoamMath — what your phone and bags cost abroad, verified", template: "%s | RoamMath" },
   description:
-    "UK mobile roaming charges per network per country, eSIM comparisons and airline baggage fees — every figure verified against official pages and date-stamped."
+    "UK mobile roaming charges per network per country, eSIM comparisons and airline baggage fees — every figure verified against official pages and date-stamped.",
+  alternates: { canonical: "/" }
 };
 
 const NAV = [
   { label: "Roaming charges", href: "/roaming" },
   { label: "Baggage fees", href: "/baggage-fees" },
+  { label: "Privacy", href: "/privacy" }
+];
+
+// Footer carries the full set, including the "How we verify" E-E-A-T page that the
+// header nav omits to keep the primary nav short.
+const FOOTER_NAV = [
+  { label: "Roaming charges", href: "/roaming" },
+  { label: "Baggage fees", href: "/baggage-fees" },
+  { label: "How we verify", href: "/methodology" },
   { label: "Privacy", href: "/privacy" }
 ];
 
@@ -40,7 +50,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AmbientBackdrop />
         <SiteHeader brandName="RoamMath" brandPrefix="Roam" links={NAV} />
         <main id="main-content" className="mx-auto max-w-5xl px-4 py-8">{children}</main>
-        <SiteFooter brandName="RoamMath" links={NAV} />
+        <SiteFooter brandName="RoamMath" links={FOOTER_NAV} />
         <SiteAnalytics />
       </body>
     </html>

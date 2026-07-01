@@ -9,7 +9,8 @@ import { NETWORK_LABELS } from "@/lib/roaming-content";
 export const metadata: Metadata = {
   title: "UK mobile roaming charges by destination — EE, O2, Vodafone, Three",
   description:
-    "All four UK networks' roaming charges for 40 destinations — daily pass prices, included zones and eSIM alternatives, verified against official price guides."
+    "All four UK networks' roaming charges for 40 destinations — daily pass prices, included zones and eSIM alternatives, verified against official price guides.",
+  alternates: { canonical: "/roaming" }
 };
 
 export default function RoamingIndexPage() {

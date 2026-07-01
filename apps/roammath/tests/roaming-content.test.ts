@@ -67,6 +67,20 @@ describe("buildRoamingFaqs", () => {
     expect(faqs.some((f) => f.question.includes("EE"))).toBe(true);
     expect(faqs.some((f) => f.question.toLowerCase().includes("esim"))).toBe(true);
   });
+
+  it("never double-terminates an answer whose fairUseNote already ends with a period", () => {
+    const destWithTerminatedNote: RoamingDestination = {
+      ...destination,
+      perNetwork: destination.perNetwork.map((n) => ({
+        ...n,
+        fairUseNote: n.fairUseNote ? `${n.fairUseNote}.` : n.fairUseNote
+      }))
+    };
+    const faqs = buildRoamingFaqs(destWithTerminatedNote, esim, 7);
+    for (const faq of faqs) {
+      expect(faq.answer).not.toMatch(/\.\./);
+    }
+  });
 });
 
 describe("NETWORK_LABELS", () => {

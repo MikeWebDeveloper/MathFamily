@@ -76,6 +76,14 @@ function joinNames(names: string[]): string {
   return `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
 }
 
+/** Appends a single trailing full stop, never a second one. Several `fairUseNote` values in
+ *  the dataset already end with their own period (e.g. "...25GB cap."), so blindly
+ *  concatenating a literal "." after them produced a double-period ("...cap..") in the
+ *  rendered FAQPage JSON-LD across ~160 destination/network pages. */
+function terminate(sentence: string): string {
+  return sentence.endsWith(".") ? sentence : `${sentence}.`;
+}
+
 export function buildRoamingFaqs(
   destination: RoamingDestination,
   esim: EsimCountry | null,
@@ -84,9 +92,9 @@ export function buildRoamingFaqs(
   const faqs = destination.perNetwork.map((n) => ({
     question: `What does ${NETWORK_LABELS[n.network] ?? n.network} charge for roaming in ${destination.countryName}?`,
     answer: n.included
-      ? `Roaming in ${destination.countryName} is included at no extra daily charge${n.fairUseNote ? ` (${n.fairUseNote})` : ""}.`
+      ? terminate(`Roaming in ${destination.countryName} is included at no extra daily charge${n.fairUseNote ? ` (${n.fairUseNote})` : ""}`)
       : n.dailyPassPence !== null
-        ? `${formatPence(n.dailyPassPence)} per day${n.passName ? ` (${n.passName})` : ""}${n.fairUseNote ? `; ${n.fairUseNote}` : ""}.`
+        ? terminate(`${formatPence(n.dailyPassPence)} per day${n.passName ? ` (${n.passName})` : ""}${n.fairUseNote ? `; ${n.fairUseNote}` : ""}`)
         : `No standard daily pass is published — check the official price guide.`
   }));
   if (esim && esim.bundles.length > 0) {

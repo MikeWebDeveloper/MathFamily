@@ -8,7 +8,8 @@ import { feeRangeLabel } from "@/lib/baggage-content";
 export const metadata: Metadata = {
   title: "Airline baggage fees 2026 — cabin & checked bag prices, verified",
   description:
-    "Cabin and checked bag fees for 12 UK-popular airlines — Ryanair, easyJet, British Airways and more — verified against official fee pages with official published min–max ranges."
+    "Cabin and checked bag fees for 12 UK-popular airlines — Ryanair, easyJet, British Airways and more — verified against official fee pages with official published min–max ranges.",
+  alternates: { canonical: "/baggage-fees" }
 };
 
 export default function BaggageFeesIndexPage() {

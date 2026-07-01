@@ -48,7 +48,8 @@ export async function generateMetadata({
       : `${networkLabel} has no standard daily roaming pass for ${destination.countryName} — see the price guide.`;
   return {
     title: `${networkLabel} roaming in ${destination.countryName} — 2026 charges`,
-    description: desc
+    description: desc,
+    alternates: { canonical: `/roaming/${country}/${network}` }
   };
 }
 

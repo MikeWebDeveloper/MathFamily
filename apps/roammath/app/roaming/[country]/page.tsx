@@ -31,7 +31,8 @@ export async function generateMetadata({ params }: { params: Promise<{ country: 
   const m = roamingPageModel(destination, esim, 7, 5);
   return {
     title: `${destination.countryName} roaming charges 2026 — EE, O2, Vodafone, Three & eSIM`,
-    description: `${m.answer} Verified against official network price guides.`
+    description: `${m.answer} Verified against official network price guides.`,
+    alternates: { canonical: `/roaming/${destination.countrySlug}` }
   };
 }
 
