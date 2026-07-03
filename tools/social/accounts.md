@@ -16,10 +16,12 @@ Live social presence for **ParkMath** (`parkmath.co.uk`). Launched **15 June 202
 | X / Twitter | `@parkmathuk` | https://x.com/parkmathuk |
 | Instagram | `@parkmathuk` | https://www.instagram.com/parkmathuk/ |
 | Threads | `@parkmathuk` | https://www.threads.com/@parkmathuk |
-| Bluesky | `parkmathuk.bsky.social` | https://bsky.app/profile/parkmathuk.bsky.social |
+| Bluesky | `parkmath.bsky.social` | https://bsky.app/profile/parkmath.bsky.social |
 | Pinterest | ParkMath (business) | board: "UK Airport Parking & Drop-Off Costs" |
 
-- Bluesky DID: `did:plc:caypcclwj76rg32rxnvut7d7`
+- Bluesky handle changed 2026-06-25: the original `parkmathuk.bsky.social` is DEAD (its Gmail got blocked). The live account is now **`parkmath.bsky.social`** — connected to Buffer. Update any old DID reference; the old `did:plc:caypcclwj76rg32rxnvut7d7` belonged to the dead handle.
+- Scheduling stack: **Buffer is the ONLY stack** (free tier, 3 channels) — auto-posts X + Threads + Bluesky via its MCP. **Metricool is dropped** (Mike's call 2026-06-25). Bluesky hard limit = **300 chars** (trim copy); Threads ≤500; X ≤240. IG/Pinterest/TikTok are **deferred** (not in the daily stack) until a free no-paste path exists.
+- **Daily automation (live 2026-06-25):** hermes cron job `parkmath-daily-social` fires **daily 07:00 UK** → runs the `/parkmath-daily-social` skill headless → reads the verified datasets + ledger → generates a fresh deduped batch → schedules straight into Buffer to **auto-publish** for X/Threads/Bluesky → logs to `ledger.jsonl` → self-verifies. Idempotent (skips any channel/day already at ≥2 posts). Wrapper: `~/.hermes/scripts/parkmath-daily-social.sh`; skill: `apps/.../.claude/skills/parkmath-daily-social/`.
 - Threads handle always mirrors the Instagram handle (same Meta account).
 
 ## Bios in use (keep consistent on new platforms)
@@ -45,5 +47,5 @@ All five verified publicly visible (logged-out) on 15 Jun 2026.
 
 - **No affiliate links in any social post** — site is presented as an independent source
   (see content-factory hard rules and `tools/social/README.md`).
-- Posting is manual: Mike pastes approved copy from the dated `queue-<date>.json` / launch files.
+- Posting is **automated via Buffer** (see daily-automation note above) — no manual paste. The old direct-Bluesky cron posters (`bluesky-poster-*`, dead `parkmathuk.bsky.social` handle) are **paused** to avoid double-posting; Buffer owns Bluesky on the live `parkmath.bsky.social`.
 - Pinterest pins are slow-burn (search-driven); don't pay to promote early — let pins index organically.

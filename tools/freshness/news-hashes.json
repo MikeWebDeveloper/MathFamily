@@ -1,93 +1,103 @@
 {
   "https://cardiff-airport.com/latest-news/": {
     "hash": "a918bfc7c4e5d42843c8e3e9e3cfa87a0dc927fc6dbd89917040436ab58c7cb4",
-    "checkedAt": "2026-06-19"
+    "checkedAt": "2026-07-03"
   },
   "https://corporate.edinburghairport.com/news": {
     "hash": "81b71afd232b83928817c65db40cdc3bf7b880bbd61d53012acbdaa023378066",
-    "checkedAt": "2026-06-19"
+    "checkedAt": "2026-07-03",
+    "pendingSince": "2026-06-24"
   },
   "https://exeter-airport.co.uk/news/": {
     "hash": "23ed452540e8bac385bfd097afac7dc8e4ae57b42123ce1ca0971d53b7214478",
-    "checkedAt": "2026-06-19"
+    "checkedAt": "2026-07-03"
   },
   "https://londonsouthendairport.com/corporate/media-centre/": {
     "hash": "488a65f6998b2f08bfe813707aea6cfd3124afffb991bb652fcd2133d5a5fe55",
-    "checkedAt": "2026-06-19"
+    "checkedAt": "2026-07-03",
+    "pendingSince": "2026-06-24"
   },
   "https://mediacentre.eastmidlandsairport.com/": {
     "hash": "5b524266d99b0d77b9d69e4b054816544c8cde5703bf724bd5c30b66bd96ddd7",
-    "checkedAt": "2026-06-19",
+    "checkedAt": "2026-07-03",
     "pendingSince": "2026-06-19"
   },
   "https://mediacentre.manchesterairport.co.uk/": {
     "hash": "8ad1bc93934e71ad28113d95de6a3c28110224fffab07aa27e24ca38241a9c3b",
-    "checkedAt": "2026-06-19"
+    "checkedAt": "2026-07-03",
+    "pendingSince": "2026-06-24"
   },
   "https://www.aberdeenairport.com/about-us/media-centre/": {
     "hash": "e6e999788fedea3f986e53c5d918d895e46d7f10fae851e297282972ca66b3df",
-    "checkedAt": "2026-06-19"
+    "checkedAt": "2026-07-03",
+    "pendingSince": "2026-06-24"
   },
   "https://www.belfastairport.com/blog-news": {
     "hash": "a518ad3255be7c186b6d280b7008f078a2e97871b15761c6da95b5ec291fb94b",
-    "checkedAt": "2026-06-19",
+    "checkedAt": "2026-07-03",
     "pendingSince": "2026-06-19"
   },
   "https://www.belfastcityairport.com/News": {
     "hash": "9e3361f8757a38b1b2a7bbb65b3a4e6314a2208176d2cb8b4b9eac7f6e86033c",
-    "checkedAt": "2026-06-19"
+    "checkedAt": "2026-07-03",
+    "pendingSince": "2026-06-24"
   },
   "https://www.bournemouthairport.com/news/": {
     "hash": "075f8f769f15ca7c3b08559af023e76e822624357b842c751b4b3ffde51d9e60",
-    "checkedAt": "2026-06-19",
+    "checkedAt": "2026-07-03",
     "pendingSince": "2026-06-19"
   },
   "https://www.bristolairport.co.uk/corporate/news-and-media/news-and-media-centre/": {
     "hash": "6425bdbb6f95a8ccd2aec0f3c6c65f2d2b476af063087cf1ef3193e12af124ea",
-    "checkedAt": "2026-06-19"
+    "checkedAt": "2026-07-03",
+    "pendingSince": "2026-06-24"
   },
   "https://www.gatwickairport.com/transport-options/drop-off.html": {
     "hash": "28189150a0b63aad8744832ec3fd6605fd62b901c49ec629873dedc54eab345f",
-    "checkedAt": "2026-06-19"
+    "checkedAt": "2026-07-03",
+    "pendingSince": "2026-06-24"
   },
   "https://www.heathrow.com/transport-and-directions/terminal-drop-off-charge": {
     "hash": "20e3852a2a143949c31d92a1b001fbb3425b5a939773a0651f88678acbdfb807",
-    "checkedAt": "2026-06-19",
+    "checkedAt": "2026-07-03",
     "pendingSince": "2026-06-19"
   },
   "https://www.hial.co.uk/inverness-airport": {
     "hash": "aae4f7de498c4b7da92aa6a853bdc6c40bd742637d77f9ce43c327148a711125",
-    "checkedAt": "2026-06-19",
+    "checkedAt": "2026-07-03",
     "pendingSince": "2026-06-19"
   },
   "https://www.liverpoolairport.com/media-centre": {
     "hash": "fe7a015671242f8e389c71ba14791743a9de4d875f06454e33bdb1cf6c9fb9d8",
-    "checkedAt": "2026-06-19"
+    "checkedAt": "2026-07-03"
   },
   "https://www.london-luton.co.uk/to-and-from-lla/dropping-off": {
     "hash": "9fbb02c29127aed8d9eccc5387a61c2fcdf2a2743bbc1896ff118c1a18b54bd2",
-    "checkedAt": "2026-06-19"
+    "checkedAt": "2026-07-03"
   },
   "https://www.newcastleairport.com/corporate/media-centre/latest-news/": {
     "hash": "8a24719dc9ae3fb3cb5db63780f7644e9607fdd2d70650eec4a2ce8f0162c498",
-    "checkedAt": "2026-06-19",
+    "checkedAt": "2026-07-03",
     "pendingSince": "2026-06-19"
   },
   "https://www.norwichairport.co.uk/news/": {
     "hash": "5d4c6e752641e36b157948171f4db60419bdffd520e810688879c029e6b403c1",
-    "checkedAt": "2026-06-19"
+    "checkedAt": "2026-07-03",
+    "pendingSince": "2026-06-24"
   },
   "https://www.southamptonairport.com/news/media-centre/": {
     "hash": "4a81a7913e163922f962c53ec4a6a10a5d5bb31d7e685d1de33a27bc2981c1e8",
-    "checkedAt": "2026-06-19"
+    "checkedAt": "2026-07-03",
+    "pendingSince": "2026-07-03"
   },
   "https://www.stanstedairport.com/parking/pick-up-and-drop-off/": {
     "hash": "f989491a76b067e2a64796681c83cc5e1a6f92d4a854386974316e508df875bb",
-    "checkedAt": "2026-06-19"
+    "checkedAt": "2026-07-03",
+    "pendingSince": "2026-06-24"
   },
   "https://www.teessideinternational.com/news/": {
     "hash": "e9f5737e490b6d747c02cb7c9a0c2e8837ec4631791797774b47719c5dd35312",
-    "checkedAt": "2026-06-19",
+    "checkedAt": "2026-07-03",
     "pendingSince": "2026-06-19"
   }
 }

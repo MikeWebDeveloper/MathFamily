@@ -6,6 +6,7 @@
 #   run-agent.sh news-sweep [--no-pr]
 #   run-agent.sh awin-digest        # marketing: weekly AWIN digest
 #   run-agent.sh content-factory    # marketing: weekly social queue + email digest
+#   run-agent.sh daily-social       # marketing: DAILY social → schedules straight into Buffer (auto-publish)
 #   run-agent.sh forum-scout        # marketing: draft forum replies from tools/social/forum-leads.md
 #   run-agent.sh reel-factory       # marketing: weekly reel batch (script + VO + MP4) for review
 #   run-agent.sh loop-digest        # marketing: weekly reel loop digest (analytics → recommendations)
@@ -22,12 +23,20 @@ case "$MODE" in
   news-sweep)      shift; PROMPT="/news-watch sweep $*" ;;
   awin-digest)     PROMPT="/awin-digest" ;;       # marketing: weekly AWIN digest → docs/reports/
   content-factory) PROMPT="/content-factory" ;;   # marketing: weekly social queue + email digest → tools/social/
+  daily-social)    PROMPT="/parkmath-daily-social" ;;  # marketing: DAILY social → schedules straight into Buffer (auto-publish)
   forum-scout)     PROMPT="/forum-scout" ;;       # marketing: draft forum replies from tools/social/forum-leads.md
   reel-factory)    PROMPT="/reel-factory" ;;       # marketing: weekly reel batch → tools/reels/review/
   loop-digest)     PROMPT="/loop-digest" ;;        # marketing: reel loop digest → docs/reports/ + recommendations.json
   *)               PROMPT="/freshness $*" ;;
 esac
-CMD=(claude -p "$PROMPT" --max-turns 200 --dangerously-skip-permissions)
+# daily-social posts via the Buffer MCP, which isn't in this repo's MCP config —
+# load it explicitly so the headless run can reach Buffer (HOME has a space, so the
+# path must stay a single quoted array element, not unquoted word-splitting).
+if [[ "$MODE" == "daily-social" ]]; then
+  CMD=(claude -p "$PROMPT" --max-turns 200 --dangerously-skip-permissions --mcp-config "$HOME/.config/company/buffer-mcp.json")
+else
+  CMD=(claude -p "$PROMPT" --max-turns 200 --dangerously-skip-permissions)
+fi
 
 # Dry-run: print the command and exit before any filesystem side effects.
 if [[ "${PRINT_CMD:-0}" == "1" ]]; then
