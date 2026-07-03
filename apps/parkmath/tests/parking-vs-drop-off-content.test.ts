@@ -3,6 +3,8 @@ import type { DropOffRecord, ParkingRecord } from "@mathfamily/data";
 import {
   REFERENCE_DAYS,
   buildParkingVsDropOffFaqs,
+  dropOffCalculatorBridge,
+  dropOffCalculatorBridgeLine,
   dropOffFeePence,
   dropOffParkingBridge,
   gateParkingPence,
@@ -242,5 +244,53 @@ describe("dropOffParkingBridge (drop-off → parking decision bridge)", () => {
     expect(b.hasComparison).toBe(false);
     expect(b.hasParking).toBe(false);
     expect(b.parkingPence).toBeNull();
+  });
+});
+
+describe("dropOffCalculatorBridge (above-the-fold £X-vs-£Y teaser, tranche 2 item 7)", () => {
+  it("shows for a charging airport with a verified gate parking tariff and a live merchant (gatwick)", () => {
+    const b = dropOffCalculatorBridge("gatwick");
+    expect(b.show).toBe(true);
+    expect(b.dropOffFeePence).not.toBeNull();
+    expect(b.parkingFromPence).not.toBeNull();
+    expect(Number.isInteger(b.dropOffFeePence!)).toBe(true);
+    expect(Number.isInteger(b.parkingFromPence!)).toBe(true);
+    // The "from" price can never exceed the drive-up gate price (it's the cheapest verified option).
+    expect(b.parkingDays).toBe(REFERENCE_DAYS);
+    expect(b.ctaHref).toBe(`/go/gatwick/parking?s=dropoffbridge`);
+  });
+
+  it("fails closed for a FREE drop-off airport, even though it has a parking page (birmingham)", () => {
+    // Unlike the lower DropOffParkingBridge (which degrades to a plain onward link for tier 2), this
+    // compact bridge only ever shows the £X-vs-£Y figure — with no drop-off fee there is no honest
+    // "One drop-off costs £X" to state, so it renders nothing rather than a half-true line.
+    const b = dropOffCalculatorBridge("birmingham");
+    expect(b.show).toBe(false);
+    expect(b.dropOffFeePence).toBeNull();
+    expect(b.parkingFromPence).toBeNull();
+    expect(b.ctaHref).toBe("");
+  });
+
+  it("fails closed for a charging airport with no parking tariff at all (prestwick)", () => {
+    const b = dropOffCalculatorBridge("prestwick");
+    expect(b.show).toBe(false);
+    expect(b.ctaHref).toBe("");
+  });
+
+  it("fails closed for an unknown slug", () => {
+    const b = dropOffCalculatorBridge("not-a-real-airport");
+    expect(b.show).toBe(false);
+  });
+});
+
+describe("dropOffCalculatorBridgeLine", () => {
+  it("renders the exact 'One drop-off costs £X — N days of parking from £Y.' shape when the bridge shows", () => {
+    const line = dropOffCalculatorBridgeLine(dropOffCalculatorBridge("gatwick"));
+    expect(line).not.toBeNull();
+    expect(line).toMatch(/^One drop-off costs £[\d.]+ — 7 days of parking from £[\d.]+\.$/);
+  });
+
+  it("returns null when the bridge doesn't show (never renders a half-true line)", () => {
+    expect(dropOffCalculatorBridgeLine(dropOffCalculatorBridge("birmingham"))).toBeNull();
   });
 });
