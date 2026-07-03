@@ -238,12 +238,40 @@ describe("dropOffParkingBridge (drop-off → parking decision bridge)", () => {
 
   it("renders nothing for a FREE drop-off airport with no parking page (no live park-or-drop-off decision)", () => {
     // inverness: free drop-off AND no parking record → no honest parking decision to surface → no bridge.
+    // (Tranche 3, 2026-07-03: Inverness's official Long Stay tariff was researched but SKIPPED — it only
+    // publishes banded rates from 4 days upward, with no 1-3 day figure and no backward-applicable per-day
+    // rate to derive one honestly — so this airport genuinely still has no parking record.)
     const b = dropOffParkingBridge("inverness");
     expect(b.show).toBe(false);
     expect(b.affiliateOnly).toBe(false);
     expect(b.hasComparison).toBe(false);
     expect(b.hasParking).toBe(false);
     expect(b.parkingPence).toBeNull();
+  });
+
+  it("tier 1 (tranche 3, 2026-07-03): aberdeen now carries the comparison figure from its newly-verified gate tariff", () => {
+    // aberdeen: charged drop-off (£7 Express Drop Off) + newly-added verified 7-day drive-up gate price
+    // (£125.00, Long Stay Turn Up) → full comparison bridge, same shape as the gatwick tier-1 case.
+    const b = dropOffParkingBridge("aberdeen");
+    expect(b.show).toBe(true);
+    expect(b.hasComparison).toBe(true);
+    expect(b.hasParking).toBe(true);
+    expect(b.affiliateOnly).toBe(false);
+    expect(b.parkingDays).toBe(REFERENCE_DAYS);
+    // Exact figures traced to the dataset: the GATE price only (12500p = £125.00), never the cheaper
+    // pre-book snapshot — the comparison bridge intentionally uses the drive-up ceiling, not a "from" price.
+    expect(b.parkingPence).toBe(12500);
+    expect(b.dropOffFeePence).toBe(700);
+  });
+
+  it("tier 1 (tranche 3, 2026-07-03): belfast-international now carries the comparison figure from its newly-verified gate tariff", () => {
+    // belfast-international: charged drop-off (£5 Drop Off Zone) + newly-added verified 7-day drive-up
+    // gate price (£95.00, computed from the official £55 3-day base + 4x£10/day) → full comparison bridge.
+    const b = dropOffParkingBridge("belfast-international");
+    expect(b.show).toBe(true);
+    expect(b.hasComparison).toBe(true);
+    expect(b.parkingPence).toBe(9500);
+    expect(b.dropOffFeePence).toBe(500);
   });
 });
 
@@ -271,8 +299,12 @@ describe("dropOffCalculatorBridge (above-the-fold £X-vs-£Y teaser, tranche 2 i
     expect(b.ctaHref).toBe("");
   });
 
-  it("fails closed for a charging airport with no parking tariff at all (prestwick)", () => {
-    const b = dropOffCalculatorBridge("prestwick");
+  it("fails closed for a charging airport with no parking tariff at all (belfast-city)", () => {
+    // belfast-city: charged drop-off, but its official Long Stay page states the drive-up daily rate is
+    // shown only on physical drive-up boards (never published online) — researched and SKIPPED 2026-07-03
+    // (tranche 3) rather than guessed. (prestwick, the previous example here, was verified this same
+    // tranche and now has a real record — see the tier-1/calculator tests below.)
+    const b = dropOffCalculatorBridge("belfast-city");
     expect(b.show).toBe(false);
     expect(b.ctaHref).toBe("");
   });
@@ -280,6 +312,29 @@ describe("dropOffCalculatorBridge (above-the-fold £X-vs-£Y teaser, tranche 2 i
   it("fails closed for an unknown slug", () => {
     const b = dropOffCalculatorBridge("not-a-real-airport");
     expect(b.show).toBe(false);
+  });
+
+  it("tranche 3 (2026-07-03): shows for prestwick using its newly-verified gate tariff", () => {
+    const b = dropOffCalculatorBridge("prestwick");
+    expect(b.show).toBe(true);
+    expect(b.dropOffFeePence).toBe(450);
+    // Car Park Two 7-day gate price (REFERENCE_DAYS), no pre-book snapshot on file → "from" equals the
+    // gate price itself, not the 3-day (6650) or 14-day (16000) figure.
+    expect(b.parkingFromPence).toBe(10350);
+    expect(b.parkingDays).toBe(REFERENCE_DAYS);
+    expect(b.ctaHref).toBe(`/go/prestwick/parking?s=dropoffbridge`);
+  });
+
+  it("tranche 3 (2026-07-03): aberdeen's 'from' price is the cheaper PRE-BOOK snapshot, not the pricier gate rate", () => {
+    // Aberdeen has BOTH a gate price (12500p, £125.00) and a same-duration pre-book snapshot (4999p,
+    // £49.99). compareParking sorts by totalPence, so "cheapest" (what the compact bridge shows) is the
+    // pre-book snapshot — proving this bridge never silently shows the more expensive gate ceiling when a
+    // genuinely cheaper verified option exists for the same 7-day duration.
+    const b = dropOffCalculatorBridge("aberdeen");
+    expect(b.show).toBe(true);
+    expect(b.parkingFromPence).toBe(4999);
+    expect(b.dropOffFeePence).toBe(700);
+    expect(b.ctaHref).toBe(`/go/aberdeen/parking?s=dropoffbridge`);
   });
 });
 

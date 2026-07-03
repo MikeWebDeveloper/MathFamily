@@ -1,6 +1,6 @@
 {
-  "version": "1.1.0",
-  "lastUpdated": "2026-06-27",
+  "version": "1.2.0",
+  "lastUpdated": "2026-07-03",
   "records": [
     {
       "airportSlug": "heathrow",
@@ -262,6 +262,85 @@
       ],
       "sourceUrl": "https://www.teessideinternational.com/teesside-airport-parking/",
       "verifiedAt": "2026-06-27"
+    },
+    {
+      "airportSlug": "prestwick",
+      "products": [
+        {
+          "productType": "gate",
+          "name": "Car Park Two — Turn Up (drive-up)",
+          "prices": [
+            { "days": 3, "totalPence": 6650 },
+            { "days": 7, "totalPence": 10350 },
+            { "days": 14, "totalPence": 16000 }
+          ],
+          "snapshotDate": null,
+          "notes": "Official Car Park Two 'Turn Up Prices' (price as of 01 April 26): 1 Day £37.50, 2 Days £44.50, 3 Days £66.50, 4 Days £75.50, 5 Days £85.50, 6 Days £94.50, 7 Days £103.50, 8 Days £112.00, then £8.00 per day thereafter. 3/7-day totals are the airport's own published figures; 14-day computed from the published 8-day base plus 6x£8.00 (112.00+48.00=160.00). Car Park One (Premium, closer to terminal) is pricier on the same tariff sheet — 3d £74/7d £120/8d £129, +£9/day thereafter — and was not used; Car Park Three is pre-book only with a minimum 3-day stay and no published turn-up rate."
+        }
+      ],
+      "sourceUrl": "https://www.glasgowprestwick.com/parking/",
+      "verifiedAt": "2026-07-03"
+    },
+    {
+      "airportSlug": "aberdeen",
+      "products": [
+        {
+          "productType": "gate",
+          "name": "Long Stay — Turn Up (drive-up)",
+          "prices": [
+            { "days": 3, "totalPence": 8000 },
+            { "days": 7, "totalPence": 12500 },
+            { "days": 14, "totalPence": 19500 }
+          ],
+          "snapshotDate": null,
+          "notes": "Official 'Turn Up Prices' table for the Long Stay car park (the price table is client-rendered and absent from the raw HTML; read via a rendered page fetch 2026-07-03): up to 1 hour free, 90 mins/up to 4h/up to 24h £35.00, 2 days £60.00, 3 days £80.00, 4 days £96.00, 5 days £105.00, 6 days £115.00, 7 days £125.00, then £10.00 per day (or part) thereafter. 3/7-day totals are the airport's own published figures; 14-day computed from the published 7-day base plus 7x£10.00 (125.00+70.00=195.00)."
+        },
+        {
+          "productType": "prebook",
+          "name": "Long Stay (pre-book) — published 'from' price",
+          "prices": [{ "days": 7, "totalPence": 4999 }],
+          "snapshotDate": "2026-07-03",
+          "notes": "Officially published pre-book 'from' price on the Long Stay page: '1-week Long Stay parking starts at £49.99' (read 2026-07-03). Single published 'from' point; the gate product above provides the 3/7/14 coverage. The page separately states turn-up prices can be undercut 'up to 60%' by booking ahead, consistent with this snapshot."
+        }
+      ],
+      "sourceUrl": "https://www.aberdeenairport.com/transport-and-directions/aberdeen-airport-parking/long-stay-parking/",
+      "verifiedAt": "2026-07-03"
+    },
+    {
+      "airportSlug": "belfast-international",
+      "products": [
+        {
+          "productType": "gate",
+          "name": "Long Stay — Gate Rate (drive-up)",
+          "prices": [
+            { "days": 3, "totalPence": 5500 },
+            { "days": 7, "totalPence": 9500 },
+            { "days": 14, "totalPence": 16500 }
+          ],
+          "snapshotDate": null,
+          "notes": "Official 'Long Stay Pricing' gate-rate table: One Day £30.00, Two Days £45.00, Three Days £55.00, then +£10.00 per day thereafter. 3-day total is the airport's own published figure; 7/14-day totals computed from the published 3-day base plus the official £10/day rate (7d=55+4x10=95; 14d=55+11x10=165)."
+        }
+      ],
+      "sourceUrl": "https://www.belfastairport.com/parking/long-stay-car-park",
+      "verifiedAt": "2026-07-03"
+    },
+    {
+      "airportSlug": "exeter",
+      "products": [
+        {
+          "productType": "gate",
+          "name": "Car Park P2 — Turn Up, not booked (drive-up)",
+          "prices": [
+            { "days": 3, "totalPence": 12000 },
+            { "days": 7, "totalPence": 28000 },
+            { "days": 14, "totalPence": 56000 }
+          ],
+          "snapshotDate": null,
+          "notes": "Official 'Car Park Tariff (not booked)' table for Car Park P2: 0-15 min £15.00, 15-30 min £15.00, 30-60 min £15.00, 1-4h £20.00, 4-12h £30.00, 12-24h £40.00, each additional 24h £40.00 (independently cross-confirmed by the page's separate 'Car Park Overstay Tariff' list: 'Car Park P2 – £40 per day or part thereof'). 3/7/14-day totals computed from the official 12-24h (=1-day) base plus the official £40/day rate (3d=40+2x40=120; 7d=40+6x40=280; 14d=40+13x40=560). Car Park P1 (nearer the terminal) is pricier at £50/day (also cross-confirmed via its own overstay line) and was not used. FLAG: the source page's tariff table and its separate 'Car Park Overstay Tariff' list disagree on P3-vs-P4 numbering for the cheapest column, so that column's figures were excluded rather than risk a mislabelled price — P3 is pre-book only regardless."
+        }
+      ],
+      "sourceUrl": "https://exeter-airport.co.uk/car-parking/",
+      "verifiedAt": "2026-07-03"
     }
   ]
 }

@@ -203,6 +203,107 @@ Three of the five MAG/AGS/Cloudflare-group sites blocked every automated transpo
 
 ---
 
+# Batch 3 — 2026-07-03 (Tranche 3: regional-first — prestwick, inverness, aberdeen,
+# belfast-international, belfast-city, exeter)
+
+Scope: Mike's regional-first priority list (2026-07-03 decision #6), to extend the tranche-2
+calculator bridge + trip-length wedge to airports where his priority regions currently render
+nothing (no parking record). Methodology unchanged from batches 1–2: official domain only, drive-up/
+gate tariff by exact published duration, 3/7/14-day totals either published directly or computed by
+extending the airport's own stated per-day/"thereafter" rate from the last published band — never
+interpolated backward, never sourced from an aggregator. 4 of 6 added; 2 skipped fail-closed.
+
+## Prestwick (PIK) — ADDED
+
+- Official page: https://www.glasgowprestwick.com/parking/ (static HTML, no Cloudflare block, no
+  render needed). Used **Car Park Two** ("Turn Up Prices", price as of 01 April 26): 1 Day £37.50,
+  2 Days £44.50, 3 Days £66.50, 4 Days £75.50, 5 Days £85.50, 6 Days £94.50, 7 Days £103.50, 8 Days
+  £112.00, then £8.00/day thereafter. 3d/7d stored directly; 14d = 8-day base (£112.00) + 6×£8.00 =
+  £160.00.
+- Car Park One (Premium) is pricier on the same sheet (3d £74/7d £120/8d £129, +£9/day) — not used.
+  Car Park Three is pre-book only (min. 3-day stay), no published turn-up rate — not used.
+
+## Aberdeen (ABZ) — ADDED
+
+- Official page: https://www.aberdeenairport.com/transport-and-directions/aberdeen-airport-parking/long-stay-parking/.
+  **FLAG (transport note):** the turn-up price table is client-rendered — absent from the raw HTTP
+  response (only a "1-week Long Stay parking starts at £49.99" teaser is present statically). A
+  real-browser render (Playwright navigate + `document.body.innerText`) surfaced the full table: up to
+  24h £35.00, 2d £60, 3d £80, 4d £96, 5d £105, 6d £115, 7d £125, then £10.00/day (or part) thereafter.
+  3d/7d stored directly; 14d = 7-day base (£125) + 7×£10 = £195.
+- Also added the £49.99 pre-book "from" snapshot as a second (`prebook`) product at day 7,
+  snapshotDate 2026-07-03 — it beats the gate price by £75.01, consistent with the page's own "book
+  in advance and save up to 60%" framing.
+- **Process note:** WebFetch's AI-summarized first pass reported this same table from a raw
+  (non-JS) fetch that, when independently re-scraped as raw markdown, did NOT contain it — i.e. the
+  first-pass summary could not be trusted on its own and was only used once a real browser render
+  independently reproduced the identical figures. Treat any single AI-summarized fetch as a lead, not
+  a source, on JS-heavy booking sites.
+
+## Belfast International (BFS) — ADDED
+
+- Official page: https://www.belfastairport.com/parking/long-stay-car-park (canonical; the
+  `/car-parking/long-stay-car-park` alias 403'd to a plain fetch but the canonical path did not).
+  "Long Stay Pricing" gate-rate table: One Day £30.00, Two Days £45.00, Three Days £55.00, then
+  +£10.00/day thereafter. 3d stored directly; 7d = £55 + 4×£10 = £95; 14d = £55 + 11×£10 = £165.
+
+## Exeter (EXT) — ADDED
+
+- Official page: https://exeter-airport.co.uk/car-parking/ → "Car Park Tariff (not booked)" table.
+  Used **Car Park P2**: 0-15/15-30/30-60 min £15.00, 1-4h £20.00, 4-12h £30.00, 12-24h £40.00, each
+  additional 24h £40.00 — cross-confirmed against the page's independent "Car Park Overstay Tariff"
+  list ("Car Park P2 – £40 per day or part thereof"). 1-day base £40; 3d=£120, 7d=£280, 14d=£560.
+- **FLAG:** the page's main tariff table (raw HTML) renders with a column/label shift that, decoded
+  naively, could misattribute a price to the wrong car park; Car Park P1 and P2 were used because both
+  are independently cross-confirmed by the separate Overstay Tariff list (P1 £50/day, P2 £40/day) —
+  P2 (cheaper) was used as the gate product, P1 noted only in the dataset's notes field. The table's
+  cheapest-looking column could not be safely attributed to P3 vs P4 (the tariff table and the
+  Overstay list disagree on which is which) and was excluded entirely rather than risk a mislabelled
+  price. Car Park P3 is pre-book only regardless.
+
+## Inverness (INV) — SKIPPED (fail-closed)
+
+- Official PDF: https://www.hial.co.uk/downloads/file/1066/inverness-car-park-tariffs-2025 ("For
+  Publication Inverness Airport Car Parking Tariffs from 1 June 2026" — parsed via a PDF-aware
+  scraper; WebFetch could not read the raw PDF binary at all).
+- **Long Stay Car Park** publishes EXACT 7-day (£94) and 14-day (£172) prices — but the table's first
+  row is "Up to 4 days" (£59); no 1/2/3-day Long Stay figure is published, and there is no
+  backward-applicable per-day rate (the stated £12/day "additional" rate only applies beyond day 14,
+  forward). Nothing links a 3-day price to the 4-day band without guessing.
+- The Short Stay/Premium car park DOES have a reapplicable per-24h rate (£25.10, "charged as per
+  above tariff" for additional days) that would technically produce a 3/7/14-day figure — but at
+  ~£25/day it is roughly double the real Long Stay rate (£172 for 14 days vs. 3×£25.10×14≈£351) and
+  would misrepresent what a long-stay parker actually pays. Not used.
+- **Verdict: skipped.** No parking record added for Inverness this tranche — an honest gap beats a
+  guessed or misleading number. Re-add if HIAL ever publishes a 1–3 day Long Stay band.
+
+## Belfast City (BHD) — SKIPPED (fail-closed)
+
+- Official pages checked: https://www.belfastcityairport.com/Parking/Our-Car-Parks/Long-Stay-Car-Park
+  and https://www.belfastcityairport.com/Parking (main parking landing page). Neither publishes a
+  drive-up/gate £-by-duration table. The Long Stay page states outright: "the daily rate, as displayed
+  on the drive‑up boards at the Long Stay Car Park entrance" — i.e. the gate rate is deliberately only
+  shown on physical on-site signage, not published online in any text or table form.
+- A "From just £14.99" marketing image caption and a third-party-reported "7 nights from £59.99"
+  pre-book figure exist, but neither carries a verifiable exact-duration citation on Belfast City's own
+  site (the £59.99 figure only surfaced via a general web search, not the official domain directly) —
+  both were rejected per the no-aggregator rule.
+- **Verdict: skipped.** No parking record added for Belfast City this tranche.
+
+## Net result
+
+- **Dataset coverage: 13 → 17 of 26 airports** (prestwick, aberdeen, belfast-international, exeter
+  added; inverness and belfast-city researched and honestly skipped).
+- Remaining uncovered (9 of 26): inverness, belfast-city (skipped this tranche, see above), plus
+  bournemouth, cardiff, east-midlands, london-city, norwich, southampton, southend (not yet
+  researched — next tranche candidates).
+- `packages/data/tests/parking-coverage.test.ts`'s hardcoded roster and
+  `apps/parkmath/tests/parking-vs-drop-off-content.test.ts`'s two real-slug fail-closed fixtures
+  (previously `prestwick` and, implicitly, `inverness`-as-uncovered) were updated to match — see the
+  test diffs in branch `seo/parkmath-regional-tariffs-t3`.
+
+---
+
 # Lounges + Priority Pass (Task 9 — 2026-06-10)
 
 Scope: 1–2 busiest-terminal lounges per airport. Walk-in figures are mostly operator

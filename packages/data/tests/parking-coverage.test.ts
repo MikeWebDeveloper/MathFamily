@@ -5,10 +5,16 @@ describe("parking dataset", () => {
   it("covers the verified parking airports with no duplicates", () => {
     // The verified parking roster, kept in sync with the dataset. newcastle/leeds-bradford/
     // liverpool/teesside were added once official dated quotes were obtained — see
-    // docs/verification/2026-06-parking-research-notes.md.
+    // docs/verification/2026-06-parking-research-notes.md. prestwick/aberdeen/belfast-international/
+    // exeter added 2026-07-03 (tranche 3, regional-first) — see the Batch 3 section of the same file.
+    // inverness and belfast-city were researched the same day but SKIPPED (fail-closed): neither
+    // publishes a usable drive-up tariff (Inverness Long Stay has no 1-3 day band and no backward-
+    // applicable per-day rate; Belfast City's gate rate is stated to be shown only on physical
+    // drive-up boards, never published online).
     const expected = [
       "heathrow", "gatwick", "manchester", "stansted", "luton", "edinburgh",
-      "birmingham", "glasgow", "bristol", "newcastle", "leeds-bradford", "liverpool", "teesside"
+      "birmingham", "glasgow", "bristol", "newcastle", "leeds-bradford", "liverpool", "teesside",
+      "prestwick", "aberdeen", "belfast-international", "exeter"
     ].sort();
     const slugs = loadParkingDataset().records.map((r) => r.airportSlug).sort();
     expect(slugs).toEqual(expected);
