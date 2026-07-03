@@ -11,7 +11,6 @@
     "agent-feed": "tsx agent-feed/server.ts"
   },
   "dependencies": {
-    "@mathfamily/agent-feed": "workspace:*",
     "@mathfamily/data": "workspace:*",
     "@mathfamily/engine": "workspace:*",
     "@mathfamily/geo": "workspace:*",
