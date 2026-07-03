@@ -29,6 +29,7 @@ export const metadata: Metadata = {
 
 const NAV = [
   { label: "Drop-off charges", href: "/drop-off-charges" },
+  { label: "Park vs drop-off", href: "/airport-parking-options" },
   { label: "Parking", href: "/airport-parking" },
   { label: "Lounges", href: "/airport-lounges" },
   { label: "About", href: "/about" }
@@ -37,6 +38,7 @@ const NAV = [
 // Footer carries the full set, including the E-E-A-T trust pages and legal.
 const FOOTER_NAV = [
   { label: "Drop-off charges", href: "/drop-off-charges" },
+  { label: "Park vs drop-off", href: "/airport-parking-options" },
   { label: "Parking", href: "/airport-parking" },
   { label: "Lounges", href: "/airport-lounges" },
   { label: "About", href: "/about" },

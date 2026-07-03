@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { loadDropOffDataset, loadParkingDataset, loadLoungeDataset, recentNews, loadNewsDataset } from "@mathfamily/data";
+import { abroadAirportSlugs } from "@/lib/abroad-content";
 
 const DURATION_SLUGS = ["3-days", "7-days", "14-days"] as const;
 
@@ -93,6 +94,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(`${r.verifiedAt}T00:00:00Z`),
       changeFrequency: "monthly" as const,
       priority: 0.8
+    })),
+    // "Going abroad by car" family — was built (app/abroad/[airport]/page.tsx, real HTML pages with
+    // FAQPage/breadcrumb schema) but 100% absent from this sitemap; Google had only found /abroad/edinburgh
+    // and /abroad/glasgow via internal links (2026-07-03 indexing census). abroadAirportSlugs() is the
+    // exact same union generateStaticParams() uses, so this can never drift out of sync with the built
+    // pages. NB: /charts/[chart] is deliberately NOT added here — it's an SVG image-generation route
+    // (Content-Type: image/svg+xml, app/charts/[chart]/route.ts), not an HTML document, so it does not
+    // belong in a page sitemap (it's discoverable via Google Images through the <img> tags that use it).
+    { url: `${base}/abroad`, changeFrequency: "weekly" as const, priority: 0.7, lastModified: latestModified },
+    ...abroadAirportSlugs().map((slug) => ({
+      url: `${base}/abroad/${slug}`,
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+      lastModified: latestModified
     })),
     { url: `${base}/news`, changeFrequency: "daily" as const, priority: 0.9, lastModified: (() => {
         const latest = recentNews(1)[0];

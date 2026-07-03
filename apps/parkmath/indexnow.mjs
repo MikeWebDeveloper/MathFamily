@@ -71,25 +71,38 @@ const parkingVsDropOff = dropOffRecords
   .map((d) => d.airportSlug)
   .filter(Boolean);
 
+// "going abroad by car": union of every airport with a drop-off OR parking record — must mirror
+// abroadAirportSlugs() in lib/abroad-content.ts exactly (that's what generateStaticParams() uses).
+const abroad = [...new Set([...dropOff, ...parking])];
+
 const urls = [
   ...new Set([
     BASE,
     `${BASE}/llms.txt`,
     `${BASE}/parking-price-index-2026`,
     `${BASE}/drop-off-charges`,
+    // 2026-07-03 fix: this list had silently drifted from app/sitemap.ts — the price index, the
+    // airport-parking-options family (164 of 275 GSC striking-distance queries) and the abroad family
+    // were all missing, so none of them got the fast-crawl ping on production builds. Deliberately still
+    // NOT pinging /charts/[chart] — that route serves image/svg+xml (an image asset), not an HTML page.
+    `${BASE}/drop-off-charges/price-index`,
     `${BASE}/avoid-drop-off-charge`,
     `${BASE}/blue-badge`,
     `${BASE}/parking-vs-drop-off`,
+    `${BASE}/airport-parking-options`,
     `${BASE}/airport-parking`,
     `${BASE}/airport-lounges`,
+    `${BASE}/abroad`,
     `${BASE}/news`,
     ...dropOff.map((s) => `${BASE}/drop-off-charges/${s}`),
     ...avoid.map((s) => `${BASE}/avoid-drop-off-charge/${s}`),
     ...blueBadge.map((s) => `${BASE}/blue-badge/${s}`),
     ...parkingVsDropOff.map((s) => `${BASE}/parking-vs-drop-off/${s}`),
+    ...dropOff.map((s) => `${BASE}/airport-parking-options/${s}`),
     ...parking.map((s) => `${BASE}/airport-parking/${s}`),
     ...parking.flatMap((s) => DURATIONS.map((d) => `${BASE}/airport-parking/${s}/${d}`)),
     ...lounges.map((s) => `${BASE}/airport-lounges/${s}`),
+    ...abroad.map((s) => `${BASE}/abroad/${s}`),
     ...news.map((id) => `${BASE}/news/${id}`)
   ])
 ].slice(0, 10000); // IndexNow caps at 10k URLs per request

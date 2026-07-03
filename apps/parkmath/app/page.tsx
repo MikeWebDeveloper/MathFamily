@@ -59,6 +59,11 @@ export default function HomePage() {
     { href: "/parking-price-index-2026", title: "Price index & data", descriptor: "Track UK airport price trends + open data", icon: <PriceIndexIcon /> }
   ];
   const secondaryTiles = [
+    // Rescues /drop-off-charges/price-index, "unknown to Google" since 2026-06-26 — it was previously
+    // reachable only via the drop-off hub (2 clicks deep), never linked directly from the homepage
+    // (the primary-tile "Price index & data" tile above points at the separate /parking-price-index-2026
+    // page, not this one). Additive: does not touch the existing primary tile.
+    { href: "/drop-off-charges/price-index", title: "UK Drop-Off Price Index", icon: <PriceIndexIcon /> },
     { href: "/abroad", title: "Going abroad by car", icon: <GlobeIcon /> },
     { href: "/news", title: "Travel news", icon: <NewsIcon /> },
     { href: "/data/drop-off-charges.csv", title: "Open data (CSV)", icon: <DataIcon />, download: true }

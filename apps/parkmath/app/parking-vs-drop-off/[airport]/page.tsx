@@ -175,6 +175,11 @@ export default async function ParkingVsDropOffPage({ params }: { params: Promise
 
       <nav aria-label="Related pages" className="space-y-2">
         <p>
+          <Link href={`/airport-parking-options/${airport.slug}`} className="text-sm font-medium text-brand-accent underline underline-offset-4">
+            See every parking &amp; drop-off option at {airport.name}, compared →
+          </Link>
+        </p>
+        <p>
           <Link href={`/airport-parking/${airport.slug}`} className="text-sm font-medium text-brand-accent underline underline-offset-4">
             Full {airport.name} parking comparison — gate vs pre-book →
           </Link>
