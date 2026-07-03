@@ -18,6 +18,7 @@ import {
   parkingVsDropOffModel,
   qualifiesForParkingVsDropOff
 } from "@/lib/parking-vs-drop-off-content";
+import { tripLengthModel } from "@/lib/trip-length-content";
 
 export const dynamicParams = false;
 
@@ -70,6 +71,7 @@ export default async function ParkingVsDropOffPage({ params }: { params: Promise
   const model = parkingVsDropOffModel({ dropOff, parking })!;
   const faqs = buildParkingVsDropOffFaqs(model, dropOff, airport.name);
   const equivalence = parkingEquivalenceLine(model, airport.name);
+  const tripLength = tripLengthModel(parking, airport.name);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
   const pageUrl = `${siteUrl}/parking-vs-drop-off/${airport.slug}`;
 
@@ -152,6 +154,66 @@ export default async function ParkingVsDropOffPage({ params }: { params: Promise
         />
       </div>
 
+      {/* Short-stay vs long-stay cost-by-duration table (2026-07-03 parking sprint, tranche 2 item 8).
+          Structured data over prose per the brief: a real <table>, not a paragraph. Fail-closed —
+          tripLengthModel returns null when there's no gate price at any of 3/7/14 days, and a
+          pre-book column is populated ONLY where a same-duration snapshot exists (never estimated). */}
+      {tripLength ? (
+        <section aria-label="Cost by trip length" className="space-y-3">
+          <div className="space-y-1">
+            <h2 className="text-h2 font-semibold text-ink">Short trip or long stay — which is cheaper, by the day?</h2>
+            <p className="text-sm text-ink-muted">{tripLength.verdict}</p>
+          </div>
+          <div className="overflow-x-auto rounded-lg border border-ink/10">
+            <table className="w-full min-w-[560px] border-collapse text-sm">
+              <caption className="sr-only">
+                {airport.name}: drive-up gate parking cost per day by trip length, and where pre-booking beats it.
+              </caption>
+              <thead>
+                <tr className="border-b border-ink/15 bg-surface-muted text-left">
+                  <th scope="col" className="px-3 py-2 font-semibold text-ink">Trip length</th>
+                  <th scope="col" className="px-3 py-2 font-semibold text-ink">Gate (total)</th>
+                  <th scope="col" className="px-3 py-2 font-semibold text-ink">Gate (per day)</th>
+                  <th scope="col" className="px-3 py-2 font-semibold text-ink">Pre-book</th>
+                  <th scope="col" className="px-3 py-2 font-semibold text-ink">Cheaper for this trip</th>
+                </tr>
+              </thead>
+              <tbody>
+                {tripLength.rows.map((row) => (
+                  <tr key={row.days} className="border-b border-ink/8 last:border-0">
+                    <th scope="row" className="px-3 py-2 text-left font-medium text-ink">{row.label}</th>
+                    <td className="px-3 py-2 tabular-nums text-ink">{row.gatePence !== null ? formatPence(row.gatePence) : "—"}</td>
+                    <td className="px-3 py-2 tabular-nums text-ink-muted">{row.gatePerDayPence !== null ? `${formatPence(row.gatePerDayPence)}/day` : "—"}</td>
+                    <td className="px-3 py-2 tabular-nums text-ink">
+                      {row.prebookPence !== null ? (
+                        <>
+                          {formatPence(row.prebookPence)}
+                          {row.savingPence !== null ? (
+                            <span className="ml-1.5 rounded-full bg-positive/10 px-1.5 py-0.5 text-[11px] font-semibold text-positive">
+                              save {formatPence(row.savingPence)}
+                            </span>
+                          ) : null}
+                        </>
+                      ) : (
+                        <span className="text-ink-muted">No verified snapshot</span>
+                      )}
+                    </td>
+                    <td className="px-3 py-2 font-medium text-ink">
+                      {row.cheaperOption === "prebook" ? "Pre-book" : row.cheaperOption === "gate" ? "Gate" : row.cheaperOption === "tie" ? "Either — same price" : "Gate (only verified figure)"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-xs text-ink-muted">
+            Gate prices are {airport.name}&apos;s official drive-up tariff at each duration. A pre-book figure is
+            shown only where we hold a dated snapshot at that exact trip length — we never scale a snapshot from
+            a different duration onto these rows. Verified {tripLength.verifiedAt}.
+          </p>
+        </section>
+      ) : null}
+
       {dropOff.freeAlternative ? (
         <Callout variant="free" title={`Want to avoid both? Use the ${dropOff.freeAlternative.name}`}>
           {isPublicTransportAlt(dropOff.freeAlternative) ? "" : `Free for ${dropOff.freeAlternative.minutesFree} minutes. `}{dropOff.freeAlternative.details}{" "}
@@ -174,6 +236,11 @@ export default async function ParkingVsDropOffPage({ params }: { params: Promise
       />
 
       <nav aria-label="Related pages" className="space-y-2">
+        <p>
+          <Link href={`/airport-parking-options/${airport.slug}`} className="text-sm font-medium text-brand-accent underline underline-offset-4">
+            See every parking &amp; drop-off option at {airport.name}, compared →
+          </Link>
+        </p>
         <p>
           <Link href={`/airport-parking/${airport.slug}`} className="text-sm font-medium text-brand-accent underline underline-offset-4">
             Full {airport.name} parking comparison — gate vs pre-book →

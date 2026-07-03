@@ -43,6 +43,17 @@ export default function ParkingVsDropOffIndexPage() {
     .filter((r): r is ParkingVsDropOffIndexRow => r !== null)
     .sort((a, b) => b.parkingPence - a.parkingPence);
 
+  // Regional-first emphasis (Mike's 2026-07-03 strategy call): concentrate extra link weight on the
+  // smaller/regional airports in our pos-20-35 band. Of the named targets (Prestwick/Teesside/
+  // Inverness/Aberdeen/Belfast/Exeter), only Teesside actually has a verified parking tariff — the
+  // rest have no gate price on file, so genuinely cannot get a comparison page (fail-closed, not a
+  // bug: see the 2026-07-03 parking-sprint board entry). Substituted with the other regional/secondary
+  // airports that DO qualify, as the closest honest match to the same "underdog regional" intent.
+  const regionalSlugs = ["teesside", "newcastle", "liverpool", "leeds-bradford"];
+  const regional = regionalSlugs
+    .map((slug) => rows.find((r) => r.slug === slug))
+    .filter((r): r is ParkingVsDropOffIndexRow => Boolean(r));
+
   const verifiedDates = rows.map((r) => {
     const d = dropOffRecords.find((x) => x.airportSlug === r.slug)!;
     const p = parkingRecords.find((x) => x.airportSlug === r.slug)!;
@@ -74,6 +85,24 @@ export default function ParkingVsDropOffIndexPage() {
         <FreshnessBadge verifiedAt={latestVerified} oldestRowDate={oldestVerified} />
         <p className="text-lead text-ink">{parkingVsDropOffIndexSummary(rows)}</p>
       </header>
+
+      {regional.length > 0 ? (
+        <section className="space-y-2" aria-label="Regional UK airports — parking vs drop-off">
+          <h2 className="text-base font-semibold text-ink">Regional airports</h2>
+          <ul className="flex flex-wrap gap-2 text-sm">
+            {regional.map((r) => (
+              <li key={r.slug}>
+                <Link
+                  href={`/parking-vs-drop-off/${r.slug}`}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-brand-accent/30 bg-brand-accent/[0.04] px-3 py-1.5 font-medium text-brand-accent hover:bg-brand-accent/10"
+                >
+                  Park or drop off at {r.name}?
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       <section className="space-y-3">
         <h2 className="text-h2 font-semibold text-ink">Pick your airport</h2>

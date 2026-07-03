@@ -6,6 +6,7 @@ import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd, speakableLd } from "@mathfamily/geo";
 import { AnswerCard, AnswerLead, AnswerPassage, CaveatChip, Callout, FaqAccordion, FreshnessBadge, LatestUpdates, MiniAnswerBar, PageHeading, SourceCitation, SourcesBlock, EmailCaptureSlot, UkMap, VerifiedStamp } from "@mathfamily/ui";
 import { DropOffCalculator } from "@/components/drop-off-calculator";
+import { DropOffCalculatorBridge } from "@/components/drop-off-calculator-bridge";
 import { DropOffParkingBridge } from "@/components/drop-off-bridge";
 import { HolidayExtrasCard } from "@/components/holiday-extras-card";
 import { bandPriceParenthetical, buildDropOffFaqs, dropOffChangeNote, dropOffTimeLimitNote, freshnessDelta, isPerEntryTariff, nearbyDropOffComparison, paymentDeadlineChip, searchName, trendNote } from "@/lib/content";
@@ -169,6 +170,12 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
         />
         <UkMap markers={[{ lat: airport.lat, lng: airport.lng, active: true }]} className="hidden h-[160px] w-auto self-center text-brand-strong sm:block" aria-hidden />
       </div>
+
+      {/* Above-the-fold calculator bridge (P0, tranche 2 item 7): the punchy £X-vs-£Y teaser, right
+          after the primary answer stat — highest position on the page a new CTA can take without
+          disturbing the AnswerLead/AnswerCard answer-first hierarchy above. Fail-closed; renders
+          nothing for free-drop-off airports, airports with no parking tariff, or no live merchant. */}
+      <DropOffCalculatorBridge slug={airport.slug} />
 
       {/* Penalty stat chip — inline pair: charge tile + penalty tile, visible at a glance */}
       {!record.isFree && record.penaltyPence !== null ? (

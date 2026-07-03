@@ -1,6 +1,6 @@
-import { formatPence } from "@mathfamily/engine";
+import { compareParking, formatPence } from "@mathfamily/engine";
 import { isPublicTransportAlt, loadDropOffDataset, loadParkingDataset, type DropOffRecord, type ParkingRecord } from "@mathfamily/data";
-import { resolveParkingMerchant } from "./partners";
+import { goLink, resolveParkingMerchant } from "./partners";
 
 /** Inputs needed to decide whether an airport can have a "parking vs drop-off" page.
  *  We need BOTH a real drop-off charge (a charging airport with a priced first band) AND
@@ -291,4 +291,59 @@ export function parkingVsDropOffIndexSummary(rows: ParkingVsDropOffIndexRow[]): 
   if (rows.length === 0) return "We don't yet have both a verified drop-off charge and a drive-up parking tariff for any UK airport.";
   const dearest = [...rows].sort((a, b) => b.parkingPence - a.parkingPence)[0]!;
   return `We compare drive-up parking against the forecourt drop-off charge at ${rows.length} UK airports, all from official figures. The steepest drive-up parking is at ${dearest.name}: ${formatPence(dearest.parkingPence)} for ${dearest.parkingDays} days versus a single ${formatPence(dearest.dropOffFeePence)} drop-off.`;
+}
+
+// ─── Above-the-fold calculator bridge (2026-07-03 parking sprint, tranche 2 item 7) ───────────────
+// A compact, punchy teaser CTA for `/drop-off-charges/[airport]`, positioned right after the page's
+// primary answer stat — separate from and higher up than the fuller `DropOffParkingBridge` Callout
+// further down the page. FAIL-CLOSED on three independent things: a real (non-free) drop-off fee, a
+// verified parking price for the reference duration, AND a live resolving affiliate link — so this
+// can never render a fabricated price or a CTA that 404s.
+
+export interface DropOffCalculatorBridgeModel {
+  /** Render the bridge at all. False when any of: free drop-off, no parking tariff for this airport,
+   *  or no affiliate merchant currently resolves for it (never guess/half-render). */
+  show: boolean;
+  dropOffFeePence: number | null;
+  /** The CHEAPEST verified price for `parkingDays` — gate or pre-book, whichever is lower (an honest
+   *  "from £Y"; the gate price alone is a ceiling, not a floor, so it is not used verbatim here). */
+  parkingFromPence: number | null;
+  parkingDays: number;
+  /** Tracked /go redirect for the CTA, surface "dropoffbridge" (distinct from the lower bridge's
+   *  "dropoff" surface, so the two CTAs are attributable separately in the click log). Empty when show is false. */
+  ctaHref: string;
+}
+
+export function dropOffCalculatorBridge(slug: string): DropOffCalculatorBridgeModel {
+  const empty: DropOffCalculatorBridgeModel = { show: false, dropOffFeePence: null, parkingFromPence: null, parkingDays: REFERENCE_DAYS, ctaHref: "" };
+
+  const dropOff = loadDropOffDataset().records.find((r) => r.airportSlug === slug);
+  const parking = loadParkingDataset().records.find((r) => r.airportSlug === slug);
+  if (!dropOff || !parking || !qualifiesForParkingVsDropOff({ dropOff, parking })) return empty;
+
+  const model = parkingVsDropOffModel({ dropOff, parking });
+  if (!model) return empty;
+
+  // Fail-closed on the affiliate link actually resolving — never render a CTA that would 404.
+  if (!resolveParkingMerchant(slug, "dropoffbridge")) return empty;
+
+  // The honest "from £Y": the cheapest verified option for the reference duration (gate or a
+  // same-duration pre-book snapshot), not just the (higher) drive-up gate price used by the model.
+  const cheapest = compareParking(parking, REFERENCE_DAYS).cheapest;
+  const parkingFromPence = cheapest?.totalPence ?? model.parkingPence;
+
+  return {
+    show: true,
+    dropOffFeePence: model.dropOffFeePence,
+    parkingFromPence,
+    parkingDays: model.parkingDays,
+    ctaHref: goLink("dropoffbridge", slug, "parking")
+  };
+}
+
+/** The exact "One drop-off costs £X — N days of parking from £Y." line. Returns null whenever the
+ *  bridge shouldn't show, so callers never have to duplicate the fail-closed check. Pure + tested. */
+export function dropOffCalculatorBridgeLine(bridge: DropOffCalculatorBridgeModel): string | null {
+  if (!bridge.show || bridge.dropOffFeePence === null || bridge.parkingFromPence === null) return null;
+  return `One drop-off costs ${formatPence(bridge.dropOffFeePence)} — ${bridge.parkingDays} days of parking from ${formatPence(bridge.parkingFromPence)}.`;
 }

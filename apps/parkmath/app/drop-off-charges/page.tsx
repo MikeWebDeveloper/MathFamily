@@ -46,6 +46,23 @@ export default function MasterTablePage() {
       fee: r.isFree ? "Free" : formatPence(r.bands[0]?.totalPence ?? 0)
     }));
 
+  // Major-airport reinforcement (2026-07-03 indexing census): birmingham/gatwick/manchester/luton/
+  // edinburgh/glasgow were the worst-indexed drop-off-charges pages (8/14 sampled), all missing a
+  // homepage/hub referrer at last crawl. The "Per-airport drop-off guides" list further down already
+  // links every airport, but every entry there gets identical, undifferentiated link weight — these
+  // six big airports get no concentrated signal the way stansted/southend/bristol do above. This
+  // strip adds that concentration without touching the existing curated "most-searched" set or the
+  // full A-Z list. Resolved from the dataset only (never hardcoded away from what actually exists).
+  const majorAirportSlugs = ["birmingham", "gatwick", "manchester", "luton", "edinburgh", "glasgow"];
+  const majorAirports = majorAirportSlugs
+    .map((slug) => records.find((r) => r.airportSlug === slug))
+    .filter((r): r is (typeof records)[number] => Boolean(r))
+    .map((r) => ({
+      slug: r.airportSlug,
+      name: nameFor(r.airportSlug),
+      fee: r.isFree ? "Free" : formatPence(r.bands[0]?.totalPence ?? 0)
+    }));
+
   // Stansted keystone wedge — the flagship example for the hub's body-level internal link. The
   // £28 worst-case is read honestly from the dataset (dropOffWorstCasePence → last band /
   // maxChargePence) and the "from 19 March 2026" fact verbatim from penaltyNotes; renders only when
@@ -193,6 +210,25 @@ export default function MasterTablePage() {
                 >
                   {f.name} drop-off charge
                   <span className="text-xs font-normal text-ink-muted">{f.fee}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
+      {majorAirports.length > 0 ? (
+        <section className="space-y-2" aria-label="Major UK airport drop-off charges">
+          <h2 className="text-base font-semibold text-ink">Major UK airports</h2>
+          <ul className="flex flex-wrap gap-2 text-sm">
+            {majorAirports.map((a) => (
+              <li key={a.slug}>
+                <Link
+                  href={`/drop-off-charges/${a.slug}`}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-ink/15 bg-surface-muted px-3 py-1.5 font-medium text-ink hover:border-brand-accent/40 hover:text-brand-accent"
+                >
+                  {a.name} drop-off charge
+                  <span className="text-xs font-normal text-ink-muted">{a.fee}</span>
                 </Link>
               </li>
             ))}
