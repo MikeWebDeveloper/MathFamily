@@ -1,6 +1,6 @@
 {
-  "version": "1.3.0",
-  "lastUpdated": "2026-06-22",
+  "version": "1.3.1",
+  "lastUpdated": "2026-07-03",
   "records": [
     {
       "airportSlug": "heathrow",
@@ -397,8 +397,8 @@
       "maxStayMinutes": 10,
       "perMinuteAfterPence": 100,
       "maxChargePence": null,
-      "penaltyPence": null,
-      "penaltyNotes": "After the first 5 minutes the charge is £1 per minute up to the 10-minute maximum stay; a Parking Charge may apply for non-payment but no amount is confirmed on the official page",
+      "penaltyPence": 10000,
+      "penaltyNotes": "After the first 5 minutes the charge is £1 per minute up to the 10-minute maximum stay; a £100 enforcement charge applies for staying past the 10-minute maximum, reduced to £60 if paid within 14 days",
       "paymentDeadline": "Midnight the following day (online, barrierless ANPR)",
       "blueBadgePolicy": "Blue Badge holders are exempt from the drop-off charge (register/sign in to the drop-off system to apply the exemption)",
       "freeAlternative": {
@@ -409,7 +409,7 @@
       },
       "priorYearFeePence": 0,
       "sourceUrl": "https://www.londoncityairport.com/parking/drop-off",
-      "verifiedAt": "2026-06-22"
+      "verifiedAt": "2026-07-03"
     },
     {
       "airportSlug": "leeds-bradford",

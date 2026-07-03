@@ -291,3 +291,16 @@ Note: the old placeholder had Prestige at £459 with perVisitPence 0 and Standar
    may move with date and duration.
 4. **Luton** MyLounge replaced Aspire (2024) — the official URL still resolves under the
    `/executive-lounges/aspire-lounge` path; confirm naming if the page slug changes.
+
+---
+
+## 2026-07-03 — daily re-verification (hard-blocked target: Newcastle parking)
+
+Daily ParkMath data-check sweep. In-scope parking re-verification target: **`parking:newcastle`** (standing hard-blocked target). No parking record was stale by the 46-day rule (oldest `verifiedAt` 2026-06-10, newest Newcastle at 2026-06-27), and no news change touched parking tariffs.
+
+### newcastle — Long Stay "Turn up & park" — CONFIRMED UNCHANGED (no dataset edit)
+- **Official URL:** https://www.newcastleairport.com/car-parking/car-parking-options/
+- **Transport:** direct WebFetch returned HTTP 403; page read successfully via `r.jina.ai` on 2026-07-03.
+- Official Long Stay "Turn up & park price" table read verbatim: Up to 24h **£50.00**, 2 days **£80.00**, 3 days **£120.00**, 4 days **£160.00**, then **£40.00** per day (or part) thereafter.
+- Stored record matches: 3-day = £120 (published directly); 7-day = £280 (= £160 + 3×£40); 14-day = £560 (= £280 + 7×£40). Arithmetic and published anchors all still correct.
+- No change applied. `verifiedAt` left at 2026-06-27 (already fresh; the daily task makes no dataset change when a record is confirmed accurate).
