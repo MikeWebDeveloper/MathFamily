@@ -8,7 +8,7 @@ import { AnswerCard, AnswerLead, AnswerPassage, CaveatChip, Callout, FaqAccordio
 import { DropOffCalculator } from "@/components/drop-off-calculator";
 import { DropOffParkingBridge } from "@/components/drop-off-bridge";
 import { HolidayExtrasCard } from "@/components/holiday-extras-card";
-import { bandPriceParenthetical, buildDropOffFaqs, dropOffTimeLimitNote, freshnessDelta, isPerEntryTariff, paymentDeadlineChip, searchName, trendNote } from "@/lib/content";
+import { bandPriceParenthetical, buildDropOffFaqs, dropOffChangeNote, dropOffTimeLimitNote, freshnessDelta, isPerEntryTariff, nearbyDropOffComparison, paymentDeadlineChip, searchName, trendNote } from "@/lib/content";
 import { airportHasParkingVsDropOff, dropOffParkingBridge } from "@/lib/parking-vs-drop-off-content";
 
 export const dynamicParams = false;
@@ -66,6 +66,14 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
   const faqs = buildDropOffFaqs(record, airport.name);
   const timeLimitNote = dropOffTimeLimitNote(record);
   const trend = trendNote(record);
+  // Freshness/news hook, on the airport's own page (previously only on the hub's keystone wedge) —
+  // the same "just changed" framing independent coverage (BBC, Reddit) is picking up on for Stansted.
+  const changeNote = dropOffChangeNote(record, airport.name);
+  // "How does X compare" — Heathrow (the national benchmark) + nearest-by-distance, every figure
+  // read from the same verified per-airport records (2026-07-02 SEO pass, competitive-gap fix:
+  // top-ranking competitors on "stansted drop off charges" show an in-page multi-airport comparison
+  // that this page lacked).
+  const comparisonRows = nearbyDropOffComparison(airport, loadAirports(), loadDropOffDataset().records);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
   const hasParking = loadParkingDataset().records.some((r) => r.airportSlug === slug);
   const hasLounge = loadLoungeDataset().records.some((r) => r.airportSlug === slug);
@@ -118,6 +126,12 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
           against the official {airport.name} page.
         </p>
       </header>
+
+      {changeNote ? (
+        <aside className="rounded-lg border border-amber-300/70 bg-amber-50/70 px-4 py-3 text-sm dark:border-amber-400/30 dark:bg-amber-400/[0.07]">
+          <p className="mf-speakable text-ink">{changeNote}</p>
+        </aside>
+      ) : null}
 
       {!record.isFree ? (
         <div className="flex flex-wrap gap-2">
@@ -245,6 +259,31 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
         <h2 className="mf-underline-grow text-xl font-semibold text-ink">Frequently asked questions</h2>
         <FaqAccordion items={faqs} />
       </section>
+
+      {comparisonRows.length > 0 ? (
+        <section className="space-y-3">
+          <AnswerPassage question={`How does ${sn} compare to other UK airports for drop-off charges?`}>
+            {record.isFree
+              ? `${sn} Airport lets you drop off free.`
+              : `${sn} Airport charges ${formatPence(record.bands[0]?.totalPence ?? 0)} to drop off, for up to ${record.bands[0]?.upToMinutes ?? 0} minutes.`}{" "}
+            Here&apos;s how that compares to the UK&apos;s busiest airport and the nearest other airports — every figure read from that airport&apos;s own official page.
+          </AnswerPassage>
+          <ul className="grid grid-cols-1 gap-2 text-sm sm:grid-cols-3">
+            {comparisonRows.map((c) => (
+              <li key={c.slug}>
+                <Link
+                  href={`/drop-off-charges/${c.slug}`}
+                  className="mf-edge flex items-center justify-between gap-2 rounded-card border border-ink/10 bg-card p-3 transition hover:border-brand-accent/40"
+                  style={{ boxShadow: "var(--shadow-card)" }}
+                >
+                  <span className="font-medium text-ink">{c.name}</span>
+                  <span className="mf-num text-ink-muted">{c.isFree ? "Free" : c.fee}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       {(
         <section className="space-y-2">

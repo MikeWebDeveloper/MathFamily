@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { loadAirports, loadDropOffDataset } from "@mathfamily/data";
-import { breadcrumbLd, itemListLd, JsonLd } from "@mathfamily/geo";
-import { FreshnessBadge, PageHeading } from "@mathfamily/ui";
+import { formatPence } from "@mathfamily/engine";
+import { breadcrumbLd, itemListLd, JsonLd, speakableLd } from "@mathfamily/geo";
+import { AnswerPassage, FreshnessBadge, PageHeading } from "@mathfamily/ui";
 import { searchName } from "@/lib/content";
 
 export const metadata: Metadata = {
@@ -22,6 +23,21 @@ export default function AirportParkingOptionsIndex() {
   );
   const latestVerified = records.map((r) => r.verifiedAt).sort().at(-1) ?? dataset.lastUpdated;
 
+  // Most-searched parking-options pages (curated, same trio as the /drop-off-charges hub for
+  // consistency): concentrate internal-link equity from this hub at the airports with the most real
+  // search demand. 2026-07-02 SEO pass — this hub previously had only a plain link grid, the weakest
+  // internal-linking page in the cluster, while airport-parking-options/stansted sits flat at ~pos 64
+  // (vs. drop-off-charges/stansted, which improved after the SAME kind of featured link).
+  const featuredSlugs = ["stansted", "southend", "bristol"];
+  const featured = featuredSlugs
+    .map((slug) => records.find((r) => r.airportSlug === slug))
+    .filter((r): r is (typeof records)[number] => Boolean(r))
+    .map((r) => ({
+      slug: r.airportSlug,
+      name: searchName(airports.get(r.airportSlug)?.name ?? r.airportSlug),
+      fee: r.isFree ? "Free" : formatPence(r.bands[0]?.totalPence ?? 0)
+    }));
+
   return (
     <article className="space-y-6">
       <JsonLd
@@ -40,16 +56,37 @@ export default function AirportParkingOptionsIndex() {
           }))
         })}
       />
+      <JsonLd data={speakableLd({ url: `${siteUrl}/airport-parking-options` })} />
 
       <header className="space-y-3">
         <PageHeading>UK airport parking options: drop-off vs Park &amp; Ride vs Meet &amp; Greet</PageHeading>
         <FreshnessBadge verifiedAt={latestVerified} />
-        <p className="text-ink-muted">
-          The cheapest way in and out of each UK airport, side by side: a quick forecourt drop-off, the free alternative,
-          drive-up gate parking, and pre-booked Park &amp; Ride or Meet &amp; Greet. Every verified price is read from the
-          airport&apos;s own page — our ranking is never affected by commission, and we never invent a &ldquo;from £X&rdquo;.
-        </p>
       </header>
+
+      <AnswerPassage question="What's the cheapest way to park or drop off at a UK airport?">
+        The cheapest way in and out of each UK airport, side by side: a quick forecourt drop-off, the free alternative,
+        drive-up gate parking, and pre-booked Park &amp; Ride or Meet &amp; Greet. Every verified price is read from the
+        airport&apos;s own page — our ranking is never affected by commission, and we never invent a &ldquo;from £X&rdquo;.
+      </AnswerPassage>
+
+      {featured.length > 0 ? (
+        <section className="space-y-2" aria-label="Most-searched airport parking options">
+          <h2 className="text-base font-semibold text-ink">Most-searched parking options</h2>
+          <ul className="flex flex-wrap gap-2 text-sm">
+            {featured.map((f) => (
+              <li key={f.slug}>
+                <Link
+                  href={`/airport-parking-options/${f.slug}`}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-brand-accent/30 bg-brand-accent/[0.04] px-3 py-1.5 font-medium text-brand-accent hover:bg-brand-accent/10"
+                >
+                  {f.name} parking options
+                  <span className="text-xs font-normal text-ink-muted">{f.fee}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       <section className="space-y-3">
         <h2 className="text-h2 font-semibold text-ink">Pick your airport</h2>

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { isPublicTransportAlt, loadAirports, loadDropOffDataset } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
-import { breadcrumbLd, datasetLd, itemListLd, JsonLd, tableLd } from "@mathfamily/geo";
+import { breadcrumbLd, datasetLd, itemListLd, JsonLd, speakableLd, tableLd } from "@mathfamily/geo";
 import { AnswerPassage, FreshnessBadge, OpenDataBand, PageHeading, StatStrip } from "@mathfamily/ui";
 import { buildDropOffLeague, dropOffHubAnswer, dropOffIndexSummary, dropOffPerMinutePence, dropOffWorstCasePence, isPerEntryTariff } from "@/lib/content";
 import { SortableFeeTable, type DropOffRow } from "@/components/sortable-fee-table";
@@ -133,12 +133,18 @@ export default function MasterTablePage() {
           }))
         })}
       />
+      {/* AI-visibility pilot (2026-07-02, escalations/2026-06-30-ai-visibility.todo.md query 1:
+          "uk airport drop off fees" — AIO renders but ParkMath isn't cited). The passage below was
+          already speakable-classed but had no matching JSON-LD, so the markup was inert for
+          extraction; this makes it real. */}
+      <JsonLd data={speakableLd({ url: `${siteUrl}/drop-off-charges` })} />
 
       <header className="space-y-3">
         <PageHeading>UK airport drop-off charges, compared (2026)</PageHeading>
         <FreshnessBadge verifiedAt={latestVerified} oldestRowDate={oldestVerified} />
-        <p className="mf-speakable text-lead text-ink">{hubAnswer}</p>
       </header>
+
+      <AnswerPassage question="What are the UK airport drop-off fees?">{hubAnswer}</AnswerPassage>
 
       {dearest && cheapest ? (
         <StatStrip

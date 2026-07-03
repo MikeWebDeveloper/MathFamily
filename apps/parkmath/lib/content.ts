@@ -1,5 +1,5 @@
-import { formatPence, loungeBreakEven } from "@mathfamily/engine";
-import { isPublicTransportAlt, type DropOffRecord, type LoungeRecord, type PriorityPassTier } from "@mathfamily/data";
+import { formatPence, loungeBreakEven, nearestAirports } from "@mathfamily/engine";
+import { isPublicTransportAlt, type Airport, type DropOffRecord, type LoungeRecord, type PriorityPassTier } from "@mathfamily/data";
 
 /**
  * The token people actually search. The dataset stores official names ("London Stansted",
@@ -478,4 +478,76 @@ export function buildPriceIndex(
       verifiedAt: r.verifiedAt
     };
   });
+}
+
+/**
+ * A citable "this just changed" sentence for the airport's OWN page — the exact freshness/news hook
+ * that gets independent pickup (BBC, Reddit, competitor blogs all frame the Stansted rise as "new
+ * this year"), but which previously only surfaced on the /drop-off-charges hub's keystone wedge, not
+ * on the airport's own page. Parses the existing `penaltyNotes` field for a "(from <date>)" pattern —
+ * the SAME field the hub already reads for its own wedge — so this never invents a date: airports
+ * without that exact dated pattern in their real data simply return null. Pure + unit-tested.
+ */
+export function dropOffChangeNote(record: Pick<DropOffRecord, "isFree" | "bands" | "penaltyNotes">, airportName: string): string | null {
+  if (record.isFree || record.bands.length < 2) return null;
+  const notes = record.penaltyNotes ?? "";
+  const match = notes.match(/\(from ([^)]+)\)/i);
+  if (!match) return null;
+  const date = match[1]!.trim();
+  const first = record.bands[0]!;
+  const next = record.bands[1]!;
+  return `This is a recent change: ${airportName}'s step-up to ${formatPence(next.totalPence)} for stays over ${first.upToMinutes} minutes took effect from ${date} — several guides and aggregators still quote the old ${formatPence(first.totalPence)} flat rate.`;
+}
+
+export interface DropOffComparisonRow {
+  slug: string;
+  name: string;
+  isFree: boolean;
+  /** "Free" | "£10.00" */
+  fee: string;
+  upToMinutes: number | null;
+}
+
+/**
+ * Fee-comparison rows for "how does X compare to other airports" — always includes Heathrow (the
+ * UK's busiest airport, the default benchmark searchers compare every other charge against —
+ * confirmed by real "how does Stansted compare to Heathrow" search demand) when it isn't the airport
+ * itself, then fills the remaining slots with the nearest airports by great-circle distance (reusing
+ * the same `nearestAirports` haversine helper the homepage's "find airports near me" tool uses, so
+ * "nearby" means the same thing everywhere on the site). Skips any candidate without a drop-off
+ * record. Every figure returned is the SAME verified record used on that airport's own page — never
+ * a new or derived number. Pure + unit-tested.
+ */
+export function nearbyDropOffComparison(
+  airport: Pick<Airport, "slug" | "lat" | "lng">,
+  allAirports: Airport[],
+  allRecords: Pick<DropOffRecord, "airportSlug" | "isFree" | "bands">[],
+  count = 3
+): DropOffComparisonRow[] {
+  const BENCHMARK_SLUG = "heathrow";
+  const candidates: Airport[] = [];
+  if (airport.slug !== BENCHMARK_SLUG) {
+    const benchmark = allAirports.find((a) => a.slug === BENCHMARK_SLUG);
+    if (benchmark) candidates.push(benchmark);
+  }
+  const others = allAirports.filter((a) => a.slug !== airport.slug && a.slug !== BENCHMARK_SLUG);
+  for (const { airport: near } of nearestAirports(airport.lat, airport.lng, others, others.length)) {
+    if (candidates.length >= count) break;
+    candidates.push(near);
+  }
+
+  const rows: DropOffComparisonRow[] = [];
+  for (const candidate of candidates.slice(0, count)) {
+    const r = allRecords.find((x) => x.airportSlug === candidate.slug);
+    if (!r) continue;
+    const first = r.bands[0];
+    rows.push({
+      slug: candidate.slug,
+      name: candidate.name,
+      isFree: r.isFree,
+      fee: r.isFree ? "Free" : first ? formatPence(first.totalPence) : "—",
+      upToMinutes: r.isFree || !first ? null : first.upToMinutes
+    });
+  }
+  return rows;
 }

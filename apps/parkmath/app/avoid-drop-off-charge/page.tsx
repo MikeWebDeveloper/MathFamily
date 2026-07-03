@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { isPublicTransportAlt, loadAirports, loadDropOffDataset } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
-import { breadcrumbLd, itemListLd, JsonLd } from "@mathfamily/geo";
-import { FreshnessBadge, PageHeading } from "@mathfamily/ui";
+import { breadcrumbLd, itemListLd, JsonLd, speakableLd } from "@mathfamily/geo";
+import { AnswerPassage, FreshnessBadge, PageHeading } from "@mathfamily/ui";
 import { avoidIndexSummary, qualifiesForAvoidPage } from "@/lib/avoid-content";
 
 export const metadata: Metadata = {
@@ -50,11 +50,15 @@ export default function AvoidIndexPage() {
           }))
         })}
       />
+      {/* AI-visibility pilot (2026-07-02, escalations/2026-06-30-ai-visibility.todo.md query 2:
+          "how to avoid airport drop off charges" — AIO renders but ParkMath isn't cited). */}
+      <JsonLd data={speakableLd({ url: `${siteUrl}/avoid-drop-off-charge` })} />
       <header className="space-y-3">
         <PageHeading>How to avoid UK airport drop-off charges</PageHeading>
         <FreshnessBadge verifiedAt={latestVerified} oldestRowDate={oldestVerified} />
-        <p className="text-lead text-ink">{avoidIndexSummary(rows)}</p>
       </header>
+
+      <AnswerPassage question="How do I avoid airport drop-off charges?">{avoidIndexSummary(rows)}</AnswerPassage>
 
       <section className="space-y-3">
         <h2 className="text-h2 font-semibold text-ink">Pick your airport</h2>

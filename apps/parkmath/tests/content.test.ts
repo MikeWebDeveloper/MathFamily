@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { DropOffRecord, LoungeRecord, PriorityPassTier } from "@mathfamily/data";
-import { bandPriceParenthetical, buildDropOffFaqs, buildDropOffLeague, buildLoungeFaqs, buildPriceIndex, dearestDropOff, dearestWorstCase, dropOffHubAnswer, dropOffIndexSummary, dropOffPerMinutePence, dropOffTimeLimitNote, dropOffWorstCasePence, freshnessDelta, isPerEntryTariff, paymentDeadlineChip, searchName, trendNote } from "../lib/content";
+import type { Airport, DropOffRecord, LoungeRecord, PriorityPassTier } from "@mathfamily/data";
+import { bandPriceParenthetical, buildDropOffFaqs, buildDropOffLeague, buildLoungeFaqs, buildPriceIndex, dearestDropOff, dearestWorstCase, dropOffChangeNote, dropOffHubAnswer, dropOffIndexSummary, dropOffPerMinutePence, dropOffTimeLimitNote, dropOffWorstCasePence, freshnessDelta, isPerEntryTariff, nearbyDropOffComparison, paymentDeadlineChip, searchName, trendNote } from "../lib/content";
 
 const record: DropOffRecord = {
   airportSlug: "gatwick",
@@ -440,5 +440,86 @@ describe("dearestWorstCase", () => {
 
   it("ignores free airports and returns null when nothing charges", () => {
     expect(dearestWorstCase([{ airportSlug: "inverness", isFree: true, bands: [], maxChargePence: null }])).toBeNull();
+  });
+});
+
+describe("dropOffChangeNote", () => {
+  it("surfaces the dated step-up when penaltyNotes carries a (from <date>) pattern (Stansted's £28 rise)", () => {
+    const note = dropOffChangeNote(
+      {
+        isFree: false,
+        bands: [{ upToMinutes: 15, totalPence: 1000 }, { upToMinutes: 30, totalPence: 2800 }],
+        penaltyNotes: "£28 tier applies to stays over 15 minutes (from 19 March 2026); a Parking Charge may also be issued"
+      },
+      "Stansted Airport"
+    );
+    expect(note).toContain("19 March 2026");
+    expect(note).toContain("£28");
+    expect(note).toContain("£10");
+  });
+
+  it("returns null when there's no dated pattern in penaltyNotes", () => {
+    expect(
+      dropOffChangeNote(
+        { isFree: false, bands: [{ upToMinutes: 20, totalPence: 1000 }, { upToMinutes: 40, totalPence: 2000 }], penaltyNotes: "Standard PCN applies" },
+        "Gatwick"
+      )
+    ).toBeNull();
+  });
+
+  it("returns null for free airports and single-band (non-stepped) tariffs", () => {
+    expect(dropOffChangeNote({ isFree: true, bands: [], penaltyNotes: null }, "Manchester")).toBeNull();
+    expect(
+      dropOffChangeNote({ isFree: false, bands: [{ upToMinutes: 1, totalPence: 700 }], penaltyNotes: "(from 1 January 2026)" }, "Heathrow")
+    ).toBeNull();
+  });
+});
+
+describe("nearbyDropOffComparison", () => {
+  const heathrow: Airport = { name: "London Heathrow", slug: "heathrow", iata: "LHR", region: "London", lat: 51.47, lng: -0.4543 };
+  const luton: Airport = { name: "London Luton", slug: "luton", iata: "LTN", region: "London", lat: 51.8747, lng: -0.3683 };
+  const londonCity: Airport = { name: "London City", slug: "london-city", iata: "LCY", region: "London", lat: 51.5053, lng: 0.0553 };
+  const southend: Airport = { name: "London Southend", slug: "southend", iata: "SEN", region: "East of England", lat: 51.5714, lng: 0.6956 };
+  const stansted: Airport = { name: "London Stansted", slug: "stansted", iata: "STN", region: "London", lat: 51.886, lng: 0.2389 };
+  const allAirports = [heathrow, luton, londonCity, southend, stansted];
+  const allRecords: Pick<DropOffRecord, "airportSlug" | "isFree" | "bands">[] = [
+    { airportSlug: "heathrow", isFree: false, bands: [{ upToMinutes: 1, totalPence: 700 }] },
+    { airportSlug: "luton", isFree: false, bands: [{ upToMinutes: 10, totalPence: 700 }] },
+    { airportSlug: "london-city", isFree: false, bands: [{ upToMinutes: 5, totalPence: 800 }] },
+    { airportSlug: "southend", isFree: true, bands: [] },
+    { airportSlug: "stansted", isFree: false, bands: [{ upToMinutes: 15, totalPence: 1000 }, { upToMinutes: 30, totalPence: 2800 }] }
+  ];
+
+  it("always leads with Heathrow (the benchmark) when the airport itself isn't Heathrow", () => {
+    const rows = nearbyDropOffComparison(stansted, allAirports, allRecords, 3);
+    expect(rows[0]?.slug).toBe("heathrow");
+    expect(rows[0]?.fee).toBe("£7");
+  });
+
+  it("never includes the airport being compared against itself", () => {
+    const rows = nearbyDropOffComparison(stansted, allAirports, allRecords, 5);
+    expect(rows.some((r) => r.slug === "stansted")).toBe(false);
+  });
+
+  it("doesn't duplicate Heathrow as its own benchmark when Heathrow is the subject airport", () => {
+    const rows = nearbyDropOffComparison(heathrow, allAirports, allRecords, 3);
+    expect(rows.filter((r) => r.slug === "heathrow")).toHaveLength(0);
+  });
+
+  it("labels a free comparator's fee as 'Free'", () => {
+    const rows = nearbyDropOffComparison(stansted, allAirports, allRecords, 5);
+    const se = rows.find((r) => r.slug === "southend");
+    expect(se?.isFree).toBe(true);
+    expect(se?.fee).toBe("Free");
+  });
+
+  it("respects the count cap", () => {
+    expect(nearbyDropOffComparison(stansted, allAirports, allRecords, 2)).toHaveLength(2);
+  });
+
+  it("skips a candidate airport that has no drop-off record", () => {
+    const noRecord = allRecords.filter((r) => r.airportSlug !== "luton");
+    const rows = nearbyDropOffComparison(stansted, allAirports, noRecord, 5);
+    expect(rows.some((r) => r.slug === "luton")).toBe(false);
   });
 });
