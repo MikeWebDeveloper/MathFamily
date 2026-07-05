@@ -271,3 +271,25 @@ Scheduled weekly sweep. **Method:** each Airalo country page (`airalo.com/<count
 **Holafly + Saily bundles: NOT re-verified this sweep (NEEDS-HUMAN).** They are "(converted)" values sourced from holafly.com / saily.com (not airalo.com, the record's `sourceUrl`) and require live FX conversion. Re-quoting them reliably is out of scope for an unattended run. Their snapshotDates remain 2026-06-10 (a few older).
 
 **ParkMath (live brand) staleness check:** nothing older than 46 days — every drop-off, parking, lounge, priority-pass and news record was verified between 2026-06-10 and 2026-06-27. The two standing hard-blocked targets are already resolved: London City drop-off has a real record (verified 2026-06-22) and Newcastle Long Stay parking was added (verified 2026-06-27). No ParkMath changes this sweep.
+
+## 2026-07-05 — freshness SWEEP (eSIM re-quote, Airalo provider)
+
+Scheduled weekly sweep. **Method:** identical to 2026-06-28 — each Airalo country page (`airalo.com/<country>-esim`) re-fetched via WebFetch (UK egress → GBP, directly comparable to the dataset's GBP `totalPence`). r.jina.ai deliberately NOT used for Airalo (US egress → USD, not comparable). Airalo's own page in GBP is the single official source.
+
+**Airalo (40 country bundles): 35 cleanly re-verified (snapshotDate → 2026-07-05), 5 held.**
+
+- **7 confirmed DRIFT** (all +£0.50; totalPence updated + snapshotDate → 2026-07-05):
+  - spain (Unlimited/5d): £14.00 → **£14.50** (1400 → 1450)
+  - france (5GB/30d): £8.50 → **£9.00** (850 → 900) — *resolves the 2026-06-28 ambiguity.* A clean full-table read this week showed "5GB — 30 days — £9.00", exactly the drift the prior note predicted.
+  - canada (Unlimited/5d): £21.00 → **£21.50** (2100 → 2150)
+  - mexico (Unlimited/5d): £14.00 → **£14.50** (1400 → 1450)
+  - india (Unlimited/5d): £24.50 → **£25.00** (2450 → 2500)
+  - egypt (Unlimited/5d): £23.00 → **£23.50** (2300 → 2350)
+  - morocco (Unlimited/5d): £22.50 → **£23.00** (2250 → 2300)
+  - Continues the pattern of selective small Airalo GBP rises; not a global change.
+- **28 confirmed UNCHANGED** (snapshotDate → 2026-07-05): italy, portugal, ireland, netherlands, belgium, austria (5GB/30d £6.50), switzerland, poland, cyprus, malta, turkey, usa, australia, new-zealand, uae, thailand, japan, china, south-africa (5GB/30d £10.00), tunisia, norway, sweden, denmark, czechia, hungary, romania, albania, montenegro. (ireland/netherlands/poland/sweden/denmark/czechia held at £15.50 and albania at £20.50 — last week's rises are stable.)
+- **5 held UNVERIFIED** (stored value + snapshotDate 2026-06-10 kept, FLAGGED): germany (5GB/15d £8.50), greece (5GB/15d £9.00), croatia (5GB/15d £8.00), iceland (5GB/15d £9.00), bulgaria (5GB/7d £5.00). Same fixed-GB-tab issue as 2026-06-28: the Airalo page defaults to Unlimited packages and the specific fixed-GB row is JS-gated — unreadable via both WebFetch and the r.jina.ai browser engine (tried on germany: only "Unlimited GB" rows, no prices). **NEEDS-HUMAN:** confirm whether Airalo still sells fixed-GB *local* plans for these 5; if discontinued, switch the tracked SKU to Unlimited/5-day to match the rest of the dataset.
+
+**Holafly + Saily bundles: NOT re-verified this sweep (same as 2026-06-28).** "(converted)" values sourced from holafly.com / saily.com (not the record's airalo `sourceUrl`), requiring live FX conversion — out of scope for an unattended run. snapshotDates unchanged.
+
+version 1.0.1 → 1.0.2, lastUpdated → 2026-07-05.
