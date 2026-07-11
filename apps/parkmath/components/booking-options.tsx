@@ -35,9 +35,10 @@ export function BookingOptions({
   // so we never render a broken/misleading affiliate link.
   const merchants = resolveAllParkingMerchants(airportSlug, surface);
   const hasAffiliate = merchants.length > 0;
-  // Narrow, Mike-directed per-airport exception (2026-07-11, Heathrow only — see partners.ts
-  // primaryOverrides doc comment): when set, that merchant is pinned first and the disclosure below
-  // names it explicitly instead of claiming pure alphabetical order.
+  // General "official operator pinned first" mechanism (see partners.ts isOfficialOperator doc
+  // comment): any partner flagged isOfficialOperator that genuinely serves this airport is pinned
+  // first, and the disclosure below names it explicitly instead of claiming pure alphabetical order.
+  // A no-op for every airport without a covering official-operator partner.
   const pinnedPrimary = merchants.find((m) => m.isPinnedPrimary) ?? null;
 
   // A 10%-off / "up to 25% Gatwick" promo is a Holiday Extras offer only — never claim it for others.
@@ -95,16 +96,17 @@ export function BookingOptions({
                 </p>
               ) : null}
               {/* Affiliate disclosure — calm, honest, BEFORE the links; states the ordering truthfully.
-                  Alphabetical by default; when a per-airport primary pin is in effect (see
-                  `pinnedPrimary` above), names it explicitly rather than claiming pure alphabetical
-                  order on the one airport where that would no longer be true. */}
+                  Alphabetical by default; when an official-operator pin is in effect (see
+                  `pinnedPrimary` above), names it explicitly and says why, rather than claiming pure
+                  alphabetical order on the one airport where that would no longer be true. */}
               <p className="mt-2 text-xs text-ink-muted">
                 {pinnedPrimary ? (
                   <>
                     We earn a commission if you book through these links. We show every partner that
-                    serves {airportName}. {pinnedPrimary.partnerName} is shown first; every other option
-                    is ordered alphabetically — never by payout — and this never changes our ranking or
-                    which park we show as cheapest.
+                    serves {airportName}. {pinnedPrimary.partnerName} is shown first because it&apos;s{" "}
+                    {airportName}&apos;s own official operator; every other option below is ordered
+                    alphabetically — never by payout — and this never changes our ranking or which park
+                    we show as cheapest.
                   </>
                 ) : (
                   <>

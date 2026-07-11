@@ -29,6 +29,15 @@ interface PartnerConfig {
   landingUrl?: string;
   products?: Record<string, { url: string; label: string }>;
   airportParkingUrl?: AirportParkingUrlConfig;
+  /** True when this partner IS the airport's own official operator (e.g. Heathrow Airport Parking at
+   *  Heathrow) rather than a third-party comparison/booking site. Drives the "official operator pinned
+   *  first" rule in `resolveAllParkingMerchants`: wherever a flagged partner genuinely serves an
+   *  airport (has a real per-airport link via `airportParkingUrl`), it sorts ahead of every other
+   *  option, which otherwise stays alphabetical. Airport-scoped implicitly — a flagged partner only
+   *  ever resolves for the airport(s) its own `airportParkingUrl` covers, so setting this flag is
+   *  sufficient on its own; no per-airport map entry is required. Data-driven replacement (2026-07-11)
+   *  for the old hardcoded `slot.primaryOverrides` map — see company/boards/parkmath-board.md. */
+  isOfficialOperator?: boolean;
 }
 
 interface SlotConfig {
@@ -43,14 +52,6 @@ interface SlotConfig {
    *  multi-option booking block) — see the 2026-06-24 "retire single-primary" decision in
    *  company/boards/parkmath-board.md §0a. */
   airportOverrides?: Record<string, string[]>;
-  /** Mike-directed, single-airport "pin to front" for the ALPHABETICAL multi-option list
-   *  (resolveAllParkingMerchants only). An explicit, narrow, visible exception to the otherwise
-   *  commission-blind alphabetical ordering — scoped to exactly the airport keys listed here; every
-   *  airport absent from this map is fully alphabetical and completely unaffected. Added 2026-07-11:
-   *  Heathrow Airport Parking (mid 2365, the official Heathrow-operated merchant) pinned first at
-   *  Mike's explicit instruction. Not a reopening of commission-based ranking generally — see
-   *  company/boards/parkmath-board.md 2026-07-11 "Heathrow primary" entry for the full rationale. */
-  primaryOverrides?: Record<string, string>;
 }
 
 const config = partnersJson as unknown as {
@@ -174,10 +175,10 @@ export interface ParkingMerchantOption {
   /** The exact tracked AWIN deep link (also rebuilt server-side by the /go route — byte-identical). */
   url: string;
   termsUrl: string | null;
-  /** True for the one option pinned to the front by `slot.primaryOverrides` for this airport (see
-   *  that field's doc comment) — false for every option on every airport without such an entry.
-   *  Callers use this to phrase the on-page disclosure honestly instead of claiming pure alphabetical
-   *  order on the one airport where that claim would no longer be true. */
+  /** True when this partner is flagged `isOfficialOperator` on its `partners` entry AND genuinely
+   *  serves this airport — false for every other option, and false for every option on any airport
+   *  with no covering official-operator partner. Callers use this to phrase the on-page disclosure
+   *  honestly instead of claiming pure alphabetical order where that claim would no longer be true. */
   isPinnedPrimary: boolean;
 }
 
@@ -191,13 +192,17 @@ export interface ParkingMerchantOption {
  *   - ORDERING is commission-blind: options are sorted ALPHABETICALLY by merchant name, a neutral
  *     criterion with no relation to payout. (We do NOT consult `airportOverrides` ordering here — that
  *     was the single-primary preference order; multi-option presentation must not inherit a ranking.)
- *   - EXCEPTION (Mike-directed, 2026-07-11, Heathrow only): if `slot.primaryOverrides` names a partner
- *     for this airport, that one partner is pinned to the front; every other option keeps its
- *     alphabetical relative order. Airports absent from `primaryOverrides` are entirely unaffected —
- *     this is a no-op for every airport except the ones explicitly listed. Each returned option's
- *     `isPinnedPrimary` flag tells callers when this applies, so the on-page disclosure can say so
- *     honestly instead of claiming pure alphabetical order where that's no longer true. See
- *     company/boards/parkmath-board.md 2026-07-11 "Heathrow primary" entry for the rationale.
+ *   - EXCEPTION, data-driven: any partner flagged `isOfficialOperator: true` (see that field's doc
+ *     comment on `PartnerConfig`) is pinned to the front of the list wherever it genuinely serves the
+ *     airport; every other option keeps its alphabetical relative order. This is airport-scoped
+ *     automatically — a flagged partner only ever resolves (and therefore only ever pins) for the
+ *     airport(s) its own `airportParkingUrl` covers, so adding the next official-operator partner needs
+ *     no per-airport map entry, just the flag. Today exactly one partner carries it (Heathrow Airport
+ *     Parking, mid 2365, Mike-directed 2026-07-11), so in practice this remains a Heathrow-only effect
+ *     — but the mechanism itself is general. Each returned option's `isPinnedPrimary` flag tells
+ *     callers when this applies, so the on-page disclosure can say so honestly instead of claiming pure
+ *     alphabetical order where that's no longer true. See company/boards/parkmath-board.md 2026-07-11
+ *     entries for the rationale.
  *
  *  Returns [] when the slot is inactive or no merchant covers the airport (caller falls back to the
  *  official-site option only). */
@@ -210,28 +215,39 @@ export function resolveAllParkingMerchants(
   // Off-airport contexts (slug "home"/empty) have no per-airport options block — return [] so callers
   // fall back to the official/generic option rather than listing every merchant's generic page.
   if (!airportSlug || airportSlug === "home") return [];
-  // Consider every partner that could ever serve the slot (default list ∪ all override lists), so a
-  // merchant is shown wherever it genuinely covers the airport — not only where it was the primary.
+  // Consider every partner that could ever serve the slot (default list ∪ all override lists), PLUS
+  // every partner flagged isOfficialOperator — the latter may serve only its own airport(s) and never
+  // appear in partnerIds/airportOverrides at all, so it needs its own inclusion path to be considered
+  // without requiring a per-airport list entry anywhere.
   const candidates = new Set<string>(slot.partnerIds);
   for (const list of Object.values(slot.airportOverrides ?? {})) {
     for (const id of list) candidates.add(id);
   }
-  const primaryId = slot.primaryOverrides?.[airportSlug];
+  for (const [partnerId, partner] of Object.entries(config.partners)) {
+    if (partner.isOfficialOperator) candidates.add(partnerId);
+  }
   const options: ParkingMerchantOption[] = [];
   for (const partnerId of candidates) {
     const r = resolvePartnerProduct(partnerId, "parking", airportSlug, clickrefSuffix);
-    if (r) options.push({ partnerId, partnerName: r.partnerName, url: r.url, termsUrl: r.termsUrl, isPinnedPrimary: partnerId === primaryId });
+    if (r) {
+      options.push({
+        partnerId,
+        partnerName: r.partnerName,
+        url: r.url,
+        termsUrl: r.termsUrl,
+        isPinnedPrimary: config.partners[partnerId]?.isOfficialOperator === true,
+      });
+    }
   }
   // Commission-blind, transparent ordering: alphabetical by merchant name.
   options.sort((a, b) => a.partnerName.localeCompare(b.partnerName));
-  // Narrow, explicit, per-airport exception (see doc comment above): pin the named primary to the
-  // front. A no-op unless this airport has a primaryOverrides entry AND that partner is present.
-  if (primaryId) {
-    const idx = options.findIndex((o) => o.partnerId === primaryId);
-    if (idx > 0) {
-      const primary = options.splice(idx, 1)[0]!;
-      options.unshift(primary);
-    }
+  // Data-driven exception (see doc comment above): pin every official-operator option to the front,
+  // preserving alphabetical relative order within each of the two groups. A no-op unless this airport
+  // actually has a covering isOfficialOperator partner.
+  const pinned = options.filter((o) => o.isPinnedPrimary);
+  if (pinned.length > 0) {
+    const rest = options.filter((o) => !o.isPinnedPrimary);
+    return [...pinned, ...rest];
   }
   return options;
 }

@@ -18,9 +18,10 @@ const htmlWithPrice = renderToStaticMarkup(
   />
 );
 
-// Belfast International is an HE-only airport (no APH/Purple/Airparks/Park BCP verified per-airport
-// page) — so it must show exactly ONE merchant option (Holiday Extras) and never a broken link.
-const heOnlyHtml = renderToStaticMarkup(
+// Belfast International: Holiday Extras (template) + Park BCP + Purple Parking (verified per-airport
+// pages, 2026-07-11 coverage expansion) genuinely cover it; APH and Airparks still have no verified
+// Belfast International page — so it must show exactly those THREE options and never a broken link.
+const belfastIntlHtml = renderToStaticMarkup(
   <BookingOptions airportName="Belfast International" airportSlug="belfast-international" officialUrl="https://www.belfastairport.com/parking" />
 );
 
@@ -72,14 +73,15 @@ describe("BookingOptions — multi-option, commission-blind presentation", () =>
   });
 
   it("omits any merchant that does NOT genuinely serve the airport (no broken/misleading link)", () => {
-    // Belfast International is HE-only: exactly one option, and only Holiday Extras.
-    const order = merchantOrder(heOnlyHtml);
-    expect(order).toEqual(["Holiday Extras"]);
-    expect(heOnlyHtml).not.toContain("parking%3Aaph");
-    expect(heOnlyHtml).not.toContain("parking%3Apurple-parking");
-    expect(heOnlyHtml).not.toContain("parking%3Aairparks");
-    expect(heOnlyHtml).not.toContain("parking%3Apark-bcp");
-    expect(heOnlyHtml).toContain('href="/go/belfast-international/parking%3Aholiday-extras?s=parking"');
+    // Belfast International: three genuine options (Holiday Extras, Park BCP, Purple Parking);
+    // APH and Airparks have no verified page here → correctly omitted, never a broken link.
+    const order = merchantOrder(belfastIntlHtml);
+    expect(order).toEqual(["Holiday Extras", "Park BCP", "Purple Parking"]);
+    expect(belfastIntlHtml).not.toContain("parking%3Aaph");
+    expect(belfastIntlHtml).not.toContain("parking%3Aairparks");
+    expect(belfastIntlHtml).toContain('href="/go/belfast-international/parking%3Aholiday-extras?s=parking"');
+    expect(belfastIntlHtml).toContain('href="/go/belfast-international/parking%3Apark-bcp?s=parking"');
+    expect(belfastIntlHtml).toContain('href="/go/belfast-international/parking%3Apurple-parking?s=parking"');
   });
 
   it("never fabricates the Holiday-Extras-only discount promo for another merchant", () => {
@@ -161,6 +163,20 @@ describe("BookingOptions — multi-option, commission-blind presentation", () =>
   it("every other airport's disclosure is untouched — still claims pure alphabetical order, no primary pin", () => {
     expect(html).toContain("ordered alphabetically");
     expect(html).not.toContain("is shown first");
+  });
+
+  it("2026-07-11 coverage expansion: Norwich now shows 4 options (was 2) — Purple Parking and Airparks gained verified pages", () => {
+    const out = renderToStaticMarkup(
+      <BookingOptions airportName="Norwich" airportSlug="norwich" officialUrl="https://www.norwichairport.co.uk/parking" />
+    );
+    expect(merchantOrder(out)).toEqual(["Airparks", "Holiday Extras", "Park BCP", "Purple Parking"]);
+    expect(out).toContain('href="/go/norwich/parking%3Apurple-parking?s=parking"');
+    expect(out).toContain('href="/go/norwich/parking%3Aairparks?s=parking"');
+    // APH still has no verified Norwich page — correctly absent, never a broken link.
+    expect(out).not.toContain("parking%3Aaph");
+    // No official-operator pin here — plain alphabetical, same disclosure as every other unpinned airport.
+    expect(out).toContain("ordered alphabetically");
+    expect(out).not.toContain("is shown first");
   });
 
   it("gate-only cta (Stansted case): suppresses the price AND makes no saving claim", () => {

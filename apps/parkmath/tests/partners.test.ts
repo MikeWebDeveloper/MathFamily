@@ -208,6 +208,64 @@ describe("newly-activated AWIN merchants emit TRACKED deep links (purple-parking
   });
 });
 
+describe("2026-07-11 coverage expansion — verified byAirport pages found on merchants ParkMath already joined", () => {
+  // Every URL here was live-verified (200, airport-specific <title>/canonical, real car-park content)
+  // against the merchant's own site before being added — see company/boards/parkmath-board.md. APH was
+  // also re-checked for all of these airports and genuinely has no dedicated page for any of them
+  // (its candidate URLs soft-redirected to its generic homepage/index) — it stays absent everywhere below.
+  it("Park BCP gained a verified Belfast International page", () => {
+    expect(airportParkingUrl("park-bcp", "belfast-international")).toBe("https://www.parkbcp.co.uk/belfast/airport-parking.html");
+    const r = resolvePartnerProduct("park-bcp", "parking", "belfast-international", "options");
+    expect(r!.url).toContain("awinmid=3495");
+    expect(r!.url).toContain("ued=https%3A%2F%2Fwww.parkbcp.co.uk%2Fbelfast%2Fairport-parking.html");
+  });
+
+  it("Purple Parking gained six verified pages (belfast-international, bournemouth, london-city, norwich, prestwick, teesside)", () => {
+    expect(airportParkingUrl("purple-parking", "belfast-international")).toBe("https://www.purpleparking.com/airport-parking/belfast-international");
+    expect(airportParkingUrl("purple-parking", "bournemouth")).toBe("https://www.purpleparking.com/airport-parking/bournemouth");
+    expect(airportParkingUrl("purple-parking", "london-city")).toBe("https://www.purpleparking.com/airport-parking/london-city");
+    expect(airportParkingUrl("purple-parking", "norwich")).toBe("https://www.purpleparking.com/airport-parking/norwich");
+    expect(airportParkingUrl("purple-parking", "prestwick")).toBe("https://www.purpleparking.com/airport-parking/prestwick");
+    expect(airportParkingUrl("purple-parking", "teesside")).toBe("https://www.purpleparking.com/airport-parking/teesside-international");
+    // Purple Parking genuinely has NO page for belfast-city or inverness (checked, not found) — still
+    // absent, fail-closed.
+    expect(airportParkingUrl("purple-parking", "belfast-city")).toBeNull();
+    expect(airportParkingUrl("purple-parking", "inverness")).toBeNull();
+  });
+
+  it("Airparks gained seven verified pages (belfast-city, bournemouth, inverness, london-city, norwich, prestwick, teesside)", () => {
+    expect(airportParkingUrl("airparks", "belfast-city")).toBe("https://www.airparks.co.uk/belfast-city-airport-parking.html");
+    expect(airportParkingUrl("airparks", "bournemouth")).toBe("https://www.airparks.co.uk/bournemouth-airport-parking.html");
+    expect(airportParkingUrl("airparks", "inverness")).toBe("https://www.airparks.co.uk/inverness-airport-parking.html");
+    expect(airportParkingUrl("airparks", "london-city")).toBe("https://www.airparks.co.uk/london-city-airport-parking.html");
+    expect(airportParkingUrl("airparks", "norwich")).toBe("https://www.airparks.co.uk/norwich-airport-parking.html");
+    expect(airportParkingUrl("airparks", "prestwick")).toBe("https://www.airparks.co.uk/prestwick-airport-parking.html");
+    expect(airportParkingUrl("airparks", "teesside")).toBe("https://www.airparks.co.uk/teesside-airport-parking.html");
+    // Airparks genuinely has NO page for belfast-international (checked: soft-redirects, not found).
+    expect(airportParkingUrl("airparks", "belfast-international")).toBeNull();
+  });
+
+  it("APH gained NONE of these — both candidate URLs (bournemouth, prestwick) soft-redirected to APH's generic pages, so both stay fail-closed", () => {
+    for (const slug of ["belfast-international", "belfast-city", "bournemouth", "inverness", "london-city", "norwich", "prestwick", "teesside"]) {
+      expect(airportParkingUrl("aph", slug)).toBeNull();
+      expect(resolvePartnerProduct("aph", "parking", slug, "options")).toBeNull();
+    }
+  });
+
+  it("zero airports are left with fewer than 3 genuine options (was 8 airports stuck at 1-2)", () => {
+    const airports = [
+      "heathrow", "gatwick", "manchester", "stansted", "luton", "edinburgh", "birmingham", "glasgow",
+      "bristol", "belfast-international", "newcastle", "liverpool", "london-city", "leeds-bradford",
+      "east-midlands", "aberdeen", "belfast-city", "southampton", "cardiff", "exeter", "southend",
+      "bournemouth", "norwich", "inverness", "teesside", "prestwick",
+    ];
+    expect(airports).toHaveLength(26); // sanity: matches packages/data/datasets/airports.json count
+    for (const slug of airports) {
+      expect(resolveAllParkingMerchants(slug, "options").length).toBeGreaterThanOrEqual(3);
+    }
+  });
+});
+
 describe("resolveAllParkingMerchants — multi-option, commission-blind presentation", () => {
   it("an airport covered by all joined merchants returns them all, alphabetical by name", () => {
     // Park BCP (awinmid 3495) joined 2026-06-26 with a verified per-airport page; it sorts
@@ -239,23 +297,49 @@ describe("resolveAllParkingMerchants — multi-option, commission-blind presenta
     expect(opts.map((o) => o.partnerName)).toEqual(["Airparks", "APH", "Holiday Extras", "Park BCP", "Purple Parking"]);
   });
 
-  it("OMITS a merchant with no verified per-airport page (norwich: HE + Park BCP only)", () => {
-    // norwich: Holiday Extras (template) + Park BCP (verified per-airport page, joined 2026-06-26)
-    // cover it; APH/Purple/Airparks have no verified Norwich page → fail closed (omitted).
+  it("OMITS a merchant with no verified per-airport page (norwich: APH is the only one still missing)", () => {
+    // norwich: Holiday Extras (template) + Park BCP (joined 2026-06-26) + Purple Parking + Airparks
+    // (verified per-airport pages added 2026-07-11) all cover it; APH has no verified Norwich page →
+    // fail closed (omitted) — never a broken/misleading link.
     const opts = resolveAllParkingMerchants("norwich", "options");
-    expect(opts.map((o) => o.partnerName)).toEqual(["Holiday Extras", "Park BCP"]);
+    expect(opts.map((o) => o.partnerName)).toEqual(["Airparks", "Holiday Extras", "Park BCP", "Purple Parking"]);
   });
 
-  it("never emits a non-covering merchant (belfast-international is HE-only)", () => {
+  it("never emits a non-covering merchant (belfast-international: APH and Airparks still have no verified page)", () => {
+    // 2026-07-11: Park BCP + Purple Parking gained verified Belfast International pages; APH and
+    // Airparks still have none → still correctly omitted, never a broken link.
     const names = resolveAllParkingMerchants("belfast-international", "options").map((o) => o.partnerName);
-    expect(names).toEqual(["Holiday Extras"]);
+    expect(names).toEqual(["Holiday Extras", "Park BCP", "Purple Parking"]);
+  });
+
+  it("2026-07-11 coverage expansion: every formerly-thin airport now resolves its newly-verified merchants too", () => {
+    // Cross-check the full set of airports that gained coverage in the same pass, one assertion each,
+    // so a future regression in any single one is caught precisely.
+    expect(resolveAllParkingMerchants("belfast-city", "options").map((o) => o.partnerName)).toEqual([
+      "Airparks",
+      "Holiday Extras",
+      "Park BCP",
+    ]);
+    expect(resolveAllParkingMerchants("inverness", "options").map((o) => o.partnerName)).toEqual([
+      "Airparks",
+      "Holiday Extras",
+      "Park BCP",
+    ]);
+    for (const slug of ["bournemouth", "london-city", "prestwick", "teesside"]) {
+      expect(resolveAllParkingMerchants(slug, "options").map((o) => o.partnerName)).toEqual([
+        "Airparks",
+        "Holiday Extras",
+        "Park BCP",
+        "Purple Parking",
+      ]);
+    }
   });
 
   it("returns [] for a non-airport context (slug 'home') so callers fall back to the official option", () => {
     expect(resolveAllParkingMerchants("home", "options")).toEqual([]);
   });
 
-  it("Heathrow's primaryOverrides pins Heathrow Airport Parking FIRST; every other option stays alphabetical (Mike-directed, 2026-07-11, Heathrow only)", () => {
+  it("Heathrow Airport Parking's isOfficialOperator flag pins it FIRST; every other option stays alphabetical (data-driven, Mike-directed 2026-07-11)", () => {
     const opts = resolveAllParkingMerchants("heathrow", "options");
     expect(opts.map((o) => o.partnerName)).toEqual([
       "Heathrow Airport Parking",
@@ -268,10 +352,26 @@ describe("resolveAllParkingMerchants — multi-option, commission-blind presenta
     expect(opts.filter((o) => o.isPinnedPrimary).map((o) => o.partnerName)).toEqual(["Heathrow Airport Parking"]);
   });
 
-  it("the primary pin is Heathrow-only — no other airport's isPinnedPrimary is ever true, and gatwick/glasgow stay purely alphabetical", () => {
-    for (const slug of ["gatwick", "glasgow", "norwich", "belfast-international"]) {
+  it("REGRESSION: no other airport's isPinnedPrimary is ever true — today only Heathrow Airport Parking carries isOfficialOperator, so every other airport (incl. every 2026-07-11 coverage-expansion airport) stays purely alphabetical", () => {
+    for (const slug of [
+      "gatwick",
+      "glasgow",
+      "manchester",
+      "edinburgh",
+      "norwich",
+      "belfast-international",
+      "belfast-city",
+      "bournemouth",
+      "inverness",
+      "london-city",
+      "prestwick",
+      "teesside",
+    ]) {
       const opts = resolveAllParkingMerchants(slug, "options");
       expect(opts.every((o) => o.isPinnedPrimary === false)).toBe(true);
+      // Ordering itself is unaffected by the pin mechanism on these airports too.
+      const sorted = [...opts.map((o) => o.partnerName)].sort((a, b) => a.localeCompare(b));
+      expect(opts.map((o) => o.partnerName)).toEqual(sorted);
     }
   });
 });
@@ -298,11 +398,19 @@ describe("goLinkMerchant + /go per-merchant parking target", () => {
   });
 
   it("fail-closed: a per-merchant target for an airport the merchant does NOT cover returns null (404)", () => {
-    // norwich is HE-only — APH has no verified page, so /go must 404 rather than emit a broken link.
+    // norwich: APH still has no verified page, so /go must 404 rather than emit a broken link.
     expect(resolveGoTarget("parking:aph", "norwich", "options")).toBeNull();
-    expect(resolveGoTarget("parking:purple-parking", "norwich", "options")).toBeNull();
     // HE still resolves on norwich (template coverage).
     expect(resolveGoTarget("parking:holiday-extras", "norwich", "options")!.url).toContain("awinmid=3496");
+  });
+
+  it("2026-07-11 coverage expansion: Purple Parking's /go target now genuinely resolves on norwich (previously 404)", () => {
+    const opt = resolveAllParkingMerchants("norwich", "options").find((o) => o.partnerName === "Purple Parking")!;
+    const viaGo = resolveGoTarget("parking:purple-parking", "norwich", "options");
+    expect(viaGo).not.toBeNull();
+    expect(viaGo!.url).toBe(opt.url);
+    expect(viaGo!.url).toContain("awinmid=12028");
+    expect(viaGo!.url).toContain("ued=https%3A%2F%2Fwww.purpleparking.com%2Fairport-parking%2Fnorwich");
   });
 
   it("fail-closed: an unknown partnerId returns null", () => {

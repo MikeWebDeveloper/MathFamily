@@ -25,9 +25,10 @@ export function HolidayExtrasCard({ product, airportName, airportSlug, surface, 
   // products (lounge/hotels/transfers) stay on Holiday Extras.
   const parkingMerchants = isParking ? resolveAllParkingMerchants(airportSlug, surface) : [];
   const heProduct = !isParking ? resolveHeProduct(product, airportSlug, surface) : null;
-  // Narrow, Mike-directed per-airport exception (2026-07-11, Heathrow only — see partners.ts
-  // primaryOverrides doc comment): when set, that merchant is pinned first and the disclosure below
-  // names it explicitly instead of claiming pure alphabetical order.
+  // General "official operator pinned first" mechanism (see partners.ts isOfficialOperator doc
+  // comment): any partner flagged isOfficialOperator that genuinely serves this airport is pinned
+  // first, and the disclosure below names it explicitly instead of claiming pure alphabetical order.
+  // A no-op for every airport without a covering official-operator partner.
   const pinnedPrimary = isParking ? (parkingMerchants.find((m) => m.isPinnedPrimary) ?? null) : null;
 
   if (isParking && parkingMerchants.length === 0) return null;
@@ -102,9 +103,10 @@ export function HolidayExtrasCard({ product, airportName, airportSlug, surface, 
           {pinnedPrimary ? (
             <>
               Affiliate links (Ad) — we show every partner that serves {airportName}.{" "}
-              {pinnedPrimary.partnerName} is shown first; every other option is ordered alphabetically.
-              If you book through one, ParkMath earns a commission at no cost to you; this never affects
-              which option we show as cheapest.
+              {pinnedPrimary.partnerName} is shown first because it&apos;s {airportName}&apos;s own
+              official operator; every other option below is ordered alphabetically. If you book through
+              one, ParkMath earns a commission at no cost to you; this never affects which option we show
+              as cheapest.
             </>
           ) : (
             <>

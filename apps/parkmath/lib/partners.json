@@ -104,7 +104,8 @@
           "norwich": "https://www.parkbcp.co.uk/norwich/airport-parking.html",
           "inverness": "https://www.parkbcp.co.uk/inverness/airport-parking.html",
           "teesside": "https://www.parkbcp.co.uk/teesside/airport-parking.html",
-          "prestwick": "https://www.parkbcp.co.uk/prestwick/airport-parking.html"
+          "prestwick": "https://www.parkbcp.co.uk/prestwick/airport-parking.html",
+          "belfast-international": "https://www.parkbcp.co.uk/belfast/airport-parking.html"
         }
       }
     },
@@ -139,7 +140,13 @@
           "cardiff": "https://www.purpleparking.com/airport-parking/cardiff",
           "southampton": "https://www.purpleparking.com/airport-parking/southampton-international",
           "exeter": "https://www.purpleparking.com/airport-parking/exeter",
-          "southend": "https://www.purpleparking.com/airport-parking/southend"
+          "southend": "https://www.purpleparking.com/airport-parking/southend",
+          "belfast-international": "https://www.purpleparking.com/airport-parking/belfast-international",
+          "bournemouth": "https://www.purpleparking.com/airport-parking/bournemouth",
+          "london-city": "https://www.purpleparking.com/airport-parking/london-city",
+          "norwich": "https://www.purpleparking.com/airport-parking/norwich",
+          "prestwick": "https://www.purpleparking.com/airport-parking/prestwick",
+          "teesside": "https://www.purpleparking.com/airport-parking/teesside-international"
         }
       }
     },
@@ -174,7 +181,14 @@
           "cardiff": "https://www.airparks.co.uk/cardiff-airport-parking.html",
           "southampton": "https://www.airparks.co.uk/southampton-airport-parking.html",
           "exeter": "https://www.airparks.co.uk/exeter-airport-parking.html",
-          "southend": "https://www.airparks.co.uk/southend-airport-parking.html"
+          "southend": "https://www.airparks.co.uk/southend-airport-parking.html",
+          "belfast-city": "https://www.airparks.co.uk/belfast-city-airport-parking.html",
+          "bournemouth": "https://www.airparks.co.uk/bournemouth-airport-parking.html",
+          "inverness": "https://www.airparks.co.uk/inverness-airport-parking.html",
+          "london-city": "https://www.airparks.co.uk/london-city-airport-parking.html",
+          "norwich": "https://www.airparks.co.uk/norwich-airport-parking.html",
+          "prestwick": "https://www.airparks.co.uk/prestwick-airport-parking.html",
+          "teesside": "https://www.airparks.co.uk/teesside-airport-parking.html"
         }
       }
     },
@@ -182,6 +196,7 @@
       "name": "Heathrow Airport Parking",
       "awinmid": "2365",
       "active": true,
+      "isOfficialOperator": true,
       "termsUrl": "https://www.heathrow.com/booking/parking",
       "landingUrl": "https://www.heathrow.com/booking/parking",
       "products": {
@@ -212,9 +227,6 @@
         "park-bcp"
       ],
       "active": true,
-      "primaryOverrides": {
-        "heathrow": "heathrow-airport-parking"
-      },
       "airportOverrides": {
         "heathrow": [
           "heathrow-airport-parking",

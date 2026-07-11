@@ -5,9 +5,10 @@ import { HolidayExtrasCard } from "../components/holiday-extras-card";
 const dropoff = renderToStaticMarkup(
   <HolidayExtrasCard product="parking" airportName="Gatwick" airportSlug="gatwick" surface="dropoff" extras={["hotels", "lounge", "transfers"]} />
 );
-// Belfast International is HE-only (Park BCP has no verified page there → fail closed) — the
-// parking card must show exactly one option (Holiday Extras), no broken links.
-const heOnly = renderToStaticMarkup(
+// Belfast International: Holiday Extras + Park BCP + Purple Parking (verified per-airport pages,
+// 2026-07-11 coverage expansion) genuinely cover it; APH/Airparks still have no verified page → fail
+// closed for those two — the parking card must show exactly those three options, no broken links.
+const belfastIntl = renderToStaticMarkup(
   <HolidayExtrasCard product="parking" airportName="Belfast International" airportSlug="belfast-international" surface="dropoff" extras={["hotels", "lounge", "transfers"]} />
 );
 const lounge = renderToStaticMarkup(
@@ -45,15 +46,17 @@ describe("HolidayExtrasCard", () => {
     expect(dropoff).not.toContain("may earn");
   });
 
-  it("HE-only airport: parking card shows exactly one option and no broken non-covering link", () => {
-    expect(merchantOrder(heOnly)).toEqual(["Holiday Extras"]);
-    expect(heOnly).toContain('href="/go/belfast-international/parking%3Aholiday-extras?s=dropoff"');
-    expect(heOnly).not.toContain("parking%3Aaph");
-    expect(heOnly).not.toContain("parking%3Apurple-parking");
-    expect(heOnly).not.toContain("parking%3Apark-bcp");
+  it("Belfast International: shows every genuinely-covering merchant, omits non-covering ones (no broken link)", () => {
+    expect(merchantOrder(belfastIntl)).toEqual(["Holiday Extras", "Park BCP", "Purple Parking"]);
+    expect(belfastIntl).toContain('href="/go/belfast-international/parking%3Aholiday-extras?s=dropoff"');
+    expect(belfastIntl).toContain('href="/go/belfast-international/parking%3Apark-bcp?s=dropoff"');
+    expect(belfastIntl).toContain('href="/go/belfast-international/parking%3Apurple-parking?s=dropoff"');
+    // APH and Airparks still have no verified Belfast International page — correctly absent.
+    expect(belfastIntl).not.toContain("parking%3Aaph");
+    expect(belfastIntl).not.toContain("parking%3Aairparks");
   });
 
-  it("Heathrow: primary override pins Heathrow Airport Parking first (Mike-directed, 2026-07-11); disclosure names it honestly", () => {
+  it("Heathrow: official-operator pin (data-driven isOfficialOperator flag) puts Heathrow Airport Parking first; disclosure names it honestly", () => {
     expect(merchantOrder(heathrowDropoff)).toEqual([
       "Heathrow Airport Parking",
       "Airparks",
@@ -64,6 +67,19 @@ describe("HolidayExtrasCard", () => {
     ]);
     expect(heathrowDropoff).toContain("Heathrow Airport Parking is shown first");
     expect(heathrowDropoff).not.toContain("we show every partner that serves Heathrow, ordered alphabetically");
+  });
+
+  it("2026-07-11 coverage expansion: Prestwick now shows 4 options (was 2) — Purple Parking and Airparks gained verified pages, no official-operator pin", () => {
+    const prestwick = renderToStaticMarkup(
+      <HolidayExtrasCard product="parking" airportName="Glasgow Prestwick" airportSlug="prestwick" surface="dropoff" />
+    );
+    expect(merchantOrder(prestwick)).toEqual(["Airparks", "Holiday Extras", "Park BCP", "Purple Parking"]);
+    expect(prestwick).toContain('href="/go/prestwick/parking%3Apurple-parking?s=dropoff"');
+    expect(prestwick).toContain('href="/go/prestwick/parking%3Aairparks?s=dropoff"');
+    // APH still has no verified Prestwick page — correctly absent, never a broken link.
+    expect(prestwick).not.toContain("parking%3Aaph");
+    // No official operator serves Prestwick — plain alphabetical disclosure, same as any other airport.
+    expect(prestwick).not.toContain("is shown first");
   });
 
   it("lounge card: Ad, first-party lounge link carrying the lounge surface", () => {
