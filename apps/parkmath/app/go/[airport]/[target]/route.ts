@@ -19,8 +19,25 @@ const UMAMI_WEBSITE_ID = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID || "";
 
 /**
  * Bot-filtered, server-side Umami event for the affiliate click. We POST to Umami's /api/send and
- * — crucially — forward the *visitor's* real User-Agent (and X-Forwarded-For for coarse geo). Umami
- * runs that UA through its bot detector: real browsers are counted, self-identifying bots are dropped.
+ * — crucially — forward the *visitor's* real User-Agent plus an explicit `payload.ip` override, so
+ * the event geolocates to the VISITOR's country rather than our own relay hop's.
+ *
+ * 2026-07-07 fix: the 2026-07-01 fix below only forwarded X-Forwarded-For as a HEADER — traced live
+ * today and found insufficient on its own: 98.9% of affiliate_click events were tagged country=US
+ * (company/analytics/2026-07-07-awin-attribution-trace.md, Finding A). Root cause, confirmed against
+ * Umami's own source (github.com/umami-software/umami src/lib/ip.ts, and grepped in our actual
+ * running container image `ghcr.io/umami-software/umami:postgresql-latest` v3.1.0): its
+ * `getIpAddress()` walks a fixed header-priority list where `cf-connecting-ip` outranks
+ * `x-forwarded-for` (2nd vs 8th). Our stats host (stats.parkmath.co.uk) sits behind a Cloudflare
+ * Tunnel, so Cloudflare unconditionally stamps `cf-connecting-ip` on every request reaching Umami's
+ * origin — for this server-relayed POST that's *our own Vercel function's egress IP* (not
+ * spoofable, and not the visitor's), which always wins over whatever we put in X-Forwarded-For.
+ * Umami's `getClientInfo()` (src/lib/detect.ts) has a documented, schema-validated escape hatch for
+ * exactly this: `payload.ip` (if present) is used directly and SKIPS the header-derived lookup
+ * entirely (`ip = payload?.ip || getIpAddress(headers)`), so sending the visitor's real IP in the
+ * JSON body — not just the header — is what actually fixes geolocation. Kept the header forward too
+ * (harmless, still useful defense-in-depth if that priority order ever changes upstream).
+ *
  * `isLikelyBot` + `isNearDuplicateClick` (lib/go-bot-filter.ts) catch what Umami's own heuristic
  * doesn't — see that file for why (generic scrapers spoofing a browser UA; the duplicate-fire root
  * cause). Inert unless both Umami env vars are set (matches the client beacon in SiteAnalytics), and
@@ -39,8 +56,14 @@ async function recordUmamiClick(
   if (!host || !websiteId || !ua) return;
   if (isLikelyBot(h)) return;
 
+  // First hop of X-Forwarded-For = the original visitor (standard convention; Vercel populates this
+  // correctly on the inbound request). "unknown" is only our own placeholder for the dedupe key below
+  // — never send it on as `payload.ip` (visitorIp guard just below strips it back to undefined, which
+  // JSON.stringify then omits entirely, so Umami falls back to its normal header-based detection
+  // exactly as before whenever we genuinely don't have a real IP).
   const ip = h.xForwardedFor ? (h.xForwardedFor.split(",")[0] ?? "unknown").trim() : "unknown";
   if (isNearDuplicateClick(`${ip}:${fields.airport}:${fields.target}`)) return;
+  const visitorIp = ip !== "unknown" ? ip : undefined;
 
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 800);
@@ -61,6 +84,7 @@ async function recordUmamiClick(
           hostname: h.host || "www.parkmath.co.uk",
           url: `/go/${fields.airport}/${fields.target}`,
           name: "affiliate_click",
+          ip: visitorIp,
           data: { airport: fields.airport, target: fields.target, surface: fields.surface },
         },
       }),
