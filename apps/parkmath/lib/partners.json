@@ -178,6 +178,24 @@
         }
       }
     },
+    "heathrow-airport-parking": {
+      "name": "Heathrow Airport Parking",
+      "awinmid": "2365",
+      "active": true,
+      "termsUrl": "https://www.heathrow.com/booking/parking",
+      "landingUrl": "https://www.heathrow.com/booking/parking",
+      "products": {
+        "parking": {
+          "url": "https://www.heathrow.com/booking/parking",
+          "label": "parking"
+        }
+      },
+      "airportParkingUrl": {
+        "byAirport": {
+          "heathrow": "https://www.heathrow.com/booking/parking"
+        }
+      }
+    },
     "priority-pass": {
       "name": "Priority Pass",
       "awinmid": null,
@@ -200,7 +218,8 @@
           "holiday-extras",
           "purple-parking",
           "airparks",
-          "park-bcp"
+          "park-bcp",
+          "heathrow-airport-parking"
         ],
         "gatwick": [
           "aph",
