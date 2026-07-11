@@ -1,6 +1,11 @@
 import { after } from "next/server";
 import { resolveGoTarget } from "@/lib/partners";
-import { isLikelyBot, isNearDuplicateClick, type ClickHeaders } from "@/lib/go-bot-filter";
+import {
+  isHighVelocityClick,
+  isLikelyBot,
+  isNearDuplicateClick,
+  type ClickHeaders,
+} from "@/lib/go-bot-filter";
 
 // First-party affiliate-click measurement. A CTA links to /go/<airport>/<target>?s=<surface>; this
 // route records one durable, privacy-friendly click event and then 302-redirects to the *exact* AWIN
@@ -38,9 +43,10 @@ const UMAMI_WEBSITE_ID = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID || "";
  * JSON body — not just the header — is what actually fixes geolocation. Kept the header forward too
  * (harmless, still useful defense-in-depth if that priority order ever changes upstream).
  *
- * `isLikelyBot` + `isNearDuplicateClick` (lib/go-bot-filter.ts) catch what Umami's own heuristic
- * doesn't — see that file for why (generic scrapers spoofing a browser UA; the duplicate-fire root
- * cause). Inert unless both Umami env vars are set (matches the client beacon in SiteAnalytics), and
+ * `isLikelyBot` + `isNearDuplicateClick` + `isHighVelocityClick` (lib/go-bot-filter.ts) catch what
+ * Umami's own heuristic doesn't — see that file for why (generic scrapers spoofing a browser UA; the
+ * duplicate-fire root cause; the 2026-07-11 same-visitor-different-URLs sweep). Inert unless both
+ * Umami env vars are set (matches the client beacon in SiteAnalytics), and
  * fully best-effort: a tight timeout + try/catch guarantee it can never delay or break the affiliate
  * redirect (conversion comes first). Takes a plain headers snapshot (not the live Request) because
  * it's invoked from inside next/server `after` — i.e. once the redirect has already been sent.
@@ -63,6 +69,9 @@ async function recordUmamiClick(
   // exactly as before whenever we genuinely don't have a real IP).
   const ip = h.xForwardedFor ? (h.xForwardedFor.split(",")[0] ?? "unknown").trim() : "unknown";
   if (isNearDuplicateClick(`${ip}:${fields.airport}:${fields.target}`)) return;
+  // Independent of the exact-URL dedupe above: same visitor (by the same `ip` fingerprint), too many
+  // /go clicks of ANY target in a rolling 5-minute window — see go-bot-filter.ts for why.
+  if (isHighVelocityClick(ip)) return;
   const visitorIp = ip !== "unknown" ? ip : undefined;
 
   const ctrl = new AbortController();
