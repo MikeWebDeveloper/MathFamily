@@ -25,6 +25,10 @@ export function HolidayExtrasCard({ product, airportName, airportSlug, surface, 
   // products (lounge/hotels/transfers) stay on Holiday Extras.
   const parkingMerchants = isParking ? resolveAllParkingMerchants(airportSlug, surface) : [];
   const heProduct = !isParking ? resolveHeProduct(product, airportSlug, surface) : null;
+  // Narrow, Mike-directed per-airport exception (2026-07-11, Heathrow only — see partners.ts
+  // primaryOverrides doc comment): when set, that merchant is pinned first and the disclosure below
+  // names it explicitly instead of claiming pure alphabetical order.
+  const pinnedPrimary = isParking ? (parkingMerchants.find((m) => m.isPinnedPrimary) ?? null) : null;
 
   if (isParking && parkingMerchants.length === 0) return null;
   if (!isParking && !heProduct) return null;
@@ -95,9 +99,20 @@ export function HolidayExtrasCard({ product, airportName, airportSlug, surface, 
         ) : null}
 
         <p className="mt-2 text-xs text-ink-muted">
-          Affiliate links (Ad) — we show every partner that serves {airportName}, ordered alphabetically.
-          If you book through one, ParkMath earns a commission at no cost to you; the order is not influenced
-          by payout and never affects which option we show as cheapest.
+          {pinnedPrimary ? (
+            <>
+              Affiliate links (Ad) — we show every partner that serves {airportName}.{" "}
+              {pinnedPrimary.partnerName} is shown first; every other option is ordered alphabetically.
+              If you book through one, ParkMath earns a commission at no cost to you; this never affects
+              which option we show as cheapest.
+            </>
+          ) : (
+            <>
+              Affiliate links (Ad) — we show every partner that serves {airportName}, ordered alphabetically.
+              If you book through one, ParkMath earns a commission at no cost to you; the order is not influenced
+              by payout and never affects which option we show as cheapest.
+            </>
+          )}
         </p>
       </section>
     );

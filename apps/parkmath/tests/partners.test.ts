@@ -69,11 +69,11 @@ describe("resolveSlot — per-airport merchant override (diversification)", () =
     expect(r.url).toContain("clickref=parkmath-gatwick");
     expect(r.url).toContain("ued=https%3A%2F%2Fwww.aph.com%2Fgatwick-airport-parking.html");
   });
-  it("Heathrow (APH override) uses APH's directory-style verified URL", () => {
+  it("Heathrow (primary override, Mike-directed 2026-07-11) resolves to Heathrow Airport Parking, not APH", () => {
     const r = resolveSlot("parking-prebook", "heathrow", "https://heathrow.com");
-    expect(r.partnerName).toBe("APH");
-    expect(r.url).toContain("awinmid=1478");
-    expect(r.url).toContain("ued=https%3A%2F%2Fwww.aph.com%2Fheathrow-airport%2Fparking%2F");
+    expect(r.partnerName).toBe("Heathrow Airport Parking");
+    expect(r.url).toContain("awinmid=2365");
+    expect(r.url).toContain("ued=https%3A%2F%2Fwww.heathrow.com%2Fbooking%2Fparking");
   });
   it("an unrouted airport still resolves to Holiday Extras (existing HE links unbroken)", () => {
     // leeds-bradford is HE-only (not an APH/Purple/Airparks override airport).
@@ -158,10 +158,20 @@ describe("newly-activated AWIN merchants emit TRACKED deep links (purple-parking
     expect(r!.url).toContain("clickref=parkmath-manchester-hub");
     expect(r!.url).toContain("ued=https%3A%2F%2Fwww.airparks.co.uk%2Fmanchester-airport-parking.html");
   });
-  it("APH stays primary on its override airports (existing links unbroken)", () => {
-    for (const slug of ["heathrow", "gatwick", "manchester", "stansted", "luton", "birmingham", "bristol", "edinburgh"]) {
+  it("APH stays primary on its other override airports (existing links unbroken)", () => {
+    // Heathrow moved out of this set 2026-07-11 (Mike-directed primary override) — asserted separately below.
+    for (const slug of ["gatwick", "manchester", "stansted", "luton", "birmingham", "bristol", "edinburgh"]) {
       expect(resolveParkingMerchant(slug, "hub")?.partnerName).toBe("APH");
     }
+  });
+  it("Heathrow Airport Parking (mid 2365) is now the PRIMARY serving merchant at Heathrow (Mike-directed, 2026-07-11) — APH demoted but still a covered option", () => {
+    const r = resolveParkingMerchant("heathrow", "hub");
+    expect(r?.partnerName).toBe("Heathrow Airport Parking");
+    expect(r!.url).toContain("awinmid=2365");
+    expect(r!.url).toContain("clickref=parkmath-heathrow-hub");
+    // APH is still a genuinely covered option in the multi-merchant comparison list — just no longer
+    // the single-CTA primary at Heathrow.
+    expect(resolveAllParkingMerchants("heathrow", "hub").map((o) => o.partnerName)).toContain("APH");
   });
   it("Purple Parking is now the PRIMARY serving merchant on its routed airports → CTA emits a tracked 12028 link", () => {
     for (const slug of ["glasgow", "newcastle", "aberdeen"]) {
@@ -244,6 +254,26 @@ describe("resolveAllParkingMerchants — multi-option, commission-blind presenta
   it("returns [] for a non-airport context (slug 'home') so callers fall back to the official option", () => {
     expect(resolveAllParkingMerchants("home", "options")).toEqual([]);
   });
+
+  it("Heathrow's primaryOverrides pins Heathrow Airport Parking FIRST; every other option stays alphabetical (Mike-directed, 2026-07-11, Heathrow only)", () => {
+    const opts = resolveAllParkingMerchants("heathrow", "options");
+    expect(opts.map((o) => o.partnerName)).toEqual([
+      "Heathrow Airport Parking",
+      "Airparks",
+      "APH",
+      "Holiday Extras",
+      "Park BCP",
+      "Purple Parking",
+    ]);
+    expect(opts.filter((o) => o.isPinnedPrimary).map((o) => o.partnerName)).toEqual(["Heathrow Airport Parking"]);
+  });
+
+  it("the primary pin is Heathrow-only — no other airport's isPinnedPrimary is ever true, and gatwick/glasgow stay purely alphabetical", () => {
+    for (const slug of ["gatwick", "glasgow", "norwich", "belfast-international"]) {
+      const opts = resolveAllParkingMerchants(slug, "options");
+      expect(opts.every((o) => o.isPinnedPrimary === false)).toBe(true);
+    }
+  });
 });
 
 describe("goLinkMerchant + /go per-merchant parking target", () => {
@@ -312,10 +342,17 @@ describe("resolveGoTarget — rebuilds the EXACT AWIN deep link (attribution pre
     expect(viaGo!.url).toContain("ued=https%3A%2F%2Fwww.aph.com%2Fgatwick-airport-parking.html");
   });
   it("parking target on an APH override airport rebuilds the APH deep link", () => {
+    const direct = resolveParkingMerchant("gatwick", "dropoff");
+    const viaGo = resolveGoTarget("parking", "gatwick", "dropoff");
+    expect(viaGo!.url).toBe(direct!.url);
+    expect(viaGo!.url).toContain("awinmid=1478");
+    expect(viaGo!.url).toContain("clickref=parkmath-gatwick-dropoff");
+  });
+  it("parking target on Heathrow now rebuilds the Heathrow Airport Parking deep link (primary override, Mike-directed 2026-07-11)", () => {
     const direct = resolveParkingMerchant("heathrow", "dropoff");
     const viaGo = resolveGoTarget("parking", "heathrow", "dropoff");
     expect(viaGo!.url).toBe(direct!.url);
-    expect(viaGo!.url).toContain("awinmid=1478");
+    expect(viaGo!.url).toContain("awinmid=2365");
     expect(viaGo!.url).toContain("clickref=parkmath-heathrow-dropoff");
   });
   it("parking target on an unrouted airport rebuilds the HE deep link", () => {

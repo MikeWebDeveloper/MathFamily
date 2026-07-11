@@ -24,6 +24,13 @@ const heOnlyHtml = renderToStaticMarkup(
   <BookingOptions airportName="Belfast International" airportSlug="belfast-international" officialUrl="https://www.belfastairport.com/parking" />
 );
 
+// Heathrow carries a Mike-directed primary override (2026-07-11): Heathrow Airport Parking (the
+// official Heathrow-operated merchant, mid 2365) is pinned first; every other covered merchant still
+// appears, ordered alphabetically after it.
+const heathrowHtml = renderToStaticMarkup(
+  <BookingOptions airportName="Heathrow" airportSlug="heathrow" officialUrl="https://www.heathrow.com/booking/parking" />
+);
+
 /** All "Book parking with X" merchant labels, in DOM order. */
 function merchantOrder(markup: string): string[] {
   const out: string[] = [];
@@ -133,6 +140,27 @@ describe("BookingOptions — multi-option, commission-blind presentation", () =>
     expect(out).toContain("Save £273.00 vs the £315.00 drive-up gate price");
     // Manchester is a multi-merchant airport — still multi-option even with a cta model (incl. Park BCP).
     expect(merchantOrder(out)).toEqual(["Airparks", "APH", "Holiday Extras", "Park BCP", "Purple Parking"]);
+  });
+
+  it("Heathrow's primary override pins Heathrow Airport Parking first; the rest stay alphabetical (Mike-directed, 2026-07-11)", () => {
+    expect(merchantOrder(heathrowHtml)).toEqual([
+      "Heathrow Airport Parking",
+      "Airparks",
+      "APH",
+      "Holiday Extras",
+      "Park BCP",
+      "Purple Parking",
+    ]);
+  });
+
+  it("Heathrow's disclosure honestly names the pinned primary instead of falsely claiming pure alphabetical order", () => {
+    expect(heathrowHtml).toContain("Heathrow Airport Parking is shown first");
+    expect(heathrowHtml).not.toContain("We show every partner that serves Heathrow, ordered alphabetically");
+  });
+
+  it("every other airport's disclosure is untouched — still claims pure alphabetical order, no primary pin", () => {
+    expect(html).toContain("ordered alphabetically");
+    expect(html).not.toContain("is shown first");
   });
 
   it("gate-only cta (Stansted case): suppresses the price AND makes no saving claim", () => {

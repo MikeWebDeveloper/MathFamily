@@ -212,14 +212,17 @@
         "park-bcp"
       ],
       "active": true,
+      "primaryOverrides": {
+        "heathrow": "heathrow-airport-parking"
+      },
       "airportOverrides": {
         "heathrow": [
+          "heathrow-airport-parking",
           "aph",
           "holiday-extras",
           "purple-parking",
           "airparks",
-          "park-bcp",
-          "heathrow-airport-parking"
+          "park-bcp"
         ],
         "gatwick": [
           "aph",

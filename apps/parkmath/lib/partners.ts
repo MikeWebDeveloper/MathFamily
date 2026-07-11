@@ -37,8 +37,20 @@ interface SlotConfig {
   active: boolean;
   /** Per-airport merchant preference order, overriding the default `partnerIds` for that airport.
    *  Lets us serve a different (e.g. higher-coverage / more reputable) merchant on specific airports
-   *  while keeping the incumbent everywhere else — diversification without breaking existing links. */
+   *  while keeping the incumbent everywhere else — diversification without breaking existing links.
+   *  Drives the SINGLE-merchant surfaces only (resolveParkingMerchant/resolveSlot — the comparison-hub
+   *  CTA and the drop-off "bridge" CTA). Deliberately NOT consulted by resolveAllParkingMerchants (the
+   *  multi-option booking block) — see the 2026-06-24 "retire single-primary" decision in
+   *  company/boards/parkmath-board.md §0a. */
   airportOverrides?: Record<string, string[]>;
+  /** Mike-directed, single-airport "pin to front" for the ALPHABETICAL multi-option list
+   *  (resolveAllParkingMerchants only). An explicit, narrow, visible exception to the otherwise
+   *  commission-blind alphabetical ordering — scoped to exactly the airport keys listed here; every
+   *  airport absent from this map is fully alphabetical and completely unaffected. Added 2026-07-11:
+   *  Heathrow Airport Parking (mid 2365, the official Heathrow-operated merchant) pinned first at
+   *  Mike's explicit instruction. Not a reopening of commission-based ranking generally — see
+   *  company/boards/parkmath-board.md 2026-07-11 "Heathrow primary" entry for the full rationale. */
+  primaryOverrides?: Record<string, string>;
 }
 
 const config = partnersJson as unknown as {
@@ -140,8 +152,9 @@ export function resolveHeProduct(
 
 /** Resolve the parking merchant for an airport: walk the slot's per-airport partner order and return
  *  the first active partner that has a live parking deep link for that airport. This is the
- *  diversification entry point — APH on its override airports, Holiday Extras elsewhere, fail-closed
- *  if neither has a live link. clickrefSuffix is the surface (e.g. "hub", "dropoff"). */
+ *  diversification entry point — the airport's `airportOverrides` order if set (e.g. Heathrow Airport
+ *  Parking at Heathrow, APH on its other override airports), else Holiday Extras, fail-closed if none
+ *  has a live link. clickrefSuffix is the surface (e.g. "hub", "dropoff"). */
 export function resolveParkingMerchant(
   airportSlug: string,
   clickrefSuffix: string,
@@ -161,6 +174,11 @@ export interface ParkingMerchantOption {
   /** The exact tracked AWIN deep link (also rebuilt server-side by the /go route — byte-identical). */
   url: string;
   termsUrl: string | null;
+  /** True for the one option pinned to the front by `slot.primaryOverrides` for this airport (see
+   *  that field's doc comment) — false for every option on every airport without such an entry.
+   *  Callers use this to phrase the on-page disclosure honestly instead of claiming pure alphabetical
+   *  order on the one airport where that claim would no longer be true. */
+  isPinnedPrimary: boolean;
 }
 
 /** Resolve EVERY joined, active merchant that genuinely serves this airport (has a verified per-airport
@@ -173,6 +191,13 @@ export interface ParkingMerchantOption {
  *   - ORDERING is commission-blind: options are sorted ALPHABETICALLY by merchant name, a neutral
  *     criterion with no relation to payout. (We do NOT consult `airportOverrides` ordering here — that
  *     was the single-primary preference order; multi-option presentation must not inherit a ranking.)
+ *   - EXCEPTION (Mike-directed, 2026-07-11, Heathrow only): if `slot.primaryOverrides` names a partner
+ *     for this airport, that one partner is pinned to the front; every other option keeps its
+ *     alphabetical relative order. Airports absent from `primaryOverrides` are entirely unaffected —
+ *     this is a no-op for every airport except the ones explicitly listed. Each returned option's
+ *     `isPinnedPrimary` flag tells callers when this applies, so the on-page disclosure can say so
+ *     honestly instead of claiming pure alphabetical order where that's no longer true. See
+ *     company/boards/parkmath-board.md 2026-07-11 "Heathrow primary" entry for the rationale.
  *
  *  Returns [] when the slot is inactive or no merchant covers the airport (caller falls back to the
  *  official-site option only). */
@@ -191,13 +216,23 @@ export function resolveAllParkingMerchants(
   for (const list of Object.values(slot.airportOverrides ?? {})) {
     for (const id of list) candidates.add(id);
   }
+  const primaryId = slot.primaryOverrides?.[airportSlug];
   const options: ParkingMerchantOption[] = [];
   for (const partnerId of candidates) {
     const r = resolvePartnerProduct(partnerId, "parking", airportSlug, clickrefSuffix);
-    if (r) options.push({ partnerId, partnerName: r.partnerName, url: r.url, termsUrl: r.termsUrl });
+    if (r) options.push({ partnerId, partnerName: r.partnerName, url: r.url, termsUrl: r.termsUrl, isPinnedPrimary: partnerId === primaryId });
   }
   // Commission-blind, transparent ordering: alphabetical by merchant name.
   options.sort((a, b) => a.partnerName.localeCompare(b.partnerName));
+  // Narrow, explicit, per-airport exception (see doc comment above): pin the named primary to the
+  // front. A no-op unless this airport has a primaryOverrides entry AND that partner is present.
+  if (primaryId) {
+    const idx = options.findIndex((o) => o.partnerId === primaryId);
+    if (idx > 0) {
+      const primary = options.splice(idx, 1)[0]!;
+      options.unshift(primary);
+    }
+  }
   return options;
 }
 
@@ -242,7 +277,7 @@ export function resolveGoTarget(
     return r.kind === "affiliate" ? { url: r.url } : null;
   }
   if (target === "parking") {
-    // Per-airport merchant (APH override airports → APH, else Holiday Extras), fail-closed.
+    // Per-airport merchant (this airport's airportOverrides order, else Holiday Extras), fail-closed.
     const r = resolveParkingMerchant(airportSlug, surface);
     return r ? { url: r.url } : null;
   }
@@ -274,7 +309,7 @@ export function activeSlotPartnerName(slotId: SlotId): string | null {
 }
 
 /** Resolve a slot to either the first active AWIN partner for this airport (affiliate mode) or the
- *  official fallback link. Consults the slot's per-airport override order first, so e.g. Heathrow
+ *  official fallback link. Consults the slot's per-airport override order first, so e.g. Gatwick
  *  serves APH while everywhere else serves Holiday Extras. Fail-closed: a partner without a live
  *  per-airport parking link is skipped (→ next partner → official). */
 export function resolveSlot(slotId: SlotId, airportSlug: string, officialUrl: string): ResolvedSlot {

@@ -5,8 +5,9 @@ const SURFACE = "hub";
 
 /** One tracked pre-book link per airport, resolved off the live affiliate config. Built here (not in
  *  the component body) so the whole section can fail closed: if nothing resolves we render nothing.
- *  Each airport resolves to its configured merchant (APH on its override airports, Holiday Extras
- *  elsewhere); we carry the merchant name through so the disclosure names exactly who is used. */
+ *  Each airport resolves to its configured merchant (that airport's airportOverrides primary — e.g.
+ *  Heathrow Airport Parking at Heathrow, APH on the other override airports — else Holiday Extras);
+ *  we carry the merchant name through so the disclosure names exactly who is used. */
 function resolveHubLinks(
   league: LeagueEntry[],
 ): { slug: string; name: string; href: string; merchant: string }[] {

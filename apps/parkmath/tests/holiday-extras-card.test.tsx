@@ -13,6 +13,11 @@ const heOnly = renderToStaticMarkup(
 const lounge = renderToStaticMarkup(
   <HolidayExtrasCard product="lounge" airportName="Gatwick" airportSlug="gatwick" surface="lounge" />
 );
+// Heathrow carries a Mike-directed primary override (2026-07-11): Heathrow Airport Parking (mid 2365)
+// is pinned first; every other covered merchant still appears, ordered alphabetically after it.
+const heathrowDropoff = renderToStaticMarkup(
+  <HolidayExtrasCard product="parking" airportName="Heathrow" airportSlug="heathrow" surface="dropoff" extras={["hotels", "lounge", "transfers"]} />
+);
 
 function merchantOrder(markup: string): string[] {
   const out: string[] = [];
@@ -46,6 +51,19 @@ describe("HolidayExtrasCard", () => {
     expect(heOnly).not.toContain("parking%3Aaph");
     expect(heOnly).not.toContain("parking%3Apurple-parking");
     expect(heOnly).not.toContain("parking%3Apark-bcp");
+  });
+
+  it("Heathrow: primary override pins Heathrow Airport Parking first (Mike-directed, 2026-07-11); disclosure names it honestly", () => {
+    expect(merchantOrder(heathrowDropoff)).toEqual([
+      "Heathrow Airport Parking",
+      "Airparks",
+      "APH",
+      "Holiday Extras",
+      "Park BCP",
+      "Purple Parking",
+    ]);
+    expect(heathrowDropoff).toContain("Heathrow Airport Parking is shown first");
+    expect(heathrowDropoff).not.toContain("we show every partner that serves Heathrow, ordered alphabetically");
   });
 
   it("lounge card: Ad, first-party lounge link carrying the lounge surface", () => {
