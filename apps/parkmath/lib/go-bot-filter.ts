@@ -4,17 +4,26 @@
 // apart. Forwarding the visitor's real UA to Umami (done in the route) lets Umami's own heuristic drop
 // self-identifying bots (Googlebot, AhrefsBot, ...) fine — but generic scrapers/scanners that SPOOF a
 // full desktop-browser UA string (no "bot"/"crawler" substring to match) sail straight through that
-// heuristic. The two checks below close that gap. Kept in its own module (not inline in the route) so
+// heuristic. The checks below close that gap. Kept in its own module (not inline in the route) so
 // it's unit-testable without going through Next's route-handler/`after()` request scope.
 //
-// Both checks only ever affect the METRIC, never the redirect — a false positive here must never cost
-// a real conversion.
+// 2026-07-11 Analytics verdict (company/analytics/2026-07-11-go-bot-traffic-verdict.md, Company repo):
+// a distinct signature layered on top of the above — device mix inverted from the human baseline,
+// anomalous UAs (BlackBerry OS, IE-on-Windows-7), and same-URL repeat-hits 5.8-25.5s apart (too slow
+// for the old 4s dedupe window, too fast to be a human re-comparing the identical link). Widened
+// DEDUPE_WINDOW_MS, added isHighVelocityClick as an independent check (catches one visitor sweeping
+// many DIFFERENT URLs, which the same-URL dedupe below cannot), and extended BOT_UA_PATTERN.
+//
+// Every check below only ever affects the METRIC, never the redirect — a false positive here must
+// never cost a real conversion.
 
-/** Known bot/crawler/scraper/HTTP-library UA signatures. Deliberately broad — this only gates whether
- *  we count the click in Umami, never whether we redirect, so a false positive costs nothing but a
- *  metric (never a lost conversion). */
+/** Known bot/crawler/scraper/HTTP-library UA signatures, PLUS a couple of anomalous-device signatures
+ *  (blackberry; Windows-7-era IE) added 2026-07-11 — not self-identifying bots, but real-2026-traffic-
+ *  implausible enough (dead OS/browser combos) that the audit treated them the same way. Deliberately
+ *  broad — this only gates whether we count the click in Umami, never whether we redirect, so a false
+ *  positive costs nothing but a metric (never a lost conversion). */
 export const BOT_UA_PATTERN =
-  /bot|crawl|spider|slurp|archiver|scrapy|headless|phantomjs|puppeteer|playwright|selenium|python-requests|python-urllib|go-http-client|okhttp|libwww-perl|curl\/|wget\/|node-fetch|axios\/|postmanruntime|httpclient|java\/[0-9]|masscan|nmap|nikto|sqlmap|censys|shodan|zgrab|gptbot|ccbot|bytespider|petalbot|serpstatbot|dataforseobot|blexbot|mj12bot|dotbot|ahrefsbot|semrushbot|barkrowler|zoominfobot|claudebot|amazonbot|bingpreview|facebookexternalhit|telegrambot|discordbot|slackbot|linkedinbot|whatsapp|embedly|pingdom|uptimerobot|site24x7|newrelic/i;
+  /bot|crawl|spider|slurp|archiver|scrapy|headless|phantomjs|puppeteer|playwright|selenium|python-requests|python-urllib|go-http-client|okhttp|libwww-perl|curl\/|wget\/|node-fetch|axios\/|postmanruntime|httpclient|java\/[0-9]|masscan|nmap|nikto|sqlmap|censys|shodan|zgrab|gptbot|ccbot|bytespider|petalbot|serpstatbot|dataforseobot|blexbot|mj12bot|dotbot|ahrefsbot|semrushbot|barkrowler|zoominfobot|claudebot|amazonbot|bingpreview|facebookexternalhit|telegrambot|discordbot|slackbot|linkedinbot|whatsapp|embedly|pingdom|uptimerobot|site24x7|newrelic|blackberry|(?=.*windows nt 6\.1)(?=.*(?:msie|trident))/i;
 
 export type ClickHeaders = {
   userAgent: string | null;
@@ -56,8 +65,15 @@ export function isLikelyBot(h: ClickHeaders): boolean {
 // landing on the SAME warm serverless instance within a few seconds. Not a distributed rate-limiter —
 // it only covers repeats on one warm lambda, which is exactly the case that produces sub-second
 // duplicate pairs.
+//
+// 2026-07-11: widened from the original 4000ms. That was correctly tuned for the 0.2-0.4s double-fire
+// bug above, but the same-day audit found a NEW, different repeat-hit pattern — identical /go URL
+// re-hit 5.8-25.5s later, in one case 3x inside 24s — that a 4s window can't see at all. 40s comfortably
+// clears the observed range (>1.5x the slowest observed repeat) while still being far shorter than any
+// plausible reason a human would re-click the exact same affiliate link (the first click already
+// navigated them away via the 302).
 const recentClicks = new Map<string, number>();
-export const DEDUPE_WINDOW_MS = 4000;
+export const DEDUPE_WINDOW_MS = 40000;
 
 export function isNearDuplicateClick(key: string): boolean {
   const now = Date.now();
@@ -72,7 +88,45 @@ export function isNearDuplicateClick(key: string): boolean {
   return last !== undefined && now - last < DEDUPE_WINDOW_MS;
 }
 
+// 2026-07-11: a second, INDEPENDENT guard alongside the exact-URL dedupe above. That check only ever
+// compares a URL to itself, so it can't see a visitor sweeping many DIFFERENT /go URLs — which is
+// exactly what today's audit found (60 distinct URLs hit in one day, flat across every airport/product,
+// the signature of a systematic crawl rather than organic browsing). A real visitor rarely compares
+// more than a handful of merchant options in one sitting, so this flags a FINGERPRINT (not a URL) that
+// generates an unusually high count of /go clicks — of any target — in a short window. Reuses the same
+// visitor-identifying value the exact-URL dedupe key is built from (the first X-Forwarded-For hop, see
+// route.ts) rather than inventing a new fingerprint; same caveat as above (in-process, per-warm-lambda,
+// not a distributed rate-limiter — and a shared/proxy IP could in theory push several real visitors
+// over the threshold together, same limitation the existing dedupe key already carries).
+const recentClicksByFingerprint = new Map<string, number[]>();
+export const VELOCITY_WINDOW_MS = 5 * 60 * 1000; // 5 minutes
+// Top of the audit-recommended 5-6 range: favors fewer false positives (this file's "never cost a real
+// conversion" principle) while still sitting far below the dozens of clicks/5min the observed bot
+// pattern (avg 12s between hits) produces — plenty of margin either way.
+export const VELOCITY_MAX_CLICKS = 6;
+
+export function isHighVelocityClick(fingerprint: string): boolean {
+  const now = Date.now();
+  const priorHits = recentClicksByFingerprint.get(fingerprint) ?? [];
+  const withinWindow = priorHits.filter((ts) => now - ts < VELOCITY_WINDOW_MS);
+  withinWindow.push(now);
+  // Opportunistic cleanup so the map can't grow unbounded on a long-lived warm instance (same approach
+  // as the de-dupe map above).
+  if (recentClicksByFingerprint.size > 500) {
+    for (const [k, hits] of recentClicksByFingerprint) {
+      if (hits.every((ts) => now - ts > VELOCITY_WINDOW_MS)) recentClicksByFingerprint.delete(k);
+    }
+  }
+  recentClicksByFingerprint.set(fingerprint, withinWindow);
+  return withinWindow.length > VELOCITY_MAX_CLICKS;
+}
+
 /** Test-only: clear the de-dupe map between test cases so they don't bleed into each other. */
 export function _resetDedupeStateForTests(): void {
   recentClicks.clear();
+}
+
+/** Test-only: clear the velocity map between test cases so they don't bleed into each other. */
+export function _resetVelocityStateForTests(): void {
+  recentClicksByFingerprint.clear();
 }
