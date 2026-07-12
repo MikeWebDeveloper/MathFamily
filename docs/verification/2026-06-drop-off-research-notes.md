@@ -418,3 +418,19 @@ max stay and payment deadline were re-confirmed today.
 > wording** if you want belt-and-braces before merging. Separately, the £5/15-min Rapid
 > Drop-off fee should be re-sourced from the official Rapid Drop-off T&C page on the next
 > sweep, since the main page no longer lists it.
+
+---
+
+## 2026-07-03 — daily re-verification (hard-blocked target: London City)
+
+Daily ParkMath data-check sweep. In-scope drop-off re-verification target: **`drop-off:london-city`** (standing hard-blocked target). No records were stale by the 46-day rule (oldest drop-off `verifiedAt` was 2026-06-10, 23 days old), and the day's news watch surfaced no drop-off fee change, so London City was the only drop-off record re-checked today.
+
+### london-city — London City (LCY)  *(re-verified; penalty field corrected)*
+- **Official URL:** https://www.londoncityairport.com/parking/drop-off
+- **Transport:** direct WebFetch returned HTTP 403 (expected for this hard-blocked domain); page read successfully via `r.jina.ai` on 2026-07-03.
+- **Core charge — CONFIRMED UNCHANGED (verbatim from official page):** "0 - 5 minutes £8.00", "5 minutes and above £1 per minute thereafter", "Maximum stay 10 minutes", settle "by midnight the day after". So `bands` (`{5, 800}`), `perMinuteAfterPence` (100), `maxStayMinutes` (10), `paymentDeadline` and `blueBadgePolicy` all remain correct — no change.
+- **Correction — penalty now officially confirmed:** the official Drop-off FAQ now states verbatim: *"A £100.00 enforcement charge is payable by drivers who stay past 10 minutes. This charge is reduced to £60.00 if paid within 14 days."* The record previously carried `penaltyPence: null` with a note that "no amount is confirmed on the official page" — that note is now false. Corrected to `penaltyPence: 10000` and rewrote `penaltyNotes` to capture the £100 → £60-within-14-days enforcement charge, matching the house convention used for Gatwick/Manchester/East Midlands.
+- `maxChargePence` left `null`: the page publishes no explicit maximum-charge cap on the drop-off itself (the effective in-window ceiling of £13 = £8 + 5×£1 is derived, not stated), consistent with how derived ceilings are handled elsewhere.
+- `verifiedAt` → **2026-07-03**. Dataset `version` 1.3.0 → **1.3.1**, `lastUpdated` → 2026-07-03.
+
+**Also re-verified today (parking dataset, no change):** `parking:newcastle` — see the parking research notes.
