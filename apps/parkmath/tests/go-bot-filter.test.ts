@@ -22,6 +22,7 @@ const REAL_CHROME_CLICK: ClickHeaders = {
   acceptLanguage: "en-GB,en;q=0.9",
   secFetchMode: "navigate",
   secFetchSite: "same-origin",
+  secFetchUser: "?1",
 };
 
 const REAL_SAFARI_IOS_CLICK: ClickHeaders = {
@@ -32,6 +33,7 @@ const REAL_SAFARI_IOS_CLICK: ClickHeaders = {
   acceptLanguage: "en-GB,en;q=0.9",
   secFetchMode: "navigate",
   secFetchSite: "same-origin",
+  secFetchUser: "?1",
 };
 
 describe("isLikelyBot — real human clicks must never be flagged", () => {
@@ -90,6 +92,7 @@ describe("isLikelyBot — generic scrapers spoofing a full browser UA (the audit
         acceptLanguage: null,
         secFetchMode: null,
         secFetchSite: null,
+        secFetchUser: null,
       }),
     ).toBe(true);
   });
@@ -138,6 +141,25 @@ describe("isLikelyBot — anomalous-device signatures (2026-07-11 bot-traffic au
         userAgent: "Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko",
       }),
     ).toBe(false);
+  });
+});
+
+describe("isLikelyBot — Sec-Fetch-Site must be same-origin (2026-07-12 distributed-IP bot patch)", () => {
+  it("flags cross-site: a normal-looking browser UA with full headers, but Sec-Fetch-Site: cross-site", () => {
+    // The new signal firing on its own — everything else about this request passes signals 1-2.
+    expect(isLikelyBot({ ...REAL_CHROME_CLICK, secFetchSite: "cross-site" })).toBe(true);
+  });
+
+  it("flags secFetchSite: none — the typed-URL / no-referring-page case", () => {
+    expect(isLikelyBot({ ...REAL_CHROME_CLICK, secFetchSite: "none" })).toBe(true);
+  });
+
+  it("still does NOT flag same-origin with a normal browser UA — the real-click fixture must not regress", () => {
+    expect(isLikelyBot({ ...REAL_CHROME_CLICK, secFetchSite: "same-origin" })).toBe(false);
+  });
+
+  it("still does NOT flag secFetchSite entirely absent as long as secFetchMode is present — the new check only fires when secFetchSite is present-but-wrong, never merely absent", () => {
+    expect(isLikelyBot({ ...REAL_CHROME_CLICK, secFetchSite: null, secFetchMode: "navigate" })).toBe(false);
   });
 });
 
