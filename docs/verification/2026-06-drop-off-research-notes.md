@@ -418,3 +418,23 @@ max stay and payment deadline were re-confirmed today.
 > wording** if you want belt-and-braces before merging. Separately, the £5/15-min Rapid
 > Drop-off fee should be re-sourced from the official Rapid Drop-off T&C page on the next
 > sweep, since the main page no longer lists it.
+
+---
+
+## 2026-07-16 — daily data check (re-verify, no fee changes)
+
+Triggered by the daily ParkMath data check (news-watch sweep flagged the **Luton drop-off**
+page fingerprint as changed; **London City** re-checked as a standing hard-blocked target).
+
+- **drop-off:luton** — official page
+  <https://www.london-luton.co.uk/to-and-from-lla/dropping-off> re-read today. Charges
+  **unchanged**: £7 for up to 10 minutes, then £1/minute (max stay 30 minutes); £95
+  enforcement charge (→£55 within 14 days); Long Stay free for up to 2 hours with free
+  24/7 shuttle. The watchdog fingerprint shift was page wording/dynamic content, **not** a
+  fee change. `verifiedAt` 2026-06-10 → **2026-07-16**.
+- **drop-off:london-city** — hard-blocked target. Official page 403s to WebFetch; read via
+  `r.jina.ai` proxy of <https://www.londoncityairport.com/parking/drop-off>. Charges
+  **unchanged**: £8.00 for 0–5 minutes, then £1/minute, maximum stay 10 minutes; Blue Badge
+  holders may register for free time. `verifiedAt` 2026-06-22 → **2026-07-16**.
+
+No numeric corrections. Dataset `version` 1.3.0 → 1.3.1 (verifiedAt bumps only).
