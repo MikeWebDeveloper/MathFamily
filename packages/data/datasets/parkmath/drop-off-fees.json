@@ -1,6 +1,6 @@
 {
-  "version": "1.3.0",
-  "lastUpdated": "2026-06-22",
+  "version": "1.3.1",
+  "lastUpdated": "2026-07-19",
   "records": [
     {
       "airportSlug": "heathrow",
@@ -26,7 +26,7 @@
       },
       "priorYearFeePence": 600,
       "sourceUrl": "https://www.heathrow.com/transport-and-directions/terminal-drop-off-charge",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-07-19"
     },
     {
       "airportSlug": "gatwick",
@@ -52,9 +52,9 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://www.gatwickairport.com/transport-options/drop-off.html",
-      "verifiedAt": "2026-06-10",
+      "verifiedAt": "2026-07-19",
       "blueBadgeSeoTitle": "Gatwick Blue Badge drop-off — free if registered 2026",
-      "blueBadgeSeoDescription": "Blue Badge holders get the £10 Gatwick drop-off charge waived — register your number plate online first (free 30-minute session). Read from the official Gatwick page, verified 2026-06-10."
+      "blueBadgeSeoDescription": "Blue Badge holders get the £10 Gatwick drop-off charge waived — register your number plate online first (free 30-minute session). Read from the official Gatwick page, verified 2026-07-19."
     },
     {
       "airportSlug": "manchester",
@@ -107,8 +107,8 @@
       "maxStayMinutes": 30,
       "perMinuteAfterPence": null,
       "maxChargePence": null,
-      "penaltyPence": null,
-      "penaltyNotes": "£28 tier applies to stays over 15 minutes (from 19 March 2026); a Parking Charge may also be issued for non-payment — amount not currently published",
+      "penaltyPence": 10000,
+      "penaltyNotes": "£28 tier applies to stays over 15 minutes (from 19 March 2026); non-payment by the deadline results in a £100 Parking Charge Notice, reduced to £60 if paid within 14 days",
       "paymentDeadline": "23:59 the day after your visit",
       "blueBadgePolicy": "Normal charges apply, but where the passenger holds a valid Blue Badge the driver is eligible for an extension to the 30-minute maximum stay if reasonably required",
       "freeAlternative": {
@@ -148,7 +148,7 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://www.london-luton.co.uk/to-and-from-lla/dropping-off",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-07-19"
     },
     {
       "airportSlug": "edinburgh",
@@ -399,10 +399,10 @@
       "maxStayMinutes": 10,
       "perMinuteAfterPence": 100,
       "maxChargePence": null,
-      "penaltyPence": null,
-      "penaltyNotes": "After the first 5 minutes the charge is £1 per minute up to the 10-minute maximum stay; a Parking Charge may apply for non-payment but no amount is confirmed on the official page",
+      "penaltyPence": 10000,
+      "penaltyNotes": "After the first 5 minutes the charge is £1 per minute up to the 10-minute maximum stay; a £100 enforcement charge is payable by drivers who stay past 10 minutes",
       "paymentDeadline": "Midnight the following day (online, barrierless ANPR)",
-      "blueBadgePolicy": "Blue Badge holders are exempt from the drop-off charge (register/sign in to the drop-off system to apply the exemption)",
+      "blueBadgePolicy": "Blue Badge holders may register to get 10 minutes free parking in the drop-off area; the Main Stay car park offers 1 hour free if more time is needed",
       "freeAlternative": {
         "name": "Docklands Light Railway (DLR)",
         "kind": "public-transport",
@@ -411,7 +411,7 @@
       },
       "priorYearFeePence": 0,
       "sourceUrl": "https://www.londoncityairport.com/parking/drop-off",
-      "verifiedAt": "2026-06-22"
+      "verifiedAt": "2026-07-19"
     },
     {
       "airportSlug": "leeds-bradford",
