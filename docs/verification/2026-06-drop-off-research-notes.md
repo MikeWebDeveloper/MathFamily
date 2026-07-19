@@ -418,3 +418,68 @@ max stay and payment deadline were re-confirmed today.
 > wording** if you want belt-and-braces before merging. Separately, the £5/15-min Rapid
 > Drop-off fee should be re-sourced from the official Rapid Drop-off T&C page on the next
 > sweep, since the main page no longer lists it.
+
+---
+
+## 2026-07-19 — daily ParkMath check (pending-fingerprint drop-off pages)
+
+Trigger: the news watchdog reported **no changed pages today** (`{"changed":[],"errors":[]}`),
+but `tools/freshness/news-hashes.json` carried unresolved `pendingSince` flags on four
+drop-off **price** pages whose last verification predated the flag. Re-verified each
+against the airport's own page.
+
+**Confirmed unchanged (verifiedAt → 2026-07-19):**
+
+- **Heathrow** — "A £7 charge applies at Heathrow every time a vehicle enters the terminal
+  drop-off areas." Penalty re-confirmed: "£80 Parking Charge (PC), reduced to £40 if paid
+  within 14 days." Payment "by midnight on the next day". All fields already correct.
+- **Gatwick** — "£10 for 10 minutes", "£1 for each additional minute up to 20 minutes",
+  "maximum daily charge of £30 and a maximum length of stay of 30 minutes". Matches the
+  stored bands/`perMinuteAfterPence`/`maxChargePence`/`maxStayMinutes` exactly. The stored
+  £100 penalty was **not** restated on the page today (it says only that a PCN is issued) —
+  retained on the strength of the earlier verification, not re-confirmed.
+- **Luton** — "£7 for 10 minutes", "£1 per minute thereafter (max stay 30 minutes)",
+  "An £95.00 enforcement charge ... reduced to £55.00 if paid within 14 days." All correct.
+
+**Corrections applied:**
+
+- **London City** (`drop-off:london-city`) — the standing hard-blocked target **fetched
+  successfully today** via the `r.jina.ai` rung against the record's own `sourceUrl`
+  (`/parking/drop-off`); the direct WebFetch of `/to-and-from-the-airport/by-car` 404s, so
+  that path is stale, not the airport. Official charges table confirms the stored fee
+  (0–5 min £8.00, "£1 per minute thereafter", "maximum stay of 10 minutes"). Two fields
+  were improved because the page now publishes what it previously did not:
+  - `penaltyPence` `null` → `10000`, from "A £100.00 enforcement charge is payable by
+    drivers who stay past 10 minutes." The old `penaltyNotes` explicitly said the amount was
+    "not confirmed on the official page"; it now is.
+  - `blueBadgePolicy` rewritten to the page's actual wording — "Blue Badge holders may
+    register to get 10 minutes free parking in the Drop-off area. Please use the Main Stay
+    if you need more time and get 1 hour free parking" — replacing the looser "exempt from
+    the drop-off charge".
+  `verifiedAt` → 2026-07-19.
+- **Stansted** (`drop-off:stansted`) — `penaltyPence` `null` → `10000`, from the Express Set
+  Down section: "If payment is not received by the deadline, a £100.00 Parking Charge Notice
+  will be issued to the registered vehicle holder. This will be reduced to £60.00 if paid
+  within 14 days." The previous `penaltyNotes` said the amount was "not currently published".
+  **`verifiedAt` deliberately left at 2026-06-26** — see NEEDS-HUMAN below.
+
+Dataset `version` 1.3.0 → 1.3.1; `pendingSince` cleared for the four pages above.
+
+> ## NEEDS-HUMAN
+> 1. **Stansted Express Set Down headline fee is no longer published on the official page.**
+>    The stored £10 / 15 min + £28 over-15-min tiers could **not** be re-confirmed today: the
+>    area is now barrierless ("no barriers, so cars don't need to stop and pay ... pay online
+>    later") and the page shows only the *Short Stay* table (Up to 30 minutes £13) plus a
+>    "15-minute allocated period". Nothing on the page *contradicts* £10/£28, so per the
+>    trust rules the value was **retained** and `verifiedAt` was **not** bumped. Same failure
+>    class as the East Midlands Rapid Drop-off note above. A human should confirm the current
+>    Express Set Down tariff from the APCOA payment portal or the Stansted T&Cs.
+> 2. **`apps/parkmath/vitest.config.ts` exists** (added 2026-07-12 to resolve the `@/` alias
+>    for `tests/go-route.test.ts`). This directly contradicts the hard rule in `CLAUDE.md` /
+>    `docs/engineering-notes.md` that **no vitest/vite config may exist on this volume**,
+>    because esbuild's `build()` is documented to deadlock on `/Volumes/TB4 Workstation`.
+>    **Observed today: it did NOT deadlock** — a full `pnpm test` from the repo root ran
+>    green (10/10 tasks, parkmath 360 tests, ~7s wall clock). So either the deadlock
+>    condition is narrower than the note claims or it has been fixed upstream. It is outside
+>    this routine's bounds to edit either the config or the engineering note; flagging so a
+>    human can decide whether to relax the documented rule or remove the config.
