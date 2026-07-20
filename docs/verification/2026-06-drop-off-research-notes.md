@@ -483,3 +483,64 @@ Dataset `version` 1.3.0 → 1.3.1; `pendingSince` cleared for the four pages abo
 >    condition is narrower than the note claims or it has been fixed upstream. It is outside
 >    this routine's bounds to edit either the config or the engineering note; flagging so a
 >    human can decide whether to relax the documented rule or remove the config.
+
+---
+
+## 2026-07-20 — daily ParkMath pass (stacked on the 2026-07-19 branch)
+
+Trigger: `watchdog:news` reported four changed fingerprints — Gatwick, Heathrow, Luton and
+Stansted drop-off pages. Note that the baseline hashes live on `main`, and the 2026-07-19
+work (PR #30) is **still unmerged**, so most of that churn is the *already-corrected* state
+from yesterday rather than new movement. Today's branch is therefore stacked on
+`freshness/2026-07-19` and records only the deltas that survive comparison against PR #30's
+post-state.
+
+### Re-confirmed today, unchanged (no edit, `verifiedAt` left at 2026-07-19)
+
+- **Heathrow** — "A £7 charge applies at Heathrow every time a vehicle enters the terminal
+  drop-off areas"; "Non-payment will result in an £80 Parking Charge (PC), reduced to £40 if
+  paid within 14 days"; "payment must be made by midnight on the next day". Matches stored.
+- **Gatwick** — "£10 for 10 minutes", "£1 for each additional minute up to 20 minutes",
+  "maximum daily charge of £30 and a maximum length of stay of 30 minutes", "Blue badge
+  holders are exempt from the drop-off charge", Long Stay "free for two hours". Matches
+  stored. The PCN amount (£100/£60) is **not** currently restated on the page; not
+  contradicted, so retained from the earlier verification.
+- **Luton fees** — table reads "Up to 10 minutes | £7" and "10 minutes and above | £1 per
+  minute thereafter (max stay 30 minutes)"; "An £95.00 enforcement charge is payable by
+  drivers who stay past 30 minutes. This charge is reduced to £55.00 if paid within 14 days."
+  Matches stored.
+- **Stansted** — the £100/£60 PCN wording confirmed again, matching yesterday's correction.
+
+### Changed today
+
+- **`luton.blueBadgePolicy`** — the official FAQ states both halves, and we stored only the
+  first: "No concessions are available for blue badge holders in the main drop off area.
+  However, blue badge holders and those who provide proof of booked assistance get **30
+  minutes FREE** and preferential rates for **dropping off** in **Terminal Car Park 1**."
+  Field extended to carry the Terminal Car Park 1 concession. `verifiedAt` → 2026-07-20.
+- **`london-city.penaltyNotes`** — the drop-off page fetched successfully today (it usually
+  403s), and states: "A £100.00 enforcement charge is payable by drivers who stay past 10
+  minutes. This charge is reduced to £60.00 if paid within 14 days." The stored note carried
+  the £100 but omitted the 14-day reduction; added. Everything else on the record was
+  re-confirmed verbatim — "0 - 5 minutes | £8.00", "5 minutes and above | £1 per minute
+  thereafter", "Maximum stay 10 minutes", and the Blue Badge 10-min / Main Stay 1-hour
+  wording. `verifiedAt` → 2026-07-20.
+
+Dataset `version` 1.3.1 → 1.3.2.
+
+### Hard-blocked targets re-attempted
+
+- **London City** — **unblocked today** (via `r.jina.ai`); fully re-verified, see above.
+- **Newcastle parking** — still unobtainable. `newcastleairport.com/car-parking` returns
+  **403** direct, and the `r.jina.ai` render resolves to the *booking quote engine* only
+  (departure/return date form, "Get a quote"), with no published tariff table. The record
+  stays excluded from `parking-tariffs.json`; no value invented.
+
+> ## NEEDS-HUMAN
+> 1. **PR #30 (2026-07-19) is still open and this branch is stacked on it.** Merge #30
+>    first, then this one; reviewing this diff against `main` will otherwise show
+>    yesterday's corrections as if they were today's.
+> 2. **Stansted Express Set Down tariff still unconfirmable** — carried over unchanged from
+>    yesterday's note above; the £10 / £28 tiers remain retained-but-unverified and
+>    `verifiedAt` stays 2026-06-26. Needs a human to read the APCOA portal or Stansted T&Cs.
+> 3. **Newcastle parking** remains hard-blocked (403 + quote-engine-only), as above.
