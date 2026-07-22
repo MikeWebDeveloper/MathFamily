@@ -1,6 +1,6 @@
 {
-  "version": "1.3.0",
-  "lastUpdated": "2026-06-22",
+  "version": "1.3.1",
+  "lastUpdated": "2026-07-22",
   "records": [
     {
       "airportSlug": "heathrow",
@@ -267,8 +267,8 @@
       "priorYearFeePence": 700,
       "sourceUrl": "https://www.bristolairport.co.uk/parking/drop-off-and-pick-up/",
       "verifiedAt": "2026-06-10",
-      "seoTitle": "Bristol drop-off fee 2026 — £8.50 charge, £100 penalty",
-      "seoDescription": "Bristol Airport drop-off fee: £8.50 for up to 10 minutes, £100 penalty if unpaid. Also called the Bristol airport drop-off levy. Free Waiting Zone (1 hr) and Blue Badge rules — verified 2026-06-10 against the official Bristol page."
+      "seoTitle": "Bristol Airport drop-off charges 2026 — £8.50 fee, £100 penalty",
+      "seoDescription": "Bristol Airport drop-off charges: £8.50 for up to 10 minutes, £100 penalty if unpaid. Also called the Bristol airport drop-off levy. Free Waiting Zone (1 hr) and Blue Badge rules — verified 2026-06-10 against the official Bristol page."
     },
     {
       "airportSlug": "belfast-international",
@@ -382,7 +382,9 @@
       },
       "priorYearFeePence": 500,
       "sourceUrl": "https://www.liverpoolairport.com/parking/express-drop-off",
-      "verifiedAt": "2026-06-22"
+      "verifiedAt": "2026-06-22",
+      "seoTitle": "Liverpool (John Lennon) Airport drop-off charges 2026 — £6 fee, free option",
+      "seoDescription": "Liverpool John Lennon Airport drop-off charges: £6 for up to 10 minutes in the Express Drop Off & Pick Up car park. Free alternative: Drop-off 2 car park, free for 20 minutes. Verified 2026-06-22 against the official Liverpool Airport page."
     },
     {
       "airportSlug": "london-city",
@@ -400,7 +402,7 @@
       "penaltyPence": null,
       "penaltyNotes": "After the first 5 minutes the charge is £1 per minute up to the 10-minute maximum stay; a Parking Charge may apply for non-payment but no amount is confirmed on the official page",
       "paymentDeadline": "Midnight the following day (online, barrierless ANPR)",
-      "blueBadgePolicy": "Blue Badge holders are exempt from the drop-off charge (register/sign in to the drop-off system to apply the exemption)",
+      "blueBadgePolicy": "Blue Badge holders may register to get 10 minutes' free parking in the Drop-off area (a full drop-off, given the 10-minute maximum stay); for longer, use the Main Stay or Pick Up area, which offer 1 hour free parking.",
       "freeAlternative": {
         "name": "Docklands Light Railway (DLR)",
         "kind": "public-transport",
@@ -409,7 +411,7 @@
       },
       "priorYearFeePence": 0,
       "sourceUrl": "https://www.londoncityairport.com/parking/drop-off",
-      "verifiedAt": "2026-06-22"
+      "verifiedAt": "2026-07-22"
     },
     {
       "airportSlug": "leeds-bradford",
@@ -435,7 +437,9 @@
       },
       "priorYearFeePence": 700,
       "sourceUrl": "https://www.leedsbradfordairport.co.uk/parking",
-      "verifiedAt": "2026-06-22"
+      "verifiedAt": "2026-06-22",
+      "optionsSeoTitle": "Leeds Bradford Airport drop-off charges 2026 — £8 fee, free option & cheapest way in",
+      "optionsSeoDescription": "How much does Leeds Bradford Airport charge for drop-off? £8 for up to 10 minutes, or free via the One Hour Free Zone. Compare against parking and pre-booked options — every figure verified against the official Leeds Bradford Airport page, updated 2026-06-22."
     },
     {
       "airportSlug": "east-midlands",
@@ -599,7 +603,9 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://exeter-airport.co.uk/car-parking/",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-06-10",
+      "optionsSeoTitle": "Exeter Airport drop-off charge 2026 — £6 fee, or free in Car Park P4",
+      "optionsSeoDescription": "How much does Exeter Airport charge for drop-off? £6 for up to 15 minutes in Car Park P1, or free for 30 minutes in Car Park P4. Compare against parking and pre-booked options — verified against the official Exeter Airport page, updated 2026-06-10."
     },
     {
       "airportSlug": "southend",
