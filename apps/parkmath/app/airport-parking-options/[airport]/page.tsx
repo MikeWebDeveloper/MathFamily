@@ -34,9 +34,18 @@ export async function generateMetadata({ params }: { params: Promise<{ airport: 
   // the winnable decision seam — "is it cheaper to park or get dropped off / how to avoid drop-off
   // charges / when is each option cheaper" — where Reddit/MSE/Guardian rank, not booking OTAs. The
   // page's differentiated asset is the verified trip-length break-even, which the fortress can't match.
+  //
+  // Per-airport override (2026-07-12 striking-distance pass): GSC search-analytics showed Google
+  // already ranks THIS page — not the dedicated /drop-off-charges page — for literal "[airport] drop
+  // off charge(s)" queries at some airports (e.g. Exeter, Leeds Bradford), yet the generated title
+  // above never used the word "charge(s)" so it under-matched the exact searched phrase. When the
+  // dataset carries an explicit optionsSeoTitle/optionsSeoDescription, use it verbatim; otherwise the
+  // generated template is unchanged (a no-op for every other airport).
   return {
-    title: `Park or get dropped off at ${sn} Airport? Cheapest option by trip length (2026)`,
-    description: `Is it cheaper to park or get dropped off at ${sn} Airport? An honest, verified break-even: the free drop-off alternative, the ${fee} forecourt fee, drive-up gate parking and when pre-booking wins — by how long you're going. Updated ${inputs.dropOff.verifiedAt}.`,
+    title: inputs.dropOff.optionsSeoTitle ?? `Park or get dropped off at ${sn} Airport? Cheapest option by trip length (2026)`,
+    description:
+      inputs.dropOff.optionsSeoDescription ??
+      `Is it cheaper to park or get dropped off at ${sn} Airport? An honest, verified break-even: the free drop-off alternative, the ${fee} forecourt fee, drive-up gate parking and when pre-booking wins — by how long you're going. Updated ${inputs.dropOff.verifiedAt}.`,
     alternates: { canonical: `/airport-parking-options/${airport}` }
   };
 }

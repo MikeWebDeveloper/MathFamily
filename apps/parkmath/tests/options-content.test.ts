@@ -94,6 +94,21 @@ describe("buildOptionsFaqs", () => {
     expect(mg?.answer).toMatch(/never quote a price we can't verify/i);
     expect(mg?.answer).not.toMatch(/from £/i);
   });
+  it("appends a literal 'how much does it cost to drop off' Q&A last, from verified data only (2026-07-12 striking-distance fix)", () => {
+    const faqs = buildOptionsFaqs(dropOff, parking, "London Gatwick");
+    // Appended, not prepended — faqs[0] above must stay the lead decision-query FAQ.
+    const last = faqs[faqs.length - 1];
+    expect(last?.question).toMatch(/how much does it cost to drop off at/i);
+    expect(last?.answer).toContain("£10");
+    expect(last?.answer).toContain("Verified 2026-06-22");
+  });
+  it("the literal drop-off-cost FAQ reads free airports as free, never a fabricated fee", () => {
+    const free = { ...dropOff, isFree: true, bands: [] };
+    const faqs = buildOptionsFaqs(free, parking, "Birmingham");
+    const last = faqs[faqs.length - 1];
+    expect(last?.answer).toMatch(/free at the forecourt/i);
+    expect(last?.answer).not.toMatch(/£\d/);
+  });
 });
 
 describe("buildBreakEvenModel", () => {

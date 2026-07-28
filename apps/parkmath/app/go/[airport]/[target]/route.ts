@@ -94,7 +94,16 @@ async function recordUmamiClick(
           url: `/go/${fields.airport}/${fields.target}`,
           name: "affiliate_click",
           ip: visitorIp,
-          data: { airport: fields.airport, target: fields.target, surface: fields.surface },
+          // secFetchUser is instrumentation-only for now (see go-bot-filter.ts) — carried through
+          // to Umami so a follow-up audit can check its real-world distribution before it becomes
+          // a hard gate in isLikelyBot. "1" means genuine user-activated navigation (?1); "0"/null
+          // means absent (scripted request, or a browser that omits it).
+          data: {
+            airport: fields.airport,
+            target: fields.target,
+            surface: fields.surface,
+            secFetchUser: h.secFetchUser ?? "0",
+          },
         },
       }),
     });
@@ -135,6 +144,7 @@ export async function GET(
     acceptLanguage: req.headers.get("accept-language"),
     secFetchMode: req.headers.get("sec-fetch-mode"),
     secFetchSite: req.headers.get("sec-fetch-site"),
+    secFetchUser: req.headers.get("sec-fetch-user"),
   };
 
   // Durable, bot-filtered affiliate-click event → self-hosted Umami, grouped by airport + target +
