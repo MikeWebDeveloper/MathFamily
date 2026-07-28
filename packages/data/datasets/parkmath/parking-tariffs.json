@@ -1,5 +1,5 @@
 {
-  "version": "1.2.1",
+  "version": "1.2.2",
   "lastUpdated": "2026-07-28",
   "records": [
     {
@@ -45,12 +45,12 @@
           "productType": "gate",
           "name": "Turn Up & Park — T2 West Multi Storey (P3)",
           "prices": [
-            { "days": 3, "totalPence": 18900 },
-            { "days": 7, "totalPence": 44100 },
-            { "days": 14, "totalPence": 88200 }
+            { "days": 3, "totalPence": 19020 },
+            { "days": 7, "totalPence": 44380 },
+            { "days": 14, "totalPence": 88760 }
           ],
           "snapshotDate": null,
-          "notes": "Official Turn Up & Park tariff: £63.00 for up to 24h and for each 24h thereafter (flat). 3/7/14-day totals computed from that official per-day rate."
+          "notes": "Official Turn Up & Park tariff: £63.40 for up to 24h and for each 24h thereafter (flat). 3/7/14-day totals computed from that official per-day rate."
         },
         {
           "productType": "prebook",

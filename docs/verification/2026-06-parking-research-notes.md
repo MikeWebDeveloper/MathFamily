@@ -531,3 +531,54 @@ is still the right fix and remains open.
 >   2026-06-27, so a sweep after the skill text was written already added it back. The
 >   `freshness` SKILL.md still describes it as "currently EXCLUDED from the parking dataset";
 >   that instruction is stale and should be corrected (out of bounds for this agent to edit).
+
+---
+
+## 2026-07-28 — correction pass (third run of the day)
+
+Two earlier runs of the daily check both executed on 2026-07-28. The first committed
+`3c0fe61` and opened PR #35; the second left work uncommitted in the tree. Their Manchester
+parking figures **disagreed**, so this pass re-read the disputed sources directly and
+reconciled them. No new sweep was run — nothing else in ParkMath scope was past the 46-day
+threshold.
+
+**Corrected**
+
+- **Manchester (MAN) — Turn Up & Park.** The committed value (`3c0fe61`) was **£63.00** per
+  24h; the uncommitted notes said **£63.40**. The official page settles it: the T2 West Multi
+  Storey (P3) table reads "Up to 24 hours and for each 24 hours thereafter **£63.40**".
+  The record is corrected to £63.40, and the 3/7/14-day totals recomputed from that rate:
+  **£190.20 / £443.80 / £887.60** (was £189.00 / £441.00 / £882.00). Dataset `version`
+  1.2.1 → 1.2.2. Same page also re-confirmed JetParks "From £59.99 (8 days)", unchanged.
+
+**Independently re-confirmed today (no change needed)**
+
+- **Birmingham parking** — Car Park 7 turn-up: up to 24h **£51.00**, per day thereafter
+  **£44.00**. Read through a real browser (the domain still 403s every plain HTTP transport).
+  The committed dataset already carries these values, so `3c0fe61`'s commit *message* — which
+  says Birmingham "could not be re-verified ... values and verifiedAt left untouched" — is
+  **inaccurate about its own diff**; the data in that commit is right.
+- **Birmingham lounges** — "Aspire Lounge, South" from **£42.99**; "No1 Lounge" from **£38**.
+  Both match the stored record.
+- **Priority Pass** — Standard **£69**, Standard Plus **£229** (10 free visits, then £24),
+  Prestige **£419**, **£24** member/guest visit fee throughout. All stored tiers unchanged;
+  this is what justifies the `verifiedAt` bump to 2026-07-28.
+- **Southampton drop-off** — stored £7/20 min and the £80 enforcement charge reduced to £50
+  within 14 days both still print on the official page.
+
+> ## NEEDS-HUMAN
+> - **Southampton's self-contradiction persists** and is confirmed live today: the prose says
+>   passengers "will be charged a **£7** fee for 20 minutes", while a table lower on the same
+>   page reads "Up to 20 minutes **£10.00**" (then £18/60 min, £30/90 min, £60/4 hours). The
+>   page separately tells drivers wanting more than 20 minutes to use the Short Stay car park
+>   and to "visit our Short Stay parking page for roll-up pricing", which suggests the £10
+>   table is the **Short Stay** tariff rather than the drop-off fee — but that remains
+>   inference. **Nothing was changed**: the record keeps £7/20 min, sourced to the prose.
+> - **Two lounge records are deliberately stale** (Heathrow, Gatwick — both at 2026-06-10,
+>   48 days). Each bundles a second lounge whose price is not published on the record's
+>   `sourceUrl`. Splitting `sourceUrl` per lounge is the real fix and is still open.
+> - **Glasgow pre-book "from" price** (£49.99) is rendered inside a booking widget, not page
+>   text, so it could not be re-read; its `snapshotDate` stays 2026-06-10.
+> - The `freshness` SKILL.md still calls Newcastle parking "currently EXCLUDED from the
+>   parking dataset". The record exists and is verified — that instruction is stale, and
+>   editing skill text is out of bounds for this run.
