@@ -271,3 +271,57 @@ Scheduled weekly sweep. **Method:** each Airalo country page (`airalo.com/<count
 **Holafly + Saily bundles: NOT re-verified this sweep (NEEDS-HUMAN).** They are "(converted)" values sourced from holafly.com / saily.com (not airalo.com, the record's `sourceUrl`) and require live FX conversion. Re-quoting them reliably is out of scope for an unattended run. Their snapshotDates remain 2026-06-10 (a few older).
 
 **ParkMath (live brand) staleness check:** nothing older than 46 days — every drop-off, parking, lounge, priority-pass and news record was verified between 2026-06-10 and 2026-06-27. The two standing hard-blocked targets are already resolved: London City drop-off has a real record (verified 2026-06-22) and Newcastle Long Stay parking was added (verified 2026-06-27). No ParkMath changes this sweep.
+
+---
+
+## 2026-07-28 — sweep (NOT COMPLETED — reporting only)
+
+The RoamMath half of this sweep was **not** completed. No RoamMath dataset value was changed
+and no `verifiedAt` was moved, so every record below stays visibly stale and will be re-flagged
+on the next run. Recording what was attempted and why it failed, so the next pass starts here.
+
+**eSIM (40 records, ~110 bundles) — not re-quoted.**
+Sweep mode requires fresh quotes with a new `snapshotDate` for every bundle. Airalo no longer
+serves package pricing in the delivered HTML: the country pages render tiers client-side, and
+`__NUXT_DATA__` (the extraction path recorded in earlier notes) no longer carries the package
+objects — a scan of `spain-esim` found the payload present but with zero price-bearing package
+entries. The site's `/api/v2/packages` route 404s. The pages do confirm UK geo-pricing is being
+served (GBP currency, "Spain eSIM, from £3.50"), so the fetch path itself is sound; only the
+tier extraction is broken. Holafly and Saily were not attempted once Airalo — the anchor
+provider and each record's `sourceUrl` — proved unreadable.
+
+Reading 40 countries x 3 providers through a browser one page at a time is not viable inside a
+scheduled run. **Recommended fix:** a small headless-browser scraper under `tools/freshness/`
+that loads each country page, waits for the tier list to hydrate, and emits
+`{provider, bundleName, dataGb, validityDays, totalPence}` — run from a UK IP, since Airalo
+geo-prices by IP and a non-UK run would silently produce wrong currency. That is a code change
+outside this agent's bounds.
+
+**Baggage (12 airlines) — not re-verified.**
+The fee tables are interactive/JS-rendered on nearly every carrier (Ryanair, easyJet, Aer
+Lingus, Vueling, Wizz Air and Lufthansa returned no price text at all to any transport). These
+records also store `minPence`/`maxPence` *ranges* that vary by route and date, so a single page
+read cannot confirm a range even where text is available — the figures need a quoted-booking
+methodology, which is a design question rather than a fetch problem.
+
+**Roaming (o2, vodafone, three) — not re-verified.**
+Partially readable but not resolvable today:
+- **o2** — the Travel Inclusive Zone Ultimate page confirms Europe Zone roaming is inclusive
+  (consistent with what is stored) and quotes £7/day for tariffs that are not eligible.
+- **three** — the Go Roam page currently advertises **two** daily Europe charges, "£2" and
+  "£2.75 … will start from" a stated date, i.e. a scheduled price change. Which one is live
+  depends on a date and plan-join cutoff the page states ambiguously. Changing the stored value
+  on a guess would be worse than leaving it stale.
+- **vodafone** — the source is a PDF charges guide; it was fetched but not parsed this run.
+
+Roaming values are additionally stored as a per-destination x per-network matrix, so a single
+network's change fans out across many destination records — that pass needs to be done
+deliberately, not opportunistically at the end of a ParkMath sweep.
+
+> ## NEEDS-HUMAN
+> - Decide whether **Three's** Europe daily roaming charge is £2 or £2.75 as of today, and from
+>   which date / for which plan cohorts the change applies.
+> - Approve building a headless-browser eSIM quoter under `tools/freshness/` (UK IP required),
+>   without which the eSIM dataset cannot be swept at all.
+> - Revisit whether baggage `minPence`/`maxPence` ranges are verifiable by any repeatable
+>   method, or whether that dataset needs a different freshness contract.

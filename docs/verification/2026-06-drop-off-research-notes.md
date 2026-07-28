@@ -482,3 +482,57 @@ any transport today. That band is carried over unverified.
 >   `/parking/drop-off` page is 403 to direct fetch and renders its content client-side from
 >   Contentful, so the served HTML carries no price. Stored value (£8 for up to 5 minutes,
 >   then £1/min, 10-minute max) and its 2026-06-22 `verifiedAt` are unchanged.
+
+---
+
+## 2026-07-28 — sweep
+
+Re-verified the 15 drop-off records whose `verifiedAt` had reached the 46-day threshold
+(all sat at 2026-06-10), plus the standing hard-blocked target **London City**.
+
+Method: the repo's own `contentFingerprint` was run over every watched source page first
+(`tools/freshness/src/watchdog.ts`). 76 of 90 pages changed fingerprint — a rate that reflects
+markup churn (rotating element ids, promo strips), **not** 76 price changes, so the hash was
+used only to screen. Every value below was then read from the price text of the official page.
+
+**Changed**
+
+- **Manchester (MAN)** — the short drop-off bands rose: 5 minutes **£5.00 → £5.50**,
+  10 minutes **£6.40 → £6.50**. The 30-minute band (£25) is unchanged. Read from the
+  "Drop Off at Manchester Airport prices" table.
+
+**Two long-standing blockers cleared this run**
+
+- **Birmingham (BHX)** — previously unverifiable (403 direct, bot interstitial via `r.jina.ai`,
+  both engines). Read successfully today through a real browser session. Confirms the stored
+  value: the Drop Off car park is **free for the first 10 minutes**, no return within one hour.
+  Beyond the free period the published tariff is 10–15 min £6.00, 15–20 min £7.00, rising to
+  £55.00 for 55 min–1 hour. A separate **Premium Set Down** product exists at £7.00 for
+  0–15 minutes. Neither the paid Drop Off ladder nor Premium Set Down is modelled in the
+  record — worth adding in a content pass, but nothing stored today is wrong.
+- **London City (LCY)** — standing hard-blocked target, also read through a real browser.
+  All stored values confirmed live: **£8.00 for 0–5 minutes, £1/minute thereafter, maximum
+  stay 10 minutes**, pay by midnight the day after. The Blue Badge wording was tightened to
+  match the source: the page says holders "may register to get 10 minutes free parking in the
+  Drop-off area" (10 minutes also being the maximum stay), rather than a blanket exemption.
+
+**Confirmed unchanged** — Heathrow (£7/entry, £80 PCN → £40 within 14 days), Gatwick
+(£10/10 min, £1/min, £30 max, 30-min max stay), Luton (£7/10 min, £1/min, £95 → £55),
+Bristol (all five bands), Newcastle (all five bands), Aberdeen (£7/15 min, £1/min, flat £50
+after 30 min), Belfast City (£4 minimum first 10 min), Exeter (£6 first 15 min in P1),
+Bournemouth (£8/30 min, £15/60 min), Norwich (£8/20 min), Teesside (£2.50/10 min, £5/60 min),
+Inverness (free 15 min, no return within the hour).
+
+Inverness's stored "£3.90 up to 30 minutes" was additionally confirmed against the official
+tariff PDF linked from the parking page (`hial.co.uk/downloads/file/1066/...`), which prints
+"FREE. No return within one hour." followed by a £3.90 first paid band.
+
+> ## NEEDS-HUMAN
+> - **Southampton (SOU)** — the official page contradicts itself. The Pick up & Drop Off
+>   prose says passengers "will be charged a **£7** fee for 20 minutes", while the tariff table
+>   lower on the same page reads "Up to 20 minutes **£10.00**" (then £18.00/60 min, £30.00/90
+>   min, £60.00/4 hours). The drop-off bay sits inside the Short Stay car park, so the £10 table
+>   may be the Short Stay tariff rather than the drop-off fee — but that is inference, not
+>   evidence. **Nothing was changed**: the record keeps £7/20 min and its 2026-06-10
+>   `verifiedAt`, so it stays flagged stale until a human resolves which figure a driver
+>   actually pays.

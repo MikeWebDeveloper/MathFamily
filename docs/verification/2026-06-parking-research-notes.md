@@ -469,3 +469,65 @@ store).
 >   under `sourceUrl`s that point at the No1 Lounges pages for the *Club Aspire* lounges, so
 >   those two sub-entries were not re-readable today. Their `verifiedAt` moved with the record —
 >   worth splitting the source URLs per lounge in a future pass.
+
+---
+
+## 2026-07-28 — sweep
+
+Re-verified the 9 parking records at the 46-day threshold (all 2026-06-10) and all 10 lounge
+records. Same method as the drop-off pass: fingerprint screen first, then read the published
+tariff table on each official page.
+
+**Changed**
+
+- **Manchester (MAN)** — Turn Up & Park flat 24-hour rate **£61.40 → £63.40**
+  ("Up to 24 hours and for each 24 hours thereafter", T2 West Multi Storey / P3).
+  3/7/14-day totals recomputed from that official per-day rate: £190.20 / £443.80 / £887.60.
+- **Luton (LTN)** — Long Stay on-the-day **£30.00 → £35.00 per day**. The published table now
+  reads "First day £35.00" and "Each additional day, or part of a day £35.00" (up to 2 hours
+  free, 3 hours £7.00). New totals £105.00 / £245.00 / £490.00. Mid Stay on-the-day also rose
+  £35 → £40/day; that is recorded in the notes but Mid Stay is not the modelled product.
+- **Birmingham (BHX)** — Car Park 7 (off-site long stay) **up to 24h £49.00 → £51.00** and
+  **per day thereafter £42.00 → £44.00**. New totals £139.00 / £315.00 / £623.00.
+  This record's figures had been resting on a 2025-09 Wayback capture flagged in earlier
+  sweeps as ~11 months stale; they are now read from the live official page (see below).
+- **Stansted (STN)** pre-book "from" price re-quoted: **£71.99 → £64.99** for an 8-day stay
+  (sample dates Oct 2026). This is a live availability-driven "from" price, so its
+  `snapshotDate` moves to 2026-07-28 rather than being treated as a fixed tariff.
+- **Birmingham lounges** — the Aspire Lounge walk-in price moved sharply,
+  **£20.99 → £42.99** ("Aspire Lounge, South", prices start from). The No1 Lounge entry, which
+  had a `null` walk-in price, is now populated at **£38.00** from the same official page.
+
+**Birmingham is no longer blocked.** Both `parking:birmingham` and `lounges:birmingham` were
+read through a real browser session today, clearing the 403/bot-interstitial blocker that had
+made them unverifiable in the previous two sweeps. The full BHX turn-up table was captured.
+
+**Confirmed unchanged** — Heathrow Park & Ride (£46.80 first day + £37.40/day), Gatwick Long
+Stay roll-up (0–2h free, £38 first 24h, £32/day), Edinburgh Long Stay (0–30 min free, £60 to
+24h, £40/day), Bristol Silver Zone (3d £100, 4d £135, 5d £170, +£35/day), Glasgow Long Stay
+turn-up (1h free, £15/2h, £50/1d, £65/2d, £80/3d, +£15/day), Stansted Mid Stay turn-up
+(£48/24h; Short Stay £70/24h), Manchester JetParks pre-book (from £59.99, 8 days).
+
+Lounges confirmed unchanged: Manchester T2 £43.99 / T3 £32.99, Stansted Essence £28.99,
+Bristol Escape £43.99 / Essence £35.00, Edinburgh Escape £46.49 (all from the Escape Lounges
+UK page), Luton MyLounge £37.99, Glasgow UpperDeck £27.00 (adult), Newcastle Aspire £46.00.
+Priority Pass tiers confirmed unchanged: Standard £69, Standard Plus £229 (10 visits included),
+Prestige £419, per-visit £24 throughout.
+
+**Fidelity change, deliberate:** Heathrow and Gatwick lounge records were **not** bumped to
+today. Each contains a second lounge (Plaza Premium T5 £47.50; No1 Lounge Gatwick North
+£38.00) whose price is not published on the record's `sourceUrl` — the No1 Lounges pages for
+the *Club Aspire* lounges — and neither operator page yielded a static price today. Earlier
+sweeps moved these records' `verifiedAt` anyway, which overstated what had been checked.
+They now stay at 2026-06-10 so they remain visibly stale. Splitting `sourceUrl` per lounge
+is still the right fix and remains open.
+
+> ## NEEDS-HUMAN
+> - **Glasgow pre-book "from" price** (£49.99, 7-day Long Stay) could not be re-read — the
+>   figure is rendered into a booking widget rather than page text. The gate/turn-up product
+>   for Glasgow *was* fully re-verified, so the record's `verifiedAt` moved; the pre-book
+>   sub-product keeps its own `snapshotDate` of 2026-06-10 as the honest marker.
+> - **Newcastle parking** is no longer excluded — the record exists and was last verified
+>   2026-06-27, so a sweep after the skill text was written already added it back. The
+>   `freshness` SKILL.md still describes it as "currently EXCLUDED from the parking dataset";
+>   that instruction is stale and should be corrected (out of bounds for this agent to edit).

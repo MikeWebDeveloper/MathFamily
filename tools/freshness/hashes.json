@@ -256,11 +256,11 @@
     "pendingSince": "2026-07-26"
   },
   "https://www.belfastcityairport.com/Parking/Drop-Off-and-Pick-Up": {
-    "hash": "dafd4f06510ae4215def1b5102cc726adf22e464f294b1ef68773690fd9cd37e",
+    "hash": "55d6d010dacef3fe0447240fb6943179057bdc9bef7341ff11025996f7b64f68",
     "checkedAt": "2026-07-28"
   },
   "https://www.bournemouthairport.com/car-parking/": {
-    "hash": "55e0a46a02a3d83484832ec46a567641643fd5c053e921160403780a8cfad1b4",
+    "hash": "20d34e08540bdddfe583781e6a707ec8bf5547b8ed4f62d4f3f1ec9bf9d1cf39",
     "checkedAt": "2026-07-28"
   },
   "https://www.bristolairport.co.uk/parking/drop-off-and-pick-up/": {
@@ -291,7 +291,7 @@
     "pendingSince": "2026-07-26"
   },
   "https://www.edinburghairport.com/edinburgh-airport-parking/long-stay-parking": {
-    "hash": "fe8761207fc0186bbfbb8dbb9701b308e8c25d5633a101b2dc92d1d517228bd5",
+    "hash": "94d68ecbbd6dc8162531af88e4a8917f00242224df53d8ce98f73375aabfe11c",
     "checkedAt": "2026-07-28"
   },
   "https://www.emirates.com/english/before-you-fly/baggage/checked-baggage/": {
@@ -373,7 +373,7 @@
   },
   "https://www.prioritypass.com/en-GB/join-prioritypass": {
     "hash": "c2726ad06cc2086bd4ebc276fa17acbbf31d14c5ff03b61fe21021ba5439aaf0",
-    "checkedAt": "2026-07-26"
+    "checkedAt": "2026-07-28"
   },
   "https://www.ryanair.com/gb/en/useful-info/help-centre/fees": {
     "hash": "6d80486cc33a915c7f4e37a813aaef90930f1ed89057b2716fd71cd80ee8c046",
