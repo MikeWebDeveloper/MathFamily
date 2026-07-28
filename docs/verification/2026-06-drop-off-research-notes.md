@@ -418,3 +418,67 @@ max stay and payment deadline were re-confirmed today.
 > wording** if you want belt-and-braces before merging. Separately, the £5/15-min Rapid
 > Drop-off fee should be re-sourced from the official Rapid Drop-off T&C page on the next
 > sweep, since the main page no longer lists it.
+
+---
+
+## 2026-07-28 — daily ParkMath freshness sweep (drop-off)
+
+Scope: every drop-off record whose `verifiedAt` was older than 46 days, plus the standing
+hard-blocked target `drop-off:london-city`. Dataset `version` 1.3.0 → 1.3.1.
+
+**Changed (verified against the official page today):**
+
+- **Manchester (MAN)** — the official Pick Up & Drop Off price table now reads
+  *5 minutes £5.50 / 10 minutes £6.50 / Up to 30 minutes £25*. Previously stored as
+  £5.00 and £6.40 for the 5- and 10-minute bands. Bands updated to 550 / 650 / 2500 pence
+  and `feeSummary` rewritten. £100 Parking Charge (reduced to £60 within 14 days),
+  30-minute max stay, midnight-next-day payment deadline and the Blue-Badge free-forecourt
+  policy all re-confirmed unchanged. The T3 tariff table is rendered client-side and was
+  not readable; only one drop-off table (T2) is present in the served HTML.
+  Source: <https://www.manchesterairport.co.uk/parking/pick-up-and-drop-off/>.
+- **Exeter (EXT)** — headline P1 0–15 min £6.00 and the free P4 alternative (30 min free,
+  then £2.00 for 30–60 min) are unchanged, but the stored `penaltyNotes` were stale: the
+  official tariff table now shows **P1 15–30 min £15.00 and 30–60 min £15.00** (stored as
+  "15–60 min £7.50"), and the published overstay Gate Rate for P1 is **£50 per day or part
+  thereof** (stored as £20). `penaltyNotes` rewritten to match. Blue-Badge policy (up to
+  4 hours at the 15-minute rate, validated at the exit intercom) re-confirmed.
+  Source: <https://exeter-airport.co.uk/car-parking/>.
+- **Belfast City (BHD)** — £4.00 minimum for the first 10 minutes in the Express Drop Off
+  and Pick Up area re-confirmed, and the 10-minutes-free Long Stay alternative still stands.
+  The stored `freeAlternative.details` claimed "longer stays are charged at £8 for up to one
+  hour" — the official page no longer says this. What it does state is that **leaving the Long
+  Stay car park and re-entering within 15 minutes is automatically charged a minimum of £8**
+  (applicable rates thereafter), and that the Short Stay car park is "up to 60 minutes … from
+  £12.00". `freeAlternative.details` rewritten to the re-entry wording only.
+  Source: <https://www.belfastcityairport.com/Parking/Drop-Off-and-Pick-Up>.
+
+**Re-verified, no change (`verifiedAt` → 2026-07-28):** Heathrow (£7 per entry, £80 PC
+reduced to £40), Gatwick (£10/10 min, £1 per additional minute, £30 max charge, 30-min max
+stay), Luton (£7/10 min, £1/min, 30-min max, £95 PCN reduced to £55, midnight-next-day),
+Bristol (£8.50 / £10.50 / £13.00 / £30.00 / £60.00 band table, £100 red-route charge),
+Newcastle (£6 / £12 / £16 / £20 / £28 band table), Aberdeen (£7/15 min, £1/min thereafter,
+£50 flat after 30 min), Southampton (£7/20 min, £80 enforcement reduced to £50, and the page
+still states there is **no** free drop-off option due to the Long Stay closure — stored
+`freeAlternative: null` is correct), Norwich (£8 up to 20 min, Car Park 1), Inverness (free
+15 min in the Short Stay drop-off area, no return within one hour), Teesside (£2.50 up to
+10 min, £5.00 to 60 min, £7/hour thereafter; free 2 h with £5 terminal spend).
+
+**Bournemouth** — the headline £8 for up to 30 minutes in the Express Drop-off/Pick-up area
+was re-confirmed, so `verifiedAt` was bumped, but the "Car Park tariff (not booked)" table
+that backs the stored 60-minute £15.00 band sits behind a JS accordion and did not render for
+any transport today. That band is carried over unverified.
+
+> ## NEEDS-HUMAN
+> - **Birmingham (BHX)** — `birminghamairport.co.uk` returns HTTP 403 to direct fetch and a
+>   bot-verification interstitial through `r.jina.ai` (both plain and browser engine). CAPTCHAs
+>   are not bypassed, so the record could **not** be re-verified; the stored value (free for the
+>   first 10 minutes in the Drop Off car park) and its 2026-06-10 `verifiedAt` are unchanged.
+>   Note: the only Wayback capture reachable today is **2025-09-06** — older than our own
+>   verification — and it describes a *"Premium Set Down … £6 for the first 15 minutes"*
+>   product. It was **not** used to change anything, but a human eyes-on check of whether the
+>   free 10-minute Drop Off car park still exists alongside a paid Premium Set Down would be
+>   worthwhile.
+> - **London City (LCY)** — standing hard-blocked target. The official
+>   `/parking/drop-off` page is 403 to direct fetch and renders its content client-side from
+>   Contentful, so the served HTML carries no price. Stored value (£8 for up to 5 minutes,
+>   then £1/min, 10-minute max) and its 2026-06-22 `verifiedAt` are unchanged.

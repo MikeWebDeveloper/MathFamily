@@ -392,3 +392,80 @@ Note: the old placeholder had Prestige at £459 with perVisitPence 0 and Standar
    may move with date and duration.
 4. **Luton** MyLounge replaced Aspire (2024) — the official URL still resolves under the
    `/executive-lounges/aspire-lounge` path; confirm naming if the page slug changes.
+
+---
+
+## 2026-07-28 — daily ParkMath freshness sweep (parking + lounges)
+
+Scope: every parking and lounge record whose `verifiedAt` was older than 46 days, plus the
+standing hard-blocked target `parking:newcastle` (still excluded from the dataset — no
+official drive-up tariff obtainable, so no record was added back). Datasets:
+`parking-tariffs` 1.2.0 → 1.2.1, `lounges` 1.0.0 → 1.0.1.
+
+### Parking — changed
+
+- **Manchester (MAN)** — official Turn Up & Park table for T2 West Multi Storey (P3) now
+  reads **£63.00** for up to 24 hours and for each 24 hours thereafter (was £61.40).
+  3/7/14-day totals recomputed from that official flat per-day rate: £189.00 / £441.00 /
+  £882.00. The JetParks pre-book "from" price on the same page is unchanged at
+  **From £59.99 (8 days)**.
+  Source: <https://www.manchesterairport.co.uk/parking/turn-up-and-park/>.
+- **Luton (LTN)** — the Long Stay On-The-Day table now publishes **First day £35.00** and
+  **£35.00 each additional day, or part of a day** (was £30.00/day, and no first-day rate was
+  previously published — that FLAG is now resolved: the rate is genuinely flat). Totals
+  recomputed: £105.00 / £245.00 / £490.00. Also re-read from the same page: up to 2 hours
+  FREE and 3 hours £7.00 in Long Stay, and Mid Stay on-the-day now £40.00 per additional day
+  (was noted as £35).
+  Source: <https://www.london-luton.co.uk/parking-prices>.
+- **Stansted (STN)** — the officially published Long Stay pre-book "from" price is now
+  **From £64.99 (8 days)** (was £71.99); `snapshotDate` → 2026-07-28. The drive-up side is
+  unchanged: Turn Up & Park **Mid Stay £48** and **Short Stay £70** per 24-hour period.
+  Sources: <https://www.stanstedairport.com/parking/long-stay/>,
+  <https://www.stanstedairport.com/parking/turn-up-and-park/>.
+
+### Parking — re-verified, no change (`verifiedAt` → 2026-07-28)
+
+- **Heathrow** Park & Ride drive-up: first day £46.80, additional 24-hour periods £37.40.
+- **Gatwick** Long Stay roll-up: 0–2 hours free, 2–24 hours £38.00, each subsequent day £32.00.
+- **Edinburgh** Long Stay drive-up: 0–30 min free, 30 min–1 h £14, 1–3 h £22, 3–24 h £60.00,
+  thereafter £40.00 per day or part.
+- **Bristol** Silver Zone gate: 3 days £100.00, 4 days £135.00, 5 days £170.00, each additional
+  day £35.00.
+- **Glasgow** Long Stay turn-up: up to 1 h free, 2 h £15, 1 day £50.00, 2 days £65.00,
+  3 days £80.00, each additional day £15.00. (Note: `glasgowairport.com` *was* readable today
+  through `r.jina.ai`, so this table is a direct official read rather than a site-scoped search.)
+
+### Lounges — changed (all operator "from" prices, per adult)
+
+| Record | Old | New | Source |
+| --- | --- | --- | --- |
+| Manchester — Escape Lounge (T2) | £41.99 | **£43.99** | escapelounges.com/uk/airport-lounges/ |
+| Manchester — Escape Lounge (T3) | £36.99 | **£32.99** | escapelounges.com/uk/airport-lounges/ |
+| Stansted — Essence by Escape | £25.99 | **£28.99** | escapelounges.com/uk/airport-lounges/ |
+| Edinburgh — Escape Lounge | £38.99 | **£46.49** | escapelounges.com/uk/airport-lounges/ |
+| Bristol — Escape Lounge | £41.99 | **£43.99** | escapelounges.com/uk/airport-lounges/ |
+| Glasgow — UpperDeck Lounge | £32.00 | **£27.00** | glasgowairport.com UpperDeck page (Adult 18+ from £27, children from £17) |
+
+Bristol *Essence by Escape* re-confirmed unchanged at £35.00. The Escape listing also carries
+two lounges we do not store: East Midlands (£37.49) and Manchester T2 *The Executive by Escape*
+(£63.99).
+
+### Lounges — re-verified, no change
+
+Heathrow Club Aspire T5 £40, Gatwick Club Aspire South £34, Newcastle Aspire £46, Luton
+MyLounge £37.99 (the official Luton page also lists a No1 Lounge from £38.00, which we do not
+store).
+
+> ## NEEDS-HUMAN
+> - **Birmingham (BHX)** — both `parking:birmingham` (Car Park 7 turn-up) and
+>   `lounges:birmingham` could **not** be re-verified: `birminghamairport.co.uk` returns 403 to
+>   direct fetch and a bot-verification interstitial through `r.jina.ai`, including the browser
+>   engine. CAPTCHAs are not bypassed. Both records keep their stored values and their
+>   2026-06-10 `verifiedAt`; the Car Park 7 figures still rest on the 2025-09 Wayback capture
+>   flagged in its `notes`, which is now ~11 months old and deserves a human eyes-on check.
+> - **Newcastle parking** remains excluded — no official drive-up tariff page was obtainable
+>   today, so no record was added back and the coverage test is unchanged.
+> - Heathrow *Plaza Premium T5* (£47.50) and Gatwick *No1 Lounge North* (£38.00) are stored
+>   under `sourceUrl`s that point at the No1 Lounges pages for the *Club Aspire* lounges, so
+>   those two sub-entries were not re-readable today. Their `verifiedAt` moved with the record —
+>   worth splitting the source URLs per lounge in a future pass.
