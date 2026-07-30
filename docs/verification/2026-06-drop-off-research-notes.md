@@ -418,3 +418,45 @@ max stay and payment deadline were re-confirmed today.
 > wording** if you want belt-and-braces before merging. Separately, the £5/15-min Rapid
 > Drop-off fee should be re-sourced from the official Rapid Drop-off T&C page on the next
 > sweep, since the main page no longer lists it.
+
+---
+
+## 2026-07-30 — daily ParkMath sweep (drop-off)
+
+Scope: every drop-off record with `verifiedAt` older than 46 days, plus the standing
+hard-blocked target `drop-off:london-city`, plus `drop-off:luton` (flagged changed by the
+news watchdog). Read from each airport's own page; no aggregators used.
+
+**Changed**
+
+- **Manchester** — Turn-up drop-off bands increased. Official T2 table now reads
+  "5 minutes £5.50 | 10 minutes £6.50 | Up to 30 minutes £25". Previously £5.00 / £6.40 / £25.
+  Bands and `feeSummary` updated. Source: manchesterairport.co.uk/parking/pick-up-and-drop-off/
+  (read directly; 30-min max stay and the £100→£60 PCN unchanged).
+- **Bournemouth** — wording only, no price change. The official page states the Express
+  drop-off/pick-up area is charged on the **CP2** tariff ("Up to 30 Minutes £8.00"), and that
+  CP1 is pre-book long-stay only. The old summary named "Car Park 1 Drop Off", which the
+  source contradicts. `feeSummary` corrected; £8/30-min figure unchanged.
+
+**Re-confirmed unchanged (verifiedAt bumped)**
+
+Heathrow £7 per entry; Gatwick £10/10min then £1/min, £30 max, 30-min max; Luton £7/10min
+then £1/min, 30-min max, Long Stay 2h free; Bristol £8.50/10min band table (10/20/40/60/120)
+identical; Newcastle £6/10min band table identical; Aberdeen £7/15min then £1/min;
+Belfast City £4 minimum first 10 min; Southampton £7/20min (still no free alternative —
+Long Stay closed); Exeter £6/15min in P1; Norwich £8/20min in CP1; Inverness free 15 min;
+Teesside £2.50/10min, £5/hr, £7/hr thereafter.
+
+**London City (standing hard-blocked target) — FETCHED SUCCESSFULLY today.**
+Official table: "0 - 5 minutes £8.00 | 5 minutes and above £1 per minute thereafter",
+"Maximum stay 10 minutes". Matches the stored record exactly — no change, `verifiedAt`
+bumped to 2026-07-30. Note the same page also lists a **black-taxi-only** rate of £7.00 for
+0–5 min (TfL-agreed); that is *not* the general drop-off fee and was deliberately not stored.
+
+> ## NEEDS-HUMAN
+> **Birmingham drop-off could not be verified today.** birminghamairport.co.uk returns HTTP 403
+> to direct fetches and serves a CAPTCHA interstitial through r.jina.ai (both plain and
+> `X-Engine: browser`); the Wayback snapshot that did return does not state the drop-off tariff.
+> The stored value ("free for the first 10 minutes in the Drop Off car park") is **unchanged and
+> its `verifiedAt` was deliberately NOT bumped** — it still reads 2026-06-10. A human with a
+> browser should confirm it.
