@@ -36,7 +36,12 @@ export default function MasterTablePage() {
   // high-authority hub at the airports with the most real search demand, using natural
   // "[airport] drop-off charge" anchor text. Resolved from the dataset (never hardcoded) and
   // rendered only when the record exists, so it stays correct if data changes.
-  const featuredSlugs = ["stansted", "southend", "bristol"];
+  // liverpool + prestwick added (2026-07-12 striking-distance pass): GSC shows this exact page
+  // (/drop-off-charges/[slug]) is already the one Google ranks for both — Liverpool at an 11-query
+  // striking-distance cluster averaging pos ~8.95, Prestwick averaging pos ~7.25 (the closest
+  // page-1-adjacent page on the whole site) — so they get the same concentrated hub-link treatment
+  // as stansted/southend/bristol rather than sitting only in the undifferentiated A-Z list below.
+  const featuredSlugs = ["stansted", "southend", "bristol", "liverpool", "prestwick"];
   const featured = featuredSlugs
     .map((slug) => records.find((r) => r.airportSlug === slug))
     .filter((r): r is (typeof records)[number] => Boolean(r))

@@ -32,10 +32,15 @@ export type ClickHeaders = {
   acceptLanguage: string | null;
   secFetchMode: string | null;
   secFetchSite: string | null;
+  /** 2026-07-12: user-activation signal, set by the browser ONLY for a genuine user-initiated
+   *  navigation (a real click), never for a scripted fetch/XHR or (per spec intent) a headless
+   *  browser's programmatic page.goto(). Not yet gated on — see isLikelyBot below — captured so the
+   *  Umami event can carry it for a validation pass before it becomes a hard filter. */
+  secFetchUser: string | null;
 };
 
 /** True when the request is very unlikely to be a real click a human made on one of our CTAs.
- *  Two independent signals:
+ *  Signals, in order:
  *   1. The UA self-identifies (or fingerprints) as a bot/scraper/HTTP-library — the same class of
  *      signature Umami's own detector uses, kept here too as defense-in-depth.
  *   2. The UA CLAIMS to be a full desktop/mobile browser (`Mozilla/5.0 ...`) but the request carries
@@ -43,6 +48,14 @@ export type ClickHeaders = {
  *      attaches automatically to a top-level navigation. Real users can't turn these off; simple
  *      scrapers that spoof a generic Chrome/Safari UA string routinely forget to fake them — this is
  *      exactly the "96%-US-tagged, zero-pageview" traffic class the audit flagged.
+ *   3. [2026-07-12] `Sec-Fetch-Site` IS present (so signal 2 above didn't already catch it) but its
+ *      value is anything other than `same-origin`. Every genuine /go click is a same-origin link click
+ *      from a parkmath.co.uk page — mechanically the ONLY way this route is ever reached by a real
+ *      user. Independent of the noreferrer note below: Sec-Fetch-Site reflects the browser's own
+ *      origin computation, not the Referer header, so noreferrer does not affect it. Addresses today's
+ *      geographically-distributed /go scraper (company/analytics/2026-07-12-affiliate-click-bot-filter-patch.md,
+ *      Company repo) — full desktop Chrome/Edge UAs across 30+ countries that pass signals 1-2 but
+ *      cannot mechanically produce a same-origin click on this route.
  *  Deliberately does NOT check Referer: every /go CTA is `rel="noreferrer"` by design (so we don't
  *  leak the affiliate path to AWIN/analytics on the outbound hop) — genuine human clicks arrive with
  *  no Referer too, so using its absence as a bot signal would zero out real conversions, not just bots. */
@@ -55,6 +68,10 @@ export function isLikelyBot(h: ClickHeaders): boolean {
   const hasAcceptLanguage = !!h.acceptLanguage;
   const hasFetchMetadata = !!h.secFetchMode || !!h.secFetchSite;
   if (looksLikeBrowserUA && !hasAcceptLanguage && !hasFetchMetadata) return true;
+
+  // 2026-07-12: a request that DOES carry Sec-Fetch-Site but claims anything other than same-origin
+  // cannot be a genuine click on our own CTA — see signal 3 in the doc comment above.
+  if (h.secFetchSite && h.secFetchSite !== "same-origin") return true;
 
   return false;
 }

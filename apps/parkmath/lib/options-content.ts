@@ -156,6 +156,19 @@ export function buildOptionsFaqs(
     });
   }
 
+  // Literal-intent-match Q, appended last (2026-07-12 striking-distance pass): GSC data showed this
+  // page — not the dedicated /drop-off-charges page — is the one Google already ranks for literal
+  // "[airport] drop off charge(s)" queries at several airports (Exeter, Leeds Bradford, Birmingham),
+  // yet none of the FAQs above use the word "charge" at all. Answered only from the same verified
+  // fee already used elsewhere in this file — never a new/derived figure. Appended, not prepended, so
+  // the existing lead-FAQ ordering/tests are untouched.
+  faqs.push({
+    question: `How much does it cost to drop off at ${airportName}?`,
+    answer: dropOff.isFree
+      ? `Dropping off at ${airportName} is free at the forecourt — no charge applies. (Verified ${dropOff.verifiedAt}.)`
+      : `${airportName}'s drop-off charge is ${formatPence(fee ?? 0)}${dropOff.freeAlternative ? `, or free via the ${dropOff.freeAlternative.name}` : ""}. (Verified ${dropOff.verifiedAt}.)`
+  });
+
   return faqs;
 }
 
