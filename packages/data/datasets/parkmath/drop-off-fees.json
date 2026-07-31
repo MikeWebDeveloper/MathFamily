@@ -1,6 +1,6 @@
 {
-  "version": "1.3.0",
-  "lastUpdated": "2026-06-22",
+  "version": "1.3.1",
+  "lastUpdated": "2026-07-31",
   "records": [
     {
       "airportSlug": "heathrow",
@@ -26,7 +26,7 @@
       },
       "priorYearFeePence": 600,
       "sourceUrl": "https://www.heathrow.com/transport-and-directions/terminal-drop-off-charge",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-07-31"
     },
     {
       "airportSlug": "gatwick",
@@ -52,22 +52,22 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://www.gatwickairport.com/transport-options/drop-off.html",
-      "verifiedAt": "2026-06-10",
+      "verifiedAt": "2026-07-31",
       "blueBadgeSeoTitle": "Gatwick Blue Badge drop-off — free if registered 2026",
       "blueBadgeSeoDescription": "Blue Badge holders get the £10 Gatwick drop-off charge waived — register your number plate online first (free 30-minute session). Read from the official Gatwick page, verified 2026-06-10."
     },
     {
       "airportSlug": "manchester",
       "isFree": false,
-      "feeSummary": "£5 for up to 5 minutes, £6.40 up to 10 minutes, £25 up to 30 minutes",
+      "feeSummary": "£5.50 for up to 5 minutes, £6.50 up to 10 minutes, £25 up to 30 minutes",
       "bands": [
         {
           "upToMinutes": 5,
-          "totalPence": 500
+          "totalPence": 550
         },
         {
           "upToMinutes": 10,
-          "totalPence": 640
+          "totalPence": 650
         },
         {
           "upToMinutes": 30,
@@ -88,7 +88,7 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://www.manchesterairport.co.uk/parking/pick-up-and-drop-off/",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-07-31"
     },
     {
       "airportSlug": "stansted",
@@ -148,7 +148,7 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://www.london-luton.co.uk/to-and-from-lla/dropping-off",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-07-31"
     },
     {
       "airportSlug": "edinburgh",
@@ -266,7 +266,7 @@
       },
       "priorYearFeePence": 700,
       "sourceUrl": "https://www.bristolairport.co.uk/parking/drop-off-and-pick-up/",
-      "verifiedAt": "2026-06-10",
+      "verifiedAt": "2026-07-31",
       "seoTitle": "Bristol drop-off fee 2026 — £8.50 charge, £100 penalty",
       "seoDescription": "Bristol Airport drop-off fee: £8.50 for up to 10 minutes, £100 penalty if unpaid. Also called the Bristol airport drop-off levy. Free Waiting Zone (1 hr) and Blue Badge rules — verified 2026-06-10 against the official Bristol page."
     },
@@ -345,7 +345,7 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://www.newcastleairport.com/car-parking/picking-up-dropping-off/",
-      "verifiedAt": "2026-06-10",
+      "verifiedAt": "2026-07-31",
       "blueBadgeSeoTitle": "Newcastle Airport Blue Badge drop-off — free zone available",
       "blueBadgeSeoDescription": "Newcastle Airport publishes no specific Blue Badge drop-off concession, but the Airport Waiting Zone at Callerton Parkway is free for 90 minutes for everyone, with a free 24/7 shuttle bus. Read from the official Newcastle page, verified 2026-06-10."
     },
@@ -487,7 +487,7 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://www.aberdeenairport.com/transport-and-directions/dropping-off-at-aberdeen-airport/",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-07-31"
     },
     {
       "airportSlug": "belfast-city",
@@ -513,7 +513,7 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://www.belfastcityairport.com/Parking/Drop-Off-and-Pick-Up",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-07-31"
     },
     {
       "airportSlug": "southampton",
@@ -535,7 +535,7 @@
       "freeAlternative": null,
       "priorYearFeePence": null,
       "sourceUrl": "https://www.southamptonairport.com/to-from/pick-up-drop-off/",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-07-31"
     },
     {
       "airportSlug": "cardiff",
@@ -589,7 +589,7 @@
       "perMinuteAfterPence": null,
       "maxChargePence": null,
       "penaltyPence": null,
-      "penaltyNotes": "P1 tariff continues beyond 15 minutes (15–60 min £7.50, then higher bands); overstay beyond a pre-booked period is charged at £20 per day or part thereof",
+      "penaltyNotes": "P1 tariff continues beyond 15 minutes (15–30 min £15.00 and 30–60 min £15.00, then higher bands); overstay beyond a pre-booked period is charged at £20 per day or part thereof",
       "paymentDeadline": "Card / contactless / Apple Pay / Google Pay at the exit barrier",
       "blueBadgePolicy": "Blue Badge holders can stay in Car Park P1 for up to 4 hours for the current up-to-15-minutes rate (£6)",
       "freeAlternative": {
@@ -599,7 +599,7 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://exeter-airport.co.uk/car-parking/",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-07-31"
     },
     {
       "airportSlug": "southend",
@@ -654,7 +654,7 @@
       "freeAlternative": null,
       "priorYearFeePence": null,
       "sourceUrl": "https://www.bournemouthairport.com/car-parking/",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-07-31"
     },
     {
       "airportSlug": "norwich",
@@ -676,7 +676,7 @@
       "freeAlternative": null,
       "priorYearFeePence": null,
       "sourceUrl": "https://www.norwichairport.co.uk/car-parking/",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-07-31"
     },
     {
       "airportSlug": "inverness",
@@ -697,7 +697,7 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://www.hial.co.uk/inverness-airport/airport-information-8/4",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-07-31"
     },
     {
       "airportSlug": "teesside",
@@ -727,7 +727,7 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://www.teessideinternational.com/teesside-airport-parking/",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-07-31"
     },
     {
       "airportSlug": "prestwick",

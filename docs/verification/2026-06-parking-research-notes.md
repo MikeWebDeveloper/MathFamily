@@ -392,3 +392,90 @@ Note: the old placeholder had Prestige at £459 with perVisitPence 0 and Standar
    may move with date and duration.
 4. **Luton** MyLounge replaced Aspire (2024) — the official URL still resolves under the
    `/executive-lounges/aspire-lounge` path; confirm naming if the page slug changes.
+
+---
+
+## 2026-07-31 — daily ParkMath sweep (parking + lounges + Priority Pass)
+
+### Parking tariffs
+
+Scope: the 9 records older than 46 days, plus the standing hard-blocked target
+`parking:newcastle`.
+
+**Changed (3):**
+
+- **Luton** — Long Stay on-the-day table now reads `Up to 2 hours FREE | 3 hours £7.00 |
+  First day £35.00 | Each additional day, or part of a day £35.00`. The record was built
+  on a flat **£30/day**; it is now a flat **£35/day**, and a distinct first-day rate is
+  now published (also £35), which removes the old FLAG about assuming a flat rate.
+  3/7/14-day totals recomputed: £90→£105, £210→£245, £420→£490. The note's parenthetical
+  about Mid Stay also updated — Mid Stay is now `£15 up to 1 hour, then £40/day` (was
+  £35/day).
+- **Manchester** — Turn Up & Park (T2 West Multi Storey / P3) is now
+  `£63.40 up to 24 hours and for each 24 hours thereafter` (was £61.40). 3/7/14-day totals
+  recomputed: £184.20→£190.20, £429.80→£443.80, £859.60→£887.60. The JetParks pre-book
+  'from' price also moved: `From £59.99 (8 days)` → `From £54.99 (8 days)`;
+  `snapshotDate` re-stamped to 2026-07-31.
+- **Stansted** — the gate product is **unchanged** (Mid Stay £48/24h, Short Stay £70/24h,
+  both re-confirmed on the official turn-up-and-park page). Only the Long Stay pre-book
+  'from' price moved: `From £71.99 (8 days)` → `From £59.99 (8 days)`; `snapshotDate`
+  re-stamped. Note these 'from' prices are promotional and date-sensitive by nature —
+  they are snapshots, not a fixed tariff.
+
+**Re-confirmed unchanged (6):** Heathrow (Park & Ride £46.80 first day + £37.40 per
+additional 24h), Gatwick (Long Stay 0–2 h free, 2–24 h £38.00, each subsequent day
+£32.00), Edinburgh (3–24 h £60.00 then £40.00/day, 0–30 min free), Bristol (Silver Zone
+3 days £100.00, 4 days £135.00, 5 days £170.00, £35.00/day thereafter),
+Glasgow (Long Stay turn-up: 1 h free, 2 h £15, 1 day £50, 2 days £65, 3 days £80,
+£15/day thereafter), **Newcastle** (Long Stay Turn up & park: up to 24 h £50, 2 days £80,
+3 days £120, 4 days £160, £40/day thereafter).
+
+**Newcastle is worth calling out:** it is one of the two standing hard-blocked targets and
+its newsroom still 403s, but the car-parking-options page itself fetched cleanly today via
+`r.jina.ai` and its Long Stay table matches the stored record exactly. No change needed.
+
+**Not verified — Birmingham.** Same Cloudflare block as the drop-off record (see the
+drop-off notes for the transports tried). Car Park 7 turn-up figures and `verifiedAt`
+left untouched.
+
+### Lounges
+
+**Changed (5 records / 6 lounge prices)** — all from the operators' own sites:
+
+- Manchester — Escape Lounge T2 £41.99→**£43.99**; Escape Lounge T3 £36.99→**£32.99**
+- Stansted — Essence by Escape Lounge £25.99→**£28.99**
+- Edinburgh — Escape Lounge £38.99→**£46.49**
+- Bristol — Escape Lounge £41.99→**£43.99** (Essence unchanged at £35.00)
+- Glasgow — UpperDeck Lounge £32.00→**£27.00** (official Glasgow Airport page,
+  "Adult (18+): From £27")
+
+**Re-confirmed unchanged (2):** Luton MyLounge (From £37.99), Newcastle Aspire (£46).
+
+The Newcastle figure needed care: the No1 Lounges page for Aspire at Newcastle says
+"Prices from: £46" for that lounge, while a generic cross-sell blurb further down the same
+page says Aspire lounges start "from £38 per person". The £38 is **not** this lounge's
+price — the stored £46 is correct and was left alone.
+
+**Not bumped — Heathrow and Gatwick.** In each case the *primary* lounge on the record's
+`sourceUrl` was re-confirmed (Club Aspire T5 "Prices from: £40"; Club Aspire Gatwick South
+"Prices from: £34"), but the record's *second* lounge (Plaza Premium T5 £47.50; No1 Lounge
+Gatwick North £38.00) is not priced on that page and I could not locate an official page
+for it today — two guessed No1 Lounges URLs returned a generic page. Rather than bump
+`verifiedAt` on a record whose second entry was not actually re-read, both records were
+left at their existing `verifiedAt`. See NEEDS-HUMAN.
+
+**Not verified — Birmingham lounges.** Same Cloudflare block.
+
+**New lounge not added:** escapelounges.com now lists "Manchester Terminal 2 — The
+Executive by Escape Lounges, From £63.99", which is not in our dataset. Adding a lounge
+changes coverage rather than correcting a value, so it was left out of this sweep and
+flagged for a human decision.
+
+### Priority Pass
+
+**Not verified.** `prioritypass.com/en-GB/join-prioritypass` geo-served **US pricing**
+(Standard US$99, Standard Plus US$329, Prestige US$469, US$35 visit fee) despite the
+`en-GB` path. Our record stores GBP (£69 / £229 / £419, £24 per visit). A USD page cannot
+confirm a GBP tier, and converting would violate the "never invent" rule, so the record
+and its `verifiedAt` were left untouched. This is the same geo/currency trap already known
+from the eSIM re-quotes — a UK-egress fetch is needed.

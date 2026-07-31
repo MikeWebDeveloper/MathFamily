@@ -418,3 +418,44 @@ max stay and payment deadline were re-confirmed today.
 > wording** if you want belt-and-braces before merging. Separately, the £5/15-min Rapid
 > Drop-off fee should be re-sourced from the official Rapid Drop-off T&C page on the next
 > sweep, since the main page no longer lists it.
+
+---
+
+## 2026-07-31 — daily ParkMath sweep (drop-off)
+
+Scope: all 15 drop-off records with `verifiedAt` older than 46 days, plus the
+`drop-off:luton` ref surfaced by the news watchdog (the Luton dropping-off page
+fingerprint changed).
+
+**Changed (2):**
+
+- **Manchester** — official T2 Drop Off table now reads `5 minutes £5.50 | 10 minutes
+  £6.50 | Up to 30 minutes £25`. Previously £5.00 / £6.40 / £25. Bands 1 and 2 corrected
+  (500→550, 640→650); `£25` and the 30-minute max stay are unchanged. Read via
+  `r.jina.ai` proxy of manchesterairport.co.uk/parking/pick-up-and-drop-off/ (direct
+  WebFetch also returned the same figures — two independent transports agreed).
+- **Exeter** — the P1 tariff table now shows `0–15 min £6.00 | 15–30 min £15.00 |
+  30–60 min £15.00`. The record's `penaltyNotes` still claimed "15–60 min £7.50", which is
+  wrong; corrected to the published £15.00 bands. The headline £6/15-min P1 fee and the
+  P4 free-30-minutes / £2 for 30–60 min alternative are **unchanged** and re-confirmed.
+
+**Re-confirmed unchanged (12):** Heathrow (£7 per entry), Gatwick (£10/10 min, £1/min,
+£30 max, 30-min max stay), Luton (£7/10 min, £1/min, 30-min max, £95→£55 penalty),
+Bristol (£8.50/10 min + full band ladder), Newcastle (£6/10 min ladder; Waiting Zone
+90 min free), Aberdeen (£7/15 min, £1/min, £50 flat after 30 min), Belfast City (£4 min
+first 10 min; Long Stay 10 min free), Southampton (£7/20 min; still no free option —
+the page states the Long Stay closure removed it), Bournemouth (£8/30 min, £15 30–60 min),
+Norwich (£8/20 min), Inverness (free 15 min), Teesside (£2.50/10 min, £5/60 min,
+£7/hour thereafter; 2 h free with a £5 landside spend).
+
+**Not verified — Birmingham.** birminghamairport.co.uk is behind Cloudflare bot
+protection and returned HTTP 403 / "Just a moment..." to WebFetch, to `r.jina.ai` plain,
+and to `r.jina.ai` with `X-Return-Format: html`. The only Wayback snapshot is from
+2025-09-06 — older than the record's existing 2026-06-10 `verifiedAt`, so it is not
+usable as confirmation. **Value and `verifiedAt` left untouched.**
+
+**Carried forward, not re-read today:** Manchester's `freeAlternative` names "JetParks 1"
+with a 30-minute free window. Today's page confirms a free drop-off area with a 24/7
+shuttle exists, but does not restate the name or the 30-minute figure — those come from
+the JetParks page and were not re-fetched. The fee bands, max stay and Blue Badge policy
+were all re-read today.
