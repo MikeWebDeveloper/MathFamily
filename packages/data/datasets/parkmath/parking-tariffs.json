@@ -1,6 +1,6 @@
 {
-  "version": "1.2.0",
-  "lastUpdated": "2026-07-03",
+  "version": "1.2.1",
+  "lastUpdated": "2026-07-31",
   "records": [
     {
       "airportSlug": "heathrow",
@@ -18,7 +18,7 @@
         }
       ],
       "sourceUrl": "https://www.heathrow.com/transport-and-directions/heathrow-parking/heathrow-park-and-ride",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-07-31"
     },
     {
       "airportSlug": "gatwick",
@@ -36,7 +36,7 @@
         }
       ],
       "sourceUrl": "https://www.gatwickairport.com/parking/roll-up-car-park-prices.html",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-07-31"
     },
     {
       "airportSlug": "manchester",
@@ -45,25 +45,25 @@
           "productType": "gate",
           "name": "Turn Up & Park — T2 West Multi Storey (P3)",
           "prices": [
-            { "days": 3, "totalPence": 18420 },
-            { "days": 7, "totalPence": 42980 },
-            { "days": 14, "totalPence": 85960 }
+            { "days": 3, "totalPence": 19020 },
+            { "days": 7, "totalPence": 44380 },
+            { "days": 14, "totalPence": 88760 }
           ],
           "snapshotDate": null,
-          "notes": "Official Turn Up & Park tariff: £61.40 for up to 24h and for each 24h thereafter (flat). 3/7/14-day totals computed from that official per-day rate."
+          "notes": "Official Turn Up & Park tariff: £63.40 for up to 24h and for each 24h thereafter (flat). 3/7/14-day totals computed from that official per-day rate."
         },
         {
           "productType": "prebook",
           "name": "JetParks (pre-book only) — published 'from' price",
           "prices": [
-            { "days": 8, "totalPence": 5999 }
+            { "days": 8, "totalPence": 5499 }
           ],
-          "snapshotDate": "2026-06-10",
-          "notes": "Officially published pre-book 'from' price: 'From £59.99 (8 days)'. JetParks is pre-book only. Single published 'from' point; not a live-quoted 3/7/14-day ladder — gate product above provides the 3/7/14 coverage."
+          "snapshotDate": "2026-07-31",
+          "notes": "Officially published pre-book 'from' price: 'From £54.99 (8 days)'. JetParks is pre-book only. Single published 'from' point; not a live-quoted 3/7/14-day ladder — gate product above provides the 3/7/14 coverage."
         }
       ],
       "sourceUrl": "https://www.manchesterairport.co.uk/parking/turn-up-and-park/",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-07-31"
     },
     {
       "airportSlug": "stansted",
@@ -83,14 +83,14 @@
           "productType": "prebook",
           "name": "Long Stay (pre-book) — published 'from' price",
           "prices": [
-            { "days": 8, "totalPence": 7199 }
+            { "days": 8, "totalPence": 5999 }
           ],
-          "snapshotDate": "2026-06-10",
-          "notes": "Officially published pre-book 'from' price: 'From £71.99' for an 8-day stay (sample dates Oct 2026, read 2026-06-10). Single published 'from' point; gate product above provides the 3/7/14 coverage."
+          "snapshotDate": "2026-07-31",
+          "notes": "Officially published pre-book 'from' price: 'From £59.99 (8 days)' (read 2026-07-31). Single published 'from' point; gate product above provides the 3/7/14 coverage."
         }
       ],
       "sourceUrl": "https://www.stanstedairport.com/parking/long-stay/",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-07-31"
     },
     {
       "airportSlug": "luton",
@@ -99,16 +99,16 @@
           "productType": "gate",
           "name": "Long Stay — on-the-day (drive-up)",
           "prices": [
-            { "days": 3, "totalPence": 9000 },
-            { "days": 7, "totalPence": 21000 },
-            { "days": 14, "totalPence": 42000 }
+            { "days": 3, "totalPence": 10500 },
+            { "days": 7, "totalPence": 24500 },
+            { "days": 14, "totalPence": 49000 }
           ],
           "snapshotDate": null,
-          "notes": "Official on-the-day tariff: Long Stay £30.00 'each additional day, or part of a day'. Treated as a flat £30/day; 3/7/14-day totals computed from that official per-day rate. (Mid Stay on-the-day is £35/day.) FLAG: a distinct first-day rate is not separately published; this assumes a flat daily rate."
+          "notes": "Official on-the-day tariff: Long Stay first day £35.00, then £35.00 'each additional day, or part of a day' (0–2 hours free; 3 hours £7.00). Flat £35/day; 3/7/14-day totals computed from that official per-day rate. (Mid Stay on-the-day is £15 up to 1 hour, then £40/day.)"
         }
       ],
       "sourceUrl": "https://www.london-luton.co.uk/parking-prices",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-07-31"
     },
     {
       "airportSlug": "edinburgh",
@@ -126,7 +126,7 @@
         }
       ],
       "sourceUrl": "https://www.edinburghairport.com/edinburgh-airport-parking/long-stay-parking",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-07-31"
     },
     {
       "airportSlug": "birmingham",
@@ -162,7 +162,7 @@
         }
       ],
       "sourceUrl": "https://www.bristolairport.co.uk/parking/parking-prices/",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-07-31"
     },
     {
       "airportSlug": "glasgow",
@@ -189,7 +189,7 @@
         }
       ],
       "sourceUrl": "https://www.glasgowairport.com/at-the-airport/airport-services/parking/long-stay/",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-07-31"
     },
     {
       "airportSlug": "newcastle",
@@ -207,7 +207,7 @@
         }
       ],
       "sourceUrl": "https://www.newcastleairport.com/car-parking/car-parking-options/",
-      "verifiedAt": "2026-06-27"
+      "verifiedAt": "2026-07-31"
     },
     {
       "airportSlug": "leeds-bradford",
