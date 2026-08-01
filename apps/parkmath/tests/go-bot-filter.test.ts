@@ -3,6 +3,7 @@ import {
   DEDUPE_WINDOW_MS,
   VELOCITY_MAX_CLICKS,
   VELOCITY_WINDOW_MS,
+  classifyClick,
   isHighVelocityClick,
   isLikelyBot,
   isNearDuplicateClick,
@@ -160,6 +161,46 @@ describe("isLikelyBot — Sec-Fetch-Site must be same-origin (2026-07-12 distrib
 
   it("still does NOT flag secFetchSite entirely absent as long as secFetchMode is present — the new check only fires when secFetchSite is present-but-wrong, never merely absent", () => {
     expect(isLikelyBot({ ...REAL_CHROME_CLICK, secFetchSite: null, secFetchMode: "navigate" })).toBe(false);
+  });
+});
+
+describe("classifyClick — three-way verdict (2026-08-02 funnel-leak board rec #1)", () => {
+  it("classifies a clean real click as ok", () => {
+    expect(classifyClick(REAL_CHROME_CLICK)).toBe("ok");
+  });
+
+  it("classifies self-identifying bots and a missing UA as bot (hard-drop tier)", () => {
+    expect(classifyClick({ ...REAL_CHROME_CLICK, userAgent: "curl/8.4.0" })).toBe("bot");
+    expect(classifyClick({ ...REAL_CHROME_CLICK, userAgent: null })).toBe("bot");
+    expect(
+      classifyClick({ ...REAL_CHROME_CLICK, userAgent: "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)" }),
+    ).toBe("bot");
+  });
+
+  it("classifies a browser-shaped UA missing Fetch Metadata / Accept-Language as suspect, not bot", () => {
+    expect(
+      classifyClick({
+        userAgent:
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        xForwardedFor: "34.201.10.4",
+        host: "www.parkmath.co.uk",
+        acceptLanguage: null,
+        secFetchMode: null,
+        secFetchSite: null,
+        secFetchUser: null,
+      }),
+    ).toBe("suspect");
+  });
+
+  it("classifies a present-but-wrong Sec-Fetch-Site as suspect, not bot", () => {
+    expect(classifyClick({ ...REAL_CHROME_CLICK, secFetchSite: "cross-site" })).toBe("suspect");
+    expect(classifyClick({ ...REAL_CHROME_CLICK, secFetchSite: "none" })).toBe("suspect");
+  });
+
+  it("isLikelyBot stays true for both bot and suspect tiers — its true/false contract is unchanged", () => {
+    expect(isLikelyBot({ ...REAL_CHROME_CLICK, userAgent: "curl/8.4.0" })).toBe(true); // bot tier
+    expect(isLikelyBot({ ...REAL_CHROME_CLICK, secFetchSite: "cross-site" })).toBe(true); // suspect tier
+    expect(isLikelyBot(REAL_CHROME_CLICK)).toBe(false); // ok tier
   });
 });
 

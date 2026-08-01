@@ -39,41 +39,48 @@ export type ClickHeaders = {
   secFetchUser: string | null;
 };
 
-/** True when the request is very unlikely to be a real click a human made on one of our CTAs.
- *  Signals, in order:
- *   1. The UA self-identifies (or fingerprints) as a bot/scraper/HTTP-library — the same class of
- *      signature Umami's own detector uses, kept here too as defense-in-depth.
- *   2. The UA CLAIMS to be a full desktop/mobile browser (`Mozilla/5.0 ...`) but the request carries
- *      NONE of the Fetch Metadata headers (`Sec-Fetch-*`) or `Accept-Language` that every real browser
- *      attaches automatically to a top-level navigation. Real users can't turn these off; simple
- *      scrapers that spoof a generic Chrome/Safari UA string routinely forget to fake them — this is
- *      exactly the "96%-US-tagged, zero-pageview" traffic class the audit flagged.
- *   3. [2026-07-12] `Sec-Fetch-Site` IS present (so signal 2 above didn't already catch it) but its
- *      value is anything other than `same-origin`. Every genuine /go click is a same-origin link click
- *      from a parkmath.co.uk page — mechanically the ONLY way this route is ever reached by a real
- *      user. Independent of the noreferrer note below: Sec-Fetch-Site reflects the browser's own
- *      origin computation, not the Referer header, so noreferrer does not affect it. Addresses today's
- *      geographically-distributed /go scraper (company/analytics/2026-07-12-affiliate-click-bot-filter-patch.md,
- *      Company repo) — full desktop Chrome/Edge UAs across 30+ countries that pass signals 1-2 but
- *      cannot mechanically produce a same-origin click on this route.
+/** Three-way verdict on a /go click, replacing a plain true/false gate (2026-08-02 CRO/measurement
+ *  pass, company board `parkmath-funnel-leaks-2026-08-02.md`, recommendation #1).
+ *   - "bot": the UA self-identifies (or fingerprints) as a bot/scraper/HTTP-library, or there's no UA
+ *     at all — unambiguous, zero analytics value even as a data point. Never recorded in Umami at all.
+ *   - "suspect": everything ELSE that used to be silently dropped — a browser-shaped UA missing the
+ *     Fetch Metadata / Accept-Language headers a real top-level navigation always carries, or a
+ *     present-but-wrong Sec-Fetch-Site. These are the classes the 2026-08-02 funnel-leak analysis
+ *     flagged as exactly the ambiguous population polluting the metric — plausible-but-unproven, not
+ *     provably fake. Recorded as a SEPARATE `affiliate_click_suspect` Umami event (see route.ts) so
+ *     the signal survives for a future audit instead of vanishing, without inflating the trusted
+ *     `affiliate_click` count.
+ *   - "ok": passes every check — recorded as the normal `affiliate_click` event, unchanged from before.
  *  Deliberately does NOT check Referer: every /go CTA is `rel="noreferrer"` by design (so we don't
  *  leak the affiliate path to AWIN/analytics on the outbound hop) — genuine human clicks arrive with
- *  no Referer too, so using its absence as a bot signal would zero out real conversions, not just bots. */
-export function isLikelyBot(h: ClickHeaders): boolean {
+ *  no Referer too, so using its absence as a bot signal would zero out real conversions, not just bots.
+ *  (This is why classification, not a referer check, is what "strengthening" this filter means here —
+ *  the codebase already tried and deliberately rejected referer-gating for that reason.) */
+export type ClickClassification = "ok" | "suspect" | "bot";
+
+export function classifyClick(h: ClickHeaders): ClickClassification {
   const ua = (h.userAgent || "").toLowerCase();
-  if (!ua) return true;
-  if (BOT_UA_PATTERN.test(ua)) return true;
+  if (!ua) return "bot";
+  if (BOT_UA_PATTERN.test(ua)) return "bot";
 
   const looksLikeBrowserUA = /mozilla\/5\.0/.test(ua);
   const hasAcceptLanguage = !!h.acceptLanguage;
   const hasFetchMetadata = !!h.secFetchMode || !!h.secFetchSite;
-  if (looksLikeBrowserUA && !hasAcceptLanguage && !hasFetchMetadata) return true;
+  if (looksLikeBrowserUA && !hasAcceptLanguage && !hasFetchMetadata) return "suspect";
 
   // 2026-07-12: a request that DOES carry Sec-Fetch-Site but claims anything other than same-origin
-  // cannot be a genuine click on our own CTA — see signal 3 in the doc comment above.
-  if (h.secFetchSite && h.secFetchSite !== "same-origin") return true;
+  // cannot be a genuine click on our own CTA — see the doc comment above.
+  if (h.secFetchSite && h.secFetchSite !== "same-origin") return "suspect";
 
-  return false;
+  return "ok";
+}
+
+/** True when the request is very unlikely to be a real click a human made on one of our CTAs — i.e.
+ *  classifyClick returned anything other than "ok". Kept as the boolean entry point every existing
+ *  caller/test uses; its true/false contract is unchanged (a "suspect" click still fails this check,
+ *  it's just now tagged rather than silently discarded — see classifyClick above and route.ts). */
+export function isLikelyBot(h: ClickHeaders): boolean {
+  return classifyClick(h) !== "ok";
 }
 
 // Best-effort, in-process de-dupe for near-duplicate fires (the audit saw some clicks fire the event

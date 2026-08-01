@@ -1,8 +1,8 @@
 import { after } from "next/server";
 import { resolveGoTarget } from "@/lib/partners";
 import {
+  classifyClick,
   isHighVelocityClick,
-  isLikelyBot,
   isNearDuplicateClick,
   type ClickHeaders,
 } from "@/lib/go-bot-filter";
@@ -43,13 +43,19 @@ const UMAMI_WEBSITE_ID = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID || "";
  * JSON body — not just the header — is what actually fixes geolocation. Kept the header forward too
  * (harmless, still useful defense-in-depth if that priority order ever changes upstream).
  *
- * `isLikelyBot` + `isNearDuplicateClick` + `isHighVelocityClick` (lib/go-bot-filter.ts) catch what
+ * `classifyClick` + `isNearDuplicateClick` + `isHighVelocityClick` (lib/go-bot-filter.ts) catch what
  * Umami's own heuristic doesn't — see that file for why (generic scrapers spoofing a browser UA; the
  * duplicate-fire root cause; the 2026-07-11 same-visitor-different-URLs sweep). Inert unless both
  * Umami env vars are set (matches the client beacon in SiteAnalytics), and
  * fully best-effort: a tight timeout + try/catch guarantee it can never delay or break the affiliate
  * redirect (conversion comes first). Takes a plain headers snapshot (not the live Request) because
  * it's invoked from inside next/server `after` — i.e. once the redirect has already been sent.
+ *
+ * 2026-08-02 (funnel-leak board, recommendation #1): a click that classifies as "suspect" — plausible
+ * but unproven, e.g. a browser-shaped UA missing Fetch Metadata headers, or a wrong Sec-Fetch-Site —
+ * is no longer silently dropped. It's recorded as its own `affiliate_click_suspect` event so the
+ * signal is visible for a future audit instead of vanishing, while the trusted `affiliate_click` count
+ * stays clean. Only a hard "bot" classification (self-identifying UA / no UA) is dropped entirely.
  */
 async function recordUmamiClick(
   h: ClickHeaders,
@@ -60,7 +66,8 @@ async function recordUmamiClick(
   const ua = h.userAgent;
   // No UA ⇒ Umami can't bot-filter (and rejects UA-less sends); skip rather than count blind.
   if (!host || !websiteId || !ua) return;
-  if (isLikelyBot(h)) return;
+  const classification = classifyClick(h);
+  if (classification === "bot") return; // unambiguous — never recorded, not even tagged.
 
   // First hop of X-Forwarded-For = the original visitor (standard convention; Vercel populates this
   // correctly on the inbound request). "unknown" is only our own placeholder for the dedupe key below
@@ -92,7 +99,9 @@ async function recordUmamiClick(
           website: websiteId,
           hostname: h.host || "www.parkmath.co.uk",
           url: `/go/${fields.airport}/${fields.target}`,
-          name: "affiliate_click",
+          // "suspect" clicks (see classifyClick doc comment) get their own event name so they never
+          // inflate the trusted affiliate_click count but are still visible for a future audit.
+          name: classification === "suspect" ? "affiliate_click_suspect" : "affiliate_click",
           ip: visitorIp,
           // secFetchUser is instrumentation-only for now (see go-bot-filter.ts) — carried through
           // to Umami so a follow-up audit can check its real-world distribution before it becomes

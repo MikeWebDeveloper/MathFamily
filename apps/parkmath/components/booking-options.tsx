@@ -63,7 +63,7 @@ export function BookingOptions({
       : null;
 
   return (
-    <section aria-label="Your booking options" className="space-y-4 rounded-card border border-ink/10 bg-surface p-4">
+    <section id="mf-merchant-block" aria-label="Your booking options" className="space-y-4 rounded-card border border-ink/10 bg-surface p-4">
       <div className="space-y-1">
         <h2 className="text-lg font-semibold text-ink">Your booking options</h2>
         <p className="text-sm text-ink-muted">

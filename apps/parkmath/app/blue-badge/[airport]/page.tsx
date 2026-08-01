@@ -5,6 +5,7 @@ import { isPublicTransportAlt, loadAirports, loadDropOffDataset, newsForAirport,
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, howToLd, JsonLd, speakableLd } from "@mathfamily/geo";
 import { AnswerLead, AnswerPassage, Callout, CaveatChip, EmailCaptureSlot, FaqAccordion, FreshnessBadge, LatestUpdates, MiniAnswerBar, PageHeading, SourceCitation, SourcesBlock } from "@mathfamily/ui";
+import { BookingBridge } from "@/components/booking-bridge";
 import { HolidayExtrasCard } from "@/components/holiday-extras-card";
 import { freshnessDelta } from "@/lib/content";
 import {
@@ -18,6 +19,7 @@ import {
   qualifiesForBlueBadgePage
 } from "@/lib/blue-badge-content";
 import { airportHasParkingVsDropOff } from "@/lib/parking-vs-drop-off-content";
+import { resolveAllParkingMerchants } from "@/lib/partners";
 
 export const dynamicParams = false;
 
@@ -74,6 +76,9 @@ export default async function BlueBadgePage({ params }: { params: Promise<{ airp
   const pageVerifiedAt = latestNews && latestNews.verifiedAt > record.verifiedAt ? latestNews.verifiedAt : record.verifiedAt;
 
   const calloutVariant = kind === "exempt" ? "free" : kind === "none" ? "warning" : "info";
+  // Same surface as the HolidayExtrasCard rendered further down this page — count always matches
+  // what's actually in the merchant block the bridge below links to.
+  const bridgeMerchantCount = resolveAllParkingMerchants(airport.slug, "dropoff").length;
 
   return (
     <article className="space-y-8">
@@ -130,6 +135,18 @@ export default async function BlueBadgePage({ params }: { params: Promise<{ airp
       <Callout variant={calloutVariant} title={`The official ${airport.name} Blue Badge policy`}>
         {record.blueBadgePolicy}.
       </Callout>
+
+      {/* Bridge right after the main answer (CRO board rec #3/#6): this is the most consistently
+          ranking template on the site (positions 6-10 across 8 airports) and previously dead-ended
+          into the claim process with no onward booking path — for the trip itself, not just the
+          drop-off. */}
+      {bridgeMerchantCount > 0 ? (
+        <BookingBridge
+          text="Sorting the drop-off is one thing — if you're parking for the trip, it's worth comparing pre-booked prices too."
+          href="#mf-merchant-block"
+          linkLabel={`Compare ${bridgeMerchantCount} provider${bridgeMerchantCount === 1 ? "" : "s"} below ↓`}
+        />
+      ) : null}
 
       {steps.length > 0 ? (
         <section className="mf-reveal space-y-4">

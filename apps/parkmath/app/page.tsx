@@ -56,7 +56,10 @@ export default function HomePage() {
     { href: "/drop-off-charges", title: "Drop-off charges", descriptor: "Compare every UK airport in one table", icon: <CarIcon /> },
     { href: "/airport-parking", title: "Airport parking", descriptor: "Gate price vs pre-book — what you save", icon: <ParkingIcon /> },
     { href: "/airport-lounges", title: "Airport lounges", descriptor: "Pay-per-visit or membership break-even", icon: <LoungeIcon /> },
-    { href: "/parking-price-index-2026", title: "Price index & data", descriptor: "Track UK airport price trends + open data", icon: <PriceIndexIcon /> }
+    { href: "/parking-price-index-2026", title: "Price index & data", descriptor: "Track UK airport price trends + open data", icon: <PriceIndexIcon /> },
+    // Booking-framed 5th tile (CRO board rec #6): the other four are all info-hub framed; this is the
+    // one that reads as an action a booking-intent visitor recognises, into the options/compare hub.
+    { href: "/airport-parking-options", title: "Airport parking deals", descriptor: "Compare providers — commission-blind ordering", icon: <ParkingIcon /> }
   ];
   const secondaryTiles = [
     // Rescues /drop-off-charges/price-index, "unknown to Google" since 2026-06-26 — it was previously
@@ -90,6 +93,14 @@ export default function HomePage() {
           <p className="max-w-2xl text-base text-ink-muted sm:text-lg">
             Every UK airport&apos;s drop-off charge, time limit, penalty and the free alternative — verified against
             official airport pages and date-stamped.
+          </p>
+          {/* Secondary, booking-framed CTA (CRO board rec #5): the hero itself stays fee-first — that
+              framing is the SEO/E-E-A-T asset — but a visitor who already knows they want to park,
+              not just drop off, gets an exit before scrolling 9 sections down to find one. */}
+          <p>
+            <a href="/airport-parking-options" className="text-sm font-semibold text-brand-accent hover:underline">
+              Or compare parking prices <span aria-hidden>→</span>
+            </a>
           </p>
         </div>
       </section>

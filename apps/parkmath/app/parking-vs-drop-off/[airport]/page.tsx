@@ -5,7 +5,10 @@ import { isPublicTransportAlt, loadAirports, loadDropOffDataset, loadParkingData
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd, speakableLd } from "@mathfamily/geo";
 import { AnswerLead, AnswerPassage, Callout, CaveatChip, EmailCaptureSlot, FaqAccordion, FeeGrid, FreshnessBadge, LatestUpdates, MiniAnswerBar, PageHeading, SavesVerdict, SourceCitation, SourcesBlock, StatStrip } from "@mathfamily/ui";
+import { BookingBridge } from "@/components/booking-bridge";
 import { HolidayExtrasCard } from "@/components/holiday-extras-card";
+import { StickyBookingBar } from "@/components/sticky-booking-bar";
+import { resolveAllParkingMerchants } from "@/lib/partners";
 import {
   REFERENCE_DAYS,
   buildParkingVsDropOffFaqs,
@@ -82,6 +85,11 @@ export default async function ParkingVsDropOffPage({ params }: { params: Promise
   const gate = parking.products.find((p) => p.productType === "gate")!;
   const coveredDays = [3, 7, 14].filter((d) => gate.prices.some((pr) => pr.days === d));
 
+  // Merchant count for the bridge line below (CRO board rec #1: this page had NO onward CTA at all
+  // despite having the best hook of any template). Same surface as the HolidayExtrasCard rendered
+  // further down this page, so the count always matches what's actually in the merchant block.
+  const bridgeMerchantCount = resolveAllParkingMerchants(airport.slug, "parkvsdropoff").length;
+
   return (
     <article className="space-y-8">
       <JsonLd data={faqPageLd(faqs)} />
@@ -127,6 +135,18 @@ export default async function ParkingVsDropOffPage({ params }: { params: Promise
       />
 
       {equivalence ? <SavesVerdict verdict={equivalence} /> : null}
+
+      {/* Bridge, right after the verdict (CRO board `parkmath-cro-review-2026-08-02.md` rec #1): this
+          template had the best hook on the site — a concrete £X-vs-£Y comparison the visitor just
+          read — and NO onward CTA at all. Fail-closed: only renders when the merchant block below
+          actually has a partner to show, so the count is always real. */}
+      {bridgeMerchantCount > 0 ? (
+        <BookingBridge
+          text={`A week's parking can cost less than you might think.`}
+          href="#mf-merchant-block"
+          linkLabel={`Compare ${bridgeMerchantCount} provider${bridgeMerchantCount === 1 ? "" : "s"} below ↓`}
+        />
+      ) : null}
 
       <AnswerPassage question={`Should I park or get dropped off at ${airport.name}?`}>
         It depends on the trip. {airport.name} charges {formatPence(model.dropOffFeePence)} for a single forecourt drop-off, while
@@ -284,6 +304,8 @@ export default async function ParkingVsDropOffPage({ params }: { params: Promise
         ]}
         method="The drop-off fee and the drive-up gate parking price are read from the airport's own official pages and re-verified on the dates shown. The per-day rate and minutes-equivalence are exact arithmetic from those two figures. We never republish unverified prices."
       />
+
+      <StickyBookingBar airportName={airport.name} targetId="mf-merchant-block" />
     </article>
   );
 }

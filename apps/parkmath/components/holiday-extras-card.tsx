@@ -47,7 +47,7 @@ export function HolidayExtrasCard({ product, airportName, airportSlug, surface, 
   if (isParking) {
     const multi = parkingMerchants.length > 1;
     return (
-      <section aria-label={`Pre-book ${airportName} parking`} className="rounded-card border border-brand-accent/30 bg-blue-50 dark:bg-brand-accent/[0.08] dark:border-brand-accent/20 p-4">
+      <section id="mf-merchant-block" aria-label={`Pre-book ${airportName} parking`} className="rounded-card border border-brand-accent/30 bg-blue-50 dark:bg-brand-accent/[0.08] dark:border-brand-accent/20 p-4">
         <div className="mb-2 flex items-center justify-between gap-2">
           <span className="rounded border border-ink-muted/40 px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Ad</span>
           <span className="text-xs text-ink-muted">{multi ? "Compare our partners" : parkingMerchants[0]!.partnerName}</span>

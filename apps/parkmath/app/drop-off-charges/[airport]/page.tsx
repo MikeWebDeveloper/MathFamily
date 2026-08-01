@@ -9,6 +9,7 @@ import { DropOffCalculator } from "@/components/drop-off-calculator";
 import { DropOffCalculatorBridge } from "@/components/drop-off-calculator-bridge";
 import { DropOffParkingBridge } from "@/components/drop-off-bridge";
 import { HolidayExtrasCard } from "@/components/holiday-extras-card";
+import { StickyBookingBar } from "@/components/sticky-booking-bar";
 import { bandPriceParenthetical, buildDropOffFaqs, dropOffChangeNote, dropOffTimeLimitNote, freshnessDelta, isPerEntryTariff, nearbyDropOffComparison, paymentDeadlineChip, searchName, trendNote } from "@/lib/content";
 import { airportHasParkingVsDropOff, dropOffParkingBridge } from "@/lib/parking-vs-drop-off-content";
 
@@ -366,6 +367,8 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
         sources={[{ label: `Official ${airport.name} drop-off page`, url: record.sourceUrl, verifiedAt: record.verifiedAt }]}
         method="Every figure is read from the airport's official page and re-verified on the date shown. We never republish unverified prices."
       />
+
+      <StickyBookingBar airportName={airport.name} targetId="mf-merchant-block" />
     </article>
   );
 }

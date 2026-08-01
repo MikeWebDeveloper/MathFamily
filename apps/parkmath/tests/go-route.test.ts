@@ -78,15 +78,43 @@ describe("GET /go/[airport]/[target] — secFetchUser flows into the Umami click
     expect(body.payload.data.secFetchUser).toBe("0");
   });
 
-  it("Signal A end-to-end: a cross-site hit still 302-redirects but is dropped from the Umami count (zero fetch calls)", async () => {
-    // The redirect must be completely unaffected by the bot gate — only the metric is gated. This
-    // proves that end-to-end at the route level, not just at the isLikelyBot unit-test level above.
+  it("Signal A end-to-end: a cross-site hit still 302-redirects, and is now TAGGED (not dropped) as affiliate_click_suspect", async () => {
+    // The redirect must be completely unaffected by the bot gate — only the metric is classified.
+    // 2026-08-02 (funnel-leak board rec #1): this used to be silently dropped; it's now recorded as
+    // its own event instead so the signal survives for a future audit. Proves this end-to-end at the
+    // route level, not just at the classifyClick unit-test level above.
     const req = buildRequest({ ...REAL_CLICK_HEADERS, "sec-fetch-site": "cross-site" }, "81.174.10.23");
     const res = await GET(req, { params: Promise.resolve({ airport: "gatwick", target: "parking" }) });
     await hoisted.lastAfterPromise;
 
     expect(res.status).toBe(302); // redirect still fires — conversion path is never affected
     expect(res.headers.get("location")).toContain("awin1.com");
-    expect(fetchMock).not.toHaveBeenCalled(); // but the click is dropped from the Umami count
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    const [, init] = fetchMock.mock.calls[0] as [string, RequestInit];
+    const body = JSON.parse(init.body as string);
+    expect(body.payload.name).toBe("affiliate_click_suspect");
+  });
+
+  it("a hard bot UA (self-identifying) is still dropped entirely — zero fetch calls, never tagged", async () => {
+    const req = buildRequest(
+      { ...REAL_CLICK_HEADERS, "user-agent": "Mozilla/5.0 (compatible; AhrefsBot/7.0; +http://ahrefs.com/robot/)" },
+      "81.174.10.24",
+    );
+    const res = await GET(req, { params: Promise.resolve({ airport: "gatwick", target: "parking" }) });
+    await hoisted.lastAfterPromise;
+
+    expect(res.status).toBe(302);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("a clean real click still records the normal affiliate_click event name (unchanged)", async () => {
+    const req = buildRequest(REAL_CLICK_HEADERS, "81.174.10.25");
+    await GET(req, { params: Promise.resolve({ airport: "gatwick", target: "parking" }) });
+    await hoisted.lastAfterPromise;
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    const [, init] = fetchMock.mock.calls[0] as [string, RequestInit];
+    const body = JSON.parse(init.body as string);
+    expect(body.payload.name).toBe("affiliate_click");
   });
 });

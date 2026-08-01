@@ -5,6 +5,7 @@ import { loadAirports, loadDropOffDataset, type Airport } from "@mathfamily/data
 import { breadcrumbLd, faqPageLd, JsonLd, speakableLd, tableLd } from "@mathfamily/geo";
 import { AnswerLead, AnswerPassage, FaqAccordion, FreshnessBadge, MiniAnswerBar, PageHeading, SourceCitation, SourcesBlock, EmailCaptureSlot } from "@mathfamily/ui";
 import { BookingOptions } from "@/components/booking-options";
+import { StickyBookingBar } from "@/components/sticky-booking-bar";
 import { parkingCtaModel } from "@/lib/parking-content";
 import { searchName } from "@/lib/content";
 import { airportHasParkingVsDropOff } from "@/lib/parking-vs-drop-off-content";
@@ -143,7 +144,11 @@ export default async function AirportParkingOptionsPage({ params }: { params: Pr
                 <td className="py-3 pr-3 font-medium text-ink">{row.option}</td>
                 <td className="py-3 pr-3 text-ink-muted">{row.whenItWins}</td>
                 <td className="py-3 pr-3 text-ink">
-                  {row.costBasis ?? <span className="text-ink-muted">Pre-book price coming</span>}
+                  {row.costBasis ?? (
+                    <a href="#mf-merchant-block" className="text-brand-accent underline underline-offset-4">
+                      Pre-book price coming ↓
+                    </a>
+                  )}
                 </td>
                 <td className="py-3"><SourceTag row={row} /></td>
               </tr>
@@ -179,7 +184,11 @@ export default async function AirportParkingOptionsPage({ params }: { params: Pr
                     <td className="py-3 pr-3 text-ink-muted">{row.trip}</td>
                     <td className="py-3 pr-3 font-medium text-ink">{row.option}</td>
                     <td className="py-3 pr-3 text-ink">
-                      {row.cost ?? <span className="text-ink-muted">Live price below</span>}
+                      {row.cost ?? (
+                        <a href="#mf-merchant-block" className="text-brand-accent underline underline-offset-4">
+                          Live price below ↓
+                        </a>
+                      )}
                     </td>
                     <td className="py-3">
                       {row.source === "official" ? (
@@ -256,6 +265,8 @@ export default async function AirportParkingOptionsPage({ params }: { params: Pr
         sources={[{ label: `Official ${airport.name} drop-off page`, url: dropOff.sourceUrl, verifiedAt: dropOff.verifiedAt }]}
         method="The drop-off, free-alternative and drive-up gate-parking figures are read from the airport's official pages and date-stamped. Pre-booked Park & Ride and Meet & Greet prices come from our parking partner's live feed — we show them only when verifiable and never invent a 'from £X'."
       />
+
+      <StickyBookingBar airportName={airport.name} targetId="mf-merchant-block" />
     </article>
   );
 }
