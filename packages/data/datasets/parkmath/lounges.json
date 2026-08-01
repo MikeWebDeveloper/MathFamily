@@ -1,6 +1,6 @@
 {
-  "version": "1.0.0",
-  "lastUpdated": "2026-06-10",
+  "version": "1.0.1",
+  "lastUpdated": "2026-08-01",
   "records": [
     {
       "airportSlug": "heathrow",
@@ -15,10 +15,10 @@
       "airportSlug": "gatwick",
       "lounges": [
         { "name": "Club Aspire Lounge (South Terminal)", "walkInPence": 3400, "priorityPass": true, "notes": "Operator No1 Lounges; from-price per adult. Priority Pass accepted pre-booking only." },
-        { "name": "No1 Lounge (North Terminal)", "walkInPence": 3800, "priorityPass": true, "notes": "Operator No1 Lounges; from-price per adult." }
+        { "name": "No1 Lounge (North Terminal)", "walkInPence": 4000, "priorityPass": true, "notes": "Operator No1 Lounges; from-price per adult. Priority Pass accepted pre-booking only." }
       ],
       "sourceUrl": "https://no1lounges.com/lounges-by-location/club-aspire-at-gatwick-south/",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-08-01"
     },
     {
       "airportSlug": "manchester",

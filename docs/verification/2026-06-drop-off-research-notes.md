@@ -418,3 +418,86 @@ max stay and payment deadline were re-confirmed today.
 > wording** if you want belt-and-braces before merging. Separately, the £5/15-min Rapid
 > Drop-off fee should be re-sourced from the official Rapid Drop-off T&C page on the next
 > sweep, since the main page no longer lists it.
+
+---
+
+## 2026-08-01 — daily ParkMath sweep (drop-off)
+
+Scope: news-watch sweep first (2 changed pages), then a ParkMath-only freshness pass over
+stale (>46 days) records, the standing hard-blocked targets, and the ParkMath pages left
+`pendingSince` in `tools/freshness/hashes.json`. eSIM/roaming/baggage deliberately skipped
+(weekly job owns those).
+
+### Re-verified and CHANGED
+
+**`drop-off:london-city` — the standing hard-blocked target finally read.**
+`https://r.jina.ai/https://www.londoncityairport.com/parking/drop-off` returned the full
+page today (direct WebFetch still 403s). Confirmed unchanged: "0 - 5 minutes | £8.00",
+"5 minutes and above | £1 per minute thereafter", "Maximum stay 10 minutes."
+**New information**, which the record previously recorded as unpublished: "A £100.00
+enforcement charge is payable by drivers who stay past 10 minutes." and "This charge is
+reduced to £60.00 if paid within 14 days. This will be strictly enforced with CCTV
+cameras." → `penaltyPence` null → 10000, `penaltyNotes` rewritten. `verifiedAt` → 2026-08-01.
+(Also noted for future enrichment, not yet recorded: black-taxi drivers pay £7.00 for 0-5
+minutes and may add £6.00 on the meter; Blue Badge accounts need 7 days' notice and take up
+to 5 days to approve.)
+
+**`drop-off:stansted` — penalty confirmed, tariff NOT re-verified.** See NEEDS-HUMAN below.
+The official page now states: "If payment is not received by the deadline, a £100.00 Parking
+Charge Notice will be issued to the registered vehicle holder. This will be reduced to £60.00
+if paid within 14 days." → `penaltyPence` null → 10000. **`verifiedAt` deliberately NOT
+bumped** (stays 2026-06-26) because the £10/£28 headline tariff could not be re-confirmed.
+
+### Re-verified, unchanged (`verifiedAt` → 2026-08-01)
+
+- **`drop-off:luton`** — "£7 for 10 minutes", "£1 per minute thereafter (max stay 30
+  minutes)", £95 enforcement charge reduced to £55 within 14 days, "until midnight the
+  following day to pay". All match. `blueBadgePolicy` enriched: the page directs Blue Badge
+  holders to Terminal Car Park 1 for "30 minutes FREE" plus reduced rates up to 24 hours.
+  (This page was one of the two the news watchdog flagged as changed; the change is not a
+  price change.)
+- **`drop-off:edinburgh`** — "Up to 10 minutes £8.50", "10 minutes and above £1 per minute".
+  `freeAlternative` (Long Stay, 30 min free) re-confirmed on the official Long Stay page:
+  "0 - 30 minutes FREE". Newly observed, not recorded: local-resident 50% discount on the
+  first 10 minutes for postcodes EH4 6/EH4 8/EH12 0/EH12 9/EH28/EH29/EH52 5, and machines
+  are card-only from 1 July.
+- **`drop-off:southend`** — "£8 per visit, paid after exit online by midnight the following
+  day", "Stay for up to 10 minutes". `blueBadgePolicy` enriched: blue badge bays are in the
+  Superior car park (charges apply). `seoDescription` "Verified June 2026" → "August 2026".
+
+### Checked, NOT verifiable today (old values kept, `verifiedAt` untouched)
+
+- **`drop-off:east-midlands` (£5 / 15 min)** and **`drop-off:stansted` (£10 / £28)** — MAG
+  has restructured both pick-up-and-drop-off pages. Neither page now publishes the
+  barrierless tariff at all; both show only *Short Stay* car-park tariffs (Stansted: £13/30min,
+  £21/1h, £25/2h, £38/4h — EMA: £6/30min, £8/1h, £12/2h, £16/3h), the payment deadline and the
+  £100→£60 Parking Charge. Re-checked with the jina browser engine (JS-rendered) — the tariff
+  is genuinely absent, not a rendering artifact. The official T&C pages
+  (`/terms-and-conditions/express-set-down/`, `/terms-and-conditions/rapid-drop-off/`) were
+  read in full and confirm the 30-minute max stay, the £100 Parking Charge and the £70
+  debt-recovery fee, but state the tariff only by reference — Stansted clause 2.1: "The
+  charges payable by you are displayed on signage at and around Express Set Down and on our
+  website at www.stanstedairport.com/parking/pick-up-and-drop-off" (which no longer lists
+  them). Both records keep their 2026-06-26 values; both are still inside the 60-day window.
+- **`drop-off:cardiff` (£3 / 10 min)** — `cardiff-airport.com` now returns HTTP 403 to every
+  transport in the ladder (direct with browser UA, r.jina.ai plain and browser-engine). The
+  newest Wayback snapshot is 2026-03-10, *older* than the record's own 2026-06-21
+  verification, so it cannot confirm anything. Value kept unchanged.
+- **`drop-off:birmingham`** — birminghamairport.co.uk remains Cloudflare-blocked to every
+  automated transport; newest Wayback snapshot is 2025-09-06, far older than the record's
+  2026-06-10. **Now 52 days stale** — see NEEDS-HUMAN.
+
+> ## NEEDS-HUMAN
+> 1. **Stansted £10/£28 and East Midlands £5 are no longer published by the airports.** MAG
+>    removed the barrierless tariff from both pages this cycle. Our figures are still the last
+>    officially-sourced ones (26 Jun) and remain inside the 60-day window, but they are now
+>    **unconfirmable by any automated route** and will go stale on ~25 Aug 2026. A human
+>    reading the on-site signage, an APCOA payment receipt, or the APCOA pay portal would
+>    re-source them. If they cannot be re-sourced before the window closes, consider nulling
+>    the headline band rather than showing an unverifiable price.
+> 2. **Birmingham (drop-off, parking and lounges) is 52 days stale and unreachable.** Cloudflare
+>    blocks every automated transport and Wayback is ~11 months behind. It crosses the 60-day
+>    warning on ~9 Aug 2026. This needs a human browser visit to
+>    birminghamairport.co.uk/parking/drop-off-and-pick-up/ and /at-the-airport/lounges/.
+> 3. **Cardiff has started 403-ing.** Not urgent (verified 21 Jun) but it will need the same
+>    manual treatment if the block persists past ~6 Aug 2026.
