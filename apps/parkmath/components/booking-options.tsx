@@ -1,5 +1,6 @@
-import { goLinkMerchant, resolveAllParkingMerchants } from "../lib/partners";
+import { resolveAllParkingMerchants } from "../lib/partners";
 import type { ParkingCtaModel } from "../lib/parking-content";
+import { MerchantCard } from "./merchant-card";
 
 export function BookingOptions({
   airportName,
@@ -40,10 +41,6 @@ export function BookingOptions({
   // first, and the disclosure below names it explicitly instead of claiming pure alphabetical order.
   // A no-op for every airport without a covering official-operator partner.
   const pinnedPrimary = merchants.find((m) => m.isPinnedPrimary) ?? null;
-
-  // A 10%-off / "up to 25% Gatwick" promo is a Holiday Extras offer only — never claim it for others.
-  const HE_DISCOUNT_NOTE =
-    "10% off most Holiday Extras car parks — up to 25% at Gatwick (Meet & Greet North). Discount applied automatically, no code.";
 
   // Resolve the honest guide price to surface ONCE (not per-merchant — the figure is from our own
   // dataset, not a specific merchant's quote): prefer the cta model (which suppresses the gate-only
@@ -119,40 +116,19 @@ export function BookingOptions({
             </div>
 
             <ul className="space-y-3">
-              {merchants.map((m) => {
-                const isHolidayExtras = m.partnerName === "Holiday Extras";
-                return (
-                  <li
-                    key={m.partnerId}
-                    className="rounded-card border border-ink/10 bg-card p-3 sm:flex sm:items-center sm:justify-between sm:gap-4"
-                  >
-                    <div className="min-w-0">
-                      <p className="font-semibold text-ink">{m.partnerName}</p>
-                      <p className="mt-0.5 text-sm text-ink-muted">
-                        {isHolidayExtras
-                          ? HE_DISCOUNT_NOTE
-                          : `Compare on-airport, Park & Ride and Meet & Greet at ${m.partnerName} — free cancellation, no code needed.`}{" "}
-                        <a
-                          href={m.termsUrl ?? officialUrl}
-                          rel="noopener noreferrer"
-                          target="_blank"
-                          className="underline underline-offset-4"
-                        >
-                          Terms ↗
-                        </a>
-                      </p>
-                    </div>
-                    <a
-                      href={goLinkMerchant(surface, airportSlug, m.partnerId)}
-                      rel="sponsored noopener noreferrer"
-                      target="_blank"
-                      className="mt-3 inline-block whitespace-nowrap rounded-card bg-brand-accent px-4 py-2 text-sm font-semibold text-white sm:mt-0 sm:shrink-0"
-                    >
-                      Book parking with {m.partnerName} ↗
-                    </a>
-                  </li>
-                );
-              })}
+              {merchants.map((m) => (
+                <MerchantCard
+                  key={m.partnerId}
+                  partnerId={m.partnerId}
+                  partnerName={m.partnerName}
+                  termsUrl={m.termsUrl}
+                  officialUrl={officialUrl}
+                  offer={m.offer}
+                  featured={m.isPinnedPrimary}
+                  airportSlug={airportSlug}
+                  surface={surface}
+                />
+              ))}
             </ul>
 
             {priceStr ? (
@@ -173,7 +149,7 @@ export function BookingOptions({
               href={officialUrl}
               rel="noopener noreferrer"
               target="_blank"
-              className="mt-3 inline-block rounded-card border border-brand-accent px-4 py-2 text-sm font-semibold text-brand-accent"
+              className="mt-3 inline-flex min-h-[44px] items-center rounded-card border border-brand-accent px-4 text-sm font-semibold text-brand-accent"
             >
               Go to airport site ▸
             </a>
@@ -190,7 +166,7 @@ export function BookingOptions({
             href={officialUrl}
             rel="noopener noreferrer"
             target="_blank"
-            className="mt-3 inline-block rounded-card border border-brand-accent px-4 py-2 text-sm font-semibold text-brand-accent"
+            className="mt-3 inline-flex min-h-[44px] items-center rounded-card border border-brand-accent px-4 text-sm font-semibold text-brand-accent"
           >
             Go to airport site ▸
           </a>

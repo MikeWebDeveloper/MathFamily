@@ -94,7 +94,17 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── 2. BENTO — the answer is the biggest thing on screen ── */}
+      {/* ── 2. SEARCH — the site's core job-to-be-done, moved above the fold (mobile UX audit
+          2026-08-01: the command search previously sat below the stat bento + nav tiles, off-screen
+          at 390×844). It now renders right under the hero, before any stat/nav content. ── */}
+      <div className="mf-reveal">
+        <AirportBentoSearch airports={airportTiles} />
+        <div className="mt-5">
+          <NearbyAirports airports={airports} feeBySlug={feeBySlug} />
+        </div>
+      </div>
+
+      {/* ── 3. BENTO — the answer is the biggest thing on screen ── */}
       <section className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <HomeAnswerHero
@@ -139,18 +149,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── 3. PRIMARY NAV — route into the answer pages ── */}
+      {/* ── 4. PRIMARY NAV — route into the answer pages ── */}
       <section className="space-y-4">
         <NavTileGrid tiles={primaryTiles} variant="primary" />
       </section>
-
-      {/* ── 4. TRACKED AIRPORTS — command search + honest sparkline grid ── */}
-      <div className="mf-reveal">
-        <AirportBentoSearch airports={airportTiles} />
-        <div className="mt-5">
-          <NearbyAirports airports={airports} feeBySlug={feeBySlug} />
-        </div>
-      </div>
 
       {/* ── 5. SECONDARY NAV ── */}
       <section className="mf-reveal space-y-4" style={{ "--mf-delay": "60ms" } as CSSProperties}>

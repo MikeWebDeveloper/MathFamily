@@ -9,6 +9,12 @@
       "active": true,
       "termsUrl": "https://www.holidayextras.com/airport-parking.html",
       "landingUrl": "https://www.holidayextras.com/airport-parking.html",
+      "offer": {
+        "hook": "Up to 70% off",
+        "points": ["Never Beaten on Price", "FREE cancellation"],
+        "source": "https://www.holidayextras.com/parking.html",
+        "checkedAt": "2026-08-01"
+      },
       "products": {
         "parking": {
           "url": "https://www.holidayextras.com/airport-parking.html",
@@ -37,6 +43,12 @@
       "active": true,
       "termsUrl": "https://www.aph.com/",
       "landingUrl": "https://www.aph.com/",
+      "offer": {
+        "hook": null,
+        "points": ["No hidden fees or booking charges", "14-time British Travel Award winner"],
+        "source": "https://www.aph.com",
+        "checkedAt": "2026-08-01"
+      },
       "products": {
         "parking": {
           "url": "https://www.aph.com/",
@@ -72,6 +84,12 @@
       "active": true,
       "termsUrl": "https://www.parkbcp.co.uk/airport-parking.html",
       "landingUrl": "https://www.parkbcp.co.uk/airport-parking.html",
+      "offer": {
+        "hook": "Save up to 60%",
+        "points": ["Price Protected guarantee"],
+        "source": "https://www.parkbcp.co.uk",
+        "checkedAt": "2026-08-01"
+      },
       "products": {
         "parking": {
           "url": "https://www.parkbcp.co.uk/airport-parking.html",
@@ -115,6 +133,12 @@
       "active": true,
       "termsUrl": "https://www.purpleparking.com/",
       "landingUrl": "https://www.purpleparking.com/airport-parking",
+      "offer": {
+        "hook": "Save up to 70%",
+        "points": ["Never Beaten on Price", "Free Cancellation"],
+        "source": "https://www.purpleparking.com",
+        "checkedAt": "2026-08-01"
+      },
       "products": {
         "parking": {
           "url": "https://www.purpleparking.com/airport-parking",
@@ -156,6 +180,12 @@
       "active": true,
       "termsUrl": "https://www.airparks.co.uk/",
       "landingUrl": "https://www.airparks.co.uk/airport-parking.html",
+      "offer": {
+        "hook": "Save up to 60%",
+        "points": ["Never Beaten on Price (24h price match)"],
+        "source": "https://www.airparks.co.uk",
+        "checkedAt": "2026-08-01"
+      },
       "products": {
         "parking": {
           "url": "https://www.airparks.co.uk/airport-parking.html",
@@ -199,6 +229,13 @@
       "isOfficialOperator": true,
       "termsUrl": "https://www.heathrow.com/booking/parking",
       "landingUrl": "https://www.heathrow.com/booking/parking",
+      "offer": {
+        "hook": "No-one sells our parking for less",
+        "points": ["Official operator - all 11 car parks", "Cancel free up to 2 hours before arrival"],
+        "badge": "Official operator",
+        "source": "https://www.heathrow.com/booking/parking",
+        "checkedAt": "2026-08-01"
+      },
       "products": {
         "parking": {
           "url": "https://www.heathrow.com/booking/parking",

@@ -164,11 +164,18 @@ export default async function ParkingVsDropOffPage({ params }: { params: Promise
             <h2 className="text-h2 font-semibold text-ink">Short trip or long stay — which is cheaper, by the day?</h2>
             <p className="text-sm text-ink-muted">{tripLength.verdict}</p>
           </div>
-          <div className="overflow-x-auto rounded-lg border border-ink/10">
-            <table className="w-full min-w-[560px] border-collapse text-sm">
-              <caption className="sr-only">
-                {airport.name}: drive-up gate parking cost per day by trip length, and where pre-booking beats it.
-              </caption>
+          {/* Scroll affordance (mobile UX audit 2026-08-01): the table is wider than a 390px viewport
+              with no visual cue that more columns exist off-screen. An edge fade + explicit "Swipe"
+              hint fixes that; both are decorative on desktop where the table already fits. */}
+          <p className="text-xs font-medium text-ink-muted sm:hidden" aria-hidden="true">
+            Swipe to see all columns →
+          </p>
+          <div className="relative">
+            <div className="overflow-x-auto rounded-lg border border-ink/10">
+              <table className="w-full min-w-[560px] border-collapse text-sm">
+                <caption className="sr-only">
+                  {airport.name}: drive-up gate parking cost per day by trip length, and where pre-booking beats it.
+                </caption>
               <thead>
                 <tr className="border-b border-ink/15 bg-surface-muted text-left">
                   <th scope="col" className="px-3 py-2 font-semibold text-ink">Trip length</th>
@@ -204,7 +211,14 @@ export default async function ParkingVsDropOffPage({ params }: { params: Promise
                   </tr>
                 ))}
               </tbody>
-            </table>
+              </table>
+            </div>
+            {/* Edge fade: signals more columns sit off-screen to the right. Pointer-events-none so it
+                never blocks the scroll gesture; hidden on desktop where the table already fits. */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-y-0 right-0 w-8 rounded-r-lg bg-gradient-to-l from-surface to-transparent sm:hidden"
+            />
           </div>
           <p className="text-xs text-ink-muted">
             Gate prices are {airport.name}&apos;s official drive-up tariff at each duration. A pre-book figure is
