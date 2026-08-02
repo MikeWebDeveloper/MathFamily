@@ -1,4 +1,5 @@
-import { goLink, goLinkMerchant, resolveAllParkingMerchants, resolveHeProduct, type HeProduct } from "../lib/partners";
+import { goLink, resolveAllParkingMerchants, resolveHeProduct, type HeProduct } from "../lib/partners";
+import { MerchantCard } from "./merchant-card";
 
 function discountLine(merchant: string, product: HeProduct): string {
   if (merchant === "Holiday Extras") {
@@ -46,7 +47,7 @@ export function HolidayExtrasCard({ product, airportName, airportSlug, surface, 
   if (isParking) {
     const multi = parkingMerchants.length > 1;
     return (
-      <section aria-label={`Pre-book ${airportName} parking`} className="rounded-card border border-brand-accent/30 bg-blue-50 dark:bg-brand-accent/[0.08] dark:border-brand-accent/20 p-4">
+      <section id="mf-merchant-block" aria-label={`Pre-book ${airportName} parking`} className="rounded-card border border-brand-accent/30 bg-blue-50 dark:bg-brand-accent/[0.08] dark:border-brand-accent/20 p-4">
         <div className="mb-2 flex items-center justify-between gap-2">
           <span className="rounded border border-ink-muted/40 px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Ad</span>
           <span className="text-xs text-ink-muted">{multi ? "Compare our partners" : parkingMerchants[0]!.partnerName}</span>
@@ -62,26 +63,19 @@ export function HolidayExtrasCard({ product, airportName, airportSlug, surface, 
           <li>✓ No code needed</li>
         </ul>
 
-        <ul className="mt-3 space-y-2">
+        <ul className="mt-3 space-y-3">
           {parkingMerchants.map((m) => (
-            <li key={m.partnerId} className="sm:flex sm:items-center sm:justify-between sm:gap-3">
-              <a
-                href={m.termsUrl ?? "https://www.holidayextras.com/airport-parking.html"}
-                rel="noopener noreferrer"
-                target="_blank"
-                className="text-sm text-ink-muted underline underline-offset-4"
-              >
-                {m.partnerName} terms ↗
-              </a>
-              <a
-                href={goLinkMerchant(surface, airportSlug, m.partnerId)}
-                rel="sponsored noopener noreferrer"
-                target="_blank"
-                className="mt-2 inline-block whitespace-nowrap rounded-card bg-brand-accent px-4 py-2 text-sm font-semibold text-white sm:mt-0 sm:shrink-0"
-              >
-                Book parking with {m.partnerName} ↗
-              </a>
-            </li>
+            <MerchantCard
+              key={m.partnerId}
+              partnerId={m.partnerId}
+              partnerName={m.partnerName}
+              termsUrl={m.termsUrl}
+              officialUrl="https://www.holidayextras.com/airport-parking.html"
+              offer={m.offer}
+              featured={m.isPinnedPrimary}
+              airportSlug={airportSlug}
+              surface={surface}
+            />
           ))}
         </ul>
 
@@ -158,7 +152,7 @@ export function HolidayExtrasCard({ product, airportName, airportSlug, surface, 
           href={primaryHref}
           rel="sponsored noopener noreferrer"
           target="_blank"
-          className="mt-3 inline-block rounded-card bg-brand-accent px-4 py-2 text-sm font-semibold text-white"
+          className="mt-3 inline-flex min-h-[44px] items-center rounded-card bg-brand-accent px-4 text-sm font-semibold text-white"
         >
           Book {productLabel} — free cancellation ↗
         </a>

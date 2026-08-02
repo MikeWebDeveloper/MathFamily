@@ -84,10 +84,10 @@ describe("BookingOptions — multi-option, commission-blind presentation", () =>
     expect(belfastIntlHtml).toContain('href="/go/belfast-international/parking%3Apurple-parking?s=parking"');
   });
 
-  it("never fabricates the Holiday-Extras-only discount promo for another merchant", () => {
-    // The "up to 25% at Gatwick" line is an HE offer — it must appear at most once (HE's row), never
-    // attached to APH/Airparks/Purple Parking.
-    const occurrences = html.split("up to 25% at Gatwick").length - 1;
+  it("never fabricates the Holiday-Extras-only offer hook for another merchant", () => {
+    // "Up to 70% off" is HE's own sourced hook (partners.json offer.hook) — it must appear at most
+    // once (HE's card), never attached to APH/Airparks/Park BCP/Purple Parking.
+    const occurrences = html.split("Up to 70% off").length - 1;
     expect(occurrences).toBe(1);
   });
 

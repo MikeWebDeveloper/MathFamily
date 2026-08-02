@@ -21,12 +21,26 @@ interface AirportParkingUrlConfig {
   byAirport?: Record<string, string>;
 }
 
+/** A merchant's own, verbatim-sourced value proposition — never invented copy. Every field traces to
+ *  a specific merchant page, captured in `source`/`checkedAt` so a stale claim can be re-verified
+ *  (see company/growth/awin-live-offers-2026-08-01.md, the source-of-truth pull this was built from).
+ *  `hook` is the headline claim (often a "%"/price-match line); merchants with no honest hook (e.g.
+ *  APH has no discount claim) carry `hook: null` and lean on `points` instead — never a fabricated %. */
+export interface PartnerOffer {
+  hook: string | null;
+  points: string[];
+  badge?: string;
+  source: string;
+  checkedAt: string;
+}
+
 interface PartnerConfig {
   name: string;
   awinmid: string | null;
   active: boolean;
   termsUrl?: string;
   landingUrl?: string;
+  offer?: PartnerOffer;
   products?: Record<string, { url: string; label: string }>;
   airportParkingUrl?: AirportParkingUrlConfig;
   /** True when this partner IS the airport's own official operator (e.g. Heathrow Airport Parking at
@@ -91,6 +105,12 @@ export function airportParkingUrl(partnerId: string, airportSlug: string): strin
   if (cfg.byAirport) return cfg.byAirport[airportSlug] ?? null;
   if (cfg.template) return cfg.template.replace("{slug}", airportSlug);
   return null;
+}
+
+/** A partner's sourced offer (hook/points/badge), or null when none is recorded — never fabricated,
+ *  never a generic fallback. Callers render their own honest boilerplate when this is null. */
+export function getPartnerOffer(partnerId: string): PartnerOffer | null {
+  return config.partners[partnerId]?.offer ?? null;
 }
 
 /** Back-compat: Holiday Extras' verified per-airport parking page. Thin wrapper over
@@ -180,6 +200,8 @@ export interface ParkingMerchantOption {
    *  with no covering official-operator partner. Callers use this to phrase the on-page disclosure
    *  honestly instead of claiming pure alphabetical order where that claim would no longer be true. */
   isPinnedPrimary: boolean;
+  /** This merchant's sourced value proposition (hook/points/badge), or null when none is recorded. */
+  offer: PartnerOffer | null;
 }
 
 /** Resolve EVERY joined, active merchant that genuinely serves this airport (has a verified per-airport
@@ -236,6 +258,7 @@ export function resolveAllParkingMerchants(
         url: r.url,
         termsUrl: r.termsUrl,
         isPinnedPrimary: config.partners[partnerId]?.isOfficialOperator === true,
+        offer: config.partners[partnerId]?.offer ?? null,
       });
     }
   }

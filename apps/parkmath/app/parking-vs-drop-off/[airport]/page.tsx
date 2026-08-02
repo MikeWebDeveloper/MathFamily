@@ -5,7 +5,10 @@ import { isPublicTransportAlt, loadAirports, loadDropOffDataset, loadParkingData
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, JsonLd, speakableLd } from "@mathfamily/geo";
 import { AnswerLead, AnswerPassage, Callout, CaveatChip, EmailCaptureSlot, FaqAccordion, FeeGrid, FreshnessBadge, LatestUpdates, MiniAnswerBar, PageHeading, SavesVerdict, SourceCitation, SourcesBlock, StatStrip } from "@mathfamily/ui";
+import { BookingBridge } from "@/components/booking-bridge";
 import { HolidayExtrasCard } from "@/components/holiday-extras-card";
+import { StickyBookingBar } from "@/components/sticky-booking-bar";
+import { resolveAllParkingMerchants } from "@/lib/partners";
 import {
   REFERENCE_DAYS,
   buildParkingVsDropOffFaqs,
@@ -82,6 +85,11 @@ export default async function ParkingVsDropOffPage({ params }: { params: Promise
   const gate = parking.products.find((p) => p.productType === "gate")!;
   const coveredDays = [3, 7, 14].filter((d) => gate.prices.some((pr) => pr.days === d));
 
+  // Merchant count for the bridge line below (CRO board rec #1: this page had NO onward CTA at all
+  // despite having the best hook of any template). Same surface as the HolidayExtrasCard rendered
+  // further down this page, so the count always matches what's actually in the merchant block.
+  const bridgeMerchantCount = resolveAllParkingMerchants(airport.slug, "parkvsdropoff").length;
+
   return (
     <article className="space-y-8">
       <JsonLd data={faqPageLd(faqs)} />
@@ -128,6 +136,18 @@ export default async function ParkingVsDropOffPage({ params }: { params: Promise
 
       {equivalence ? <SavesVerdict verdict={equivalence} /> : null}
 
+      {/* Bridge, right after the verdict (CRO board `parkmath-cro-review-2026-08-02.md` rec #1): this
+          template had the best hook on the site — a concrete £X-vs-£Y comparison the visitor just
+          read — and NO onward CTA at all. Fail-closed: only renders when the merchant block below
+          actually has a partner to show, so the count is always real. */}
+      {bridgeMerchantCount > 0 ? (
+        <BookingBridge
+          text={`A week's parking can cost less than you might think.`}
+          href="#mf-merchant-block"
+          linkLabel={`Compare ${bridgeMerchantCount} provider${bridgeMerchantCount === 1 ? "" : "s"} below ↓`}
+        />
+      ) : null}
+
       <AnswerPassage question={`Should I park or get dropped off at ${airport.name}?`}>
         It depends on the trip. {airport.name} charges {formatPence(model.dropOffFeePence)} for a single forecourt drop-off, while
         drive-up parking is {formatPence(model.parkingPence)} for {model.parkingDays} days — about {formatPence(model.perDayPence)} per 24
@@ -164,11 +184,18 @@ export default async function ParkingVsDropOffPage({ params }: { params: Promise
             <h2 className="text-h2 font-semibold text-ink">Short trip or long stay — which is cheaper, by the day?</h2>
             <p className="text-sm text-ink-muted">{tripLength.verdict}</p>
           </div>
-          <div className="overflow-x-auto rounded-lg border border-ink/10">
-            <table className="w-full min-w-[560px] border-collapse text-sm">
-              <caption className="sr-only">
-                {airport.name}: drive-up gate parking cost per day by trip length, and where pre-booking beats it.
-              </caption>
+          {/* Scroll affordance (mobile UX audit 2026-08-01): the table is wider than a 390px viewport
+              with no visual cue that more columns exist off-screen. An edge fade + explicit "Swipe"
+              hint fixes that; both are decorative on desktop where the table already fits. */}
+          <p className="text-xs font-medium text-ink-muted sm:hidden" aria-hidden="true">
+            Swipe to see all columns →
+          </p>
+          <div className="relative">
+            <div className="overflow-x-auto rounded-lg border border-ink/10">
+              <table className="w-full min-w-[560px] border-collapse text-sm">
+                <caption className="sr-only">
+                  {airport.name}: drive-up gate parking cost per day by trip length, and where pre-booking beats it.
+                </caption>
               <thead>
                 <tr className="border-b border-ink/15 bg-surface-muted text-left">
                   <th scope="col" className="px-3 py-2 font-semibold text-ink">Trip length</th>
@@ -204,7 +231,14 @@ export default async function ParkingVsDropOffPage({ params }: { params: Promise
                   </tr>
                 ))}
               </tbody>
-            </table>
+              </table>
+            </div>
+            {/* Edge fade: signals more columns sit off-screen to the right. Pointer-events-none so it
+                never blocks the scroll gesture; hidden on desktop where the table already fits. */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-y-0 right-0 w-8 rounded-r-lg bg-gradient-to-l from-surface to-transparent sm:hidden"
+            />
           </div>
           <p className="text-xs text-ink-muted">
             Gate prices are {airport.name}&apos;s official drive-up tariff at each duration. A pre-book figure is
@@ -270,6 +304,8 @@ export default async function ParkingVsDropOffPage({ params }: { params: Promise
         ]}
         method="The drop-off fee and the drive-up gate parking price are read from the airport's own official pages and re-verified on the dates shown. The per-day rate and minutes-equivalence are exact arithmetic from those two figures. We never republish unverified prices."
       />
+
+      <StickyBookingBar airportName={airport.name} targetId="mf-merchant-block" />
     </article>
   );
 }

@@ -5,10 +5,12 @@ import { isPublicTransportAlt, loadAirports, loadDropOffDataset, newsForAirport,
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, faqPageLd, howToLd, JsonLd, speakableLd } from "@mathfamily/geo";
 import { AnswerLead, AnswerPassage, Callout, CaveatChip, EmailCaptureSlot, FaqAccordion, FreshnessBadge, LatestUpdates, MiniAnswerBar, PageHeading, SourceCitation, SourcesBlock } from "@mathfamily/ui";
+import { BookingBridge } from "@/components/booking-bridge";
 import { HolidayExtrasCard } from "@/components/holiday-extras-card";
 import { freshnessDelta } from "@/lib/content";
 import { avoidAnswer, avoidLeadFacts, buildAvoidFaqs, buildAvoidSteps, qualifiesForAvoidPage } from "@/lib/avoid-content";
 import { airportHasParkingVsDropOff } from "@/lib/parking-vs-drop-off-content";
+import { resolveAllParkingMerchants } from "@/lib/partners";
 
 export const dynamicParams = false;
 
@@ -52,6 +54,9 @@ export default async function AvoidDropOffPage({ params }: { params: Promise<{ a
   const faqs = buildAvoidFaqs(record, airport.name);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
   const pageUrl = `${siteUrl}/avoid-drop-off-charge/${airport.slug}`;
+  // Same surface as the HolidayExtrasCard rendered further down this page — the bridge's count
+  // always matches what's actually in the merchant block it links to.
+  const bridgeMerchantCount = resolveAllParkingMerchants(airport.slug, "dropoff").length;
 
   const latestNews = newsForAirport(airport.slug, 1)[0];
   const pageVerifiedAt = latestNews && latestNews.verifiedAt > record.verifiedAt ? latestNews.verifiedAt : record.verifiedAt;
@@ -107,6 +112,17 @@ export default async function AvoidDropOffPage({ params }: { params: Promise<{ a
       <Callout variant="free" title={`The free alternative: ${alt.name}`}>
         {isPublicTransportAlt(alt) ? <>{alt.details}</> : <>Free for {alt.minutesFree} minutes. {alt.details}</>}
       </Callout>
+
+      {/* Bridge right after the main answer (CRO board rec #3/#6): someone reading "how to avoid the
+          charge" is one step from "book parking instead" — a steady real-GB-traffic template that
+          previously dead-ended into the step-by-step guide with no onward booking path. */}
+      {bridgeMerchantCount > 0 ? (
+        <BookingBridge
+          text="If you're leaving the car for the trip rather than just dropping off, it's worth comparing pre-booked parking too."
+          href="#mf-merchant-block"
+          linkLabel={`Compare ${bridgeMerchantCount} provider${bridgeMerchantCount === 1 ? "" : "s"} below ↓`}
+        />
+      ) : null}
 
       <section className="mf-reveal space-y-4">
         <h2 className="mf-underline-grow text-xl font-semibold text-ink">Step by step</h2>
