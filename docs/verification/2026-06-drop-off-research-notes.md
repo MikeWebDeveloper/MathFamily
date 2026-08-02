@@ -418,3 +418,59 @@ max stay and payment deadline were re-confirmed today.
 > wording** if you want belt-and-braces before merging. Separately, the £5/15-min Rapid
 > Drop-off fee should be re-sourced from the official Rapid Drop-off T&C page on the next
 > sweep, since the main page no longer lists it.
+
+---
+
+## 2026-08-02 — daily sweep (drop-off)
+
+Scope: every drop-off record with `verifiedAt` older than 46 days, plus the standing
+hard-blocked target `drop-off:london-city`, plus `drop-off:luton` (flagged changed by the
+news watchdog). RoamMath datasets deliberately out of scope for the daily run.
+
+**Re-confirmed unchanged (verifiedAt → 2026-08-02):**
+
+| Airport | What the official page says today |
+| --- | --- |
+| Heathrow | £7 per entry to a terminal drop-off zone; £80 PC reduced to £40 within 14 days |
+| Gatwick | £10 for 10 min, £1/min after, max daily £30, max stay 30 min |
+| Luton | £7 up to 10 min, £1/min after, max 30 min; £95 enforcement reduced to £55 within 14 days; Long Stay free 2 hrs |
+| Aberdeen | £7.00 up to 15 min, £1.00/min thereafter, flat £50 after 30 min |
+| Southampton | £7 for 20 min in the Pick Up & Drop Off area; £80 enforcement reduced to £50 within 14 days |
+| Bournemouth | Express Drop-off/Pick-up: up to 30 min £8.00, 30–60 min £15.00 |
+| Norwich | Car Park 1 (Short Stay): up to 20 min £8.00, 20–60 min £15.00 |
+| Inverness | Free Drop Off area free for up to 15 min, 5-min walk, no return within one hour |
+| Teesside | 0–10 min £2.50, 10–60 min £5.00, £7 per hour thereafter; free 2 hrs with £5 terminal spend |
+| Bristol | £8.50 / £10.50 / £13.00 / £30.00 / £60.00 bands; Red Route £100 reduced to £60; free 1-hr Waiting Zone |
+
+Bristol's live site is bot-blocked (403 direct, Cloudflare interstitial via `r.jina.ai`);
+the figures above were read from the **official Bristol page captured in the Wayback
+Machine on 2026-07-03**, which post-dates the record's previous 2026-06-10 verification.
+
+**Corrections applied:**
+
+- **Manchester** — drop-off bands increased. Official pick-up-and-drop-off page now reads
+  "5 minutes £5.50 / 10 minutes £6.50 / Up to 30 minutes £25". Was £5.00 / £6.40.
+  `bands[0]` 500 → 550, `bands[1]` 640 → 650, `feeSummary` reworded.
+- **Exeter** — the P1 continuation tariff in `penaltyNotes` was stale. The official
+  car-parking page's "Car park tariff (not booked)" table now reads P1 0–15 min £6.00,
+  15–30 min £15.00, 30–60 min £15.00, 1–4 h £20.00. Note corrected from
+  "15–60 min £7.50, then higher bands" to "15–60 min £15.00, then 1–4 h £20.00".
+  The £6 headline fee, the £20/day pre-booked overstay rate, the Blue Badge 4-hours-for-the-
+  15-minute-rate concession and the P4 free-30-minutes alternative (then £2.00 for 30–60 min)
+  all re-confirmed unchanged on the same table.
+- **London City** — the standing hard-blocked target **was readable today** via
+  `r.jina.ai` (direct fetch still 403s). Charges confirmed: 0–5 min £8.00, "£1 per minute
+  thereafter", maximum stay 10 minutes, ANPR/barrierless, pay by midnight the following day —
+  all matching the stored record. `blueBadgePolicy` tightened to the page's actual wording
+  (register for **10 minutes free in the Drop-off area**; Main Stay gives 1 hour free) —
+  the previous wording implied an open-ended exemption. `verifiedAt` 2026-06-22 → 2026-08-02.
+
+**Left untouched — could not be verified today (values and old `verifiedAt` retained):**
+
+- **Birmingham** (`2026-06-10`) — birminghamairport.co.uk serves a Cloudflare
+  "Performing security verification" CAPTCHA to every transport; CAPTCHAs are not bypassed.
+  The only Wayback capture of the drop-off page is 2025-09-06, older than the record.
+- **Newcastle** (`2026-06-10`) — 403 to direct and jina; newest Wayback capture 2025-12-26,
+  older than the record.
+- **Belfast City** (`2026-06-10`) — 403 to direct and jina; newest Wayback capture
+  2026-02-14, older than the record.
