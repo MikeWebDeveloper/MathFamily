@@ -418,3 +418,94 @@ max stay and payment deadline were re-confirmed today.
 > wording** if you want belt-and-braces before merging. Separately, the £5/15-min Rapid
 > Drop-off fee should be re-sourced from the official Rapid Drop-off T&C page on the next
 > sweep, since the main page no longer lists it.
+
+---
+
+## 2026-08-02 — scheduled sweep (drop-off, parking, lounges)
+
+Scope: every record with `verifiedAt` older than 46 days (cut-off 2026-06-17), plus the
+standing hard-blocked targets. Sources read 2026-08-02 from UK egress.
+
+### Drop-off — 15 re-verified, 3 changed
+
+| Airport | Field | Old | New | Source |
+|---|---|---|---|---|
+| manchester | bands 5 min / 10 min | £5.00 / £6.40 | **£5.50 / £6.50** | manchesterairport.co.uk/parking/pick-up-and-drop-off/ |
+| birmingham | `penaltyPence` | `null` | **10000** (£100, £50 within 14 days) | birminghamairport.co.uk/parking/drop-off-and-pick-up/ |
+| exeter | `penaltyNotes` P1 15–60 min | £7.50 | **£15.00** | exeter-airport.co.uk/car-parking/ |
+
+Re-confirmed **unchanged**: heathrow (£7; £80/£40 PCN), gatwick (£10/10 min, £1/min, £30 max,
+30 min max), luton (£7/10 min, £1/min, £95/£55), bristol (all five bands + £100/£60 Red Route
++ 40 min Blue Badge @ £8.50), newcastle (all five Express bands + 90 min free Callerton
+Parkway), aberdeen (£7/15 min, £1/min, £50 flat), belfast-city (£4 min/10 min; Long Stay
+10 min free; £8 re-entry), southampton (£7/20 min, £80/£50, no free alternative — the airport
+states there is none since the Long Stay closure), norwich (£8/20 min, £15 20–60 min),
+inverness (15 min free, Blue Badge 20 min free), teesside (£2.50/£5/£7-per-hour, 2 h free with
+£5 terminal spend), bournemouth (£8/30 min, £15 30–60 min, Blue Badge 4 h at the 30-min rate).
+
+Manchester now publishes prices for **Terminal 2 only** (T3 tab renders no tariff); the record
+tracks the published T2 figures. Two independent fetches of the official page agreed.
+
+Birmingham's site Cloudflare-challenges every plain HTTP transport (WebFetch, `r.jina.ai`
+including `X-Engine: browser`, and a browser-UA `curl` all get the managed challenge; the only
+Wayback capture is 2025-09-06, older than the data it would be used to verify). It was read
+successfully via a real browser session on 2026-08-02 — that is the source for both the
+drop-off penalty above and the Car Park 7 parking tariff below.
+
+### Parking — 9 re-verified, 5 products changed
+
+| Airport | Product | Old | New | Basis |
+|---|---|---|---|---|
+| manchester | gate (Turn Up & Park) | £61.40/24h → 3/7/14 = £184.20/£429.80/£859.60 | **£63.40/24h → £190.20/£443.80/£887.60** | flat official per-24h rate × days |
+| manchester | prebook JetParks 8d | £59.99 | **£54.99** | "Prices from £54.99 (8 day stay in November 2026)" on the JetParks page |
+| luton | gate (Long Stay on-the-day) | £30.00/day → £90/£210/£420 | **£35.00/day → £105/£245/£490** | official first day £35 + £35 each additional day |
+| birmingham | gate (Car Park 7) | £49 + £42/day → £133/£301/£595 | **£51 + £44/day → £139/£315/£623** | official turn-up table, live page |
+| stansted | prebook Long Stay 8d | £71.99 | **£59.99** | published "from" price (sample dates Nov 2026) |
+
+Re-confirmed **unchanged**: heathrow Park & Ride (£46.80 + £37.40/day), gatwick Long Stay
+roll-up (£38 + £32/day), edinburgh Long Stay drive-up (£60 for 3–24 h, then £40/day),
+bristol Silver Zone gate (3 d £100, 4 d £135, 5 d £170, +£35/day), glasgow Long Stay turn-up
+(1 h free, 2 h £15, 1 d £50, 2 d £65, 3 d £80, +£15/day), stansted Mid Stay Turn Up & Park
+(£48/24h; Short Stay £70/24h).
+
+Two pre-existing FLAGs in the dataset were **resolved** by this sweep: Luton's "first-day rate
+not separately published" (the page now publishes it, and it equals the additional-day rate)
+and Birmingham's "figures from a 2025-09-06 Wayback capture — re-confirm against the live 2026
+tariff" (re-read live today).
+
+### Lounges — 10 re-verified, 8 prices changed; Priority Pass unchanged
+
+| Airport | Lounge | Old | New |
+|---|---|---|---|
+| gatwick | No1 Lounges, Gatwick North | £38.00 | **£40.00** |
+| manchester | Escape Lounge T2 | £41.99 | **£43.99** |
+| manchester | Escape Lounge T3 | £36.99 | **£32.99** |
+| stansted | Essence by Escape | £25.99 | **£28.99** |
+| edinburgh | Escape Lounge | £38.99 | **£46.49** |
+| bristol | Escape Lounge | £41.99 | **£43.99** |
+| glasgow | UpperDeck Lounge | £32.00 | **£27.00** (adult from-price) |
+| birmingham | Aspire Lounge → **Aspire Lounge, South** | £20.99 | **£42.99** (renamed on the airport site) |
+| birmingham | No1 Lounge | `null` (unpublished) | **£38.00** (airport now publishes a from-price) |
+
+Re-confirmed unchanged: heathrow Club Aspire T5 £40, gatwick Club Aspire South £34, luton
+MyLounge £37.99, newcastle Aspire £46, bristol Essence £35. Priority Pass re-confirmed
+unchanged on all three tiers (£69 / £229 + 10 included visits / £419) and the £24 per-visit fee.
+
+### Not verified this run (values left untouched)
+
+- **Heathrow T5 Plaza Premium (£47.50)** — the operator's Heathrow T5 page 404s. Flagged in
+  the record's own `notes` so the staleness is visible in the data, not only here.
+- **Glasgow Long Stay pre-book "from" price (£49.99)** — rendered client-side by
+  `book.glasgowairport.com`; `snapshotDate` deliberately left at 2026-06-10. The Glasgow
+  **gate** tariff was re-confirmed.
+- **Birmingham Blue Badge Premium Set Down wording** names "NCP"; the airport's current pages
+  name **APCOA** as the operator. Not changed (the specific Blue Badge concession page 404s) —
+  worth a human check.
+
+### Standing hard-blocked targets
+
+- **Newcastle parking** — no longer blocked: the record was added by the 2026-06-27 sweep and
+  is present in `parking-tariffs.json` (not stale, so untouched here).
+- **London City drop-off** — carries real published values (`verifiedAt` 2026-06-22, inside the
+  46-day window, so out of scope for this sweep). Re-fetching it today returned HTTP 403; not
+  re-verified and **not** re-dated.

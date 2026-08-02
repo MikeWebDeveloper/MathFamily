@@ -271,3 +271,80 @@ Scheduled weekly sweep. **Method:** each Airalo country page (`airalo.com/<count
 **Holafly + Saily bundles: NOT re-verified this sweep (NEEDS-HUMAN).** They are "(converted)" values sourced from holafly.com / saily.com (not airalo.com, the record's `sourceUrl`) and require live FX conversion. Re-quoting them reliably is out of scope for an unattended run. Their snapshotDates remain 2026-06-10 (a few older).
 
 **ParkMath (live brand) staleness check:** nothing older than 46 days — every drop-off, parking, lounge, priority-pass and news record was verified between 2026-06-10 and 2026-06-27. The two standing hard-blocked targets are already resolved: London City drop-off has a real record (verified 2026-06-22) and Newcastle Long Stay parking was added (verified 2026-06-27). No ParkMath changes this sweep.
+
+---
+
+## 2026-08-02 — scheduled sweep (eSIM, roaming)
+
+### FX
+
+**1 USD = £0.74508**, from the ECB euro reference rates published **2026-07-31** (the latest
+publication; ECB does not publish at weekends): EUR→USD 1.1485, EUR→GBP 0.85573, so
+USD→GBP = 0.85573 / 1.1485 = 0.745085. Cross-checked against api.frankfurter.dev (0.74508).
+The previous sweep used 1 USD = £0.747, so part of every converted move below is FX drift
+rather than a merchant price change. Airalo is **not** converted — see below.
+
+### eSIM — all 40 records re-quoted, 68 of 95 bundle prices changed
+
+Method, and the two traps this dataset has hit before:
+
+1. **Airalo geo-prices by request IP.** All 40 Airalo country pages were fetched by direct
+   UK-egress `curl` (never through `r.jina.ai`, whose US egress returns USD). Every one of the
+   40 payloads carried `price.currency.code = "GBP"`, so Airalo figures are its own GBP list
+   prices and are stored unconverted, with no "(converted)" suffix.
+2. **Prices come from `__NUXT_DATA__`, not from a prose read of the page.** The payload is a
+   reference graph: an object field holds an *index* into a flat array. It must be
+   dereferenced **exactly once** and then recursed only if the result is a container —
+   dereferencing a primitive again re-reads it as an index and silently corrupts the row
+   (`price.minor_amount` 350 would be re-read as `flat[350]`, a random string). Prices were
+   taken from `price.minor_amount` (already in minor units) and sanity-checked against
+   `price.formatted`. All 40 pages parsed; 0 unmatched tiers.
+
+Where a country sells the same tier under more than one operator, the **cheapest** was taken,
+matching the existing convention.
+
+- **Airalo: 13 of 40 changed**, all small decreases — spain £14.00→£13.50, netherlands
+  £15.50→£14.50, switzerland £15.00→£14.00, poland £15.50→£14.50, malta/turkey £15.00→£14.50,
+  mexico £14.00→£13.50, new-zealand £15.00→£14.50, egypt £23.00→£22.00, norway £15.00→£14.50,
+  hungary/romania £15.00→£14.50, montenegro £22.00→£21.50.
+- **Holafly: 40 of 40 changed.** Holafly server-renders USD only; the day tab and its price
+  interleave in document order, which is how each tier was paired. Notable real moves:
+  spain/italy $78.90→**$64.50**, morocco $74.90→**$84.90**, egypt $94.20→**$95.90**. UAE still
+  has no 30-day tier (the record correctly tracks its 15-day tier).
+- **Saily: 15 of 15 changed**, all from FX drift alone — every underlying USD price was
+  unchanged (e.g. spain 5 GB/30 d still $9.99). Saily 403s a direct fetch; reached via
+  `r.jina.ai`, which is safe here because Saily quotes USD to every egress and is converted.
+
+Every bundle's `snapshotDate` was set to 2026-08-02 (all were re-quoted, including the 27
+Airalo bundles whose price was unchanged).
+
+### Roaming — o2 and three re-confirmed unchanged; vodafone left stale
+
+- **three** — Go Roam in Europe **£2.75/day** and Around the World **£8/day** for plans
+  joined/upgraded on or after 18 Dec 2025 (the rate the dataset tracks), **12 GB** fair-use
+  cap, Republic of Ireland and Isle of Man excluded from the daily charge. All match.
+- **o2** — Europe Zone inclusive with no daily charge; the O2 Travel Bolt On covering the same
+  75 non-Europe destinations is **£7/day**. Both match.
+- **vodafone** — the price guide PDF re-confirmed the zone structure (A/B/C/D) and the
+  **25 GB** roaming fair-use cap, but the Zone B/C/D daily rates live in a table whose cells
+  the PDF text layer does not expose. The £2.75 / £8 figures were therefore **not** numerically
+  re-read, so `vodafone`'s `verifiedAt` was deliberately left at 2026-06-10 and it will be
+  picked up again by the next sweep.
+
+### Baggage — NOT re-verified this run
+
+All 12 airline sources resisted every transport on the ladder: ryanair and easyjet render the
+fee tables client-side (`r.jina.ai` returns the surrounding prose and a bag of unlabelled `£`
+figures that cannot be safely mapped to fee items), tui returns 403, britishairways serves a
+"high demand" holding page, jet2 times out, and a browser navigation to easyjet timed out after
+300 s. Per the no-fabrication rule, **no baggage value was touched and no `verifiedAt` was
+bumped** — the records stay visibly stale rather than falsely fresh.
+
+Two things were incidentally confirmed from Ryanair's prose (they match the dataset already):
+10 kg check-in bag at the airport bag drop is £35.99–£40, and the 20 kg check-in bag at bag drop
+is £59.99.
+
+The EUR/USD-converted baggage figures (wizz-air EUR 13/kg, vueling's EUR ranges, norwegian
+USD 15/kg) are stored at the older 1 EUR = 0.864 / 1 USD = 0.74 rates. They were left alone:
+re-converting at today's ECB rate without first re-confirming that the underlying published
+EUR/USD figures still hold would produce a number that looks fresh but was never verified.
