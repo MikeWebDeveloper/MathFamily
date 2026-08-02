@@ -59,15 +59,15 @@
     {
       "airportSlug": "manchester",
       "isFree": false,
-      "feeSummary": "£5 for up to 5 minutes, £6.40 up to 10 minutes, £25 up to 30 minutes",
+      "feeSummary": "£5.50 for up to 5 minutes, £6.50 up to 10 minutes, £25 up to 30 minutes",
       "bands": [
         {
           "upToMinutes": 5,
-          "totalPence": 500
+          "totalPence": 550
         },
         {
           "upToMinutes": 10,
-          "totalPence": 640
+          "totalPence": 650
         },
         {
           "upToMinutes": 30,
@@ -86,9 +86,9 @@
         "minutesFree": 30,
         "details": "Free drop-off area a little further from the terminals, with a free shuttle bus running 24/7 (journey takes a few minutes)"
       },
-      "priorYearFeePence": null,
+      "priorYearFeePence": 500,
       "sourceUrl": "https://www.manchesterairport.co.uk/parking/pick-up-and-drop-off/",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-08-02"
     },
     {
       "airportSlug": "stansted",
