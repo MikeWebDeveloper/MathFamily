@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { loadAirports, loadParkingDataset, type Airport, type ParkingRecord } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
-import { breadcrumbLd, faqPageLd, JsonLd } from "@mathfamily/geo";
+import { breadcrumbLd, faqPageLd, JsonLd, offerLd, speakableLd } from "@mathfamily/geo";
 import { AnswerLead, Callout, FaqAccordion, FeeGrid, FreshnessBadge, SourcesBlock } from "@mathfamily/ui";
 import { BookingOptions } from "@/components/booking-options";
 import { DURATION_SLUGS, buildParkingFaqs, durationFromSlug, parkingPageModel } from "@/lib/parking-content";
@@ -52,6 +52,10 @@ export default async function DurationPage({
   const m = parkingPageModel(record, days);
   const faqs = buildParkingFaqs(record, airport.name, days);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const pageUrl = `${siteUrl}/airport-parking/${airport.slug}/${duration}`;
+  const priceValidUntil = new Date(new Date(`${record.verifiedAt}T00:00:00Z`).getTime() + 60 * 86_400_000)
+    .toISOString()
+    .slice(0, 10);
 
   return (
     <article className="space-y-8">
@@ -61,9 +65,26 @@ export default async function DurationPage({
           { name: "Home", url: siteUrl },
           { name: "Airport parking", url: `${siteUrl}/airport-parking` },
           { name: airport.name, url: `${siteUrl}/airport-parking/${airport.slug}` },
-          { name: `${days} days`, url: `${siteUrl}/airport-parking/${airport.slug}/${duration}` }
+          { name: `${days} days`, url: pageUrl }
         ])}
       />
+      <JsonLd data={speakableLd({ url: pageUrl })} />
+      {/* Single verified price for this exact duration — genuine Product/Offer, not the
+          AggregateOffer used on the parent hub (which spans all durations). Only emitted when a
+          real cheapest price exists for this duration; never a fabricated figure. */}
+      {m.cheapest ? (
+        <JsonLd
+          data={offerLd({
+            name: `${days}-day parking at ${airport.name}`,
+            description: `${m.cheapest.name} parking for ${days} days at ${airport.name}, verified ${record.verifiedAt}.`,
+            image: `${siteUrl}/airport-parking/${airport.slug}/opengraph-image`,
+            url: pageUrl,
+            pricePence: m.cheapest.totalPence,
+            priceValidUntil,
+            brand: airport.name
+          })}
+        />
+      ) : null}
 
       <header className="space-y-3">
         <h1 className="text-3xl font-bold text-ink">
