@@ -418,3 +418,45 @@ max stay and payment deadline were re-confirmed today.
 > wording** if you want belt-and-braces before merging. Separately, the £5/15-min Rapid
 > Drop-off fee should be re-sourced from the official Rapid Drop-off T&C page on the next
 > sweep, since the main page no longer lists it.
+
+---
+
+## 2026-08-03 — daily ParkMath freshness sweep (drop-off fees)
+
+**No drop-off value changed anywhere.** 15 records re-verified against the airports' own pages;
+every band, max-stay, per-minute rate, penalty and free-alternative matched what was already
+stored. Only `verifiedAt` moved.
+
+Re-confirmed verbatim today (2026-08-03):
+
+| Record | Confirmed reading |
+| --- | --- |
+| `drop-off:heathrow` | £7 each time a vehicle enters a terminal drop-off zone; pay by midnight the following day |
+| `drop-off:gatwick` | £10 for 10 minutes, £1 each additional minute, max daily charge £30, max stay 30 minutes; Blue Badge exempt; Long Stay free 2 hours |
+| `drop-off:luton` | £7 up to 10 min, £1/min thereafter, max stay 30 min; £95 enforcement reduced to £55 within 14 days; pay to midnight the following day; no Blue Badge concession in the main area; Long Stay free 2 hours (10-min shuttle every 20 min) |
+| `drop-off:bristol` | £8.50 / £10.50 / £13.00 / £30.00 / £60.00 across 10/20/40/60/120 min, max stay 2 hours; Waiting Zone 1 hour free |
+| `drop-off:newcastle` | Express £6 / £12 / £16 / £20 / £28 across 10/30/45/60/120 min; Callerton Parkway Waiting Zone free 90 min |
+| `drop-off:london-city` | 0-5 minutes £8.00, £1 per minute thereafter, maximum stay 10 minutes |
+| `drop-off:aberdeen` | Drop Off 15 minutes £7.00, £1.00 per minute thereafter, flat £50.00 after 30 mins; long stay free 1 hour |
+| `drop-off:belfast-city` | Express minimum £4.00 for the first ten minutes; 10 minutes free in the Long Stay car park |
+| `drop-off:southampton` | £7 for 20 minutes; £80 enforcement reduced to £50 within 14 days; **no free option** (page states this explicitly, due to the Long Stay car park closure) |
+| `drop-off:exeter` | £6 for stays up to 15 minutes in Car Park P1; up to 30 mins free in Car Park P4 |
+| `drop-off:bournemouth` | Express Drop-off/Pick-up up to 30 minutes £8.00, 30-60 minutes £15.00 |
+| `drop-off:norwich` | Up to 20 minutes £8.00 in Car Park 1 (Short Stay) |
+| `drop-off:inverness` | Free for up to 15 minutes in the designated drop off area |
+| `drop-off:teesside` | 0-10 minutes £2.50, 10 to 60 minutes £5.00, £7 per hour thereafter; 2 hours free with a £5 minimum terminal spend |
+
+**`drop-off:london-city` is a standing hard-blocked target** and it *was* reachable today via the
+jina reader rung — the £8.00 / 5 min / £1-per-minute / 10-min-max figures are confirmed against the
+official page, not carried forward. Direct fetch still 403s.
+
+**`drop-off:birmingham`** ("free for up to 10 minutes") could not be read live — the domain is
+CAPTCHA-walled to all transports. Confirmed instead from the Wayback capture dated 2026-06-30
+("Drop Off car park — 0 - 10 minutes Free"), so its `verifiedAt` is stamped **2026-06-30**, not
+today.
+
+### Item for human attention
+`drop-off:heathrow.freeAlternative.minutesFree` is stored as **30**, but the official Park & Ride
+table reads "0 - 29 mins Free" and "30 mins - 1 hr 59 mins £9.40" — i.e. at exactly 30 minutes you
+pay. Left unchanged this run because it is a modelling/wording choice rather than a stale price,
+but "30 minutes free" arguably overstates it by a minute. Flagged for a decision.
