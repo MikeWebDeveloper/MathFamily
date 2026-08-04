@@ -418,3 +418,44 @@ max stay and payment deadline were re-confirmed today.
 > wording** if you want belt-and-braces before merging. Separately, the £5/15-min Rapid
 > Drop-off fee should be re-sourced from the official Rapid Drop-off T&C page on the next
 > sweep, since the main page no longer lists it.
+
+---
+
+## 2026-08-04 — daily ParkMath freshness sweep (drop-off)
+
+Scope: the 14 drop-off records still carrying `verifiedAt: 2026-06-10` on `main`.
+Transport: direct fetch with a desktop UA; `r.jina.ai` fallback for Cloudflare-fronted sites.
+
+**Re-confirmed unchanged (13)** — headline fee, bands and penalty re-read on the official page today:
+
+| Airport | Confirmed on the official page |
+| --- | --- |
+| Heathrow | £7 per entry to a terminal drop-off zone; £80 PC reduced to £40 within 14 days |
+| Gatwick | £10 for 10 min, £1 per additional minute up to 20 min, max daily £30, max stay 30 min |
+| Luton | £7 for 10 min then £1/min; enforcement reduced to £55 |
+| Bristol | £8.50 / £10.50 / £13.00 / £30.00 / £60.00 ladder, max stay 2 h; Blue Badge 40 min for £8.50 |
+| Newcastle | Express £6 / £12 / £16 / £20 / £28; Callerton Parkway waiting zone free 90 min |
+| Aberdeen | £7 for 15 min, £1/min thereafter, flat £50 beyond 30 min |
+| Belfast City | Express minimum £4.00 for the first 10 min; 10 min free in Long Stay |
+| Southampton | £7 for 20 min; enforcement reduced to £50 |
+| Bournemouth | Express drop-off £8 up to 30 min, £15 for 30–60 min; Blue Badge 4 h at the 30-min rate |
+| Norwich | CP1 £8 up to 20 min, £15 for 20–60 min; overstay £30/day |
+| Inverness | Free 15 min in the Short Stay free drop-off area, no return within 1 h |
+| Teesside | £2.50 up to 10 min, £5 up to 1 h, £7/h thereafter |
+| Exeter | CP1 £6 up to 15 min; CP4 free 30 min then £2 for 30–60 min; overstay £20/day |
+
+**Value changed (1)**
+
+- **Exeter (EXT)** — `penaltyNotes` said "15–60 min £7.50". The official Car Park Tariff
+  (not booked) table now reads **15–30 minutes £15.00** and **30–60 minutes £15.00** for
+  Car Park P1. The £7.50 figure no longer appears anywhere on the page. Corrected to
+  "15–30 min £15.00, 30–60 min £15.00, then higher bands". The headline £6 up-to-15-minutes
+  rate is unchanged. Source: <https://exeter-airport.co.uk/car-parking/>.
+
+**Not verifiable today (1)**
+
+- **Birmingham (BHX)** — `birminghamairport.co.uk` serves a Cloudflare bot-verification
+  interstitial to direct fetch *and* to `r.jina.ai` ("Performing security verification").
+  The newest Wayback capture of `/parking/drop-off-and-pick-up/` is **2025-09-06**, ~11 months
+  old, which is not a citable source for a current price. **Existing value kept unchanged and
+  `verifiedAt` deliberately left at 2026-06-10** so the record keeps surfacing as stale.
