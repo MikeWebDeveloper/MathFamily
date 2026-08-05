@@ -418,3 +418,57 @@ max stay and payment deadline were re-confirmed today.
 > wording** if you want belt-and-braces before merging. Separately, the £5/15-min Rapid
 > Drop-off fee should be re-sourced from the official Rapid Drop-off T&C page on the next
 > sweep, since the main page no longer lists it.
+
+---
+
+## 2026-08-05 — daily ParkMath sweep (drop-off fees)
+
+Scope: the 14 drop-off records whose `verifiedAt` was older than 46 days, plus the standing
+hard-blocked target `drop-off:london-city`, plus `drop-off:luton` (flagged by the news watchdog
+as a changed page).
+
+**All 15 headline fees confirmed unchanged.** No drop-off price moved this run.
+
+Confirmed verbatim: heathrow £7 per entry (£80 PCN, £40 within 14 days); gatwick £10/10 min then
+£1/min, £30 max charge, 30 min max; birmingham free first 10 min; bristol £8.50/10 min through the
+five-band ladder to £60/2h; newcastle Express £6/10 min through £28/2h; aberdeen £7/15 min then
+£1/min, £50 after 30 min; belfast-city £4 minimum first 10 min; southampton £7/20 min (£80, £50
+within 14 days); exeter £6/15 min in P1 with P4 free for 30 min; bournemouth £8/30 min, £15/60 min;
+norwich £8/20 min; inverness free 15 min (dual-sourced against the official HIAL tariff PDF);
+teesside £2.50/10 min, £5/60 min; luton £7/10 min then £1/min, 30 min max, £95 enforcement reduced
+to £55 within 14 days.
+
+**Changed:**
+
+- **london-city** — the hard-blocked target came through on the jina rung this time. The fee
+  structure is confirmed exactly as stored (£8 for 0-5 min, £1/min thereafter, 10 min max, pay by
+  midnight the day after). But the official FAQ now **publishes a penalty amount** where the record
+  previously asserted none was available: `penaltyPence` **null → 10000**. Verbatim: "A £100.00
+  enforcement charge is payable by drivers who stay past 10 minutes. This charge is reduced to
+  £60.00 if paid within 14 days. This will be strictly enforced with CCTV cameras."
+  `penaltyNotes` rewritten accordingly (the old text explicitly claimed "no amount is confirmed on
+  the official page", which the source now contradicts).
+- **bournemouth** — no price change, two accuracy fixes. `maxStayMinutes` **null → 240**, from the
+  page's own "Express Drop-off /Pick-up area parking: maximum stay 4 hours." And the `feeSummary`
+  label "Car Park 1 Drop Off" was misleading: the page now states "Car Park 1 (CP1), Car Park 1
+  Premium (CP1P) and Car Park 3 (CP3) are all pre-book, pre-paid long stay car parks only" — CP1 is
+  the entry route, not the facility. Renamed to "Express Drop-off/Pick-up Area, entry via Car Park 1".
+- **southampton** — no price change; dropped the unsourced words "ground floor of the" from the
+  `feeSummary`. The page says only "in the short stay car park".
+
+**Traps avoided, recorded so the next run doesn't fall in:**
+
+- Southampton's page carries a table reading "Up to 20 minutes £10.00 / 60 min £18.00 / 90 min
+  £30.00 / 4 hours £60.00". That sits under **"Information for Bus Operators — Pay With Your
+  Plates"** and is *not* the car drop-off tariff. Do not ingest it.
+- Inverness's official tariff PDF is served from a URL slug ending `-2025` but its own title reads
+  "Inverness Airport Car Parking Tariffs from 1 June 2026". The slug is stale on HIAL's side; the
+  document content is current.
+- Birmingham defeated every fetch rung (WebFetch 403, all three jina variants returned the
+  Cloudflare interstitial, browser-UA curl 403) and needed a real headless browser. This is a live
+  read, not an archive read.
+
+**Transport ladder:** heathrow, gatwick, aberdeen, exeter, norwich, inverness, teesside reachable at
+rung 1. belfast-city, southampton, bournemouth, bristol, newcastle, london-city needed rung 2
+(r.jina.ai). Birmingham needed a live headless browser. No Wayback fallback was used for any
+drop-off record, so every quote above is from the live page as of 2026-08-05.

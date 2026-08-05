@@ -392,3 +392,121 @@ Note: the old placeholder had Prestige at £459 with perVisitPence 0 and Standar
    may move with date and duration.
 4. **Luton** MyLounge replaced Aspire (2024) — the official URL still resolves under the
    `/executive-lounges/aspire-lounge` path; confirm naming if the page slug changes.
+
+---
+
+## 2026-08-05 — daily ParkMath sweep (parking tariffs)
+
+Scope: the 9 parking records whose `verifiedAt` was older than 46 days, plus the standing
+hard-blocked target `parking:newcastle`. Gate/turn-up (drive-up) tariffs only — pre-book
+"from" prices are recorded separately and carry their own `snapshotDate`.
+
+**Confirmed unchanged:** heathrow (£46.80 first 24h + £37.40 thereafter), gatwick (£38 + £32),
+edinburgh (3-24h £60, then £40/day), bristol (Silver Zone 3 Days £100, 4 Days £135, 5 Days £170,
++£35/day — the page carries its own "correct on 30 July 2026" stamp), glasgow (turn-up 1 day £50,
+2 days £65, 3 days £80, +£15/day), newcastle (Long Stay turn-up: 24h £50, 2d £80, 3d £120,
+4d £160, +£40/day).
+
+**Changed:**
+
+- **manchester** — Turn Up & Park (T2 West Multi Storey, signposted P3) moved **£61.40 → £63.40**
+  per 24h, flat. Verbatim: "Up to 24 hours and for each 24 hours thereafter | £63.40". Totals
+  recomputed 3d £190.20 / 7d £443.80 / 14d £887.60. JetParks pre-book "from" moved
+  **£59.99 → £54.99 (8 days)**. Dual-verified (WebFetch + r.jina.ai), then independently
+  re-fetched a third time before the edit landed.
+- **luton** — Long Stay on-the-day moved **£30 → £35** per day. The page now states both legs
+  explicitly ("First day £35.00" / "Each additional day, or part of a day £35.00"), which also
+  retires the old FLAG that no distinct first-day rate was published. Totals recomputed
+  3d £105 / 7d £245 / 14d £490. Mid Stay on-the-day £35 → £40. Dual-verified, then independently
+  re-fetched.
+- **birmingham** — Car Park 7 turn-up moved **£49 → £51** (up to 24h) and **£42 → £44** per day
+  thereafter. Totals recomputed 3d £139 / 7d £315 / 14d £623. **Source caveat:** the live site is
+  still Cloudflare-blocked on every automated rung (WebFetch 403; plain, html and browser-engine
+  jina all returned the security interstitial; browser-UA curl 403). Figures come from the Wayback
+  capture of the official turn-up-prices page dated **2026-06-30** — 9 months newer than the
+  2025-09-06 capture the record was previously pinned to. Flagged for a human live-page check.
+- **stansted** — rates unchanged (Mid Stay £48/24h, Short Stay £70/24h) but the record's
+  `sourceUrl` was **wrong**: it cited `/parking/long-stay/`, which is now marked PRE BOOK ONLY and
+  carries no drive-up tariff at all. Corrected to `/parking/turn-up-and-park/`, where the numbers
+  actually live. That page also supplied the first explicit official confirmation of the flat
+  "every 24-hour period thereafter … same rate" assumption the totals rely on. Pre-book Long Stay
+  "from" moved £71.99 → £59.99 (8 days).
+
+**Newcastle — standing hard-blocked target now resolved.** The record added on 2026-06-27 was
+re-verified today against the official page and every figure matches to the penny. The block was a
+URL problem, not a real block: `/car-parking/` carries no prices; `/car-parking/car-parking-options/`
+does. Note the freshness skill still describes `parking:newcastle` as "currently EXCLUDED from the
+parking dataset" — that is stale; it has been in the dataset and in the coverage test roster since
+June. See NEEDS-HUMAN in the PR.
+
+**Unverifiable, value retained:** glasgow's pre-book "from £49.99 (7-day)". The official Long Stay
+page now renders only "Prices start from £" with the figure injected client-side, and the only
+advance-booking claim in the copy is "save up to 60%". The stored value and its 2026-06-10
+`snapshotDate` were left untouched and the product's notes now carry the flag.
+
+## 2026-08-05 — daily ParkMath sweep (lounges + Priority Pass)
+
+Scope: all 10 lounge records (every one was past the 46-day threshold) and `priority-pass.json`.
+
+**The convention question, and how it was resolved.** Escape Lounges now publishes *two* official
+prices per lounge: a pre-book "From £X per person" on the listing page, and a separately labelled
+"Walk-in price £Y" on each lounge page. These diverge sharply (Bristol £43.99 vs £55.00; Edinburgh
+£46.49 vs £49.00). Our field is *named* `walkInPence`, but every affected record's own `notes` say
+"from-price per adult" — so the stored convention has always been the **pre-book from-price**. This
+sweep applied that convention consistently and now records the walk-in figure alongside it in each
+`notes` string. **The field name remains a mismatch with its documented meaning — see NEEDS-HUMAN.**
+
+**Changed:**
+
+| Record | Lounge | Old | New |
+|---|---|---|---|
+| gatwick | No1 Lounge (North) | £38.00 | **£40.00** |
+| manchester | Escape (T2) | £41.99 | **£43.99** |
+| manchester | Escape (T3) | £36.99 | **£32.99** |
+| stansted | Essence by Escape | £25.99 | **£28.99** |
+| edinburgh | Escape | £38.99 | **£46.49** |
+| bristol | Escape | £41.99 | **£43.99** |
+| birmingham | Aspire | £20.99 | **£42.00** (flagged) |
+| birmingham | No1 Lounge | null | **£40.00**, `priorityPass` false → true |
+
+**Confirmed unchanged:** heathrow Club Aspire T5 £40; gatwick Club Aspire South £34; luton MyLounge
+£37.99; glasgow UpperDeck £32; bristol Essence £35 (the one lounge where from-price and walk-in
+agree); newcastle Aspire £46 (dual-sourced across both no1lounges.com and aspirelounges.com).
+
+**Birmingham Aspire £20.99 → £42.00 is a doubling and is flagged in the record.** It is sourced from
+the operator's own site, which is citable, but the previous £20.99 came from the airport's own
+lounges page — which is now permanently Cloudflare-blocked — so no like-for-like comparison was
+possible. This one wants a human eyeball before merge.
+
+**Two `sourceUrl`s repointed to the operator.** `birminghamairport.co.uk/at-the-airport/lounges/` and
+`glasgowairport.com/.../upperdeck-lounge/` return Cloudflare 403 on *every* rung — WebFetch, all three
+jina modes, browser-UA curl, and headless Chromium. Birmingham's most recent Wayback capture is
+itself an archived 403; the last good one (2024-12-03) is far too stale to cite. A `sourceUrl` no
+routine can ever re-read is a silent freshness blind spot, so both now point at the
+`aspirelounges.com/airports/…` pages that actually verify.
+
+**heathrow's `verifiedAt` was deliberately NOT bumped.** Club Aspire T5 (£40) re-confirmed fine, but
+the Plaza Premium T5 entry did not: the operator publishes a bare "from GBP 49.00" with no stated
+duration, while our record claims a "2-hour walk-in" basis at £47.50 — a different basis, not just a
+different number. The record also cites a **No1 Lounges** URL for a **Plaza Premium** lounge, which is
+the wrong operator entirely. Rather than bump a date over an unresolved record, both the value and
+the 2026-06-10 stamp were left untouched. See NEEDS-HUMAN.
+
+**Glasgow UpperDeck `priorityPass: true` is unsupported.** Neither the operator (which lists it as a
+"Partner Lounge" without any card-scheme language) nor the blocked airport page states Priority Pass
+acceptance; the stored `true` rests only on the prioritypass.com directory, which is neither. Left
+as-is and flagged in the record — absence of a statement is not evidence of non-acceptance.
+
+**Lounges seen but NOT in the dataset:** Manchester T2 "The Executive by Escape Lounges" (from
+£63.99, new), Birmingham "Clubrooms" (from £46), East Midlands Escape (from £37.49).
+
+**priority-pass.json — CONFIRMED unchanged.** Standard £69 / Standard Plus £229 (10 free visits) /
+Prestige £419 (all member visits free), £24 per visit throughout.
+
+> **Geo-pricing trap, recorded so no future run falls in it.** prioritypass.com prices by *Residence*,
+> resolved from the requester's IP — the `/en-GB/` path alone does **not** guarantee GBP. The
+> `r.jina.ai` rung (US egress) served the **USA** product: `US$99 / US$329 / US$469` with `US$35`
+> visit fees. Those are a different product, not a conversion, and must never be written into the
+> dataset. This record can only be re-verified from a UK-egress fetch, and the check should assert on
+> the literal string "United Kingdom" near the plan grid before trusting any number. (Same class of
+> failure as the Airalo eSIM geo/currency trap.)
