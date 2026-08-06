@@ -418,3 +418,51 @@ max stay and payment deadline were re-confirmed today.
 > wording** if you want belt-and-braces before merging. Separately, the £5/15-min Rapid
 > Drop-off fee should be re-sourced from the official Rapid Drop-off T&C page on the next
 > sweep, since the main page no longer lists it.
+
+---
+
+## 2026-08-06 — daily ParkMath sweep (drop-off)
+
+Re-verified every drop-off record whose `verifiedAt` was ≥46 days old (16 records).
+All figures below were read from the airport's own page today.
+
+**Changed — Cardiff (CWL).** The Drop Off Zone tariff has increased and the page has moved.
+Official tariff now reads: *"Up to 10 mins £4.50 / 10 – 20 minutes £6.00 / Up to 1 hour £9.00 /
+Up to 2 hours £20.00 / 2 – 24 hours £50.00 / All subsequent days – £50.00 per day"*, with
+*"This facility is £4.50 for the first 10 minutes"*.
+
+| field | old | new |
+| --- | --- | --- |
+| feeSummary | £3 for up to 10 minutes | £4.50 for up to 10 minutes |
+| band 10 min | £3.00 | £4.50 |
+| band 20 min | £4.00 | £6.00 |
+| band 60 min | £8.00 | £9.00 |
+| band 120 min | £20.00 | £20.00 (unchanged) |
+| penaltyNotes | "…3–24 hours costs £50" | "…2–24 hours costs £50, and £50 per day for all subsequent days" |
+| sourceUrl | /parking-cwl/drop-off-and-pick-up-cwl/ | /car-parking-options/drop-off-and-pick-up-cwl/ |
+
+The old `/parking-cwl/…` path still returns HTTP 200 and is still listed in
+`cardiff-airport.com/sitemap.xml`, but the Vue SPA renders "Page not Found" on it; the live
+nav links to `/car-parking-options/drop-off-and-pick-up-cwl/`. sourceUrl updated accordingly.
+Car Park 2 free-20-minutes alternative re-confirmed, unchanged.
+
+**Confirmed unchanged (15):** Heathrow £7/entry + £80→£40 PCN; Gatwick £10/10 min, £1/min to
+20 min, £30 max, 30 min max stay; Luton £7/10 min then £1/min, £95→£55 past 30 min, Long Stay
+free 2 h; Birmingham free 10 min + no-return-within-1-hour; Glasgow £7/15 min, £1/min, £50
+after 30 min; Bristol £8.50/10.50/13/30/60 ladder, 2 h max, £100→£60 Red Route; Newcastle
+£6/12/16/20/28 Express ladder + 90 min free at Callerton Parkway; Aberdeen £7/15 min then
+£1/min, £50 beyond 30 min, Long Stay free 1 h; Belfast City £4 minimum first 10 min, 10 min
+free in Long Stay, £8 minimum on re-entry within 15 min; Southampton £7/20 min, £80→£50, no
+free option; Exeter £6/15 min in P1, 30 min free in P4, £20/day overstay; Bournemouth £8/30
+min, £15 for 30–60 min; Norwich £8/20 min in CP1, £30/day overstay; Inverness free 15 min;
+Teesside £2.50/10 min, £5/1 h, £7 per hour thereafter, 2 h free with £5 terminal spend.
+
+**Transport notes.** Bristol, Bournemouth, Newcastle and Belfast City are 403 to plain curl but
+readable through `r.jina.ai`. Birmingham and Glasgow defeat both curl and the jina reader
+(Cloudflare / CAPTCHA interstitial) — both were read from the live official page rendered in a
+headless browser. Cardiff is a client-rendered Vue SPA and also required the headless browser.
+
+**Not changed, worth a human look:** Birmingham's `penaltyPence` is still `null` even though the
+official page publishes a £100 Red Route enforcement charge (reduced to £50 within 14 days).
+Bristol and Newcastle encode their Red Route charges differently, so this was left alone rather
+than changed unilaterally.

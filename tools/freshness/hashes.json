@@ -13,11 +13,13 @@
   },
   "https://escapelounges.com/uk/airport-lounges/": {
     "hash": "1985c83b380ca488f18c441871ff34018e5d5aceb47236beb3427de7cf4f0347",
-    "checkedAt": "2026-06-10"
+    "checkedAt": "2026-08-06",
+    "pendingSince": "2026-08-06"
   },
   "https://exeter-airport.co.uk/car-parking/": {
     "hash": "d56d88013047fc02e5576877225fed89614b552b5f0549b22929610de3307b33",
-    "checkedAt": "2026-06-10"
+    "checkedAt": "2026-08-06",
+    "pendingSince": "2026-08-06"
   },
   "https://flywith.virginatlantic.com/gb/en/upgrades-and-extras/optional-service-and-travel-fees.html": {
     "hash": "3460f367a5917fb549c411df6b914de2d2f346442c86f5c09c10f960ad0c77fe",
@@ -29,19 +31,23 @@
   },
   "https://no1lounges.com/lounges-by-location/aspire-at-newcastle/": {
     "hash": "7e29524e0c7535912841b502f48e40b70ee52342b36044bb1e3bfeaaf3ede76e",
-    "checkedAt": "2026-06-10"
+    "checkedAt": "2026-08-06",
+    "pendingSince": "2026-08-06"
   },
   "https://no1lounges.com/lounges-by-location/club-aspire-at-gatwick-south/": {
     "hash": "cfc49835d46e0f490c6449ea2fec619af95131c65b329e8ed30d3c45bedd1770",
-    "checkedAt": "2026-06-10"
+    "checkedAt": "2026-08-06",
+    "pendingSince": "2026-08-06"
   },
   "https://no1lounges.com/lounges-by-location/club-aspire-at-heathrow-t5/": {
     "hash": "48ff317fa8d834336b79097206714f09b598fd2446100f27d33c2d6e2071a5cb",
-    "checkedAt": "2026-06-10"
+    "checkedAt": "2026-08-06",
+    "pendingSince": "2026-08-06"
   },
   "https://www.aberdeenairport.com/transport-and-directions/dropping-off-at-aberdeen-airport/": {
     "hash": "d25d13366984f17b4798a18008f245c7e38b09d9429d51784cb8bd97b5624971",
-    "checkedAt": "2026-06-10"
+    "checkedAt": "2026-08-06",
+    "pendingSince": "2026-08-06"
   },
   "https://www.aerlingus.com/travel-information/baggage-information/checked-baggage/": {
     "hash": "a25d2e2a7475a6133f590b410b4638aa59b939e98d1f790c8a84746e2ffa2559",
@@ -245,7 +251,8 @@
   },
   "https://www.edinburghairport.com/edinburgh-airport-parking/long-stay-parking": {
     "hash": "aca3ad10fda3a3fbdb1b031a3e99fb9bf44ea0bc29fd2d7e52c4576ba3a73311",
-    "checkedAt": "2026-06-10"
+    "checkedAt": "2026-08-06",
+    "pendingSince": "2026-08-06"
   },
   "https://www.emirates.com/english/before-you-fly/baggage/checked-baggage/": {
     "hash": "20f328e842e074b9a60dd5062de670a5213ccaed30de04678f0d77578e5bf241",
@@ -253,23 +260,27 @@
   },
   "https://www.gatwickairport.com/parking/roll-up-car-park-prices.html": {
     "hash": "e52e7432298cf3c6f6c554294bf2c685b727b7309bc733d6670677309701cfcf",
-    "checkedAt": "2026-06-10"
+    "checkedAt": "2026-08-06",
+    "pendingSince": "2026-08-06"
   },
   "https://www.gatwickairport.com/transport-options/drop-off.html": {
     "hash": "28189150a0b63aad8744832ec3fd6605fd62b901c49ec629873dedc54eab345f",
-    "checkedAt": "2026-06-10"
+    "checkedAt": "2026-08-06",
+    "pendingSince": "2026-08-06"
   },
   "https://www.heathrow.com/transport-and-directions/heathrow-parking/heathrow-park-and-ride": {
     "hash": "9358dd3e3f7bc0563ca0a7c28a8da152082d8585d3880d69e76768102ce4bf3a",
-    "checkedAt": "2026-06-10"
+    "checkedAt": "2026-08-06",
+    "pendingSince": "2026-08-06"
   },
   "https://www.heathrow.com/transport-and-directions/terminal-drop-off-charge": {
     "hash": "5e11201748bae8d2839411b25daf62566b059ec4b1da6b841b581f4a2b97de68",
-    "checkedAt": "2026-06-10"
+    "checkedAt": "2026-08-06",
+    "pendingSince": "2026-08-06"
   },
   "https://www.hial.co.uk/inverness-airport/airport-information-8/4": {
     "hash": "eafae1e7f3e35ca02fc31546c4c558d5d9fc6e9ec0c2fc44839e4cb8f78cfb1e",
-    "checkedAt": "2026-06-10"
+    "checkedAt": "2026-08-06"
   },
   "https://www.jet2.com/en/baggage": {
     "hash": "ed0d0d2c3d4a2ecd0a65f9dcb6d8ebeadabd84e4482fe4355678526c9f7f7fa1",
@@ -281,15 +292,18 @@
   },
   "https://www.london-luton.co.uk/executive-lounges/aspire-lounge": {
     "hash": "1657b53329f2128c2c2fafd704da0f46a13ce5e47337be5584626afd9230631b",
-    "checkedAt": "2026-06-10"
+    "checkedAt": "2026-08-06",
+    "pendingSince": "2026-08-06"
   },
   "https://www.london-luton.co.uk/parking-prices": {
     "hash": "7fa324f4cb893beed201e17abe375dda9b4f2b9e7b79bb22481b4428fe30a9ce",
-    "checkedAt": "2026-06-10"
+    "checkedAt": "2026-08-06",
+    "pendingSince": "2026-08-06"
   },
   "https://www.london-luton.co.uk/to-and-from-lla/dropping-off": {
     "hash": "9fbb02c29127aed8d9eccc5387a61c2fcdf2a2743bbc1896ff118c1a18b54bd2",
-    "checkedAt": "2026-06-10"
+    "checkedAt": "2026-08-06",
+    "pendingSince": "2026-08-06"
   },
   "https://www.lufthansa.com/gb/en/baggage": {
     "hash": "6de35468c02d3d0df767e964aab6a6bd2173ba90e620c0ae73246adff1ca8af7",
@@ -301,7 +315,8 @@
   },
   "https://www.manchesterairport.co.uk/parking/turn-up-and-park/": {
     "hash": "f6ccd014e302aa0c3f97a2ad63f40813b555e98f9d6150ffa34a511db6a6f7f1",
-    "checkedAt": "2026-06-10"
+    "checkedAt": "2026-08-06",
+    "pendingSince": "2026-08-06"
   },
   "https://www.newcastleairport.com/car-parking/pick-up-drop-off/": {
     "hash": "71ad4448b3de210357628351e21debdc4bd9b7609fd6d9ada6cbfc929bc59864",
@@ -313,7 +328,8 @@
   },
   "https://www.norwichairport.co.uk/car-parking/": {
     "hash": "c296a11e336b2293f1dd08c6675105379f05dda8eff0121a5108c94340799bcf",
-    "checkedAt": "2026-06-10"
+    "checkedAt": "2026-08-06",
+    "pendingSince": "2026-08-06"
   },
   "https://www.o2.co.uk/international/travel-inclusive-zone-ultimate": {
     "hash": "5963ba3bd5c19f0677d187dbac280a233cc44d5b2c95958b4b1d4526f163a067",
@@ -321,7 +337,7 @@
   },
   "https://www.prioritypass.com/en-GB/join-prioritypass": {
     "hash": "c2726ad06cc2086bd4ebc276fa17acbbf31d14c5ff03b61fe21021ba5439aaf0",
-    "checkedAt": "2026-06-10"
+    "checkedAt": "2026-08-06"
   },
   "https://www.ryanair.com/gb/en/useful-info/help-centre/fees": {
     "hash": "6d80486cc33a915c7f4e37a813aaef90930f1ed89057b2716fd71cd80ee8c046",
@@ -329,7 +345,8 @@
   },
   "https://www.southamptonairport.com/to-from/pick-up-drop-off/": {
     "hash": "848adaf7d474e5e5d13c4e60db6afc97598a8ad4a466f3b522f4e8b976fd9a58",
-    "checkedAt": "2026-06-10"
+    "checkedAt": "2026-08-06",
+    "pendingSince": "2026-08-06"
   },
   "https://www.stanstedairport.com/parking/long-stay/": {
     "hash": "64d4a3d08f14aef32016216f77bc65cb67543fa6e9a679431ae4897b4f3c97db",
@@ -341,7 +358,7 @@
   },
   "https://www.teessideinternational.com/teesside-airport-parking/": {
     "hash": "6cf6a71263ad6aac823e419fcc363a016000a31835503d711b65ee36e8fc7a2d",
-    "checkedAt": "2026-06-10"
+    "checkedAt": "2026-08-06"
   },
   "https://www.three.co.uk/support/roaming-and-calling-abroad/roaming-abroad/go-roam": {
     "hash": "1d1f296dc6bf0ed99c4bcec269d286b18bd64eae8d1edfd9f1455f2e04adc5a9",
@@ -358,5 +375,9 @@
   "https://www.wizzair.com/en-gb/help-centre/booking-information-and-services/baggage/baggage-allowance/checked-in-baggage": {
     "hash": "8137609d486bec56c3c7324915fb2258982052d1f5d486ee9c51924300c3770a",
     "checkedAt": "2026-06-10"
+  },
+  "https://cardiff-airport.com/car-parking-options/drop-off-and-pick-up-cwl/": {
+    "hash": "fb681bbf2ee5631a533db4bb0b7c68cc4942792362bc3cd5408cd9d56a8807e9",
+    "checkedAt": "2026-08-06"
   }
 }
