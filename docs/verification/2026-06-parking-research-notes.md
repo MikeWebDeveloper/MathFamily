@@ -483,3 +483,29 @@ Glasgow, Bristol and Birmingham all return HTTP 403 to plain curl; Birmingham ad
 defeats `r.jina.ai` with a CAPTCHA interstitial. All three were read from the live official page
 rendered in a headless browser. Edinburgh and Stansted serve their tariff tables client-side and
 also required the browser.
+
+## 2026-08-07 — daily ParkMath parking pass
+
+Three records re-read against their official pages; **no value changed**, all three were
+`verifiedAt`-bumped to 2026-08-07.
+
+- **Stansted** — the 2026-08-06 pass re-quoted the Long Stay pre-book "from" price (£59.99, 8-day
+  stay in November 2026) and updated that product's `snapshotDate`, but left the record-level
+  `verifiedAt` at 2026-06-10. Both products were re-read today to close that gap: the published
+  "from" price is still £59.99, and the official Turn Up & Park table still shows Mid Stay £48
+  and Short Stay (Blue, Green) £70 per 24 h, which is the basis of the gate product's
+  3/7/14-day totals (£144 / £336 / £672).
+- **Newcastle** — standing hard-blocked target, readable today via `r.jina.ai` with
+  `X-Engine: browser`. The official Long Stay "Turn up & park price" table is unchanged: up to
+  24 h £50, 2 days £80, 3 days £120, 4 days £160, then £40 per day or part thereafter — so the
+  recorded £120 / £280 / £560 stand.
+- **Exeter** — the official tariff table is unchanged: Car Park P2 12–24 h £40.00 and £40.00 per
+  additional 24 h (giving £120 / £280 / £560), with P1 at £50/day.
+
+**Not changed, worth a human look.** The Exeter record's `notes` carry a FLAG saying the cheapest
+tariff column was excluded because the page's tariff table and its separate overstay list
+disagreed on P3-vs-P4 numbering. Today's table labels that column unambiguously as **Car Park
+P4**: 0–15 min FREE, 15–30 min FREE, 30–60 min £2.00, 1–4 h £5.00, 4–12 h £12.00, 12–24 h
+£25.00, per additional 24 h £30.00. Adding P4 as a second gate product would change the
+drive-up price ParkMath quotes for Exeter from £40/day (P2) to £25/day, so it is left for Mike
+rather than swapped in unilaterally.

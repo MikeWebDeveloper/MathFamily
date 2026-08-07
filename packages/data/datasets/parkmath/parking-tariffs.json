@@ -1,6 +1,6 @@
 {
-  "version": "1.2.1",
-  "lastUpdated": "2026-08-06",
+  "version": "1.2.2",
+  "lastUpdated": "2026-08-07",
   "records": [
     {
       "airportSlug": "heathrow",
@@ -90,7 +90,7 @@
         }
       ],
       "sourceUrl": "https://www.stanstedairport.com/parking/long-stay/",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-08-07"
     },
     {
       "airportSlug": "luton",
@@ -207,7 +207,7 @@
         }
       ],
       "sourceUrl": "https://www.newcastleairport.com/car-parking/car-parking-options/",
-      "verifiedAt": "2026-06-27"
+      "verifiedAt": "2026-08-07"
     },
     {
       "airportSlug": "leeds-bradford",
@@ -340,7 +340,7 @@
         }
       ],
       "sourceUrl": "https://exeter-airport.co.uk/car-parking/",
-      "verifiedAt": "2026-07-03"
+      "verifiedAt": "2026-08-07"
     }
   ]
 }

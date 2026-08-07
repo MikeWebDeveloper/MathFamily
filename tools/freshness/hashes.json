@@ -17,17 +17,16 @@
     "pendingSince": "2026-08-06"
   },
   "https://exeter-airport.co.uk/car-parking/": {
-    "hash": "d56d88013047fc02e5576877225fed89614b552b5f0549b22929610de3307b33",
-    "checkedAt": "2026-08-06",
-    "pendingSince": "2026-08-06"
+    "hash": "c79481f846a5d6dfe2e491d623da99ce2dbe4c019b5c30546b78e68dadf217bb",
+    "checkedAt": "2026-08-07"
   },
   "https://flywith.virginatlantic.com/gb/en/upgrades-and-extras/optional-service-and-travel-fees.html": {
     "hash": "3460f367a5917fb549c411df6b914de2d2f346442c86f5c09c10f960ad0c77fe",
     "checkedAt": "2026-06-10"
   },
   "https://londonsouthendairport.com/getting-to-and-from/pick-up-drop-off": {
-    "hash": "8d961e9732f22d3b0cb030ebf736f33e6eae73024c374a5bb93f7a24b213d058",
-    "checkedAt": "2026-06-10"
+    "hash": "92e3153c7a173740e5ae6f23e7e06c3cce88c9c0eb5ed2d97e77e432cb4e92f1",
+    "checkedAt": "2026-08-07"
   },
   "https://no1lounges.com/lounges-by-location/aspire-at-newcastle/": {
     "hash": "7e29524e0c7535912841b502f48e40b70ee52342b36044bb1e3bfeaaf3ede76e",
@@ -238,16 +237,16 @@
     "checkedAt": "2026-06-10"
   },
   "https://www.eastmidlandsairport.com/parking/pick-up-and-drop-off/": {
-    "hash": "817767d5e283b698a1248cd724e57c899621038c5a1ed83b2fa068597e3cda7a",
-    "checkedAt": "2026-06-10"
+    "hash": "0be2031d6b817e289dc74d39745f344c1c40c966ec4c5b3034a26633a061dd78",
+    "checkedAt": "2026-08-07"
   },
   "https://www.easyjet.com/en/help-centre/policy-terms-and-conditions/fees-charges": {
     "hash": "69eca09463a751c3ee7f6188f3583eb93a2ba4dcdfa2da29a68c53c6fb4bc954",
     "checkedAt": "2026-06-10"
   },
   "https://www.edinburghairport.com/edinburgh-airport-parking/drop-off-and-pick-up": {
-    "hash": "3e3dccf930e8586c02bd32f9a330171ea83c4b5cb4ef05606d4a8f723ffad12e",
-    "checkedAt": "2026-06-10"
+    "hash": "c123d110a80fcc154973b60bd763775ac26cfd6c9bae27a0d24fa6da03b522bf",
+    "checkedAt": "2026-08-07"
   },
   "https://www.edinburghairport.com/edinburgh-airport-parking/long-stay-parking": {
     "hash": "aca3ad10fda3a3fbdb1b031a3e99fb9bf44ea0bc29fd2d7e52c4576ba3a73311",
@@ -288,7 +287,7 @@
   },
   "https://www.liverpoolairport.com/parking/express-drop-off": {
     "hash": "fe7a015671242f8e389c71ba14791743a9de4d875f06454e33bdb1cf6c9fb9d8",
-    "checkedAt": "2026-06-10"
+    "checkedAt": "2026-08-07"
   },
   "https://www.london-luton.co.uk/executive-lounges/aspire-lounge": {
     "hash": "1657b53329f2128c2c2fafd704da0f46a13ce5e47337be5584626afd9230631b",
@@ -301,9 +300,8 @@
     "pendingSince": "2026-08-06"
   },
   "https://www.london-luton.co.uk/to-and-from-lla/dropping-off": {
-    "hash": "9fbb02c29127aed8d9eccc5387a61c2fcdf2a2743bbc1896ff118c1a18b54bd2",
-    "checkedAt": "2026-08-06",
-    "pendingSince": "2026-08-06"
+    "hash": "1ce59f84cb3f6c437fe6f79fb97ba2ea07403a827832430309ec58e541eee86e",
+    "checkedAt": "2026-08-07"
   },
   "https://www.lufthansa.com/gb/en/baggage": {
     "hash": "6de35468c02d3d0df767e964aab6a6bd2173ba90e620c0ae73246adff1ca8af7",
@@ -349,12 +347,12 @@
     "pendingSince": "2026-08-06"
   },
   "https://www.stanstedairport.com/parking/long-stay/": {
-    "hash": "64d4a3d08f14aef32016216f77bc65cb67543fa6e9a679431ae4897b4f3c97db",
-    "checkedAt": "2026-06-10"
+    "hash": "4d8da5f9a0fed1f4a795cd1cf94b4b968e920c835e1ea3e06139c677730c1ea9",
+    "checkedAt": "2026-08-07"
   },
   "https://www.stanstedairport.com/parking/pick-up-and-drop-off/": {
-    "hash": "6dd012e21a7aec710aafb128c074cbe0a82651f824f6e5f59ac3b39985dff268",
-    "checkedAt": "2026-06-10"
+    "hash": "57c86857e83b544855dd62c358e39d82039db7f9ce5e3719302a9485450c72d5",
+    "checkedAt": "2026-08-07"
   },
   "https://www.teessideinternational.com/teesside-airport-parking/": {
     "hash": "6cf6a71263ad6aac823e419fcc363a016000a31835503d711b65ee36e8fc7a2d",
