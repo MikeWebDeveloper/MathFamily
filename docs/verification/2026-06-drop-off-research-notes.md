@@ -466,3 +466,53 @@ headless browser. Cardiff is a client-rendered Vue SPA and also required the hea
 official page publishes a £100 Red Route enforcement charge (reduced to £50 within 14 days).
 Bristol and Newcastle encode their Red Route charges differently, so this was left alone rather
 than changed unilaterally.
+
+## 2026-08-07 — daily ParkMath drop-off pass
+
+Scope: the boundary-stale records (verifiedAt 2026-06-22/26) plus the standing hard-blocked
+target London City. Everything read from the airport's own page today.
+
+**Changed (4 records, 0 headline prices):**
+
+- **East Midlands** — `perMinuteAfterPence` `null` → `100`. The Rapid Drop Off tab publishes
+  "Up to 15 minutes £5 / Every minute after the first 15 minutes £1" (max stay 30 minutes); the
+  per-minute leg was simply missing from our record. `feeSummary` reworded to include it.
+  Long Stay 2 free-60-minutes alternative re-confirmed as open to all drivers ("We have a free
+  pick-up or drop-off option at our Long Stay car park. This car park is free for up to 60
+  minutes"), not Blue-Badge-only.
+- **Stansted** — `penaltyPence` `null` → `10000`. The page now publishes the amount: "a £100.00
+  Parking Charge Notice will be issued … reduced to £60.00 if paid within 14 days". Also
+  captured the £28 re-entry-within-30-minutes charge in `penaltyNotes`. Express Set Down
+  £10/15 min and £28 over 15 min re-confirmed unchanged, max stay 30 minutes.
+- **London City** (standing hard-blocked target — *unblocked today*, see transport notes) —
+  `penaltyPence` `null` → `10000`: "A £100.00 enforcement charge is payable by drivers who stay
+  past 10 minutes. This charge is reduced to £60.00 if paid within 14 days." `blueBadgePolicy`
+  restated in the official wording: Blue Badge holders "may register to get 10 minutes free
+  parking in the Drop-off area", with 1 hour free in Main Stay if they need longer. The £8 /
+  0–5 min + £1 per minute / 10 min max fee itself is unchanged.
+- **Leeds Bradford** — bands extended from a single 10-minute band to the full published ladder
+  (cars): 0–10 min £8.00, 10–20 min £10.00, 20–30 min £13.50, 30–60 min £16.50, each subsequent
+  hour £16.50. Two claims that the page no longer supports were removed rather than carried
+  under a fresh `verifiedAt`: the "SmoothPark automatic payment gives 10% off" line (the page
+  now describes payment as ticketless ANPR, card/Apple Pay at exit, nothing about SmoothPark)
+  and the "fully electric private cars free for up to 1 hour, max 2 visits/day" line (the page
+  says only "this car park is free for one visit of up to one hour only"). One Hour Free Zone
+  re-described from the page: inside the Mid Stay car park, ~five-minute walk with a slight
+  incline (we previously said 3–4 minutes). £8 Blue-Badge-60-minutes concession re-confirmed.
+
+**Confirmed unchanged (5):** Edinburgh £8.50/10 min then £1/min, Blue Badge 1 h free, local
+resident 50% discount; Southend £8/10 min max, pay by midnight next day; Prestwick £4.50/60 min,
+£8.50/2 h, £14.50/4 h, £21/12 h, £33/24 h ("Price as of 01 April 26"), Blue Badge 30 min free;
+Liverpool £6/10 min, £10/20 min, £25/1 h, £50/24 h, Blue Badge 40 min free; Belfast International
+£5/10 min, £8/20 min, £13/60 min, £60 over 1 hour.
+
+Luton was re-read as well (the news watchdog flagged its page as changed): £7/10 min then £1/min,
+30 min max, £95→£55, midnight-next-day, no Blue Badge concession, Long Stay 2 h free — all
+identical to the record verified 2026-08-06, so the fingerprint change was cosmetic.
+
+**Transport notes.** London City, Newcastle and Belfast International — the three targets that
+403 every plain rung — all came back cleanly today through `r.jina.ai` with the
+`X-Engine: browser` header. That header is now the rung that beats their bot protection; plain
+jina returns the page shell with no tariff. Leeds Bradford renders its tariff client-side and is
+empty in Wayback too, but the numbers are present verbatim in the Next.js RSC payload embedded
+in the direct-curl HTML, so no browser was needed.
