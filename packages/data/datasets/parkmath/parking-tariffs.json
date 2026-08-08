@@ -1,6 +1,6 @@
 {
-  "version": "1.2.2",
-  "lastUpdated": "2026-08-07",
+  "version": "1.2.3",
+  "lastUpdated": "2026-08-08",
   "records": [
     {
       "airportSlug": "heathrow",
@@ -18,7 +18,7 @@
         }
       ],
       "sourceUrl": "https://www.heathrow.com/transport-and-directions/heathrow-parking/heathrow-park-and-ride",
-      "verifiedAt": "2026-08-06"
+      "verifiedAt": "2026-08-08"
     },
     {
       "airportSlug": "gatwick",
@@ -36,7 +36,7 @@
         }
       ],
       "sourceUrl": "https://www.gatwickairport.com/parking/roll-up-car-park-prices.html",
-      "verifiedAt": "2026-08-06"
+      "verifiedAt": "2026-08-08"
     },
     {
       "airportSlug": "manchester",
@@ -56,14 +56,14 @@
           "productType": "prebook",
           "name": "JetParks (pre-book only) — published 'from' price",
           "prices": [
-            { "days": 8, "totalPence": 5999 }
+            { "days": 8, "totalPence": 5499 }
           ],
-          "snapshotDate": "2026-06-10",
-          "notes": "Officially published pre-book 'from' price: 'From £59.99 (8 days)'. JetParks is pre-book only. Single published 'from' point; not a live-quoted 3/7/14-day ladder — gate product above provides the 3/7/14 coverage."
+          "snapshotDate": "2026-08-08",
+          "notes": "Officially published pre-book 'from' price: 'From £54.99 (8 days)' (read 2026-08-08; was £59.99). JetParks is pre-book only. Single published 'from' point; not a live-quoted 3/7/14-day ladder — gate product above provides the 3/7/14 coverage."
         }
       ],
       "sourceUrl": "https://www.manchesterairport.co.uk/parking/turn-up-and-park/",
-      "verifiedAt": "2026-08-06"
+      "verifiedAt": "2026-08-08"
     },
     {
       "airportSlug": "stansted",
@@ -108,7 +108,7 @@
         }
       ],
       "sourceUrl": "https://www.london-luton.co.uk/parking-prices",
-      "verifiedAt": "2026-08-06"
+      "verifiedAt": "2026-08-08"
     },
     {
       "airportSlug": "edinburgh",
@@ -126,7 +126,7 @@
         }
       ],
       "sourceUrl": "https://www.edinburghairport.com/edinburgh-airport-parking/long-stay-parking",
-      "verifiedAt": "2026-08-06"
+      "verifiedAt": "2026-08-08"
     },
     {
       "airportSlug": "birmingham",
@@ -207,7 +207,7 @@
         }
       ],
       "sourceUrl": "https://www.newcastleairport.com/car-parking/car-parking-options/",
-      "verifiedAt": "2026-08-07"
+      "verifiedAt": "2026-08-08"
     },
     {
       "airportSlug": "leeds-bradford",
@@ -340,7 +340,7 @@
         }
       ],
       "sourceUrl": "https://exeter-airport.co.uk/car-parking/",
-      "verifiedAt": "2026-08-07"
+      "verifiedAt": "2026-08-08"
     }
   ]
 }

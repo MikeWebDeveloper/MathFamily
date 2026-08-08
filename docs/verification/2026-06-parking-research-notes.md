@@ -509,3 +509,47 @@ P4**: 0–15 min FREE, 15–30 min FREE, 30–60 min £2.00, 1–4 h £5.00, 4�
 £25.00, per additional 24 h £30.00. Adding P4 as a second gate product would change the
 drive-up price ParkMath quotes for Exeter from £40/day (P2) to £25/day, so it is left for Mike
 rather than swapped in unilaterally.
+
+## 2026-08-08 — daily ParkMath parking + lounge pass
+
+Driven by the daily data check. The dataset watchdog flagged Exeter's car-parking page as
+changed; the remaining work was clearing the fifteen ParkMath pages still carrying a
+`pendingSince: 2026-08-06` flag in `tools/freshness/hashes.json` (the 2026-08-06 sweep verified
+the records but never cleared the flags). All pages below were read direct with a browser
+User-Agent except Newcastle, which needed `r.jina.ai`.
+
+**Changed (2).**
+
+- **Manchester — JetParks pre-book "from" price: £59.99 → £54.99 (8 days).** The official
+  Turn Up & Park page's "Our other airport car parks" panel now reads "JetParks From £54.99
+  (8 days) PRE BOOK ONLY"; £59.99 no longer appears anywhere on the page. `snapshotDate` moved
+  to 2026-08-08. The Turn Up & Park gate product is untouched — the official table still shows
+  £63.40 for up to 24 h and for each 24 h thereafter (£190.20 / £443.80 / £887.60).
+- **Escape Lounges walk-in "from" prices — four cuts** (all from the single official
+  escapelounges.com/uk/airport-lounges listing, read today):
+  Manchester T2 £43.99 → £39.99, Manchester T3 £32.99 → £29.99, Edinburgh £46.49 → £41.99,
+  Bristol (Escape) £43.99 → £39.99. Stansted (Essence, £28.99) and Bristol (Essence, £35) are
+  unchanged on the same page.
+
+**Confirmed unchanged (parking, 5).** Heathrow Park & Ride £46.80 first 24 h + £37.40 per
+subsequent 24 h; Gatwick Long Stay roll-up 0–2 h free, 2–24 h £38.00, each subsequent day
+£32.00; Luton Long Stay on-the-day up to 2 h FREE, 3 h £7.00, first day £35.00 and £35.00 each
+additional day; Edinburgh Long Stay non-booked 0–30 min FREE, 30 min–1 h £14, 1–3 h £22,
+3–24 h £60, thereafter £40/day; Exeter Car Park P2 12–24 h £40.00 and £40.00 per additional
+24 h. Newcastle's Long Stay "Turn up & park" table is also unchanged (up to 24 h £50, 2 days
+£80, 3 days £120, 4 days £160, then £40/day) — it came back cleanly through plain `r.jina.ai`
+today, no browser header needed.
+
+**Confirmed unchanged (lounges, 4).** Club Aspire Heathrow T5 £40; Club Aspire Gatwick South
+£34; Aspire Newcastle £46; Luton MyLounge £37.99.
+
+**Not changed, worth a human look.**
+
+- The Escape Lounges page lists **Manchester T2 — The Executive by Escape Lounges, from £56.99
+  per person**, a lounge the dataset does not carry. Adding it is a data addition rather than a
+  correction, so it is left for Mike.
+- The official Luton lounges page lists a second lounge, **No1 Lounge from £38.00 pp**,
+  alongside MyLounge. Same call — addition, not correction.
+- The Exeter P3-vs-P4 FLAG from the 2026-08-07 pass still stands unresolved; today's table again
+  labels the cheap column P4 (0–30 min FREE, 30–60 min £2.00, 1–4 h £5.00, 12–24 h £25.00, per
+  additional 24 h £30.00).
