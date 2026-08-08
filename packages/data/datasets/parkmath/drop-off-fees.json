@@ -1,6 +1,6 @@
 {
-  "version": "1.3.2",
-  "lastUpdated": "2026-08-07",
+  "version": "1.3.3",
+  "lastUpdated": "2026-08-08",
   "records": [
     {
       "airportSlug": "heathrow",
@@ -26,7 +26,7 @@
       },
       "priorYearFeePence": 600,
       "sourceUrl": "https://www.heathrow.com/transport-and-directions/terminal-drop-off-charge",
-      "verifiedAt": "2026-08-06"
+      "verifiedAt": "2026-08-08"
     },
     {
       "airportSlug": "gatwick",
@@ -52,7 +52,7 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://www.gatwickairport.com/transport-options/drop-off.html",
-      "verifiedAt": "2026-08-06",
+      "verifiedAt": "2026-08-08",
       "blueBadgeSeoTitle": "Gatwick Blue Badge drop-off — free if registered 2026",
       "blueBadgeSeoDescription": "Blue Badge holders get the £10 Gatwick drop-off charge waived — register your number plate online first (free 30-minute session). Read from the official Gatwick page, verified 2026-06-10."
     },
@@ -87,8 +87,8 @@
         "details": "Free drop-off area a little further from the terminals, with a free shuttle bus running 24/7 (journey takes a few minutes)"
       },
       "priorYearFeePence": 500,
-      "sourceUrl": "https://www.manchesterairport.co.uk/parking/pick-up-and-drop-off/",
-      "verifiedAt": "2026-08-02"
+      "sourceUrl": "https://www.manchesterairport.co.uk/getting-to-and-from/pick-up-and-drop-off/",
+      "verifiedAt": "2026-08-08"
     },
     {
       "airportSlug": "stansted",
@@ -148,7 +148,7 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://www.london-luton.co.uk/to-and-from-lla/dropping-off",
-      "verifiedAt": "2026-08-06"
+      "verifiedAt": "2026-08-08"
     },
     {
       "airportSlug": "edinburgh",
@@ -503,7 +503,7 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://www.aberdeenairport.com/transport-and-directions/dropping-off-at-aberdeen-airport/",
-      "verifiedAt": "2026-08-06"
+      "verifiedAt": "2026-08-08"
     },
     {
       "airportSlug": "belfast-city",
@@ -551,7 +551,7 @@
       "freeAlternative": null,
       "priorYearFeePence": null,
       "sourceUrl": "https://www.southamptonairport.com/to-from/pick-up-drop-off/",
-      "verifiedAt": "2026-08-06"
+      "verifiedAt": "2026-08-08"
     },
     {
       "airportSlug": "cardiff",
@@ -605,7 +605,7 @@
       "perMinuteAfterPence": null,
       "maxChargePence": null,
       "penaltyPence": null,
-      "penaltyNotes": "P1 tariff continues beyond 15 minutes (15–60 min £7.50, then higher bands); overstay beyond a pre-booked period is charged at £20 per day or part thereof",
+      "penaltyNotes": "P1 tariff continues beyond 15 minutes (15–30 min £15, 30–60 min £15, then higher bands); overstay beyond a pre-booked period is charged at £20 per day or part thereof",
       "paymentDeadline": "Card / contactless / Apple Pay / Google Pay at the exit barrier",
       "blueBadgePolicy": "Blue Badge holders can stay in Car Park P1 for up to 4 hours for the current up-to-15-minutes rate (£6)",
       "freeAlternative": {
@@ -615,7 +615,7 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://exeter-airport.co.uk/car-parking/",
-      "verifiedAt": "2026-08-06",
+      "verifiedAt": "2026-08-08",
       "optionsSeoTitle": "Exeter Airport drop-off charge 2026 — £6 fee, or free in Car Park P4",
       "optionsSeoDescription": "How much does Exeter Airport charge for drop-off? £6 for up to 15 minutes in Car Park P1, or free for 30 minutes in Car Park P4. Compare against parking and pre-booked options — verified against the official Exeter Airport page, updated 2026-06-10."
     },
@@ -694,7 +694,7 @@
       "freeAlternative": null,
       "priorYearFeePence": null,
       "sourceUrl": "https://www.norwichairport.co.uk/car-parking/",
-      "verifiedAt": "2026-08-06"
+      "verifiedAt": "2026-08-08"
     },
     {
       "airportSlug": "inverness",
@@ -715,7 +715,7 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://www.hial.co.uk/inverness-airport/airport-information-8/4",
-      "verifiedAt": "2026-08-06"
+      "verifiedAt": "2026-08-08"
     },
     {
       "airportSlug": "teesside",

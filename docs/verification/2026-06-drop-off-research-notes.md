@@ -516,3 +516,39 @@ identical to the record verified 2026-08-06, so the fingerprint change was cosme
 jina returns the page shell with no tariff. Leeds Bradford renders its tariff client-side and is
 empty in Wayback too, but the numbers are present verbatim in the Next.js RSC payload embedded
 in the direct-curl HTML, so no browser was needed.
+
+## 2026-08-08 — daily ParkMath drop-off pass
+
+Nine records re-read against their official pages. The dataset watchdog flagged Exeter,
+Inverness, Luton and Manchester as changed; the other five were pages still carrying a stale
+`pendingSince: 2026-08-06` flag.
+
+**Changed (2), neither a fee.**
+
+- **Exeter — `penaltyNotes` corrected.** The note said the P1 tariff runs "15–60 min £7.50".
+  The official tariff table shows Car Park P1 at **£15.00 for 15–30 min and £15.00 for
+  30–60 min** — there is no £7.50 band on the page. Corrected to "15–30 min £15, 30–60 min £15".
+  The headline fee (£6 for up to 15 min in P1), the free P4 alternative (30 min free, then £2
+  for 30–60 min), the £20/day overstay rate and the Blue Badge concession (up to 4 hours at the
+  15-minute rate, confirmed verbatim: "You can stay for up to 4 hours for just the current
+  15-minute rate") are all unchanged.
+- **Manchester — `sourceUrl` moved.** `/parking/pick-up-and-drop-off/` now 301s to
+  `/getting-to-and-from/pick-up-and-drop-off/`; the record now points at the canonical URL. The
+  fee table there is unchanged: 5 min £5.50, 10 min £6.50, up to 30 min £25, 30-minute max,
+  pay by midnight the following day, £100 charge reduced to £60 within 14 days.
+
+**Confirmed unchanged (7).** Heathrow £7 per entry, £80 PCN → £40 within 14 days; Gatwick £10
+for 10 min then £1/min up to 20 min, £30 max daily charge, 30-minute max stay, Blue Badge
+exempt; Aberdeen £7.00 for 15 min, £1.00 per minute thereafter, flat £50 after 30 min;
+Southampton £7 for 20 min, £80 enforcement charge → £50 within 14 days; Norwich £8 for up to
+20 min in Car Park 1 (Short Stay); Luton £7 for 10 min then £1/min, 30-min max, £95 → £55,
+Long Stay free for 2 h; Inverness free for 15 min in the Short Stay drop-off area, no return
+within one hour, Blue Badge 20 min free in the premium car park.
+
+**NEEDS-HUMAN — Inverness lost its published tariff.** The record's `freeAlternative.details`
+still cites "£3.90 up to 30 minutes, tariff from 1 June 2026" for stays beyond the free 15
+minutes. HIAL has removed all figures from that page — it now says only "please check prices on
+the car park system before booking". The £3.90 is therefore no longer verifiable at source. The
+free-15-minutes claim, which is what the record actually asserts, is still stated verbatim, so
+the value was kept rather than nulled, but the parenthetical should either be dropped or
+re-sourced.
