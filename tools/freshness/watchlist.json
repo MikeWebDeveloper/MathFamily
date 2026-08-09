@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-08",
+  "generatedAt": "2026-08-09",
   "entries": [
     {
       "url": "https://binaries.vodafone.co.uk/gbnnsauqav4t/3ynRZJ6BvgpyYyPmoIAHX0/ff9c9463c41c25d0cbf8f5d27f955afb/evo-paym-charges-guide.pdf",
@@ -58,13 +58,6 @@
       "url": "https://exeter-airport.co.uk/news/",
       "refs": [
         "news:exeter"
-      ],
-      "watchable": true
-    },
-    {
-      "url": "https://flywith.virginatlantic.com/gb/en/upgrades-and-extras/optional-service-and-travel-fees.html",
-      "refs": [
-        "baggage:virgin-atlantic"
       ],
       "watchable": true
     },
@@ -856,6 +849,13 @@
       "url": "https://www.tui.co.uk/destinations/info/luggage-allowance",
       "refs": [
         "baggage:tui"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.virginatlantic.com/experience/upgrades-and-extras/optional-service-and-travel-fees",
+      "refs": [
+        "baggage:virgin-atlantic"
       ],
       "watchable": true
     },

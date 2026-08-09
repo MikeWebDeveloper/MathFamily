@@ -271,3 +271,85 @@ Scheduled weekly sweep. **Method:** each Airalo country page (`airalo.com/<count
 **Holafly + Saily bundles: NOT re-verified this sweep (NEEDS-HUMAN).** They are "(converted)" values sourced from holafly.com / saily.com (not airalo.com, the record's `sourceUrl`) and require live FX conversion. Re-quoting them reliably is out of scope for an unattended run. Their snapshotDates remain 2026-06-10 (a few older).
 
 **ParkMath (live brand) staleness check:** nothing older than 46 days — every drop-off, parking, lounge, priority-pass and news record was verified between 2026-06-10 and 2026-06-27. The two standing hard-blocked targets are already resolved: London City drop-off has a real record (verified 2026-06-22) and Newcastle Long Stay parking was added (verified 2026-06-27). No ParkMath changes this sweep.
+
+---
+
+## 2026-08-09 — freshness SWEEP (RoamMath: eSIM re-quote, roaming networks, baggage)
+
+Scheduled sweep. ParkMath was already fresh on the branch base (oldest `verifiedAt` 2026-06-27,
+inside the 46-day window) and both standing hard-blocked targets are resolved — London City
+drop-off has a live record (re-verified 2026-08-07) and Newcastle parking is in the dataset.
+So this pass is RoamMath-only.
+
+### Method change — Airalo now read from `__NUXT_DATA__`, not the rendered page
+
+The 2026-06-28 sweep left 6 countries unverified because the rendered Airalo page defaults to
+the Unlimited tab and the fixed-GB rows could not be read. Fixed by parsing the page's
+`<script id="__NUXT_DATA__">` payload instead: every package is a `type: "sim"` object carrying
+`title`, `data`, `day`, `is_unlimited` and a `price.minor_amount` in **GBP pence** with an explicit
+`price.currency.code`. UK-egress `curl` only — the payload also carries the currency picker, and
+`GBP` shows `"selected": true`, which is the check that the quote is the UK price. r.jina.ai
+remains unusable here (US egress → USD).
+
+**Result: 40/40 Airalo bundles re-quoted cleanly (previously 34/40), matched on data + validity,
+all GBP, `snapshotDate` → 2026-08-09.** 21 unchanged, **19 changed**:
+
+- Unlimited / 5 days, £15.50 → **£15.00**: ireland, netherlands, poland, sweden, denmark, czechia
+- Unlimited / 5 days, £15.00 → **£14.50**: switzerland, malta, turkey, new-zealand, norway, hungary, romania
+- Unlimited / 5 days, £14.00 → **£13.50**: spain, mexico
+- Unlimited / 5 days: egypt £23.00 → **£22.00**, albania £20.50 → **£20.00**, montenegro £22.00 → **£21.50**
+- France 5GB / 30 days, £8.50 → **£9.50** — the one *rise*, and the country the June sweep flagged
+  as ambiguous (it guessed "likely ~£9.00"). The payload read is unambiguous: 5 GB / 30 days = £9.50.
+
+Most of the Unlimited/5-day moves are a broad ~50p **cut**, not a rise — the opposite direction to June.
+
+### Roaming networks (3 of 4 re-verified; EE was already fresh at 2026-07-01)
+
+- **vodafone** — charges guide PDF re-read: Zone A inclusive; **Zone B £2.75/day** and
+  **Zone C & D £8/day** "from 14 April 2026" (before that £2.57 / £7.86); **25GB roaming fair-use
+  cap per billing month in Zones A–D**. Every stored figure matches. No change.
+- **three** — Go Roam page: **£2.75/day** for customers joining on/after 18 Dec 2025 (from 1 Apr 2026),
+  £2 for Oct 2021–17 Dec 2025 joiners; **12GB** fair-use cap. Matches. No change.
+- **o2** — PARTIAL. The Europe Zone being inclusive ("we cover roaming in our Europe Zone as part of
+  our tariffs") and the **£7/day O2 Travel Bolt On** are both confirmed on the record's `sourceUrl`.
+  The stored **25GB** roaming limit is *not* restated anywhere reachable: the page says only "subject
+  to a Roaming limit", and `/help/pay-monthly/roaming-in-europe` gives no figure
+  (`/termsandconditions/mobile/our-latest-tariff-terms` and `/international/roaming-limit` both 404).
+  Value kept per the no-invention rule; flagged.
+
+### Baggage (4 of 12 re-verified)
+
+Confirmed unchanged, `verifiedAt` → 2026-08-09:
+
+- **ryanair** — full fee table re-read: Priority & 2 Cabin Bags £12–£60, 10kg £9.49–£44.99
+  (bag drop £35.99–£40), 20kg £18.99–£59.99 (bag drop £59.99), 23kg £29.99–£97, excess **£13/kg**.
+- **easyjet** — fees & charges table: **£12/kg** excess weight at the airport, **£60** at the boarding
+  gate and **£60** at bag drop; online large-cabin/hold prices remain demand-priced ("from £5.99" /
+  "from just £6.99" on the baggage page). *Not yet in the dataset:* a published
+  **"Up to £15 per 3kg"** pre-booked additional-weight fee — only a maximum is published, so no
+  min/max record was invented. Flagged for a human decision on how to model it.
+- **tui** — all four figures exact: £60 per 15kg short-haul, £80 per 15kg long-haul/Cape Verde/Egypt/
+  Gambia/Senegal, £15/kg excess short-mid-haul, £20/kg long-haul.
+- **virgin-atlantic** — £80 first checked bag on Economy Light, £80 second bag, £65 overweight,
+  £200 oversized. **`sourceUrl` updated**: the old `flywith.virginatlantic.com/...` URL now 302s to
+  `www.virginatlantic.com/experience/upgrades-and-extras/optional-service-and-travel-fees`.
+
+**8 airlines NOT re-verified — transport ladder exhausted, stored values kept, `verifiedAt` left at
+2026-06-10:**
+
+| airline | blocker |
+|---|---|
+| jet2 | direct curl returns nothing; WebFetch times out; baggage page carries no fee figures |
+| british-airways | `baggage-essentials` publishes allowances only, no £ figures; the excess-baggage page is a marketing shell |
+| aer-lingus | Imperva bot-verification interstitial on every rung |
+| norwegian | 403 to WebFetch; jina copy has no fee figures |
+| vueling | rates are published as an **image**, no machine-readable table |
+| wizz-air | jina copy is a consent/shell page with no figures |
+| emirates, lufthansa | records hold no fixed numeric fees (route/fare-dynamic) — nothing re-quotable without a booking flow |
+
+Wayback returned no snapshot for jet2 / aer-lingus / norwegian / vueling.
+
+**Holafly + Saily bundles: still NOT re-verified (unchanged NEEDS-HUMAN from June).** Holafly's page
+renders prices client-side (no figures in the HTML); saily.com returns 403. Their `snapshotDate`
+stays 2026-06-10 and the "(converted)" FX rates (1 EUR = 0.864 GBP, 1 USD = 0.74 GBP, June 2026) are
+now two months old.
