@@ -1,6 +1,6 @@
 {
-  "version": "1.0.0",
-  "lastUpdated": "2026-06-10",
+  "version": "1.0.1",
+  "lastUpdated": "2026-08-09",
   "records": [
     {
       "airlineSlug": "ryanair",
@@ -15,7 +15,7 @@
       ],
       "dynamicPricingNote": "Ryanair prices bags dynamically; ranges reflect the official published online min-max charges per item",
       "sourceUrl": "https://www.ryanair.com/gb/en/useful-info/help-centre/fees",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-08-09"
     },
     {
       "airlineSlug": "easyjet",
@@ -28,7 +28,7 @@
       ],
       "dynamicPricingNote": "easyJet prices cabin and hold bags dynamically by demand, route, date and time of booking; online floor prices and airport caps shown",
       "sourceUrl": "https://www.easyjet.com/en/help-centre/policy-terms-and-conditions/fees-charges",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-08-09"
     },
     {
       "airlineSlug": "jet2",
@@ -79,7 +79,7 @@
       ],
       "dynamicPricingNote": "TUI publishes fixed flight-only hold-bag and excess rates (package bookings include 20kg+); short-haul vs long-haul rates differ",
       "sourceUrl": "https://www.tui.co.uk/destinations/info/luggage-allowance",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-08-09"
     },
     {
       "airlineSlug": "virgin-atlantic",
@@ -92,8 +92,8 @@
         { "item": "Oversized bag", "minPence": 20000, "maxPence": 20000, "note": "£200 per oversized bag, fixed" }
       ],
       "dynamicPricingNote": "Virgin Atlantic publishes fixed per-bag GBP fees by fare and bag number; one 23kg checked bag is included on all Economy fares except Economy Light",
-      "sourceUrl": "https://flywith.virginatlantic.com/gb/en/upgrades-and-extras/optional-service-and-travel-fees.html",
-      "verifiedAt": "2026-06-10"
+      "sourceUrl": "https://www.virginatlantic.com/experience/upgrades-and-extras/optional-service-and-travel-fees",
+      "verifiedAt": "2026-08-09"
     },
     {
       "airlineSlug": "aer-lingus",

@@ -1,6 +1,6 @@
 {
-  "version": "1.2.3",
-  "lastUpdated": "2026-08-08",
+  "version": "1.2.4",
+  "lastUpdated": "2026-08-09",
   "records": [
     {
       "airportSlug": "heathrow",
@@ -207,7 +207,7 @@
         }
       ],
       "sourceUrl": "https://www.newcastleairport.com/car-parking/car-parking-options/",
-      "verifiedAt": "2026-08-08"
+      "verifiedAt": "2026-08-09"
     },
     {
       "airportSlug": "leeds-bradford",
@@ -225,7 +225,7 @@
         }
       ],
       "sourceUrl": "https://www.leedsbradfordairport.co.uk/parking",
-      "verifiedAt": "2026-06-27"
+      "verifiedAt": "2026-08-09"
     },
     {
       "airportSlug": "liverpool",
@@ -243,7 +243,7 @@
         }
       ],
       "sourceUrl": "https://www.liverpoolairport.com/parking/long-stay",
-      "verifiedAt": "2026-06-27"
+      "verifiedAt": "2026-08-09"
     },
     {
       "airportSlug": "teesside",
@@ -261,7 +261,7 @@
         }
       ],
       "sourceUrl": "https://www.teessideinternational.com/teesside-airport-parking/",
-      "verifiedAt": "2026-06-27"
+      "verifiedAt": "2026-08-09"
     },
     {
       "airportSlug": "prestwick",
