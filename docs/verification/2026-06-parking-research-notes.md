@@ -553,3 +553,48 @@ today, no browser header needed.
 - The Exeter P3-vs-P4 FLAG from the 2026-08-07 pass still stands unresolved; today's table again
   labels the cheap column P4 (0–30 min FREE, 30–60 min £2.00, 1–4 h £5.00, 12–24 h £25.00, per
   additional 24 h £30.00).
+
+## 2026-08-09 — daily ParkMath pass (parking)
+
+Scope this run was unusually small: nothing in the ParkMath datasets was past the 46-day
+staleness line, no ParkMath page was `pendingSince` in `hashes.json`, and the news sweep
+produced no price-relevant refs. So the pass covered the standing hard-blocked target
+(Newcastle) plus the three oldest parking records, which were 43 days old and would have
+crossed the 46-day line within three days.
+
+**Confirmed unchanged (parking, 4).**
+
+- **Newcastle — Long Stay Turn Up & Park.** Official parking-options page still publishes
+  up to 24h £50.00, 2 days £80.00, 3 days £120.00, 4 days £160.00, then £40.00 per day (or
+  part) thereafter. Stored 3d £120 / 7d £280 / 14d £560 re-derived from those rates and
+  matched exactly. Source: https://www.newcastleairport.com/car-parking/car-parking-options/
+- **Leeds Bradford — Long Stay turn-up.** The "Turn up on the day pricing" summary table
+  ("Car Park | 1st Day | Per Additional Day") still lists **Long Stay — 10-20 min by shuttle
+  bus, £57, £18**. Stored 3d £93 / 7d £165 / 14d £291 re-derived and matched.
+  Source: https://www.leedsbradfordairport.co.uk/parking
+- **Liverpool — Long Stay Gate Rate.** Official table unchanged: up to 1 day £60.00, 2 days
+  £100.00, 3 days £120.00, 4 days £130.00, 5 days £140.00, 6 days £150.00, 7 days £160.00,
+  8 days £170.00, then £30.00 per 24h. Stored 3d £120 / 7d £160 / 14d £350 matched.
+  Source: https://www.liverpoolairport.com/parking/long-stay
+- **Teesside — Main car park standard turn-up.** Official table unchanged: up to 24h £36.00,
+  2d £72, 3d £82, 4d £87, 5d £93, 6d £99, 7d £105, 8d £120, 9d £135, 10d £150, 11d £165,
+  then £15 per day. Stored 3d £82 / 7d £105 / 14d £210 matched.
+  Source: https://www.teessideinternational.com/teesside-airport-parking/
+
+No values changed; only `verifiedAt` was moved to 2026-08-09 on these four records.
+
+**Transport notes.** Newcastle and Leeds Bradford both still fail a direct fetch. Newcastle
+returns HTTP 403 to direct requests and to `r.jina.ai` on the `/corporate/media-centre/`
+path, but the **car-parking pages read fine through `r.jina.ai`** — the standing
+"hard-blocked: Newcastle parking" label is no longer accurate for the tariff pages, only for
+the newsroom. Leeds Bradford's tariff tables are still JS-rendered and invisible to the plain
+markdown fetch; they were read via `r.jina.ai` with `X-Return-Format: html` and parsing the
+escaped Next.js flight payload. Worth folding both into the tooling rather than rediscovering
+each run.
+
+**Not changed, worth a human look.** Leeds Bradford's page now also publishes a drop-off /
+forecourt table (0-10 min £8.00, 10-20 min £10.00, 20-30 min £13.50, 30-60 min £16.50, each
+subsequent hour £16.50, with separate higher columns for 9-seat and 10-seat-plus vehicles).
+The drop-off dataset's Leeds Bradford record was not in scope this run and was not touched;
+someone should check whether it still matches, and whether the per-vehicle-class columns are
+worth carrying.

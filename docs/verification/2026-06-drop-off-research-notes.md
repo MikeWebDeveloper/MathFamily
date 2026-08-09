@@ -552,3 +552,32 @@ the car park system before booking". The £3.90 is therefore no longer verifiabl
 free-15-minutes claim, which is what the record actually asserts, is still stated verbatim, so
 the value was kept rather than nulled, but the parenthetical should either be dropped or
 re-sourced.
+
+## 2026-08-09 — daily ParkMath pass (drop-off)
+
+Small scope: nothing past the 46-day staleness line, no pending hashes, no price-relevant news
+refs. Covered the standing hard-blocked target (London City) and Newcastle's Express drop-off.
+
+**Confirmed unchanged (drop-off, 2).**
+
+- **London City.** Official drop-off page still states, verbatim, "0 - 5 minutes | £8.00" and
+  "5 minutes and above | £1 per minute thereafter", "Maximum stay 10 minutes", "A £100.00
+  enforcement charge is payable by drivers who stay past 10 minutes... reduced to £60.00 if
+  paid within 14 days", "Please ensure you settle the charge by midnight the day after", and
+  the Blue Badge line ("10 minutes free parking in the Drop-off area... use the Main Stay if
+  you need more time and get 1 hour free parking"). Every stored field matched.
+  Source: https://www.londoncityairport.com/parking/drop-off
+- **Newcastle — Express Pick Up & Drop Off.** Official table unchanged: up to 10 mins £6.00,
+  30 mins £12.00, 45 mins £16.00, 1 hour £20.00, 2 hours £28.00 (and beyond: 3h £38, 4h £50,
+  24h £120). The free alternative is still stated: Airport Waiting Zone at Callerton Parkway,
+  free for up to 90 minutes. Source:
+  https://www.newcastleairport.com/car-parking/picking-up-dropping-off/
+
+No values changed; only `verifiedAt` was moved to 2026-08-09.
+
+**Transport note.** London City 403s a direct fetch but reads cleanly through `r.jina.ai`, as
+it did on 2026-08-07. The "hard-blocked" designation for this target is stale.
+
+**Still open from earlier passes.** The Inverness NEEDS-HUMAN item from the previous pass
+(HIAL removed the £3.90 figure the record's `freeAlternative.details` still cites) was not in
+scope this run and remains unresolved.
