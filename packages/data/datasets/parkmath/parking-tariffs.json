@@ -1,6 +1,6 @@
 {
-  "version": "1.2.4",
-  "lastUpdated": "2026-08-09",
+  "version": "1.2.5",
+  "lastUpdated": "2026-08-10",
   "records": [
     {
       "airportSlug": "heathrow",
@@ -279,7 +279,7 @@
         }
       ],
       "sourceUrl": "https://www.glasgowprestwick.com/parking/",
-      "verifiedAt": "2026-07-03"
+      "verifiedAt": "2026-08-10"
     },
     {
       "airportSlug": "aberdeen",
@@ -299,12 +299,12 @@
           "productType": "prebook",
           "name": "Long Stay (pre-book) — published 'from' price",
           "prices": [{ "days": 7, "totalPence": 4999 }],
-          "snapshotDate": "2026-07-03",
-          "notes": "Officially published pre-book 'from' price on the Long Stay page: '1-week Long Stay parking starts at £49.99' (read 2026-07-03). Single published 'from' point; the gate product above provides the 3/7/14 coverage. The page separately states turn-up prices can be undercut 'up to 60%' by booking ahead, consistent with this snapshot."
+          "snapshotDate": "2026-08-10",
+          "notes": "Officially published pre-book 'from' price on the Long Stay page: '1-week Long Stay parking starts at £49.99' (first read 2026-07-03, unchanged on re-read 2026-08-10). Single published 'from' point; the gate product above provides the 3/7/14 coverage. The page separately states turn-up prices can be undercut 'up to 60%' by booking ahead, consistent with this snapshot."
         }
       ],
       "sourceUrl": "https://www.aberdeenairport.com/transport-and-directions/aberdeen-airport-parking/long-stay-parking/",
-      "verifiedAt": "2026-07-03"
+      "verifiedAt": "2026-08-10"
     },
     {
       "airportSlug": "belfast-international",
@@ -322,7 +322,7 @@
         }
       ],
       "sourceUrl": "https://www.belfastairport.com/parking/long-stay-car-park",
-      "verifiedAt": "2026-07-03"
+      "verifiedAt": "2026-08-10"
     },
     {
       "airportSlug": "exeter",
