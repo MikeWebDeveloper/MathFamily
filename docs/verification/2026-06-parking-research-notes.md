@@ -598,3 +598,41 @@ subsequent hour £16.50, with separate higher columns for 9-seat and 10-seat-plu
 The drop-off dataset's Leeds Bradford record was not in scope this run and was not touched;
 someone should check whether it still matches, and whether the per-vehicle-class columns are
 worth carrying.
+
+## 2026-08-10 — daily ParkMath pass (3 oldest parking records re-verified, 0 values changed)
+
+Scope note: nothing in the ParkMath datasets was over the 46-day staleness threshold this
+run (the oldest records were 38 days old), no ParkMath page was `pendingSince` in
+`tools/freshness/hashes.json`, the news sweep produced no price-relevant refs, and both
+standing "hard-blocked" targets (London City drop-off, Newcastle parking) had already been
+re-verified on 2026-08-09. The three oldest parking records were re-verified instead so the
+run did real work rather than none.
+
+- **Glasgow Prestwick — Car Park Two turn-up.** Official "Turn Up Prices" table unchanged and
+  still stamped **"Price as of 01 April 26"**: 1 Day £37.50, 2 Days £44.50, 3 Days £66.50,
+  4 Days £75.50, 5 Days £85.50, 6 Days £94.50, 7 Days £103.50, 8 Days £112.00, then £8.00 per
+  day thereafter. Stored 3d £66.50 / 7d £103.50 / 14d £160.00 (112.00 + 6x£8.00) re-derived
+  and matched. Car Park One (Premium) also unchanged on the same sheet (1d £42.00, 7d £120.00,
+  £9.00/day thereafter) and remains unused.
+  Source: https://www.glasgowprestwick.com/parking/
+- **Aberdeen — Long Stay turn-up + pre-book "from".** Official "Turn Up Prices" table
+  unchanged: up to 24h £35.00, 2 days £60.00, 3 days £80.00, 4 days £96.00, 5 days £105.00,
+  6 days £115.00, 7 days £125.00, then £10.00 per day (or part) thereafter. Stored 3d £80 /
+  7d £125 / 14d £195 (125.00 + 7x£10.00) re-derived and matched. The published pre-book
+  "from" price is still "1-week Long Stay parking starts at £49.99", so the £49.99 snapshot
+  was re-stamped rather than re-quoted.
+  Source: https://www.aberdeenairport.com/transport-and-directions/aberdeen-airport-parking/long-stay-parking/
+- **Belfast International — Long Stay gate rate.** Official "Long Stay Pricing" table
+  unchanged: One Day £30.00, Two Days £45.00, Three Days £55.00, Each Day Thereafter
+  +£10.00 per day. Stored 3d £55 / 7d £95 (55 + 4x£10) / 14d £165 (55 + 11x£10) re-derived
+  and matched.
+  Source: https://www.belfastairport.com/parking/long-stay-car-park
+
+No values changed; only `verifiedAt` moved to 2026-08-10 on these three records (plus the
+Aberdeen pre-book `snapshotDate`).
+
+**Transport notes.** Prestwick and Aberdeen read fine on rung 1 (direct fetch). Belfast
+International returns HTTP 403 to a direct fetch — both on the newsroom (`/blog-news`, which
+the news watchdog also 403s on) and on the parking pages — but the parking page reads cleanly
+through `r.jina.ai`. Same shape as the Newcastle finding above: the 403 is a bot-block on the
+domain, not a missing page, and rung 2 clears it.
