@@ -392,3 +392,87 @@ Note: the old placeholder had Prestige at £459 with perVisitPence 0 and Standar
    may move with date and duration.
 4. **Luton** MyLounge replaced Aspire (2024) — the official URL still resolves under the
    `/executive-lounges/aspire-lounge` path; confirm naming if the page slug changes.
+
+---
+
+## 2026-08-02 — daily sweep (parking, lounges, Priority Pass)
+
+Scope: ParkMath parking / lounges / priority-pass records with `verifiedAt` older than
+46 days. eSIM/roaming/baggage re-quoting is the weekly sweep's job and was skipped.
+
+### Parking — re-confirmed unchanged (verifiedAt → 2026-08-02)
+
+| Airport | Official tariff read today | Stored 3/7/14-day totals |
+| --- | --- | --- |
+| Heathrow | Park & Ride first day £46.80, additional 24h £37.40 | £121.60 / £271.20 / £533.00 ✓ |
+| Gatwick | Long Stay 0–2 h free, 2–24 h £38.00, each subsequent day £32.00 | £102 / £230 / £454 ✓ |
+| Edinburgh | 0–30 min free, 30 min–1 h £14, 1–3 h £22, 3–24 h £60, then £40/day | £140 / £300 / £580 ✓ |
+| Glasgow | Long Stay turn-up: 1 h free, 2 h £15, 1 day £50, 2 days £65, 3 days £80, then £15/day | £80 / £140 / £245 ✓ |
+
+### Parking — corrections applied
+
+- **Luton** — Long Stay on-the-day rate rose £30 → **£35** per day (official parking-prices
+  page: Long Stay first day £35.00 and "each additional day, or part of a day £35.00";
+  Mid Stay is now £40.00 per additional day). 3/7/14-day totals recomputed at the flat
+  official rate: £90→£105, £210→£245, £420→£490. The old FLAG about an unpublished distinct
+  first-day rate is dropped — the page now publishes the first day explicitly.
+- **Manchester** — Turn Up & Park (T2 West Multi Storey P3) £61.40 → **£63.40** per 24 h
+  (flat). Totals: £184.20→£190.20, £429.80→£443.80, £859.60→£887.60.
+- **Manchester JetParks** — published pre-book from-price £59.99 → **£54.99**
+  ("Prices from £54.99", 8 day stay in November 2026). `snapshotDate` → 2026-08-02.
+- **Stansted** — Long Stay published pre-book from-price £71.99 → **£59.99**
+  ("Prices from £59.99", 8 day stay in November 2026). `snapshotDate` → 2026-08-02.
+  Note this is a dynamic from-price on a sampled month, not a fixed tariff.
+- **Birmingham Car Park 7** — up to 24 h £49.00 → **£51.00**, per day thereafter
+  £42.00 → **£44.00**. Totals: £133→£139, £301→£315, £595→£623.
+  **Provenance matters here:** birminghamairport.co.uk serves a Cloudflare CAPTCHA to every
+  automated transport, so this was read from the **official BHX turn-up-prices page captured
+  in the Wayback Machine on 2026-06-30** (Car Park 7: "Up to 24 hours £51.00 / Per day
+  thereafter* £44.00"). The FLAG in `notes` recording that provenance has been **kept and
+  updated**, not removed — the figure is one month old and still wants a live human check.
+
+### Parking — left untouched
+
+- **Bristol** (`2026-06-10`) — live site bot-blocked; the only Wayback capture of
+  parking-prices is 2026-04-10, *older* than the record, so it cannot corroborate. Silver
+  Zone values and the old `verifiedAt` retained.
+- **Glasgow pre-book "from £49.99"** — the Long Stay page no longer surfaces that
+  from-price to a fetcher; its `snapshotDate` stays 2026-06-10 while the gate tariff above
+  carries today's verification.
+- **Newcastle parking** — standing hard-blocked target, but its record was verified
+  2026-06-27 (36 days) so it is not yet in sweep scope; site still 403s.
+
+### Lounges — corrections applied (all from the operators' own pages)
+
+| Airport | Lounge | Old | New |
+| --- | --- | --- | --- |
+| Bristol | Escape Lounge | £41.99 | **£43.99** |
+| Edinburgh | Escape Lounge | £38.99 | **£46.49** |
+| Manchester | Escape Lounge (T2) | £41.99 | **£43.99** |
+| Manchester | Escape Lounge (T3) | £36.99 | **£32.99** |
+| Stansted | Essence by Escape Lounge | £25.99 | **£28.99** |
+| Gatwick | No1 Lounge (North Terminal) | £38.00 | **£40.00** |
+| Glasgow | UpperDeck Lounge | £32.00 | **£27.00** |
+
+Escape Lounges' UK directory lists all five Escape figures verbatim ("From £43.99 per
+person" etc.). Gatwick North read from no1lounges.com ("Prices from: £40"). Glasgow read
+from the airport's own UpperDeck page ("Adult (18+): From £27"). The Stansted note lost its
+stale "(walk-up ~£35)" parenthetical, which was never separately sourced.
+
+Re-confirmed unchanged: Heathrow T5 Club Aspire £40, Gatwick South Club Aspire £34,
+Luton MyLounge £37.99, Newcastle Aspire £46.
+
+**Heathrow Plaza Premium T5 (£47.50)** was NOT re-verified. The earlier draft of this sweep
+claimed the operator page 404s; it actually returns HTTP 200 but renders prices client-side
+and publishes no static figure. A FLAG saying exactly that now sits in the record's notes.
+
+**Birmingham lounges left untouched** (`2026-06-10`) — the airport's lounges page is behind
+the same Cloudflare CAPTCHA, and the newest Wayback capture is 2024-12-03. An earlier draft
+of this sweep proposed renaming "Aspire Lounge" → "Aspire Lounge, South" at £42.99 and
+publishing £38.00 for No1 Lounge; **none of that could be sourced today, so it was dropped.**
+
+### Priority Pass — re-confirmed unchanged (verifiedAt → 2026-08-02)
+
+prioritypass.com/en-GB/join-prioritypass (UK): Standard £69/yr, £24 member visit fee;
+Standard Plus £229/yr, 10 free visits then £24; Prestige £419/yr, all member visits free,
+£24 guest fee. All three tiers match the stored pence exactly — no change.
