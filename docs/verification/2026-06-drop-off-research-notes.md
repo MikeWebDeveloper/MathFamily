@@ -418,3 +418,17 @@ max stay and payment deadline were re-confirmed today.
 > wording** if you want belt-and-braces before merging. Separately, the £5/15-min Rapid
 > Drop-off fee should be re-sourced from the official Rapid Drop-off T&C page on the next
 > sweep, since the main page no longer lists it.
+
+## 2026-07-05 — freshness SWEEP (London City drop-off re-confirm)
+
+Standing hard-blocked target. The official page (`londoncityairport.com/parking/drop-off`) 403s on plain WebFetch (bot-protected — the reason it was historically hard to verify), so read via the r.jina.ai browser engine (GBP domestic page). Official forecourt table confirmed **UNCHANGED**:
+
+| Duration | Charge |
+|----------|--------|
+| 0–5 minutes | £8.00 |
+| 5 minutes and above | £1 per minute thereafter |
+| Maximum stay | 10 minutes |
+
+All numeric fields match the stored record: bands `[{upToMinutes:5, totalPence:800}]`, `perMinuteAfterPence` 100, `maxStayMinutes` 10 — no price change. `verifiedAt` 2026-06-22 → 2026-07-05.
+
+`blueBadgePolicy` reworded to the current official wording — the page now states Blue Badge holders "register to get 10 minutes' free parking in the Drop-off area" (the full maximum stay, so effectively no charge) and get 1 hour free in the Main Stay. This is a wording refinement, not a fee change. version 1.3.0 → 1.3.1.

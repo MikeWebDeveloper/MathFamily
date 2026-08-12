@@ -1,6 +1,6 @@
 {
-  "version": "1.2.0",
-  "lastUpdated": "2026-07-03",
+  "version": "1.2.1",
+  "lastUpdated": "2026-07-05",
   "records": [
     {
       "airportSlug": "heathrow",
@@ -203,11 +203,11 @@
             { "days": 14, "totalPence": 56000 }
           ],
           "snapshotDate": null,
-          "notes": "Official 'Turn Up & Park price' table for the Long Stay car park: up to 24h £50.00, 2 days £80.00, 3 days £120.00, 4 days £160.00, then £40.00 per day (or part) thereafter. Published 3-day total used directly (£120). 7-day computed from the published 4-day base plus the official £40/day (£160 + 3x£40 = £280); 14-day from the 7-day plus 7x£40 (£280 + £280 = £560). Verified 2026-06-27 against the official newcastleairport.com parking-options page."
+          "notes": "Official 'Turn Up & Park price' table for the Long Stay car park: up to 24h £50.00, 2 days £80.00, 3 days £120.00, 4 days £160.00, then £40.00 per day (or part) thereafter. Published 3-day total used directly (£120). 7-day computed from the published 4-day base plus the official £40/day (£160 + 3x£40 = £280); 14-day from the 7-day plus 7x£40 (£280 + £280 = £560). Verified 2026-06-27; re-verified 2026-07-05 against the official newcastleairport.com parking-options page (Turn Up & Park rates unchanged: up to 24h £50, 2 days £80, 3 days £120, 4 days £160, £40/day thereafter)."
         }
       ],
       "sourceUrl": "https://www.newcastleairport.com/car-parking/car-parking-options/",
-      "verifiedAt": "2026-06-27"
+      "verifiedAt": "2026-07-05"
     },
     {
       "airportSlug": "leeds-bradford",

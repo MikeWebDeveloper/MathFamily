@@ -392,3 +392,9 @@ Note: the old placeholder had Prestige at £459 with perVisitPence 0 and Standar
    may move with date and duration.
 4. **Luton** MyLounge replaced Aspire (2024) — the official URL still resolves under the
    `/executive-lounges/aspire-lounge` path; confirm naming if the page slug changes.
+
+## 2026-07-05 — freshness SWEEP (Newcastle Long Stay re-confirm)
+
+Standing hard-blocked target (previously excluded, re-added 2026-06-27). The official page (`newcastleairport.com/car-parking/car-parking-options/`) 403s on plain WebFetch, so read via the r.jina.ai browser engine (GBP). Long Stay **"Turn up & park price"** table confirmed **UNCHANGED**: up to 24h £50.00, 2 days £80.00, 3 days £120.00, 4 days £160.00, then £40.00 per day (or part) thereafter.
+
+Stored products still hold against these official rates: 3-day £120 (published, direct), 7-day £280 (£160 4-day base + 3×£40), 14-day £560 (£280 + 7×£40). No price change. `verifiedAt` 2026-06-27 → 2026-07-05; product `notes` updated to record the re-verification. version 1.2.0 → 1.2.1.
