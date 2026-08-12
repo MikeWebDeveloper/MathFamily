@@ -271,3 +271,88 @@ Scheduled weekly sweep. **Method:** each Airalo country page (`airalo.com/<count
 **Holafly + Saily bundles: NOT re-verified this sweep (NEEDS-HUMAN).** They are "(converted)" values sourced from holafly.com / saily.com (not airalo.com, the record's `sourceUrl`) and require live FX conversion. Re-quoting them reliably is out of scope for an unattended run. Their snapshotDates remain 2026-06-10 (a few older).
 
 **ParkMath (live brand) staleness check:** nothing older than 46 days — every drop-off, parking, lounge, priority-pass and news record was verified between 2026-06-10 and 2026-06-27. The two standing hard-blocked targets are already resolved: London City drop-off has a real record (verified 2026-06-22) and Newcastle Long Stay parking was added (verified 2026-06-27). No ParkMath changes this sweep.
+
+---
+
+## 2026-07-19 — freshness SWEEP (eSIM re-quote: Airalo + Holafly + Saily)
+
+Scheduled weekly sweep. Sweep scope resolved to: (a) staleness — **no record anywhere in
+`packages/data/datasets/` is older than 46 days** (cutoff 2026-06-03; oldest is 2026-06-10);
+(b) all eSIM bundles — done, see below; (c) the standing hard-blocked targets — **both already
+resolved** (see ParkMath note at the end); (d) `pendingSince` in `hashes.json` — **none
+outstanding** (the four drop-off flags were cleared earlier today by commit `644c26b`).
+
+### Method change — payload extraction, not page summarisation
+
+The 2026-06-28 sweep left 6 fixed-GB bundles unverified because "the Airalo page now defaults
+to the Unlimited tab, so the fetch could not read the specific GB row". That is a *rendering*
+limit of prose-summarising a fetched page, not an absence of data. **All Airalo packages —
+Unlimited and fixed-GB — are present in the page's embedded `__NUXT_DATA__` payload**, which is
+a reference-graph structure (values are integer indices into a flat array, resolved via
+`slug`/`price`/`validity`/`operator` field references). Extracting from the payload reads every
+tier regardless of which tab renders, and returns the operator name alongside each price.
+
+This resolves all 6 previously-unverifiable bundles, and settles the open **france 5GB/30d**
+ambiguity: the payload gives **£8.50 (operator Élan)**, confirming the stored value. The
+suspected drift to £9.00 in the previous sweep was a row-misalignment artefact, as suspected.
+
+**Currency is geo-detected per request IP and must be pinned.** The same Airalo page served
+GBP to a direct UK-egress `curl` and USD via `r.jina.ai` (US egress) — the payload query key
+literally carries the currency (`["country","en","GBP","iceland"]`). All 40 Airalo pages here
+were fetched by direct `curl` from the UK, so every figure is Airalo's **own GBP list price**,
+directly comparable to `totalPence` — never a converted USD number. A sweep that mixes fetch
+routes will silently write USD into GBP fields; three of four parallel research passes for this
+sweep disagreed on currency for exactly this reason.
+
+### Airalo — 40/40 bundles re-verified, ALL UNCHANGED
+
+Every tracked Airalo bundle matched its stored `totalPence` exactly (snapshotDate → 2026-07-19).
+That includes the 6 that could not be read last sweep: france 5GB/30d £8.50, germany 5GB/15d
+£8.50, greece 5GB/15d £9.00, croatia 5GB/15d £8.00, iceland 5GB/15d £9.00, bulgaria 5GB/7d £5.00.
+
+Note: croatia/iceland/bulgaria were independently reported this sweep as "tier removed" by a
+US-egress proxy read. **That was wrong** — the payload shows all three tiers alive at the stored
+prices. Do not retire a fixed-GB tier on the strength of a page-summary read.
+
+**Multi-operator ambiguity (unchanged policy, now explicit):** netherlands, belgium, austria and
+south-africa sell the same data/validity tier under two operators at different prices (e.g.
+austria 5GB/30d: Servus Austria £6.50 vs Servus Austria+ £8.50; south-africa 5GB/30d: CellSA
+£10.00 vs £10.50). The dataset tracks the **cheaper/base operator**, which is what the stored
+values already reflect. The record does not currently carry the operator name — see NEEDS-HUMAN.
+
+### Holafly — 40/40 re-quoted (was NEEDS-HUMAN last sweep)
+
+Server-rendered price table on `esim.holafly.com/esim-<country>/` is **USD** (`$ 73.90` + a
+`USD` currency label); the currency switcher is client-side only, so USD → GBP conversion
+remains the correct treatment and the "(converted)" naming stands.
+
+- **Rate used: 1 USD = £0.74419** — ECB reference rate for 2026-07-17 (latest publication; the
+  sweep ran on a Sunday), via `api.frankfurter.dev`. Corroborated by two independent feeds on
+  the sweep date: 0.743782 (open.er-api.com) and 0.74337 (fawazahmed0 currency-api). The
+  previous sweep used 0.747, so **every** Holafly/Saily value moves slightly on FX alone.
+- **Genuine USD price moves:** spain + italy $78.90 → **$73.90**; the $74.90 band (france,
+  germany, netherlands, switzerland, turkey, usa, australia, new-zealand, thailand, japan,
+  china) → **$73.90**; canada $95.90 → **$86.90**; mexico $74.90 → **$64.90**; morocco $74.90 →
+  **$84.90** (the only rise); egypt $93.90 → **$95.90**; montenegro $104.90 → **$106.50**.
+- **Holafly slug changes** (old slugs now 301 to a JPEG, not a page): USA is `esim-usa/` (not
+  `esim-united-states/`); UAE is `esim-dubai/` (not `esim-united-arab-emirates/`).
+- **UAE has no 30-day tier** — the Dubai page ladder stops at 15 days. The dataset correctly
+  tracks UAE at 15 days ($50.50 → 3758p), so no structural change was needed.
+
+### Saily — 15/15 re-quoted from the LIVE page (was Wayback-only)
+
+`saily.com` still 403s to a direct browser-UA fetch, but **`r.jina.ai` now reaches it** (plain
+transport, ladder step 2). This replaces the stale Wayback snapshots — several Saily
+snapshotDates were from March/April/May 2026 and are now live-quoted at 2026-07-19.
+
+**All 15 Saily USD prices are UNCHANGED** ($9.99 spain/portugal/netherlands, $11.99
+france/uae/tunisia/iceland, $12.99 germany/south-africa, $13.99 greece/new-zealand/india,
+$10.99 japan, $15.99 china, $21.99 morocco). Their pence values move on FX only. Note these are
+US-egress USD reads, which is consistent with the "(converted)" treatment.
+
+### ParkMath (live brand) — no changes this sweep
+
+Nothing older than 46 days. Both standing hard-blocked targets remain resolved: **London City
+drop-off** was re-verified earlier today (commit `644c26b`, penaltyPence corrected to £100) and
+**Newcastle Long Stay parking** has been in the dataset since 2026-06-27. The `freshness`
+SKILL.md still describes both as blocked/excluded — see NEEDS-HUMAN.
