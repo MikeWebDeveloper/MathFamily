@@ -392,3 +392,35 @@ Note: the old placeholder had Prestige at £459 with perVisitPence 0 and Standar
    may move with date and duration.
 4. **Luton** MyLounge replaced Aspire (2024) — the official URL still resolves under the
    `/executive-lounges/aspire-lounge` path; confirm naming if the page slug changes.
+
+---
+
+## 2026-08-01 — daily ParkMath sweep (parking)
+
+Two parking records were in scope: `parking:birmingham` (stale, `verifiedAt` 2026-06-10) and
+the standing hard-blocked `parking:newcastle`. **Neither could be re-verified; no parking
+values were changed and no `verifiedAt` was bumped.**
+
+- **`parking:birmingham`** — birminghamairport.co.uk is still Cloudflare-blocked to every
+  transport in the ladder, and the newest Wayback snapshot (2025-09-06) is the same one the
+  record's existing FLAG note already cites. Nothing new to confirm against; the Car Park 7
+  turn-up figures (£49 first 24h, £42/day thereafter → 3d £133 / 7d £301 / 14d £595) are kept
+  as they stand. **Now 52 days stale** — this is the third Birmingham dataset in the same
+  position, so one manual browser session would clear drop-off, parking and lounges together.
+- **`parking:newcastle`** — `https://www.newcastleairport.com/parking/parking-options` now
+  renders only marketing copy and a pre-book CTA ("From Premium Meet and Greet to Long Stay,
+  Newcastle Airport has a range of car parking options... Click below to pre-book your
+  parking for the best possible rate."). The "Turn Up & Park price" table the record was
+  built from on 2026-06-27 is no longer present on that page. The stored figures (up to 24h
+  £50, 2d £80, 3d £120, then £40/day → 3d £120 / 7d £280 / 14d £560) are kept unchanged and
+  remain inside the 60-day window (they go stale ~26 Aug 2026).
+  Note the corporate newsroom (`/corporate/media-centre/latest-news/`) also 403s, as it has
+  on every recent run.
+
+> ## NEEDS-HUMAN
+> **Newcastle's turn-up tariff table has disappeared from the parking-options page.** This is
+> the same failure mode as Stansted/East Midlands this cycle — the airport has pushed drivers
+> to a pre-book funnel and stopped publishing drive-up prices. If it does not return before
+> ~26 Aug 2026, the drive-up product may need to be nulled rather than shown at an
+> unverifiable price. A human check of the on-site tariff board or a pre-book quote page
+> would settle it.
