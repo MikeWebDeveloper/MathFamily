@@ -129,6 +129,14 @@ export function surfaceFromClickRef(clickRef) {
 
 // ---- transaction aggregation -----------------------------------------------
 
+/** Awin's transactions API nests the click reference under `clickRefs.clickRef` (confirmed against a
+ *  live response 2026-08-13 — every transaction we pulled had this shape, never a flat `clickRef`).
+ *  Fall back to a flat `t.clickRef` too, so hand-built fixtures/tests and any future API shape change
+ *  keep working without another silent "unattributed" regression. */
+function clickRefOf(t) {
+  return (t && t.clickRefs && t.clickRefs.clickRef) || (t && t.clickRef) || null;
+}
+
 function amountOf(x) {
   if (typeof x === "number") return x;
   if (x && typeof x.amount === "number") return x.amount;
@@ -171,9 +179,10 @@ export function aggregateTransactions(transactions) {
     count += 1;
     commission += comm;
     sale += saleAmt;
+    const clickRef = clickRefOf(t);
     bump(byAdvertiser, t.advertiserName || String(t.advertiserId ?? "unknown"), comm, saleAmt);
-    bump(byAirport, airportFromClickRef(t.clickRef) || "unattributed", comm, saleAmt);
-    bump(byClickRef, t.clickRef || "(none)", comm, saleAmt);
+    bump(byAirport, airportFromClickRef(clickRef) || "unattributed", comm, saleAmt);
+    bump(byClickRef, clickRef || "(none)", comm, saleAmt);
   }
 
   finalize(byAdvertiser);
