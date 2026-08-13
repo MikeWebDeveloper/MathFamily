@@ -3,9 +3,17 @@
  * Everything here is unit-tested (lib.test.mjs). The CLI (awin.mjs) supplies the
  * Bearer token at fetch time; URLs built here NEVER contain the token.
  *
+ * One exception to "pure": parseClickRef reads the parkmath drop-off dataset (local
+ * file, node builtin `fs`, cached, never network) to learn the airport slugs. That
+ * beats hardcoding a surface allowlist, which silently rotted and mis-attributed
+ * every /airport-parking-options/ conversion. Falls back to the legacy allowlist if
+ * the dataset cannot be read, so the module still works standalone.
+ *
  * Awin Publisher API: base https://api.awin.com, OAuth2 Bearer, 20 calls/min,
  * transactions capped at a 31-day window. Docs: https://help.awin.com/apidocs/introduction-1
  */
+
+import { readFileSync } from "node:fs";
 
 export const AWIN_API_BASE = "https://api.awin.com";
 export const AWIN_FEED_BASE = "https://productdata.awin.com";
@@ -104,14 +112,56 @@ export function buildFeedListUrl(feedApiKey) {
 
 // ---- clickRef → airport / surface ------------------------------------------
 
+/** Legacy fallback only — see airportSlugs() for why this must not be the primary path. */
 const KNOWN_SURFACES = new Set([
   "parking", "lounge", "dropoff", "drop-off", "hotel", "hotels", "transfer", "transfers", "extras",
 ]);
+
+/** Airport slugs read from the dataset at runtime rather than hardcoded.
+ *
+ *  A hardcoded surface allowlist rots: it was missing both "options" and "hub", so
+ *  `parkmath-exeter-options` parsed as airport="exeter-options", surface=null — every
+ *  /airport-parking-options/ conversion was mis-attributed to a nonexistent airport and
+ *  the surface split was unmeasurable. Airports are a closed, dataset-owned set; surfaces
+ *  are open and grow whenever someone adds a link. So match the AIRPORT (authoritative)
+ *  and treat whatever remains as the surface (open-ended). */
+let _slugCache = null;
+function airportSlugs() {
+  if (_slugCache) return _slugCache;
+  try {
+    const url = new URL("../../packages/data/datasets/parkmath/drop-off-fees.json", import.meta.url);
+    const raw = JSON.parse(readFileSync(url, "utf8"));
+    const out = new Set();
+    (function walk(o) {
+      if (Array.isArray(o)) return o.forEach(walk);
+      if (o && typeof o === "object") {
+        if (typeof o.airportSlug === "string") out.add(o.airportSlug);
+        Object.values(o).forEach(walk);
+      }
+    })(raw);
+    _slugCache = out.size ? out : null;
+  } catch {
+    _slugCache = null; // fall back to the legacy allowlist below
+  }
+  return _slugCache;
+}
 
 function parseClickRef(clickRef) {
   if (typeof clickRef !== "string" || !clickRef.startsWith("parkmath-")) return { airport: null, surface: null };
   const rest = clickRef.slice("parkmath-".length);
   if (!rest) return { airport: null, surface: null };
+
+  // Prefer the dataset: longest matching airport slug wins (belfast-international before belfast).
+  const slugs = airportSlugs();
+  if (slugs) {
+    let best = null;
+    for (const s of slugs) {
+      if ((rest === s || rest.startsWith(s + "-")) && (!best || s.length > best.length)) best = s;
+    }
+    if (best) return { airport: best, surface: rest.length > best.length ? rest.slice(best.length + 1) : null };
+  }
+
+  // Fallback (dataset unreadable / unknown airport): legacy suffix allowlist.
   const segs = rest.split("-");
   if (segs.length >= 2 && KNOWN_SURFACES.has(segs[segs.length - 1])) {
     return { airport: segs.slice(0, -1).join("-") || null, surface: segs[segs.length - 1] };
@@ -161,10 +211,14 @@ function finalize(map) {
   }
 }
 
-/** Roll transactions up by advertiser, airport (from clickRef) and raw clickRef. */
+/** Roll transactions up by advertiser, airport, surface (all from clickRef) and raw clickRef.
+ *  `bySurface` answers "which PAGE TYPE actually earns" — the drop-off-charges pages carry
+ *  nearly all search traffic while the parking-options pages have been taking the revenue,
+ *  and that split was invisible until clickRef parsing was fixed (2026-08-14). */
 export function aggregateTransactions(transactions) {
   const byAdvertiser = {};
   const byAirport = {};
+  const bySurface = {};
   const byClickRef = {};
   let count = 0;
   let commission = 0;
@@ -182,16 +236,19 @@ export function aggregateTransactions(transactions) {
     const clickRef = clickRefOf(t);
     bump(byAdvertiser, t.advertiserName || String(t.advertiserId ?? "unknown"), comm, saleAmt);
     bump(byAirport, airportFromClickRef(clickRef) || "unattributed", comm, saleAmt);
+    bump(bySurface, surfaceFromClickRef(clickRef) || "(no surface)", comm, saleAmt);
     bump(byClickRef, clickRef || "(none)", comm, saleAmt);
   }
 
   finalize(byAdvertiser);
   finalize(byAirport);
+  finalize(bySurface);
   finalize(byClickRef);
   return {
     totals: { count, commission: round2(commission), sale: round2(sale), currency: currency || "GBP" },
     byAdvertiser,
     byAirport,
+    bySurface,
     byClickRef,
   };
 }
