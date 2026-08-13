@@ -26,7 +26,9 @@
       },
       "priorYearFeePence": 600,
       "sourceUrl": "https://www.heathrow.com/transport-and-directions/terminal-drop-off-charge",
-      "verifiedAt": "2026-08-13"
+      "verifiedAt": "2026-08-13",
+      "seoTitle": "Heathrow drop-off payment — £7 charge 2026",
+      "seoDescription": "Heathrow drop-off: £7 per vehicle. Pay online by midnight next day. £80 penalty if unpaid. Free 30-minute Park & Ride alternative."
     },
     {
       "airportSlug": "gatwick",
@@ -53,6 +55,8 @@
       "priorYearFeePence": null,
       "sourceUrl": "https://www.gatwickairport.com/transport-options/drop-off.html",
       "verifiedAt": "2026-08-13",
+      "seoTitle": "Gatwick drop-off pay — £10 charge 2026",
+      "seoDescription": "Gatwick drop-off: £10 for up to 10 minutes, then £1/min to a £30 max. Free 2-hour Long Stay alternative. Pay online by midnight next day.",
       "blueBadgeSeoTitle": "Gatwick Blue Badge drop-off — free if registered 2026",
       "blueBadgeSeoDescription": "Blue Badge holders get the £10 Gatwick drop-off charge waived — register your number plate online first (free 30-minute session). Read from the official Gatwick page, verified 2026-06-10."
     },
@@ -88,7 +92,9 @@
       },
       "priorYearFeePence": 500,
       "sourceUrl": "https://www.manchesterairport.co.uk/parking/pick-up-and-drop-off/",
-      "verifiedAt": "2026-08-13"
+      "verifiedAt": "2026-08-13",
+      "seoTitle": "Manchester airport drop-off charges — £5.50 2026",
+      "seoDescription": "Manchester Airport drop-off: £5.50 for 5 minutes up to £25 for 30. Free JetParks 1 alternative with 24/7 shuttle. Pay by midnight next day."
     },
     {
       "airportSlug": "stansted",
@@ -108,7 +114,7 @@
       "perMinuteAfterPence": null,
       "maxChargePence": null,
       "penaltyPence": 10000,
-      "penaltyNotes": "£100 Parking Charge Notice for non-payment, reduced to £60 if paid within 14 days. Maximum stay is 30 minutes, and a £28 charge applies for re-entering within 30 minutes of first entering. NOTE: as of 2026-08-13 London Stansted no longer publishes an Express Set Down price table on its official Pick Up & Drop Off page, so the £10/15-minute and £28 bands below are not currently confirmable at source.",
+      "penaltyNotes": "£100 Parking Charge Notice for non-payment, reduced to £60 if paid within 14 days. Maximum stay is 30 minutes, and a £28 charge applies for re-entering within 30 minutes of first entering.",
       "paymentDeadline": "23:59 the day after your visit",
       "blueBadgePolicy": "Normal charges apply, but where the passenger holds a valid Blue Badge the driver is eligible for an extension to the 30-minute maximum stay if reasonably required",
       "freeAlternative": {
@@ -117,12 +123,15 @@
         "details": "Free drop-off area at the Mid Stay car park with a free shuttle bus to the terminal"
       },
       "priorYearFeePence": null,
-      "sourceUrl": "https://www.stanstedairport.com/parking/pick-up-and-drop-off/",
+      "sourceUrl": "https://www.stanstedairport.com/getting-to-and-from/pick-up-and-drop-off/",
       "verifiedAt": "2026-06-26",
-      "seoTitle": "Stansted Airport drop-off levy 2026 — £10/15min, £28 over",
-      "seoDescription": "Stansted Airport drop-off levy (charges): £10 for up to 15 min, £28 over 15. Free Mid Stay zone; pay online by 23:59 next day. Verified June 2026 from the official page.",
+      "seoTitle": "Stansted drop-off charge 2026 — £10, £28 over",
+      "seoDescription": "Stansted Airport drop-off charge: £10 for up to 15 min, £28 beyond 15. Free Mid Stay drop-off zone; pay online by 23:59 the next day.",
       "blueBadgeSeoTitle": "Stansted Blue Badge drop-off 2026 — free zone available",
-      "blueBadgeSeoDescription": "Standard Stansted drop-off charges apply for Blue Badge holders (with a max-stay extension if needed), but the Mid Stay car park free drop-off zone (60 min) is free for everyone. Read from the official Stansted page, verified 2026-06-10."
+      "blueBadgeSeoDescription": "Standard Stansted drop-off charges apply for Blue Badge holders (with a max-stay extension if needed), but the Mid Stay car park free drop-off zone (60 min) is free for everyone. Read from the official Stansted page, verified 2026-06-10.",
+      "priceProvenance": "secondary-corroborated",
+      "priceProvenanceNote": "Stansted withdrew the Express Set Down tariff from its own site when it moved to barrierless ANPR; pricing now sits with APCOA. £10 (<=15 min) / £28 (15-30 min) effective 19 Mar 2026 (up from £7), corroborated by 6 independent secondary sources. Mike's call 2026-08-14: accept secondary corroboration; verify against the APCOA/pay portal, not the airport page.",
+      "tariffCheckUrl": "https://pay.stanstedairport.com/"
     },
     {
       "airportSlug": "luton",
@@ -175,7 +184,9 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://www.edinburghairport.com/edinburgh-airport-parking/drop-off-and-pick-up",
-      "verifiedAt": "2026-08-13"
+      "verifiedAt": "2026-08-13",
+      "seoTitle": "Edinburgh airport drop-off — £8.50, free option",
+      "seoDescription": "Edinburgh Airport drop-off: £8.50 for 10 minutes, then £1/min. Long Stay car park is free for the first 30 min. Blue Badge holders 1 hour free."
     },
     {
       "airportSlug": "birmingham",
@@ -224,7 +235,9 @@
       },
       "priorYearFeePence": 600,
       "sourceUrl": "https://www.glasgowairport.com/to-and-from/pick-up-and-drop-off/",
-      "verifiedAt": "2026-08-13"
+      "verifiedAt": "2026-08-13",
+      "seoTitle": "Glasgow airport drop-off charge — £7 2026",
+      "seoDescription": "Glasgow Airport drop-off: £7 for up to 15 minutes, then £1/min, £50 beyond 30 min. Free 1-hour Long Stay zone. Blue Badge 30 minutes free."
     },
     {
       "airportSlug": "bristol",
@@ -346,6 +359,8 @@
       "priorYearFeePence": null,
       "sourceUrl": "https://www.newcastleairport.com/car-parking/picking-up-dropping-off/",
       "verifiedAt": "2026-08-13",
+      "seoTitle": "Newcastle airport drop-off charges — £6 fee 2026",
+      "seoDescription": "Newcastle Airport drop-off: £6 for up to 10 minutes, paid on exit by ANPR. Free 90-minute Waiting Zone with a free 24/7 shuttle bus.",
       "blueBadgeSeoTitle": "Newcastle Airport Blue Badge drop-off — free zone available",
       "blueBadgeSeoDescription": "Newcastle Airport publishes no specific Blue Badge drop-off concession, but the Airport Waiting Zone at Callerton Parkway is free for 90 minutes for everyone, with a free 24/7 shuttle bus. Read from the official Newcastle page, verified 2026-06-10."
     },
