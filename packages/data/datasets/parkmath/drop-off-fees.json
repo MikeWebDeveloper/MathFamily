@@ -128,10 +128,7 @@
       "seoTitle": "Stansted drop-off charge 2026 — £10, £28 over",
       "seoDescription": "Stansted Airport drop-off charge: £10 for up to 15 min, £28 beyond 15. Free Mid Stay drop-off zone; pay online by 23:59 the next day.",
       "blueBadgeSeoTitle": "Stansted Blue Badge drop-off 2026 — free zone available",
-      "blueBadgeSeoDescription": "Standard Stansted drop-off charges apply for Blue Badge holders (with a max-stay extension if needed), but the Mid Stay car park free drop-off zone (60 min) is free for everyone. Read from the official Stansted page, verified 2026-06-10.",
-      "priceProvenance": "secondary-corroborated",
-      "priceProvenanceNote": "Stansted withdrew the Express Set Down tariff from its own site when it moved to barrierless ANPR; pricing now sits with APCOA. £10 (<=15 min) / £28 (15-30 min) effective 19 Mar 2026 (up from £7), corroborated by 6 independent secondary sources. Mike's call 2026-08-14: accept secondary corroboration; verify against the APCOA/pay portal, not the airport page.",
-      "tariffCheckUrl": "https://pay.stanstedairport.com/"
+      "blueBadgeSeoDescription": "Standard Stansted drop-off charges apply for Blue Badge holders (with a max-stay extension if needed), but the Mid Stay car park free drop-off zone (60 min) is free for everyone. Read from the official Stansted page, verified 2026-06-10."
     },
     {
       "airportSlug": "luton",
