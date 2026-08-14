@@ -1,5 +1,5 @@
 {
-  "version": "1.3.0",
+  "version": "1.3.1",
   "lastUpdated": "2026-07-03",
   "records": [
     {
@@ -18,7 +18,7 @@
         }
       ],
       "sourceUrl": "https://www.heathrow.com/transport-and-directions/heathrow-parking/heathrow-park-and-ride",
-      "verifiedAt": "2026-08-13"
+      "verifiedAt": "2026-08-14"
     },
     {
       "airportSlug": "gatwick",
@@ -36,7 +36,7 @@
         }
       ],
       "sourceUrl": "https://www.gatwickairport.com/parking/roll-up-car-park-prices.html",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-08-14"
     },
     {
       "airportSlug": "manchester",
@@ -63,7 +63,7 @@
         }
       ],
       "sourceUrl": "https://www.manchesterairport.co.uk/parking/turn-up-and-park/",
-      "verifiedAt": "2026-08-13"
+      "verifiedAt": "2026-08-14"
     },
     {
       "airportSlug": "stansted",
@@ -90,7 +90,7 @@
         }
       ],
       "sourceUrl": "https://www.stanstedairport.com/parking/long-stay/",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-08-14"
     },
     {
       "airportSlug": "luton",
@@ -108,7 +108,7 @@
         }
       ],
       "sourceUrl": "https://www.london-luton.co.uk/parking-prices",
-      "verifiedAt": "2026-08-13"
+      "verifiedAt": "2026-08-14"
     },
     {
       "airportSlug": "edinburgh",
@@ -126,7 +126,7 @@
         }
       ],
       "sourceUrl": "https://www.edinburghairport.com/edinburgh-airport-parking/long-stay-parking",
-      "verifiedAt": "2026-08-13"
+      "verifiedAt": "2026-08-14"
     },
     {
       "airportSlug": "birmingham",
@@ -135,16 +135,16 @@
           "productType": "gate",
           "name": "Car Park 7 — off-site Long Stay (turn-up)",
           "prices": [
-            { "days": 3, "totalPence": 13300 },
-            { "days": 7, "totalPence": 30100 },
-            { "days": 14, "totalPence": 59500 }
+            { "days": 3, "totalPence": 13900 },
+            { "days": 7, "totalPence": 31500 },
+            { "days": 14, "totalPence": 62300 }
           ],
           "snapshotDate": null,
-          "notes": "Official turn-up tariff for Car Park 7 (the off-site long-stay car park): up to 24h £49.00, then £42.00 per day (or part) thereafter. 3/7/14-day totals computed from those official per-day rates (3d=49+2x42; 7d=49+6x42; 14d=49+13x42). FLAG: birminghamairport.co.uk is Cloudflare-blocked to every automated transport; figures read from the official birminghamairport.co.uk turn-up-prices page captured in the Wayback Machine on 2025-09-06. Re-confirm against the live 2026 tariff."
+          "notes": "Official turn-up tariff for Car Park 7 (the off-site long-stay car park): up to 24h £51.00, then £44.00 per day (or part) thereafter. 3/7/14-day totals computed from those official per-day rates (3d=51+2x44; 7d=51+6x44; 14d=51+13x44). FLAG: birminghamairport.co.uk is Cloudflare-blocked to every automated transport (direct fetch and reader proxy both return 403 / CAPTCHA interstitial); figures read from the official birminghamairport.co.uk turn-up-prices page captured in the Wayback Machine on 2026-06-30, the most recent snapshot that exists. verifiedAt is deliberately set to that snapshot date, not the check date. Re-confirm from a real browser session."
         }
       ],
       "sourceUrl": "https://www.birminghamairport.co.uk/parking/turn-up-prices/",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-06-30"
     },
     {
       "airportSlug": "bristol",
@@ -207,7 +207,7 @@
         }
       ],
       "sourceUrl": "https://www.newcastleairport.com/car-parking/car-parking-options/",
-      "verifiedAt": "2026-06-27"
+      "verifiedAt": "2026-08-14"
     },
     {
       "airportSlug": "leeds-bradford",
@@ -225,7 +225,7 @@
         }
       ],
       "sourceUrl": "https://www.leedsbradfordairport.co.uk/parking",
-      "verifiedAt": "2026-06-27"
+      "verifiedAt": "2026-08-14"
     },
     {
       "airportSlug": "liverpool",
@@ -243,7 +243,7 @@
         }
       ],
       "sourceUrl": "https://www.liverpoolairport.com/parking/long-stay",
-      "verifiedAt": "2026-06-27"
+      "verifiedAt": "2026-08-14"
     },
     {
       "airportSlug": "teesside",
@@ -261,7 +261,7 @@
         }
       ],
       "sourceUrl": "https://www.teessideinternational.com/teesside-airport-parking/",
-      "verifiedAt": "2026-06-27"
+      "verifiedAt": "2026-08-14"
     },
     {
       "airportSlug": "prestwick",
@@ -340,7 +340,7 @@
         }
       ],
       "sourceUrl": "https://exeter-airport.co.uk/car-parking/",
-      "verifiedAt": "2026-07-03"
+      "verifiedAt": "2026-08-14"
     }
   ]
 }

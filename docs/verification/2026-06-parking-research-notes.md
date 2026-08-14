@@ -466,3 +466,60 @@ both Birmingham lounge entries kept at their 2026-06-10 values and `verifiedAt` 
 **New product spotted, NOT added:** escapelounges.com now lists "Manchester Terminal 2 - The
 Executive by Escape Lounges — From £56.99 per person" as a separate lounge. Adding a new record
 is outside a re-verification pass, so it is flagged for a human decision rather than written in.
+
+## 2026-08-14 — daily ParkMath sweep (parking tariffs + lounges)
+
+Scope: every ParkMath parking/lounge record with `verifiedAt` older than 46 days, plus the
+ParkMath URLs flagged `pendingSince` in `tools/freshness/hashes.json`. RoamMath (eSIM /
+roaming / baggage) deliberately excluded — that is the weekly sweep's job.
+
+### Changed
+
+| Record | Field | Old | New | Source |
+| --- | --- | --- | --- | --- |
+| parking:birmingham | Car Park 7 turn-up 3/7/14-day totals | £133.00 / £301.00 / £595.00 | **£139.00 / £315.00 / £623.00** | Wayback snapshot 2026-06-30 of https://www.birminghamairport.co.uk/parking/turn-up-prices/ |
+
+The Car Park 7 turn-up tariff moved from "up to 24h £49.00, then £42.00 per day" to
+**"Up to 24 hours £51.00, Per day thereafter £44.00"**. The old figures came from a
+2025-09-06 Wayback snapshot and carried an explicit "re-confirm against the live 2026 tariff"
+flag, so this is that re-confirmation. birminghamairport.co.uk remains Cloudflare-blocked on
+every automated rung (direct fetch → HTTP 403; r.jina.ai → "Just a moment..." CAPTCHA
+interstitial), so the figures were read from the most recent Wayback capture of the official
+page. The CDX index confirms 2026-06-30 is the only capture since May 2026.
+
+`verifiedAt` for this record is deliberately set to **2026-06-30** (the snapshot date), not the
+check date — the number is attested as of the snapshot, not as of today. Recomputation:
+3d = 51 + 2×44 = £139; 7d = 51 + 6×44 = £315; 14d = 51 + 13×44 = £623. The same snapshot maps
+tariff tables to headings unambiguously ("Car Park 7" → "Up to 4 hours £30.00 / Up to 24 hours
+£51.00 / Per day thereafter* £44.00").
+
+### Confirmed unchanged (verifiedAt bumped to 2026-08-14)
+
+| Record | Official figure re-read today |
+| --- | --- |
+| parking:gatwick | Long Stay roll-up "0-2 hours: free; 2-24 hours: £38.00; Each subsequent day: £32.00" |
+| parking:stansted | Turn Up & Park table "Short Stay (Blue, Green) £70 / Mid Stay £48" |
+| parking:leeds-bradford | FAQ table "Long Stay - 10-20 min by shuttle bus | £57 | £18" |
+| parking:liverpool | Gate Rate table 1d £60, 2d £100, 3d £120, 4d £130, 5d £140, 6d £150, 7d £160, 8d £170, +£30/day |
+| parking:newcastle | Long Stay "Up to 24 hours £50.00, 2 days £80.00, 3 days £120.00, 4 days £160.00, Per day or part thereafter £40.00" |
+| parking:teesside | Standard turn-up "Up to 24h £36.00 … 7 days £105.00 … 11 days £165.00, £15 per day thereafter" |
+| parking:manchester | Turn Up & Park "Up to 24 hours and for each 24 hours thereafter £63.40" |
+| parking:heathrow | "first day costing £46.80, and additional 24-hour periods starting at £37.40" |
+| parking:luton | Long Stay on-the-day £35.00/day |
+| parking:edinburgh | Long Stay drive-up £60 first 24h, £40/day thereafter |
+| parking:exeter | "Car Park P2 – £40 per day or part thereof" |
+| lounges:heathrow | Club Aspire T5 £40 |
+| lounges:gatwick | Club Aspire South £34 (No1 North £38 also listed) |
+| lounges:manchester | Escape T2 £39.99, Escape T3 £29.99 |
+| lounges:stansted | Essence by Escape "From £28.99 per person" |
+| lounges:edinburgh | Escape "From £36.99 per person" |
+| lounges:bristol | Escape £39.99, Essence £35 |
+| lounges:newcastle | Aspire £46 |
+
+### Not re-verified
+
+- **lounges:birmingham** — birminghamairport.co.uk/at-the-airport/lounges/ is Cloudflare-blocked
+  (403 direct, 403 via reader) and the only Wayback capture is 2024-12-03, far too old to act on.
+  Both Birmingham lounge entries keep their 2026-06-10 values; `verifiedAt` NOT bumped.
+- **lounges:luton** — the Aspire/MyLounge page rendered with no price on any rung today; record
+  left at its 2026-08-13 value (still fresh), hash left pending.
