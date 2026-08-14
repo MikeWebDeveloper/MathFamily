@@ -418,3 +418,154 @@ max stay and payment deadline were re-confirmed today.
 > wording** if you want belt-and-braces before merging. Separately, the £5/15-min Rapid
 > Drop-off fee should be re-sourced from the official Rapid Drop-off T&C page on the next
 > sweep, since the main page no longer lists it.
+
+## 2026-08-13 — daily ParkMath sweep (drop-off)
+
+Transport: direct curl (browser UA) → `r.jina.ai` plain → `r.jina.ai` with `X-Engine: browser`
+→ in-app Chromium (for the client-rendered MAG/Cardiff/Birmingham tariff widgets).
+
+**Confirmed unchanged against the official page today (verifiedAt bumped, no value edits):**
+Heathrow (£7/visit), Gatwick (£10/10min, £1/min to 20 min, max £30, max stay 30),
+Manchester (£5.50/5min, £6.50/10min, £25/30min, max stay 30), Luton (£7/10min then £1/min,
+£95 enforcement), Edinburgh (£8.50/10min then £1/min), Birmingham (Drop Off free for up to
+10 minutes), Glasgow (£7/15min, £1/min, £50 after 30 min), Bristol (£8.50 / £10.50 / £13.00 /
+£30.00 / £60.00, max stay 2h, Red Route £100→£60, Blue Badge 40 min for £8.50),
+Belfast International (£5 / £8 / £13, over 1 hour £60), Newcastle Express (£6 / £12 / £16 /
+£20 / £28 — all five bands), Liverpool (£6/10min), London City (£8/5min, £1/min, max stay
+10 min), Aberdeen (£7/15min, £1/min, £50 flat after 30 min), Belfast City (£4 minimum first
+10 min; £8 minimum on re-entry within 15 min), Southampton (£7 for 20 min), Exeter (£6/15min
+in P1; P4 free 30 min; £20/day overstay), Southend (£8/10min), Bournemouth (£8/30min),
+Norwich (£8/20min in CP1; £30/day overstay), Inverness (free 15 min, no return within 1 hour;
+Blue Badge/Special Assistance 20 min free in Premium), Teesside (£2.50/10min, £5/1h, £7 per
+hour thereafter), Prestwick (£4.50/60min in Car Park 1).
+
+**Changed — Cardiff (drop-off:cardiff).** The official tariff rose across the lower bands:
+
+| Duration | Old | New |
+| --- | --- | --- |
+| Up to 10 mins | £3.00 | **£4.50** |
+| 10–20 minutes | £4.00 | **£6.00** |
+| Up to 1 hour | £8.00 | **£9.00** |
+| Up to 2 hours | £20.00 | £20.00 (unchanged) |
+
+Verbatim from the page: "This facility is £4.50 for the first 10 minutes", "It costs £4.50 for
+every 10 minutes thereafter", and the DURATION/TARIFF table "Up to 10 mins £4.50 / 10 – 20
+minutes £6.00 / Up to 1 hour £9.00 / Up to 2 hours £20.00 / 2 – 24 hours £50.00 / All
+subsequent days – £50.00 per day". Car Park 2 "first 20 minutes are FREE" — free alternative
+unchanged. `penaltyNotes` updated from "3–24 hours costs £50" to the published "2–24 hours".
+`priorYearFeePence` deliberately left null — the £3.00 we held was a 2026 figure, not a
+prior-year figure, so populating it would fabricate a trend.
+
+**Source URL moved — Cardiff.** The recorded `sourceUrl`
+`cardiff-airport.com/parking-cwl/drop-off-and-pick-up-cwl/` now serves an empty shell (page
+title renders as "Careers"). The live page is
+`cardiff-airport.com/car-parking-options/drop-off-and-pick-up-cwl/`; `sourceUrl` updated and
+the watchlist regenerated.
+
+**Refined — London City blue-badge policy.** Values unchanged. The official page now states
+the concession precisely: "Blue Badge holders may register to get 10 minutes free parking in
+the Drop-off area. Please use the Main Stay if you need more time and get 1 hour free
+parking." Replaced our looser "exempt from the drop-off charge" wording.
+
+**Stansted — penalty now published, fee bands NO LONGER published.** `penaltyPence` set to
+10000: "If payment is not received by the deadline, a £100.00 Parking Charge Notice will be
+issued to the registered vehicle holder. This will be reduced to £60.00 if paid within 14
+days." Also confirmed: "Maximum stay is 30 minutes" and "There is a £28 charge for re-entering
+within 30 minutes of first entering the car park" — i.e. the £28 is a **re-entry** charge on
+today's page, not the "over 15 minutes" tier our `penaltyNotes` described. The Express Set
+Down "Pick Up & Drop Off charges" table is now rendered empty (`<p class="_y78g06"></p>`,
+`aria-hidden="true"`) in the live DOM, so the £10/15-minute and £28/30-minute bands could not
+be re-confirmed. Bands left untouched and `verifiedAt` deliberately NOT bumped (still
+2026-06-26); flagged for human decision.
+
+**East Midlands — same MAG pattern.** Confirmed "Maximum stay is 30 minutes. Payments must be
+made online by midnight the following day", the £100→£60 charge, Short Stay 1 £6/30min and
+the Blue Badge concessions (Short Stay 1 free 30 min, Long Stay 2 free 60 min). The Rapid
+Drop-Off charge table is likewise empty in the live DOM, so the £5/15-minute headline could
+not be re-confirmed. Value kept, `verifiedAt` not bumped (still 2026-06-26).
+
+**Leeds Bradford — unverifiable today.** `leedsbradfordairport.co.uk/parking` is an SPA that
+returned no priced content on any rung (direct 200 but empty, jina plain and jina browser both
+~3.3 KB of chrome, in-app browser navigation timed out at 300 s). Value kept, `verifiedAt` not
+bumped (still 2026-06-22).
+
+**Southampton — on-page conflict, flagged.** Prose confirms our figure: "Passengers who choose
+this option will be charged a £7 fee for 20 minutes." The same page also carries an unlabelled
+tariff table "Up to 20 minutes £10.00 / Up to 60 minutes £18.00 / Up to 90 minutes £30.00 /
+Up to 4 hours £60.00". The 60/90-minute and 4-hour bands make that table look like the Short
+Stay roll-up tariff (the page links out to "Short Stay parking page for roll-up pricing"), not
+the ≤20-minute drop-off product, so £7 was kept and `verifiedAt` bumped on the strength of the
+explicit prose. Flagged for human confirmation. Enforcement charge £80 → £50 within 14 days
+re-confirmed.
+
+**Birmingham — blue-badge policy no longer on the page.** The drop-off fee (free for up to 10
+minutes) was re-confirmed, so `verifiedAt` was bumped, but the page no longer carries any Blue
+Badge text; the existing `blueBadgePolicy` (Premium Set Down, 30 minutes free, validated at the
+NCP Customer Service cabin) is retained unverified from 2026-06-10.
+
+**Standing hard-blocked targets — both cleared this run.** London City drop-off and the
+Newcastle drop-off page were both read successfully via `r.jina.ai` with `X-Engine: browser`,
+and both matched our held values exactly. Newcastle's page also publishes the full Express /
+Short Stay 1 / Short Stay 2 / Minibus tariff grid.
+
+## 2026-08-14 — daily ParkMath sweep (drop-off fees)
+
+Scope: drop-off records with `verifiedAt` older than 46 days (Stansted, Leeds Bradford, East
+Midlands), the standing hard-blocked target London City, and the ParkMath drop-off URLs flagged
+`pendingSince` in `tools/freshness/hashes.json`.
+
+### Changed
+
+| Record | Field | Old | New | Source |
+| --- | --- | --- | --- | --- |
+| drop-off:east-midlands | `perMinuteAfterPence` | `null` | **100** | https://www.eastmidlandsairport.com/parking/pick-up-and-drop-off/ |
+| drop-off:east-midlands | `feeSummary` | "£5 for up to 15 minutes (Rapid Drop-off, barrier-free in front of the terminal)" | "£5 for up to 15 minutes, then £1 per minute (Rapid Drop-off, barrier-free in front of the terminal; maximum stay 30 minutes)" | same |
+| drop-off:london-city | `penaltyPence` | `null` | **10000** | https://www.londoncityairport.com/parking/drop-off |
+| drop-off:london-city | `penaltyNotes` | "…a Parking Charge may apply for non-payment but no amount is confirmed on the official page" | "…a £100 enforcement charge is payable by drivers who stay past 10 minutes, reduced to £60 if paid within 14 days" | same |
+
+**East Midlands.** The official "Drop Off charges" table now reads "Up to 15 minutes | £5" and
+"Every minute after the first 15 minutes | £1", with "Maximum stay is 30 minutes." below it. The
+£5 headline and the 30-minute cap are unchanged; the per-minute overstay rate was previously
+`null` and is now published, so it has been filled in. Note the price table on this page is
+rendered from a Storyblok JSON payload embedded in the page and is absent from the reader-proxy
+text — it has to be read from the raw HTML of the redirect target
+(`/getting-to-and-from/pick-up-and-drop-off/`).
+
+**London City** — a standing hard-blocked target — was readable today via
+`r.jina.ai` with `X-Engine: browser` (direct fetch still 403s). The page confirms the existing
+fee unchanged ("0 - 5 minutes | £8.00", "5 minutes and above | £1 per minute thereafter",
+"Maximum stay 10 minutes") and, newly, states the enforcement amount the record previously
+recorded as unconfirmed: "A £100.00 enforcement charge is payable by drivers who stay past 10
+minutes. This charge is reduced to £60.00 if paid within 14 days."
+
+### Confirmed unchanged (verifiedAt bumped to 2026-08-14)
+
+| Record | Official figure re-read today |
+| --- | --- |
+| drop-off:stansted | Express Set Down table "Up to 15 minutes £10 / Over 15 minutes £28"; "£28 charge for re-entering within 30 minutes" |
+| drop-off:leeds-bradford | "The standard fee is £8 for 10 minutes … Blue Badge holders who are travelling can stay for up to 60 minutes for the same £8 fee" |
+| drop-off:east-midlands | £5 up to 15 minutes (headline unchanged; see per-minute correction above) |
+| drop-off:london-city | £8 for 0-5 min, £1/min thereafter, max stay 10 min |
+| drop-off:heathrow | "The £7 charge applies each time your vehicle enters a terminal drop-off zone" |
+| drop-off:gatwick | "£10 for 10 minutes", "£1 for each additional minute up to 20 minutes", "maximum daily charge of £30 and a maximum length of stay of 30 minutes" |
+| drop-off:luton | "£7 for 10 minutes and £1 thereafter. There is a maximum stay of 30 minutes" |
+| drop-off:edinburgh | £8.50, then £1 per minute |
+| drop-off:aberdeen | "Drop Off is charged at £7.00 to stay for up to 15 minutes" |
+| drop-off:southampton | "charged a £7 fee for 20 minutes" |
+| drop-off:norwich | "up to 20 mins for £8" |
+| drop-off:southend | "£8 per visit, paid after exit online by midnight the following day"; "0–10mins £8" |
+| drop-off:exeter | Car Park P1 £6.00 drop-off band |
+| drop-off:manchester | "5 minutes £5.50 / 10 minutes £6.50 / Up to 30 minutes £25" |
+| drop-off:teesside | "0-10 minutes £2.50 / 10 to 60 minutes £5.00 / £7 per hour thereafter" |
+| drop-off:newcastle | Express table "Up to 10 mins £6.00 / 30 mins £12.00 / 45 mins £16.00 / 1 hour £20.00 / 2 hours £28.00" |
+| drop-off:liverpool | Long Stay Gate Rate page re-read; drop-off record unchanged |
+
+### Not re-verified
+
+- **drop-off:birmingham** — birminghamairport.co.uk Cloudflare-blocked on every rung. The
+  2026-06-30 Wayback capture of the turn-up-prices page does still show the Drop Off car park as
+  "0 - 10 minutes | Free", consistent with the record, but the record's own `verifiedAt`
+  (2026-08-13) is still current so nothing was changed.
+- **drop-off:cardiff**, **drop-off:inverness** — pages returned no readable price text on any
+  rung today; both records are still within their freshness window (2026-08-13) so their values
+  stand and their watchdog hashes were left pending.
