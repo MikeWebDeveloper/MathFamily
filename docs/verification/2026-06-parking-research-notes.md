@@ -495,3 +495,19 @@ page today shows several unattributed "From" prices (£74.99, £64.99) whose dur
 be pinned from the markup, so the held quote and its snapshotDate are left untouched; only the
 gate product was re-verified. Record `verifiedAt` follows the stable gate tariff, per the
 dataset's snapshotDate-vs-verifiedAt convention.
+
+## 2026-08-16 (follow-up pass — daily ParkMath check)
+
+**Stansted pre-book 'from' price — CHANGED, £71.99 → £59.99.** The official Long Stay page
+now reads "Prices from £59.99 (8 day stay in November 2026)"; the held value was "From £71.99"
+for an 8-day stay against sample Oct 2026 dates, snapshotted 2026-06-10. This is a dynamic
+"from" quote, so `snapshotDate` moves to 2026-08-16 with it. The Mid Stay Turn Up & Park gate
+rate was re-read on the official Turn Up & Park page — £48 per 24h, "these prices are for a
+24-hour period, every 24-hour period thereafter will be charged at the same rate" — unchanged,
+as are the Short Stay £70/24h figures quoted in the notes.
+
+Also re-read and confirmed unchanged this pass: Gatwick Long Stay roll-up (£38 for 2–24h, £32
+each subsequent day), Newcastle Long Stay Turn Up & Park (3 days £120, 4 days £160, £40/day
+thereafter), Liverpool Long Stay Gate Rate (3 days £120, 7 days £160, 8 days £170, £30/day
+thereafter), Teesside standard turn-up (3 days £82, 7 days £105, 11 days £165, £15/day
+thereafter), Leeds Bradford Long Stay turn-up (£57 first day, £18 per additional day).
