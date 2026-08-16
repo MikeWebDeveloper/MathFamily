@@ -1,6 +1,6 @@
 {
-  "version": "1.0.0",
-  "lastUpdated": "2026-07-01",
+  "version": "1.0.1",
+  "lastUpdated": "2026-08-16",
   "networkSources": [
     {
       "network": "ee",
@@ -10,17 +10,17 @@
     {
       "network": "o2",
       "sourceUrl": "https://www.o2.co.uk/international/travel-inclusive-zone-ultimate",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-08-16"
     },
     {
       "network": "vodafone",
       "sourceUrl": "https://binaries.vodafone.co.uk/gbnnsauqav4t/3ynRZJ6BvgpyYyPmoIAHX0/ff9c9463c41c25d0cbf8f5d27f955afb/evo-paym-charges-guide.pdf",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-08-16"
     },
     {
       "network": "three",
       "sourceUrl": "https://www.three.co.uk/support/roaming-and-calling-abroad/roaming-abroad/go-roam",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-08-16"
     }
   ],
   "destinations": [

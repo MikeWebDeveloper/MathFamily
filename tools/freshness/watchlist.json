@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-13",
+  "generatedAt": "2026-08-16",
   "entries": [
     {
       "url": "https://binaries.vodafone.co.uk/gbnnsauqav4t/3ynRZJ6BvgpyYyPmoIAHX0/ff9c9463c41c25d0cbf8f5d27f955afb/evo-paym-charges-guide.pdf",
@@ -426,6 +426,13 @@
       "watchable": true
     },
     {
+      "url": "https://www.aspirelounges.com/airports/birmingham-airport/",
+      "refs": [
+        "lounges:birmingham"
+      ],
+      "watchable": true
+    },
+    {
       "url": "https://www.belfastairport.com/blog-news",
       "refs": [
         "news:belfast-international"
@@ -459,13 +466,6 @@
         "drop-off:belfast-city"
       ],
       "watchable": true
-    },
-    {
-      "url": "https://www.birminghamairport.co.uk/at-the-airport/lounges/",
-      "refs": [
-        "lounges:birmingham"
-      ],
-      "watchable": false
     },
     {
       "url": "https://www.birminghamairport.co.uk/news/",
@@ -816,6 +816,13 @@
       "watchable": true
     },
     {
+      "url": "https://www.stanstedairport.com/getting-to-and-from/pick-up-and-drop-off/",
+      "refs": [
+        "drop-off:stansted"
+      ],
+      "watchable": true
+    },
+    {
       "url": "https://www.stanstedairport.com/parking/long-stay/",
       "refs": [
         "parking:stansted"
@@ -825,7 +832,6 @@
     {
       "url": "https://www.stanstedairport.com/parking/pick-up-and-drop-off/",
       "refs": [
-        "drop-off:stansted",
         "news:stansted"
       ],
       "watchable": true

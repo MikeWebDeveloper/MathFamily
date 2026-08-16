@@ -466,3 +466,32 @@ both Birmingham lounge entries kept at their 2026-06-10 values and `verifiedAt` 
 **New product spotted, NOT added:** escapelounges.com now lists "Manchester Terminal 2 - The
 Executive by Escape Lounges — From £56.99 per person" as a separate lounge. Adding a new record
 is outside a re-verification pass, so it is flagged for a human decision rather than written in.
+
+## 2026-08-16 — sweep (staleness pass)
+
+Seven stale parking records re-read. Six matched their held figures exactly; one changed.
+
+**Unchanged, re-confirmed:**
+- **Gatwick** — Long Stay roll-up 0–2h free, 2–24h £38, each subsequent day £32. Matches.
+- **Stansted** — Turn Up & Park MAG CMS JSON: `Short Stay (Blue, Green)|£70`, `Mid Stay|£48`.
+  Matches the held £48/24h Mid Stay gate product.
+- **Newcastle** — Long Stay turn-up: 24h £50, 2d £80, 3d £120, 4d £160, then £40/day. Matches.
+- **Leeds Bradford** — "Turn up on the day": Long Stay 1st day £57, per additional day £18.
+  Matches. (Mid Stay £68/£25, Short Stay £83/£48, Premium Short Stay £118 also published.)
+- **Liverpool** — Gate Rate: 1d £60, 2d £100, 3d £120, 4d £130, 5d £140, 6d £150, 7d £160,
+  8d £170, then £30/24h. Matches.
+- **Teesside** — Standard turn-up: 24h £36 … 11d £165, then £15/day. Matches (cross-read twice).
+
+**Birmingham — CHANGED.** Car Park 7 turn-up is now **£51.00 up to 24h + £44.00 per day**
+thereafter (was £49 + £42). Totals 3d £133→£139, 7d £301→£315, 14d £595→£623. This is the first
+*live* read of this record: the previous figures came from a 2025-09-06 Wayback capture because
+`birminghamairport.co.uk` 403s every fetch rung. The in-app **browser pane (rung 0)** went
+straight through, as `parkmath-source-reachability` predicted — the note about re-confirming
+against the live 2026 tariff is now discharged and removed from the record's notes.
+
+**Stansted pre-book product — NOT re-quoted.** The record's second product is a dynamic
+"From £71.99 / 8 days" quote carrying its own `snapshotDate` of 2026-06-10. The live long-stay
+page today shows several unattributed "From" prices (£74.99, £64.99) whose duration basis cannot
+be pinned from the markup, so the held quote and its snapshotDate are left untouched; only the
+gate product was re-verified. Record `verifiedAt` follows the stable gate tariff, per the
+dataset's snapshotDate-vs-verifiedAt convention.

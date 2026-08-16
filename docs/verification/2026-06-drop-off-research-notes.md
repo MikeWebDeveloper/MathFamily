@@ -507,3 +507,37 @@ NCP Customer Service cabin) is retained unverified from 2026-06-10.
 Newcastle drop-off page were both read successfully via `r.jina.ai` with `X-Engine: browser`,
 and both matched our held values exactly. Newcastle's page also publishes the full Express /
 Short Stay 1 / Short Stay 2 / Minibus tariff grid.
+
+## 2026-08-16 — sweep (staleness pass)
+
+Three stale drop-off records re-read; all transport rungs per `parkmath-source-reachability`.
+
+**Stansted (unchanged).** MAG CMS JSON in the raw HTML of
+`/getting-to-and-from/pick-up-and-drop-off/` gives `Up to 15 minutes|£10`,
+`Over 15 minutes|£28` — matches the held £10/£28 exactly. The same payload also carries the
+Short Stay set-down ladder (30 min £13, 1h £21, 2h £25, 4h £38) and confirms the Mid Stay free
+alternative (`Up to 60 minutes|Free`, `Next hour|£5`, then day rate).
+
+**Leeds Bradford (bands widened, headline unchanged).** The Next.js RSC payload publishes the
+full car ladder, not just the first band: 0–10 min £8.00, 10–20 £10.00, 20–30 £13.50, 30–60
+£16.50, each subsequent hour £16.50. We previously stored only the £8/10-min band, so the
+calculator under-reported any stay over 10 minutes. All four bands are now in `bands`;
+`feeSummary` updated. (Minibus/coach columns exist too — not modelled, cars only.)
+
+**East Midlands (two corrections).** The Rapid Drop-Off table now reads
+`Up to 15 minutes|£5` and `Every minute after the first 15 minutes|£1`. Two held claims are no
+longer supported anywhere on the official page:
+- a **30-minute maximum stay** — no max-stay text remains; `maxStayMinutes` 30 → `null`, and
+  `perMinuteAfterPence` null → 100, which is what the page actually publishes.
+- a **£70 debt-recovery fee** and "overstaying the 30-minute maximum" in `penaltyNotes` — the
+  page states only £100 for non-payment by midnight the day after, reduced to £60 within 14 days.
+  `penaltyNotes` rewritten to that.
+Blue Badge wording re-confirmed: Short Stay 1 free 30 min, Long Stay 2 free 60 min for everyone.
+
+**Birmingham drop-off — NOT re-verified, flagged.** Not stale (verified 2026-08-13) so out of
+this pass's scope, but the site is running a banner "New tariffs for Premium Set Down and Drop
+off Car parks", and the live page now publishes an explicit ladder our record does not model
+(`bands` is empty): Drop Off car park 0–10 min free, 10–15 £7, 15–20 £8, 20–25 £14, 25–30 £20,
+rising to £56 for 55–60 min, then £8 per extra 15 min; Premium Set Down 0–15 min £8 rising to
+£61. The held claim ("first 10 minutes free, standard tariff thereafter") is still true. Worth a
+targeted `check drop-off:birmingham` to fill the bands.

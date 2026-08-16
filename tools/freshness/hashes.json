@@ -1,7 +1,7 @@
 {
   "https://binaries.vodafone.co.uk/gbnnsauqav4t/3ynRZJ6BvgpyYyPmoIAHX0/ff9c9463c41c25d0cbf8f5d27f955afb/evo-paym-charges-guide.pdf": {
     "hash": "8748a61804c23ce9e8f920cfb0adc0ab1bb94c9ceaa89157b000c2e9c2f5ed04",
-    "checkedAt": "2026-08-13"
+    "checkedAt": "2026-08-16"
   },
   "https://cardiff-airport.com/parking-cwl/drop-off-and-pick-up-cwl/": {
     "hash": "fb681bbf2ee5631a533db4bb0b7c68cc4942792362bc3cd5408cd9d56a8807e9",
@@ -57,204 +57,164 @@
     "checkedAt": "2026-08-13"
   },
   "https://www.airalo.com/albania-esim": {
-    "hash": "f21cb24886a24f7a1ad4625f664055df405b0ce60bbe0f199f1000af8fb1f389",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "a707f6b5f93936c5ca9f8a56cd5fa6a50bbed31def9b8f9c89be44dac42894d2",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/australia-esim": {
-    "hash": "ced1996833e7c385db84e4cdd4e84ff2249ec922d855c5100f7ff23f39c941e9",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "7e0e8189808cbfec327e77bf32e14dce49452325ff9a40b7ee0c9dcb96095d68",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/austria-esim": {
-    "hash": "5e9c05138fa685f8cf47ea463e6a7b562b470be10166d242d9fbbf90a1981a93",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "ab5a4e19855e1469808a3312639fedb5091b1974b57531662a0372dc3d7249f1",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/belgium-esim": {
-    "hash": "7a9ee1778d09e633f9a6fa4310c02925bfb3a9d57c3e388e7699d1b1df6f83a1",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "845e743688e643d4a060e08923facdbbf29862a094d74a8fb8f26a70d5bf79d6",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/bulgaria-esim": {
-    "hash": "03d1299e8bcdf823218b87d0eaf2cef23f71209d9efe2503e05c9f2c00c8cdbc",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "a34bbd47fcb3b1755ec20d101f3d32141d2f05ba1661aae630d50f275b8c6645",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/canada-esim": {
-    "hash": "0fdd133714d413e07dd7a097a142fb0d7d93c417a4d9e590829601f3d2620c07",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "27e18d247fc448504d9579e62f22f805de317c554a6903eaa8e57c122e4746ed",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/china-esim": {
-    "hash": "555b863615cccf04a306425b5b775b290bdc782a2bf5ed1a8c850a7cb2acfc4e",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "e1e4206ea4377a6417a1fb2c58135fddcbedf34e702cf449956ca8444bfa4e76",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/croatia-esim": {
-    "hash": "2d44d44340ad8874de6aeffb26c12ee55a4d5a7f0f90f1da4c087526dbc6d9b9",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "59174c05a87b88875343ebd4723b808c0d4ba8f688aaaa9736f71bad39b27c59",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/cyprus-esim": {
-    "hash": "bf47a6ab027db907f556ff0b75e42292e7debf2a03f46a14f629d7aa9a7db468",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "e4151512b09270eae92ef69e09c822990aabfbd299a63e899c06b24df7650997",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/czech-republic-esim": {
-    "hash": "04bc3ec14054dde71638bf3f3401affddfed97e0b110f3858a35a1dc466e92f3",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "e516cd2f84d72c15b2af102078df60ba5d43c74a087e1c9088c87ebec3c218ee",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/denmark-esim": {
-    "hash": "14202eb1b92c894a81480102813beeb3400886d6a5c1b842579c12f5f5379823",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "2d506b623d500672ab50a8f5f2745190257778299adbd02219d6b89c823607a0",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/egypt-esim": {
-    "hash": "e124c9d234f96d700a30fc7f969b2f10c74774be94c2c3c3b31ac80f6b9e4b6a",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "b1ba997468be328556db1b0ec8d044d568819ea76fdc8b84989815fb1d479bfb",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/france-esim": {
-    "hash": "18778ff52a4e6ab90d9f970336f98e9afe7cfcc4d08828fa159465cab1afdb6b",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "b5f70f1888a03b0cd12162bc78205af729ccb8ca5f2ae236195affe0edd37d2c",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/germany-esim": {
-    "hash": "e55aec8416b20bec988c8ae3dae7a967924627c337036fd4e7d78315c297dca6",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "7811e653f0ede500b0f58c06cbfbd9f3d55de012123f4c881923d93fc6002a53",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/greece-esim": {
-    "hash": "3fb678e60677f1d211dc2e1c0529a0c01f750633aa2167b85b54761d14d810fd",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "0a34503c8c300a3c7c20335e92fa3599f92797b2aad21f70bd197da63f0c7cb6",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/hungary-esim": {
-    "hash": "2d53a3d9649ad9de06cfc9be869897fede444c8bdc93188c4817700574cde661",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "f982e495793c6555d527b5c4b4071045d9aa82f33f81af15f0d3c63ddf1692cb",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/iceland-esim": {
-    "hash": "137fc95f0cc8931aedd6e224695c1c5960ffa9e403b1f0f11c1b8637ec355a6d",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "e24648d77bee315f9b9f10f8b2e73f9e8d31a5856b6d1134133be81712f75f3f",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/india-esim": {
-    "hash": "cfb99ba9969160919a2c199781d04707eb43a1f2d2e309077a7b748dea61ff83",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "d17ec8e48bc6262781f8ebc5e2112c563105ab1fab63cf784241a63415c8633e",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/ireland-esim": {
-    "hash": "3dbf5b4cf6f9bb3d3915367d4bcdd2100478ae3044a09f1e98ca22e116bd9c9c",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "bf1dee10dd8e06f6d861de1a179dae1f2f76103132065e377d9e2c6a275f0b30",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/italy-esim": {
-    "hash": "097aa3a7e84a4af431a491771bbd826ca07dd3f6f5a8f670dbef4443213fadf4",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "165a2797c32c0a22c5324cfc375ffebf20fd8e7ed89a57c589f5a130f4708bc6",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/japan-esim": {
-    "hash": "9c3e87ae9fafa1acccc21853a492d692862643a90de7975451a5a8514d73ff0d",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "62139915ad1174925b21080fcd482e746743decfdbd72e9dd830fb0e1a3799fa",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/malta-esim": {
-    "hash": "6975d56336afd3a1b9a43cb80621e5aba78db328677adc02822c07bf05b7476a",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "3d74f94ea60af24c07c36841bbf97b3d8d47280ac2646bcc5f44344cebb5600f",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/mexico-esim": {
-    "hash": "dcb0bcc3fd27d0c238329ea7ede3589b09a6b536f6bf2925b28127b24f5723df",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "8367e055959e2f40ab89bcb8f99e1db0cd5d05a89d0a62f639e2f7bc29faac4b",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/montenegro-esim": {
-    "hash": "3f64f343afe1ddf279f890a6b3a8f4eb7eddb0934a8016ec538c298889f114d7",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "d21732a68b09875712cbe725a4eed2448596e05bd0e673e206ba93cfad760350",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/morocco-esim": {
-    "hash": "962a1dc54ec04202199ea3197a56c30c9f79b132ed472083e98d8893d7da9b93",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "05e59f681052c8769796eab8ece5c04da311277bdde3466e2bdb76815cece7b8",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/netherlands-esim": {
-    "hash": "106349d40e5847e994f7381cb578c05ee5d1c0fc2fdf373041fd362c80215a76",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "2f33af10fdf9911e1803770464d8fd1426e846b6eae41340cc13a84170b699b9",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/new-zealand-esim": {
-    "hash": "9cdb102510ca566799e9b2b28a9c5173703521cbb217472a94443f669d0c0c45",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "090fd645c785e6f37fddccf522745caa289818d89054a223bbb3a3edd00dd033",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/norway-esim": {
-    "hash": "5c6def8200fdfb48957ad417afc2e638ef05148939495ffa3c29a866da80cae8",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "00b907cdad5fba1a0af50bab0c5041fb4b3f79bcf709418a43c8a3dc257429ae",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/poland-esim": {
-    "hash": "9ad2956f79f3ceaeaee3557a58bab34363f06a93a6b3437dcb80534f0e844762",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "b070915a89f29719a2744da284902115af5e720d0f5cd45e0169a82ecfd0313c",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/portugal-esim": {
-    "hash": "b87522fae785b159ef7aa5e3b1669c6e0c69f87c51c86ef2da87337089be110b",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "8283f13f58ed466be741ada7cae06e8669d3d1750c9d846fd7e5278250d6aef3",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/romania-esim": {
-    "hash": "d01bb19196a4283c48ef8800779e740f93940e751f716cb24156300a55c0b7b1",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "f3be9d0896f035c720a54058c5897f2303d8f3dab1021d5454418f2b79ce5871",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/south-africa-esim": {
-    "hash": "108f56bed7d203313e6a766d62507f525f741efaa45e88f0d514904df8cd3646",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "c0a5b33e7ada0bcabba8b8fcae13e1b3bdbe718500401bda701a39953917511e",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/spain-esim": {
-    "hash": "83846545b5f7591882e819e7afaec64e3f6b5fa240103bae096bb2af186a936a",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "8ce213b67fa62e21c48cf01b7ae31ad0a919832142488b05e7e91cf07b85d6a0",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/sweden-esim": {
-    "hash": "7c07ee880d89a4821aaf5af1bc6f4bd4857efee80301e22e364f92f3797415bf",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "3a2f61a493fab808cce975d5c22c77773c38f6e1963b56104d446c6f0d20b1a4",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/switzerland-esim": {
-    "hash": "4c2fbbe8113bca1705602f9bd58e6fba2d05dc2943ebf8b06844357b1af594f9",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "18e2701ac1a9fb0e4eb31ed5ed3782291f1d074180f3aa0830424e9ceae90f62",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/thailand-esim": {
-    "hash": "1b89e4599e82d2df57b707eee408f8c423d43c63651989c4945ddbfef88b6fcc",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "b857f968b58001cc5bea9acd841d06b0609956629454476bbb30aaf1f9e06f84",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/tunisia-esim": {
-    "hash": "e76b944b3272e3c392bbd0c399058eac914f2fa0f682c0bb2123d54a6ca2b730",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "d467ae19af8803a00a4565b9e528cc8ea0b50850daabe718584bf8e9c3a638aa",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/turkey-esim": {
-    "hash": "586ff36cd8a14061964f8f0dce245f122ee4f09736d7525a02e7e15931399872",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "da7697f8085f0fee8403a3a0cb95799694e04e3fe27caf9d976f8fde311dcda5",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/united-arab-emirates-esim": {
-    "hash": "ad0cfe7baf4ecd4f8d1ff5773415f3341eac5446bb897c22641f7459549ffcf5",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "5a0b47d49048051c66c33a84c445d2d79e08862c69c4b865c9aacba93da06e99",
+    "checkedAt": "2026-08-16"
   },
   "https://www.airalo.com/united-states-esim": {
-    "hash": "444e9667fa15ddcb9d9a833b2c0a0487e5a79a94ab7f1ec2f4cc7382566dcebe",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "110dd8bae590f2ef1ec4aec063f9f01692fa2425216f436f198dbbdd81916fd3",
+    "checkedAt": "2026-08-16"
   },
   "https://www.belfastairport.com/car-parking/drop-off-zone": {
     "hash": "c2e3d3100811545dc4d53ae83de837b68fb610c92a26af799f936ecec588f04a",
@@ -282,9 +242,8 @@
     "pendingSince": "2026-08-13"
   },
   "https://www.eastmidlandsairport.com/parking/pick-up-and-drop-off/": {
-    "hash": "817767d5e283b698a1248cd724e57c899621038c5a1ed83b2fa068597e3cda7a",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "0be2031d6b817e289dc74d39745f344c1c40c966ec4c5b3034a26633a061dd78",
+    "checkedAt": "2026-08-16"
   },
   "https://www.easyjet.com/en/help-centre/policy-terms-and-conditions/fees-charges": {
     "hash": "69eca09463a751c3ee7f6188f3583eb93a2ba4dcdfa2da29a68c53c6fb4bc954",
@@ -306,9 +265,8 @@
     "pendingSince": "2026-08-13"
   },
   "https://www.gatwickairport.com/parking/roll-up-car-park-prices.html": {
-    "hash": "e52e7432298cf3c6f6c554294bf2c685b727b7309bc733d6670677309701cfcf",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "97ea574ab0cc9b30b0c692c4d5cff2b22f1df1c6e4e6d29c81cdbdeebe8955ae",
+    "checkedAt": "2026-08-16"
   },
   "https://www.gatwickairport.com/transport-options/drop-off.html": {
     "hash": "28189150a0b63aad8744832ec3fd6605fd62b901c49ec629873dedc54eab345f",
@@ -382,13 +340,12 @@
     "pendingSince": "2026-08-13"
   },
   "https://www.o2.co.uk/international/travel-inclusive-zone-ultimate": {
-    "hash": "5963ba3bd5c19f0677d187dbac280a233cc44d5b2c95958b4b1d4526f163a067",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "87566e7112ae0a7420261699e6372f2dca3dd28ab62c00c0c9ba7614979f167b",
+    "checkedAt": "2026-08-16"
   },
   "https://www.prioritypass.com/en-GB/join-prioritypass": {
     "hash": "c2726ad06cc2086bd4ebc276fa17acbbf31d14c5ff03b61fe21021ba5439aaf0",
-    "checkedAt": "2026-08-13"
+    "checkedAt": "2026-08-16"
   },
   "https://www.ryanair.com/gb/en/useful-info/help-centre/fees": {
     "hash": "6d80486cc33a915c7f4e37a813aaef90930f1ed89057b2716fd71cd80ee8c046",
@@ -400,23 +357,20 @@
     "pendingSince": "2026-08-13"
   },
   "https://www.stanstedairport.com/parking/long-stay/": {
-    "hash": "64d4a3d08f14aef32016216f77bc65cb67543fa6e9a679431ae4897b4f3c97db",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "4d8da5f9a0fed1f4a795cd1cf94b4b968e920c835e1ea3e06139c677730c1ea9",
+    "checkedAt": "2026-08-16"
   },
   "https://www.stanstedairport.com/parking/pick-up-and-drop-off/": {
-    "hash": "6dd012e21a7aec710aafb128c074cbe0a82651f824f6e5f59ac3b39985dff268",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "57c86857e83b544855dd62c358e39d82039db7f9ce5e3719302a9485450c72d5",
+    "checkedAt": "2026-08-16"
   },
   "https://www.teessideinternational.com/teesside-airport-parking/": {
     "hash": "6cf6a71263ad6aac823e419fcc363a016000a31835503d711b65ee36e8fc7a2d",
-    "checkedAt": "2026-08-13"
+    "checkedAt": "2026-08-16"
   },
   "https://www.three.co.uk/support/roaming-and-calling-abroad/roaming-abroad/go-roam": {
-    "hash": "1d1f296dc6bf0ed99c4bcec269d286b18bd64eae8d1edfd9f1455f2e04adc5a9",
-    "checkedAt": "2026-08-13",
-    "pendingSince": "2026-08-13"
+    "hash": "890e9abc4d4e08997fae412882c73c8167aa95e9ef3efa134da7add8691824ce",
+    "checkedAt": "2026-08-16"
   },
   "https://www.tui.co.uk/destinations/info/luggage-allowance": {
     "hash": "c02e681c686ee5bf2b87d686fd85d13628af46839aa900e7a28fe2b0fbe462bf",
@@ -431,5 +385,21 @@
     "hash": "8137609d486bec56c3c7324915fb2258982052d1f5d486ee9c51924300c3770a",
     "checkedAt": "2026-08-13",
     "pendingSince": "2026-08-13"
+  },
+  "https://www.stanstedairport.com/getting-to-and-from/pick-up-and-drop-off/": {
+    "hash": "57c86857e83b544855dd62c358e39d82039db7f9ce5e3719302a9485450c72d5",
+    "checkedAt": "2026-08-16"
+  },
+  "https://www.leedsbradfordairport.co.uk/parking": {
+    "hash": "d09bb45486ade6b68b0ed424b64bd12802dfbd8b33ee41481698c6ac563883b7",
+    "checkedAt": "2026-08-16"
+  },
+  "https://www.stanstedairport.com/parking/turn-up-and-park/": {
+    "hash": "aba02c19be0bba36608c7f73460a23d847a4115a4126870aeff47ec6cb2b95cc",
+    "checkedAt": "2026-08-16"
+  },
+  "https://www.liverpoolairport.com/parking/long-stay": {
+    "hash": "fe7a015671242f8e389c71ba14791743a9de4d875f06454e33bdb1cf6c9fb9d8",
+    "checkedAt": "2026-08-16"
   }
 }
