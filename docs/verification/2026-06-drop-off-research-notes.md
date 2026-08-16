@@ -541,3 +541,28 @@ off Car parks", and the live page now publishes an explicit ladder our record do
 rising to £56 for 55–60 min, then £8 per extra 15 min; Premium Set Down 0–15 min £8 rising to
 £61. The held claim ("first 10 minutes free, standard tariff thereafter") is still true. Worth a
 targeted `check drop-off:birmingham` to fill the bands.
+
+## 2026-08-16 (follow-up pass — daily ParkMath check)
+
+Ran after the 2026-08-16 sweep had already landed. Only records where the sweep's held text
+was still contradicted by the official page are touched here; no figure is restated.
+
+**Stansted — `blueBadgePolicy` corrected (wording, no price change).** The official Express Set
+Down FAQ "Are Blue Badge holders exempt from charges in the Express Set Down area?" answers:
+all vehicles must pay, and "if you require longer than the allocated 15-minute period, please
+speak to one of our traffic marshals on site". The held text claimed an extension to a
+*30-minute* maximum stay, which appears nowhere on the page. Re-worded to the page's own terms.
+The £10 / £28 bands, the 30-minute max stay and the £28 re-entry charge were re-read from the
+Express Set Down tab of the official page and are unchanged.
+
+**Leeds Bradford — two unsupported claims removed.** Neither "SmoothPark" nor "electric" occurs
+anywhere in the official parking page's payload (0 matches each):
+- `paymentDeadline` claimed "SmoothPark automatic payment gives 10% off the standard tariff".
+  The page now describes a ticketless ANPR system paid at the barrier by card or Apple Pay.
+- `freeAlternative.details` claimed "fully electric private cars may also use the Pick Up &
+  Drop Off car park free for up to 1 hour (max 2 visits/day)". Removed.
+The page also now places the free zone *within the Mid Stay car park*, "approximately a
+five-minute walk to the terminal" (held text said a 3–4 minute walk), and states that exceeding
+the hour — or exiting and re-entering within it — puts you on the standard Mid Stay hourly
+tariff. `freeAlternative` rewritten to that. The £8 / £10 / £13.50 / £16.50 car bands and the
+Long Stay turn-up rates (£57 first day, £18 per additional day) were re-read and are unchanged.
