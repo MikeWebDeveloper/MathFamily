@@ -418,3 +418,43 @@ max stay and payment deadline were re-confirmed today.
 > wording** if you want belt-and-braces before merging. Separately, the £5/15-min Rapid
 > Drop-off fee should be re-sourced from the official Rapid Drop-off T&C page on the next
 > sweep, since the main page no longer lists it.
+
+---
+
+## 2026-08-16 — London City (`drop-off:london-city`), standing hard-blocked target
+
+**The block is broken.** `www.londoncityairport.com/parking/drop-off` still returns **HTTP 403**
+to a direct fetch, and `r.jina.ai` in plain mode returns only nav chrome (the fee content is
+client-rendered from Contentful). The page **does** render fully through the reader's browser
+engine:
+
+```
+curl -H "X-Engine: browser" https://r.jina.ai/https://www.londoncityairport.com/parking/drop-off
+```
+
+That rung should be the default for LCY from now on — this target no longer needs to be
+carried as unverifiable.
+
+**Re-confirmed unchanged** against the official page: the `Charges` table (`0 - 5 minutes |
+£8.00`, `5 minutes and above | £1 per minute thereafter`), `_Maximum stay 10 minutes._`, and
+the "settle the charge by midnight the day after" payment deadline.
+
+**Two fields corrected** (both had been carrying pre-block assumptions):
+
+1. `penaltyPence` `null` → `10000`. The Drop-off FAQ ("How long can I stay in the Drop-off
+   Area?") now states the amount outright: *"A £100.00 enforcement charge is payable by drivers
+   who stay past 10 minutes. This charge is reduced to £60.00 if paid within 14 days. This will
+   be strictly enforced with CCTV cameras."* The old `penaltyNotes` explicitly said "no amount
+   is confirmed on the official page" — that is no longer true. Note the £60 is a
+   prompt-payment discount, not a second penalty tier, so only the £100 headline goes in
+   `penaltyPence`; the discount is described in `penaltyNotes`.
+2. `blueBadgePolicy` — was "exempt from the drop-off charge". The official page does **not** say
+   exempt; it says *"Blue Badge holders may register to get 10 minutes free parking in the
+   Drop-off area. Please use the Main Stay if you need more time and get 1 hour free parking."*
+   Rewritten to match. (The 60-minute free window mentioned elsewhere on the page is the
+   **Pick-up** area, not Drop-off — kept out of this field.)
+
+`verifiedAt` 2026-06-22 → 2026-08-16; dataset `version` 1.3.0 → 1.3.1.
+
+**Not changed:** `bands`, `perMinuteAfterPence`, `maxStayMinutes`, `maxChargePence` (the page
+states no overall cap), `feeSummary`, `freeAlternative` (DLR), `priorYearFeePence`.

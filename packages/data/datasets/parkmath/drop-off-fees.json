@@ -1,5 +1,5 @@
 {
-  "version": "1.3.0",
+  "version": "1.3.1",
   "lastUpdated": "2026-06-22",
   "records": [
     {
@@ -399,10 +399,10 @@
       "maxStayMinutes": 10,
       "perMinuteAfterPence": 100,
       "maxChargePence": null,
-      "penaltyPence": null,
-      "penaltyNotes": "After the first 5 minutes the charge is £1 per minute up to the 10-minute maximum stay; a Parking Charge may apply for non-payment but no amount is confirmed on the official page",
+      "penaltyPence": 10000,
+      "penaltyNotes": "£100 enforcement charge for staying past the 10-minute maximum stay, reduced to £60 if paid within 14 days; strictly enforced by CCTV. Separately, after the first 5 minutes the drop-off charge is £1 per minute up to that 10-minute maximum",
       "paymentDeadline": "Midnight the following day (online, barrierless ANPR)",
-      "blueBadgePolicy": "Blue Badge holders are exempt from the drop-off charge (register/sign in to the drop-off system to apply the exemption)",
+      "blueBadgePolicy": "Blue Badge holders may register to get 10 minutes' free parking in the Drop-off area; use the Main Stay car park instead for 1 hour free parking if more time is needed",
       "freeAlternative": {
         "name": "Docklands Light Railway (DLR)",
         "kind": "public-transport",
@@ -411,7 +411,7 @@
       },
       "priorYearFeePence": 0,
       "sourceUrl": "https://www.londoncityairport.com/parking/drop-off",
-      "verifiedAt": "2026-06-22"
+      "verifiedAt": "2026-08-16"
     },
     {
       "airportSlug": "leeds-bradford",
