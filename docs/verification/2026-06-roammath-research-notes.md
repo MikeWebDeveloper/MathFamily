@@ -271,3 +271,46 @@ Scheduled weekly sweep. **Method:** each Airalo country page (`airalo.com/<count
 **Holafly + Saily bundles: NOT re-verified this sweep (NEEDS-HUMAN).** They are "(converted)" values sourced from holafly.com / saily.com (not airalo.com, the record's `sourceUrl`) and require live FX conversion. Re-quoting them reliably is out of scope for an unattended run. Their snapshotDates remain 2026-06-10 (a few older).
 
 **ParkMath (live brand) staleness check:** nothing older than 46 days — every drop-off, parking, lounge, priority-pass and news record was verified between 2026-06-10 and 2026-06-27. The two standing hard-blocked targets are already resolved: London City drop-off has a real record (verified 2026-06-22) and Newcastle Long Stay parking was added (verified 2026-06-27). No ParkMath changes this sweep.
+
+## 2026-08-16 — sweep (staleness pass)
+
+**eSIM: all 40 country records re-quoted (Airalo bundle only).** UK egress confirmed — the
+Airalo pages served GBP (`"currency":{"code":"GBP"}`), no USD anywhere, so the
+`esim-requote-geo-currency-trap` did not bite. Method per `airalo-nuxt-data-quotes`: parse
+`__NUXT_DATA__` out of the direct-curl HTML, walk the index-reference graph, and select package
+nodes by exact `(is_unlimited | amount, day)` match against each held bundle rather than by
+reading the rendered page. All 40 matched a package unambiguously; prices taken from
+`price.minor_amount`, so no float arithmetic or rounding.
+
+**23 of 40 changed — every one a small decrease** (£0.50–£1.00 on a 5-day Unlimited bundle),
+which is consistent with an Airalo price adjustment rather than a parsing artefact:
+spain 14.00→13.00, italy 13.50→13.00, ireland 15.50→15.00, netherlands 15.50→14.50, belgium
+12.00→11.50, switzerland 15.00→14.00, poland 15.50→14.50, malta 15.00→14.50, turkey
+15.00→14.50, mexico 14.00→13.50, new-zealand 15.00→14.50, thailand 12.00→11.50, japan
+13.50→13.00, egypt 23.00→22.00, tunisia 22.00→21.50, norway 15.00→14.50, sweden 15.50→15.00,
+denmark 15.50→15.00, czechia 15.50→15.00, hungary 15.00→14.50, romania 15.00→14.50, albania
+20.50→20.00, montenegro 22.00→21.50. The other 17 were byte-identical.
+
+**Holafly + Saily bundles: still NOT re-verified** (same standing reason as the June note — they
+are "(converted)" values from a different origin than the record's `sourceUrl` and need live FX).
+Their `snapshotDate`s remain 2026-06-10. Only the Airalo bundle's snapshotDate moved to
+2026-08-16; record `verifiedAt` tracks the `sourceUrl` (airalo.com) that was actually re-read.
+
+**Roaming network sources: all three stale sources re-read, all unchanged.**
+- **Three** — Go Roam in Europe £2.75/day for plans joined/upgraded on or after 18 Dec 2025
+  (effective 1 Apr 2026), 12GB fair-use; Go Roam Around the World £8/day on the same join-date
+  basis. Held 275 / 800 confirmed.
+- **Vodafone** — the Evo PAYM charges-guide PDF (extracted with `pdftotext`) states Zone A
+  inclusive, "£2.75 daily charge with usage" for Zone B, "£8 daily charge with usage taken" for
+  Zone C and Zone D. Held 275 / 800 / 800 confirmed.
+- **O2** — Europe Zone inclusive with all tariffs; O2 Travel Bolt On £7/day. Held
+  `included: true` / 700 confirmed. (The 25GB fair-use figure in our `fairUseNote` is not stated
+  on this particular page — carried forward unchanged, not re-confirmed.)
+EE was not due (verified 2026-07-01, inside the 46-day window).
+
+**Baggage: NOT re-verified this sweep — all 12 records remain at verifiedAt 2026-06-10.**
+Ryanair's help-centre fees page renders its fee table in JS (WebFetch returns the bare "Fees"
+heading), and the other eleven airlines publish multi-row tables of *ranges* that vary by route
+and date — the kind of value that is easy to get subtly wrong at speed. Deferred to a dedicated
+`check baggage:*` pass with the browser pane rather than guessed at here. This is the largest
+remaining staleness gap in the family.
