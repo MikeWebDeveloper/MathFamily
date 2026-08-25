@@ -466,3 +466,60 @@ both Birmingham lounge entries kept at their 2026-06-10 values and `verifiedAt` 
 **New product spotted, NOT added:** escapelounges.com now lists "Manchester Terminal 2 - The
 Executive by Escape Lounges — From £56.99 per person" as a separate lounge. Adding a new record
 is outside a re-verification pass, so it is flagged for a human decision rather than written in.
+
+## 2026-08-25 — daily sweep, ParkMath-only, 46-day staleness cutoff
+
+Scope: every ParkMath parking record with `verifiedAt` older than 46 days
+(< 2026-07-10), plus the standing hard-block re-check on Newcastle parking, plus
+the stale Birmingham lounge record.
+
+**Parking — EXACT MATCH, `verifiedAt` bumped to 2026-08-25, no value changes:**
+Gatwick (£38 first 24h + £32/day roll-up), Newcastle (standing hard-block
+re-check — £50/£80/£120/£160 then £40/day, page read successfully), Leeds
+Bradford (£57 day 1 + £18/day), Liverpool (Gate Rate tiered table up to £170
+then £30/24h), Teesside (Standard turn-up table up to £165 then £15/day),
+Prestwick (Car Park Two Turn Up table up to £112 then £8/day), Aberdeen (Turn
+Up table up to £125 then £10/day; pre-book "from £49.99" 1-week price also
+re-confirmed unchanged), Belfast International (£30/£45/£55 then +£10/day),
+Exeter (Car Park P2 £40/day — the P2/P3/P4 tariff-vs-overstay-list labelling
+ambiguity flagged in the 2026-07-03 entry was not independently resolved this
+run; left excluded as before, still worth a raw-HTML follow-up).
+
+**Stansted — core tariff unchanged, pre-book quote updated, sourceUrl
+corrected.** The Mid Stay Turn Up & Park flat £48/24h gate rate is EXACT MATCH,
+`verifiedAt` bumped to 2026-08-25. The pre-book Long Stay "from" price moved
+£71.99 → £64.99 for an 8-day stay; treated as ordinary date-rolling drift for a
+dynamic "from" quote (different future sample-date window), not a tariff
+change — `snapshotDate` updated to 2026-08-25 per the same convention used for
+eSIM rolling quotes. Separately, `/parking/long-stay/` no longer surfaces live
+Turn Up & Park pricing; the record's `sourceUrl` was corrected to
+`/parking/turn-up-and-park/` (where the £48/24h figure was actually
+re-confirmed today) and `tools/freshness/watchlist.json` was regenerated via
+`pnpm --filter @mathfamily/freshness-tools generate` to match.
+
+**Birmingham parking — NEEDS-HUMAN, left unchanged.** birminghamairport.co.uk
+remains Cloudflare-blocked on every rung tried (direct fetch, `r.jina.ai`
+plain, `r.jina.ai` + `X-Engine: browser`). A newer Wayback Machine snapshot
+(2026-06-30) than the one the current record cites (2025-09-06) suggests Car
+Park 7's turn-up rate may have risen: first-24h £49.00 → £51.00, and the
+per-day-thereafter rate £42.00 → £44.00. This is a single unofficial archive
+snapshot, not a live confirmation, so per the freshness rules (unverifiable →
+keep the old value, flag for a human) it was **not** written into the dataset.
+`verifiedAt` stays at 2026-06-10. A human should try a manual browser visit to
+confirm the live 2026 tariff — Wayback snapshot:
+https://web.archive.org/web/2026*/https://www.birminghamairport.co.uk/parking/turn-up-prices/
+
+**Birmingham lounges — NEEDS-HUMAN, left unchanged, still unreachable.**
+Consistent with the 2026-06 note above ("the Birmingham lounge page returned
+no content on any rung"), birminghamairport.co.uk/at-the-airport/lounges/ is
+still fully Cloudflare-blocked today, including Wayback's own most recent
+crawl attempt (403). The only retrievable snapshot was from December 2024 and
+shows materially different prices (Aspire Lounge £36.99, No1 Lounge £34) than
+the dataset's current £20.99 for Aspire — too stale and too far from an
+official live read to trust. `verifiedAt` stays at 2026-06-10; flagged for a
+human/manual live check.
+
+**Priority Pass tiers** — EXACT MATCH against prioritypass.com/en-GB/join-prioritypass
+(Standard £69/yr + £24/visit, Standard Plus £229/yr with 10 included visits +
+£24/visit after, Prestige £419/yr unlimited visits). `verifiedAt` bumped to
+2026-08-25.

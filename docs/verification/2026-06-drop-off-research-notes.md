@@ -507,3 +507,36 @@ NCP Customer Service cabin) is retained unverified from 2026-06-10.
 Newcastle drop-off page were both read successfully via `r.jina.ai` with `X-Engine: browser`,
 and both matched our held values exactly. Newcastle's page also publishes the full Express /
 Short Stay 1 / Short Stay 2 / Minibus tariff grid.
+
+## 2026-08-25 — daily sweep, ParkMath-only, 46-day staleness cutoff
+
+Scope: every ParkMath drop-off record with `verifiedAt` older than 46 days
+(< 2026-07-10), plus the standing hard-block re-check on London City. Newcastle
+drop-off was not stale this run (verifiedAt 2026-08-13) so it was left alone.
+
+- **Stansted** (£10/15min, £28 over) — EXACT MATCH, `verifiedAt` bumped to
+  2026-08-25. Minor caveat: the £10/£28 Express Set Down bands were not visible
+  as explicit prose on the rendered page this run (everything else — penalty,
+  payment deadline, Blue Badge policy, Mid Stay free alternative — matched). Not
+  treated as a contradiction; kept as-is.
+- **London City** (£8/5min then £1/min, 10min max) — standing hard-block
+  re-check, EXACT MATCH, `verifiedAt` bumped to 2026-08-25.
+- **Leeds Bradford** (£8/10min) — EXACT MATCH, `verifiedAt` bumped to
+  2026-08-25. **NEEDS-HUMAN:** the "SmoothPark automatic payment gives 10% off"
+  claim in `paymentDeadline` was not found anywhere on the current official
+  page (absence, not a contradiction — the £8 fee and free-zone details were
+  otherwise fully confirmed). Recommend a human spot-check whether the
+  SmoothPark discount still exists before the next sweep; left unchanged today
+  since nothing on the page actively disputes it.
+- **East Midlands** (£5/15min) — EXACT MATCH, `verifiedAt` bumped to
+  2026-08-25.
+- **Cardiff** (£4.50/10min) — EXACT MATCH, `verifiedAt` bumped to 2026-08-25.
+  Also resolved a `tools/freshness/hashes.json` anomaly: that file carries a
+  `pendingSince` entry for `cardiff-airport.com/parking-cwl/drop-off-and-pick-up-cwl/`,
+  a different path than the dataset's current sourceUrl
+  (`cardiff-airport.com/car-parking-options/drop-off-and-pick-up-cwl/`) — the
+  current sourceUrl is the one that was live-verified today; the old hash-key
+  path is stale bookkeeping left for a human to clean out of hashes.json.
+
+No drop-off value changes today — all five re-verified records reconfirmed
+their existing figures unchanged.
