@@ -418,3 +418,125 @@ max stay and payment deadline were re-confirmed today.
 > wording** if you want belt-and-braces before merging. Separately, the £5/15-min Rapid
 > Drop-off fee should be re-sourced from the official Rapid Drop-off T&C page on the next
 > sweep, since the main page no longer lists it.
+
+## 2026-08-13 — daily ParkMath sweep (drop-off)
+
+Transport: direct curl (browser UA) → `r.jina.ai` plain → `r.jina.ai` with `X-Engine: browser`
+→ in-app Chromium (for the client-rendered MAG/Cardiff/Birmingham tariff widgets).
+
+**Confirmed unchanged against the official page today (verifiedAt bumped, no value edits):**
+Heathrow (£7/visit), Gatwick (£10/10min, £1/min to 20 min, max £30, max stay 30),
+Manchester (£5.50/5min, £6.50/10min, £25/30min, max stay 30), Luton (£7/10min then £1/min,
+£95 enforcement), Edinburgh (£8.50/10min then £1/min), Birmingham (Drop Off free for up to
+10 minutes), Glasgow (£7/15min, £1/min, £50 after 30 min), Bristol (£8.50 / £10.50 / £13.00 /
+£30.00 / £60.00, max stay 2h, Red Route £100→£60, Blue Badge 40 min for £8.50),
+Belfast International (£5 / £8 / £13, over 1 hour £60), Newcastle Express (£6 / £12 / £16 /
+£20 / £28 — all five bands), Liverpool (£6/10min), London City (£8/5min, £1/min, max stay
+10 min), Aberdeen (£7/15min, £1/min, £50 flat after 30 min), Belfast City (£4 minimum first
+10 min; £8 minimum on re-entry within 15 min), Southampton (£7 for 20 min), Exeter (£6/15min
+in P1; P4 free 30 min; £20/day overstay), Southend (£8/10min), Bournemouth (£8/30min),
+Norwich (£8/20min in CP1; £30/day overstay), Inverness (free 15 min, no return within 1 hour;
+Blue Badge/Special Assistance 20 min free in Premium), Teesside (£2.50/10min, £5/1h, £7 per
+hour thereafter), Prestwick (£4.50/60min in Car Park 1).
+
+**Changed — Cardiff (drop-off:cardiff).** The official tariff rose across the lower bands:
+
+| Duration | Old | New |
+| --- | --- | --- |
+| Up to 10 mins | £3.00 | **£4.50** |
+| 10–20 minutes | £4.00 | **£6.00** |
+| Up to 1 hour | £8.00 | **£9.00** |
+| Up to 2 hours | £20.00 | £20.00 (unchanged) |
+
+Verbatim from the page: "This facility is £4.50 for the first 10 minutes", "It costs £4.50 for
+every 10 minutes thereafter", and the DURATION/TARIFF table "Up to 10 mins £4.50 / 10 – 20
+minutes £6.00 / Up to 1 hour £9.00 / Up to 2 hours £20.00 / 2 – 24 hours £50.00 / All
+subsequent days – £50.00 per day". Car Park 2 "first 20 minutes are FREE" — free alternative
+unchanged. `penaltyNotes` updated from "3–24 hours costs £50" to the published "2–24 hours".
+`priorYearFeePence` deliberately left null — the £3.00 we held was a 2026 figure, not a
+prior-year figure, so populating it would fabricate a trend.
+
+**Source URL moved — Cardiff.** The recorded `sourceUrl`
+`cardiff-airport.com/parking-cwl/drop-off-and-pick-up-cwl/` now serves an empty shell (page
+title renders as "Careers"). The live page is
+`cardiff-airport.com/car-parking-options/drop-off-and-pick-up-cwl/`; `sourceUrl` updated and
+the watchlist regenerated.
+
+**Refined — London City blue-badge policy.** Values unchanged. The official page now states
+the concession precisely: "Blue Badge holders may register to get 10 minutes free parking in
+the Drop-off area. Please use the Main Stay if you need more time and get 1 hour free
+parking." Replaced our looser "exempt from the drop-off charge" wording.
+
+**Stansted — penalty now published, fee bands NO LONGER published.** `penaltyPence` set to
+10000: "If payment is not received by the deadline, a £100.00 Parking Charge Notice will be
+issued to the registered vehicle holder. This will be reduced to £60.00 if paid within 14
+days." Also confirmed: "Maximum stay is 30 minutes" and "There is a £28 charge for re-entering
+within 30 minutes of first entering the car park" — i.e. the £28 is a **re-entry** charge on
+today's page, not the "over 15 minutes" tier our `penaltyNotes` described. The Express Set
+Down "Pick Up & Drop Off charges" table is now rendered empty (`<p class="_y78g06"></p>`,
+`aria-hidden="true"`) in the live DOM, so the £10/15-minute and £28/30-minute bands could not
+be re-confirmed. Bands left untouched and `verifiedAt` deliberately NOT bumped (still
+2026-06-26); flagged for human decision.
+
+**East Midlands — same MAG pattern.** Confirmed "Maximum stay is 30 minutes. Payments must be
+made online by midnight the following day", the £100→£60 charge, Short Stay 1 £6/30min and
+the Blue Badge concessions (Short Stay 1 free 30 min, Long Stay 2 free 60 min). The Rapid
+Drop-Off charge table is likewise empty in the live DOM, so the £5/15-minute headline could
+not be re-confirmed. Value kept, `verifiedAt` not bumped (still 2026-06-26).
+
+**Leeds Bradford — unverifiable today.** `leedsbradfordairport.co.uk/parking` is an SPA that
+returned no priced content on any rung (direct 200 but empty, jina plain and jina browser both
+~3.3 KB of chrome, in-app browser navigation timed out at 300 s). Value kept, `verifiedAt` not
+bumped (still 2026-06-22).
+
+**Southampton — on-page conflict, flagged.** Prose confirms our figure: "Passengers who choose
+this option will be charged a £7 fee for 20 minutes." The same page also carries an unlabelled
+tariff table "Up to 20 minutes £10.00 / Up to 60 minutes £18.00 / Up to 90 minutes £30.00 /
+Up to 4 hours £60.00". The 60/90-minute and 4-hour bands make that table look like the Short
+Stay roll-up tariff (the page links out to "Short Stay parking page for roll-up pricing"), not
+the ≤20-minute drop-off product, so £7 was kept and `verifiedAt` bumped on the strength of the
+explicit prose. Flagged for human confirmation. Enforcement charge £80 → £50 within 14 days
+re-confirmed.
+
+**Birmingham — blue-badge policy no longer on the page.** The drop-off fee (free for up to 10
+minutes) was re-confirmed, so `verifiedAt` was bumped, but the page no longer carries any Blue
+Badge text; the existing `blueBadgePolicy` (Premium Set Down, 30 minutes free, validated at the
+NCP Customer Service cabin) is retained unverified from 2026-06-10.
+
+**Standing hard-blocked targets — both cleared this run.** London City drop-off and the
+Newcastle drop-off page were both read successfully via `r.jina.ai` with `X-Engine: browser`,
+and both matched our held values exactly. Newcastle's page also publishes the full Express /
+Short Stay 1 / Short Stay 2 / Minibus tariff grid.
+
+## 2026-08-25 — daily sweep, ParkMath-only, 46-day staleness cutoff
+
+Scope: every ParkMath drop-off record with `verifiedAt` older than 46 days
+(< 2026-07-10), plus the standing hard-block re-check on London City. Newcastle
+drop-off was not stale this run (verifiedAt 2026-08-13) so it was left alone.
+
+- **Stansted** (£10/15min, £28 over) — EXACT MATCH, `verifiedAt` bumped to
+  2026-08-25. Minor caveat: the £10/£28 Express Set Down bands were not visible
+  as explicit prose on the rendered page this run (everything else — penalty,
+  payment deadline, Blue Badge policy, Mid Stay free alternative — matched). Not
+  treated as a contradiction; kept as-is.
+- **London City** (£8/5min then £1/min, 10min max) — standing hard-block
+  re-check, EXACT MATCH, `verifiedAt` bumped to 2026-08-25.
+- **Leeds Bradford** (£8/10min) — EXACT MATCH, `verifiedAt` bumped to
+  2026-08-25. **NEEDS-HUMAN:** the "SmoothPark automatic payment gives 10% off"
+  claim in `paymentDeadline` was not found anywhere on the current official
+  page (absence, not a contradiction — the £8 fee and free-zone details were
+  otherwise fully confirmed). Recommend a human spot-check whether the
+  SmoothPark discount still exists before the next sweep; left unchanged today
+  since nothing on the page actively disputes it.
+- **East Midlands** (£5/15min) — EXACT MATCH, `verifiedAt` bumped to
+  2026-08-25.
+- **Cardiff** (£4.50/10min) — EXACT MATCH, `verifiedAt` bumped to 2026-08-25.
+  Also resolved a `tools/freshness/hashes.json` anomaly: that file carries a
+  `pendingSince` entry for `cardiff-airport.com/parking-cwl/drop-off-and-pick-up-cwl/`,
+  a different path than the dataset's current sourceUrl
+  (`cardiff-airport.com/car-parking-options/drop-off-and-pick-up-cwl/`) — the
+  current sourceUrl is the one that was live-verified today; the old hash-key
+  path is stale bookkeeping left for a human to clean out of hashes.json.
+
+No drop-off value changes today — all five re-verified records reconfirmed
+their existing figures unchanged.
