@@ -507,3 +507,32 @@ NCP Customer Service cabin) is retained unverified from 2026-06-10.
 Newcastle drop-off page were both read successfully via `r.jina.ai` with `X-Engine: browser`,
 and both matched our held values exactly. Newcastle's page also publishes the full Express /
 Short Stay 1 / Short Stay 2 / Minibus tariff grid.
+
+## 2026-08-26 daily sweep
+
+**London City — penalty amount found.** The dataset carried `penaltyPence: null` with a note
+saying "no amount is confirmed on the official page." The official page
+(`londoncityairport.com/parking/drop-off`) does now state it: "A £100.00 enforcement charge is
+payable by drivers who stay past 10 minutes. This charge is reduced to £60.00 if paid within 14
+days." Updated `penaltyPence` to `10000` and the notes to match; `verifiedAt` bumped.
+
+**Confirmed unchanged (verifiedAt bumped, no value change):** Stansted, Southend, Aberdeen,
+Edinburgh, Gatwick, Heathrow, Luton, Manchester, Southampton — all re-fetched from their
+official pages and matched the dataset exactly (fee band, max stay, penalty amount, Blue Badge
+policy all cross-checked where stated).
+
+**Leeds Bradford — still unverifiable.** The £8/10-min figure sits behind a client-side FAQ
+accordion; no fetch rung (direct, jina plain/html/browser) served the price text today.
+`verifiedAt` not bumped (still 2026-06-22, now 65+ days stale — flagged NEEDS-HUMAN).
+
+**East Midlands — still unverifiable.** Same pattern as prior runs: the Rapid Drop-Off tariff
+panel is client-rendered and empty in every fetch. Penalty (£100→£60) and Blue Badge policy
+re-confirmed and would have supported a bump, but the core £5/15-min figure could not be
+independently re-checked, so `verifiedAt` was left at 2026-06-26 out of caution. Flagged
+NEEDS-HUMAN.
+
+**Cardiff — site unreachable on every rung.** Both the dataset's `sourceUrl` and the
+pendingSince-flagged alternate URL return HTTP 403 direct and via jina; jina also got
+redirected to an ad-tracker pixel (`match.adsrvr.org`), suggesting WAF/bot-detection rather
+than a real page change. No Wayback snapshot exists for the current sourceUrl. `verifiedAt`
+left unchanged. Flagged NEEDS-HUMAN — recommend a manual browser check.
