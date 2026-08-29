@@ -507,3 +507,29 @@ NCP Customer Service cabin) is retained unverified from 2026-06-10.
 Newcastle drop-off page were both read successfully via `r.jina.ai` with `X-Engine: browser`,
 and both matched our held values exactly. Newcastle's page also publishes the full Express /
 Short Stay 1 / Short Stay 2 / Minibus tariff grid.
+
+---
+
+## 2026-08-29 — daily ParkMath freshness sweep (drop-off)
+
+Attempted re-verification of the three stale drop-off records (`stansted`, `leeds-bradford`,
+`east-midlands`). **No values changed in the dataset; no `verifiedAt` bumped** — see below.
+
+- **`drop-off:stansted`** — the official Express Set Down page
+  (stanstedairport.com/getting-to-and-from/pick-up-and-drop-off/) has moved to a **barrierless
+  ANPR pay-later** system and **no longer publishes a per-visit Express Set Down charge**. The
+  only tariff on the page is the *Short Stay Green/Blue* "Pick Up & Drop Off" table (£13 up to
+  30 min, £21/1h, £25/2h, £38/4h) which is a different product (walk-in to terminal). The held
+  £10 (≤15 min) / £28 (>15 min) forecourt figures could be neither confirmed nor refuted.
+  15-minute allocation, £100 PCN (→£60 within 14 days), pay by midnight the day after — all
+  still stated. **NEEDS-HUMAN.**
+- **`drop-off:east-midlands`** — same pattern: Rapid Drop-Off is now barrierless with **no
+  published per-visit price**. Page's only table is Short Stay 1 "Pick Up & Drop Off" (£6 up to
+  30 min, Free for Blue Badge, £8/1h, £12/2h, £16/3h). Held £5/15-min Rapid Drop-Off figure
+  not confirmable. Blue Badge concession (30 min free at Short Stay 1; 60 min free at Long
+  Stay 2) still matches. £100 PCN (→£60) still stated. **NEEDS-HUMAN.**
+- **`drop-off:leeds-bradford`** — the Pick Up & Drop Off fee sits inside a JS-rendered accordion
+  on leedsbradfordairport.co.uk/parking; not machine-readable on any transport rung today. Held
+  £8/10-min value retained, `verifiedAt` not bumped. **NEEDS-HUMAN** (or retry via headless
+  render).
+- **`drop-off:london-city`** — `verifiedAt` 2026-08-13 still within 46 days; not in scope this run.

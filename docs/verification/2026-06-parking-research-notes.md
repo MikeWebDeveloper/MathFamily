@@ -466,3 +466,32 @@ both Birmingham lounge entries kept at their 2026-06-10 values and `verifiedAt` 
 **New product spotted, NOT added:** escapelounges.com now lists "Manchester Terminal 2 - The
 Executive by Escape Lounges — From £56.99 per person" as a separate lounge. Adding a new record
 is outside a re-verification pass, so it is flagged for a human decision rather than written in.
+
+---
+
+## 2026-08-29 — daily ParkMath freshness sweep (parking-tariffs → v1.3.1)
+
+Re-verified the parking records whose `verifiedAt` was older than 46 days. Official pages only.
+
+**Confirmed unchanged — `verifiedAt` bumped to 2026-08-29:**
+
+| Record | Source (official) | Result |
+| --- | --- | --- |
+| `parking:gatwick` | gatwickairport.com/parking/roll-up-car-park-prices.html | roll-up £38 first 24h + £32/subsequent 24h — unchanged (3d £102 / 7d £230 / 14d £454). |
+| `parking:newcastle` | newcastleairport.com/car-parking/car-parking-options/ | Long Stay Turn Up & Park: 24h £50, 2d £80, 3d £120, 4d £160, +£40/day — unchanged (3d £120 / 7d £280 / 14d £560). |
+| `parking:liverpool` | liverpoolairport.com/parking/long-stay | Gate Rate: 1d £60 … 8d £170, +£30/day — unchanged (3d £120 / 7d £160 / 14d £350). Read via r.jina.ai (table JS-rendered). |
+| `parking:teesside` | teessideinternational.com/teesside-airport-parking/ | Standard turn-up: 1d £36 … 11d £165, +£15/day — unchanged (3d £82 / 7d £105 / 14d £210). |
+| `parking:prestwick` | glasgowprestwick.com/parking/ | Car Park Two Turn Up (price as of 01 April 26): 1d £37.50, 2d £44.50, 3d £66.50, 7d £103.50, 8d £112.00, +£8/day — unchanged. |
+
+**Changed — corrected and `verifiedAt` bumped:**
+
+| Record | Field | Old | New | Source |
+| --- | --- | --- | --- | --- |
+| `parking:stansted` (prebook 'from') | 8-day totalPence / snapshotDate | 7199 / 2026-06-10 | 5999 / 2026-08-29 | stanstedairport.com/parking/long-stay/ — "Prices from £59.99" (8-day stay, sample dates Nov 2026). Page now also states "Long Stay parking is pre-book only". Gate Mid Stay £48/24h re-confirmed unchanged via /parking/turn-up-and-park/. |
+
+**Not re-verified this run (kept at existing values, `verifiedAt` NOT bumped):**
+
+- `parking:birmingham` — birminghamairport.co.uk still Cloudflare-blocked on every transport rung (0 bytes).
+- `parking:aberdeen` — aberdeenairport.com Long Stay price table is client-rendered; no rung returned the tariff grid today.
+- `parking:belfast-international` — belfastairport.com returned HTTP 403 on WebFetch and r.jina.ai.
+- `parking:leeds-bradford` — price table is inside a JS accordion on leedsbradfordairport.co.uk/parking; not machine-readable on any rung today.
