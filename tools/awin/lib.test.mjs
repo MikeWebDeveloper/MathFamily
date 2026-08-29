@@ -140,3 +140,32 @@ test("parseFeedListCsv parses a quoted, comma-delimited feed list into objects",
   assert.equal(rows[0]["Advertiser Name"], "Holiday Extras, Ltd");
   assert.equal(rows[1]["Advertiser ID"], "12028");
 });
+
+// Regression: a hardcoded surface allowlist silently rotted. "options" (and "hub") were
+// never in it, so parkmath-exeter-options parsed as airport="exeter-options", surface=null
+// — every /airport-parking-options/ conversion was booked to a nonexistent airport and the
+// revenue-by-page-type split was invisible. Airports now come from the dataset; the surface
+// is whatever remains, so a NEW surface can never mis-attribute the airport again.
+test("clickRef parsing survives surfaces that are not in any allowlist", () => {
+  assert.equal(airportFromClickRef("parkmath-exeter-options"), "exeter");
+  assert.equal(surfaceFromClickRef("parkmath-exeter-options"), "options");
+  // A surface nobody has invented yet must still resolve the airport correctly.
+  assert.equal(airportFromClickRef("parkmath-luton-somethingnew"), "luton");
+  assert.equal(surfaceFromClickRef("parkmath-luton-somethingnew"), "somethingnew");
+  // Multi-word airport slugs must win over any shorter prefix match.
+  assert.equal(airportFromClickRef("parkmath-leeds-bradford-options"), "leeds-bradford");
+  assert.equal(surfaceFromClickRef("parkmath-leeds-bradford-options"), "options");
+  assert.equal(airportFromClickRef("parkmath-belfast-international"), "belfast-international");
+  assert.equal(surfaceFromClickRef("parkmath-belfast-international"), null);
+});
+
+test("aggregateTransactions splits revenue by surface (page type)", () => {
+  const txns = [
+    { commissionAmount: { amount: 2.53, currency: "GBP" }, saleAmount: { amount: 100 }, clickRefs: { clickRef: "parkmath-exeter-options" } },
+    { commissionAmount: { amount: 0.83, currency: "GBP" }, saleAmount: { amount: 20 }, clickRefs: { clickRef: "parkmath-stansted-parking" } },
+  ];
+  const agg = aggregateTransactions(txns);
+  assert.equal(agg.bySurface.options.commission, 2.53);
+  assert.equal(agg.bySurface.parking.commission, 0.83);
+  assert.equal(agg.byAirport.exeter.commission, 2.53);
+});
