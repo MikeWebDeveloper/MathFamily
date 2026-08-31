@@ -153,6 +153,7 @@ async function cmdTransactions(flags) {
   console.log(`Transactions ${since} → ${until}: ${totals.count}`);
   console.log(`  Commission: ${totals.commission} ${totals.currency}   Sales: ${totals.sale} ${totals.currency}\n`);
   printSection("By airport", agg.byAirport, totals.currency);
+  printSection("By surface (page type)", agg.bySurface, totals.currency);
   printSection("By advertiser", agg.byAdvertiser, totals.currency);
 }
 
