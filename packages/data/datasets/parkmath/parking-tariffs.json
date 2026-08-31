@@ -1,6 +1,6 @@
 {
-  "version": "1.3.0",
-  "lastUpdated": "2026-07-03",
+  "version": "1.3.1",
+  "lastUpdated": "2026-08-31",
   "records": [
     {
       "airportSlug": "heathrow",
@@ -36,7 +36,7 @@
         }
       ],
       "sourceUrl": "https://www.gatwickairport.com/parking/roll-up-car-park-prices.html",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-08-31"
     },
     {
       "airportSlug": "manchester",
@@ -83,14 +83,14 @@
           "productType": "prebook",
           "name": "Long Stay (pre-book) — published 'from' price",
           "prices": [
-            { "days": 8, "totalPence": 7199 }
+            { "days": 8, "totalPence": 5999 }
           ],
-          "snapshotDate": "2026-06-10",
-          "notes": "Officially published pre-book 'from' price: 'From £71.99' for an 8-day stay (sample dates Oct 2026, read 2026-06-10). Single published 'from' point; gate product above provides the 3/7/14 coverage."
+          "snapshotDate": "2026-08-31",
+          "notes": "Officially published pre-book 'from' price: 'Prices from £59.99' for an 8-day stay (sample dates Nov 2026, read 2026-08-31; was 'From £71.99' Oct-2026 sample on 2026-06-10). Dynamic 'from' point; gate product above provides the 3/7/14 coverage."
         }
       ],
       "sourceUrl": "https://www.stanstedairport.com/parking/long-stay/",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-08-31"
     },
     {
       "airportSlug": "luton",
@@ -203,11 +203,11 @@
             { "days": 14, "totalPence": 56000 }
           ],
           "snapshotDate": null,
-          "notes": "Official 'Turn Up & Park price' table for the Long Stay car park: up to 24h £50.00, 2 days £80.00, 3 days £120.00, 4 days £160.00, then £40.00 per day (or part) thereafter. Published 3-day total used directly (£120). 7-day computed from the published 4-day base plus the official £40/day (£160 + 3x£40 = £280); 14-day from the 7-day plus 7x£40 (£280 + £280 = £560). Verified 2026-06-27 against the official newcastleairport.com parking-options page."
+          "notes": "Official 'Turn Up & Park price' table for the Long Stay car park: up to 24h £50.00, 2 days £80.00, 3 days £120.00, 4 days £160.00, then £40.00 per day (or part) thereafter. Published 3-day total used directly (£120). 7-day computed from the published 4-day base plus the official £40/day (£160 + 3x£40 = £280); 14-day from the 7-day plus 7x£40 (£280 + £280 = £560). Verified 2026-06-27 against the official newcastleairport.com parking-options page; re-confirmed unchanged 2026-08-31 (same page: £50/£80/£120/£160 then £40/day)."
         }
       ],
       "sourceUrl": "https://www.newcastleairport.com/car-parking/car-parking-options/",
-      "verifiedAt": "2026-06-27"
+      "verifiedAt": "2026-08-31"
     },
     {
       "airportSlug": "leeds-bradford",
@@ -239,11 +239,11 @@
             { "days": 14, "totalPence": 35000 }
           ],
           "snapshotDate": null,
-          "notes": "Official 'Gate Rate tariff for non-booked parking' for Long Stay: up to 1 day £60.00, 2 days £100.00, 3 days £120.00, 4 days £130.00, 5 days £140.00, 6 days £150.00, 7 days £160.00, 8 days £170.00, then £30.00 per 24h (or part) thereafter. Published 3-day (£120) and 7-day (£160) totals used directly; 14-day computed from the published 8-day base plus 6x£30 (£170 + £180 = £350). Verified 2026-06-27 against the official liverpoolairport.com long-stay page. FLAG: price table is JS-rendered; read via headless render of the official page."
+          "notes": "Official 'Gate Rate tariff for non-booked parking' for Long Stay: up to 1 day £60.00, 2 days £100.00, 3 days £120.00, 4 days £130.00, 5 days £140.00, 6 days £150.00, 7 days £160.00, 8 days £170.00, then £30.00 per 24h (or part) thereafter. Published 3-day (£120) and 7-day (£160) totals used directly; 14-day computed from the published 8-day base plus 6x£30 (£170 + £180 = £350). Verified 2026-06-27 against the official liverpoolairport.com long-stay page; re-confirmed unchanged 2026-08-31 (same Gate Rate table: £60/£100/£120/£130/£140/£150/£160/£170 then £30/day). FLAG: price table is JS-rendered; read via headless render of the official page."
         }
       ],
       "sourceUrl": "https://www.liverpoolairport.com/parking/long-stay",
-      "verifiedAt": "2026-06-27"
+      "verifiedAt": "2026-08-31"
     },
     {
       "airportSlug": "teesside",
@@ -318,11 +318,11 @@
             { "days": 14, "totalPence": 16500 }
           ],
           "snapshotDate": null,
-          "notes": "Official 'Long Stay Pricing' gate-rate table: One Day £30.00, Two Days £45.00, Three Days £55.00, then +£10.00 per day thereafter. 3-day total is the airport's own published figure; 7/14-day totals computed from the published 3-day base plus the official £10/day rate (7d=55+4x10=95; 14d=55+11x10=165)."
+          "notes": "Official 'Long Stay Pricing' gate-rate table: One Day £30.00, Two Days £45.00, Three Days £55.00, then +£10.00 per day thereafter. 3-day total is the airport's own published figure; 7/14-day totals computed from the published 3-day base plus the official £10/day rate (7d=55+4x10=95; 14d=55+11x10=165). Re-confirmed unchanged 2026-08-31 (same 'Long Stay Pricing' table: £30/£45/£55 then £10/day)."
         }
       ],
       "sourceUrl": "https://www.belfastairport.com/parking/long-stay-car-park",
-      "verifiedAt": "2026-07-03"
+      "verifiedAt": "2026-08-31"
     },
     {
       "airportSlug": "exeter",

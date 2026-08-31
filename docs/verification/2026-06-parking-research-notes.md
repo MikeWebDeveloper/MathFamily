@@ -466,3 +466,48 @@ both Birmingham lounge entries kept at their 2026-06-10 values and `verifiedAt` 
 **New product spotted, NOT added:** escapelounges.com now lists "Manchester Terminal 2 - The
 Executive by Escape Lounges — From £56.99 per person" as a separate lounge. Adding a new record
 is outside a re-verification pass, so it is flagged for a human decision rather than written in.
+
+---
+
+## 2026-08-31 — daily ParkMath freshness sweep (parking-tariffs v1.3.1)
+
+Re-verified the parking records whose `verifiedAt` was older than 46 days. Transport: WebFetch
+→ `r.jina.ai` (plain, then `X-Engine: browser`).
+
+**Changed (1):**
+- `parking:stansted` — Long Stay **pre-book 'from' price £71.99 → £59.99** (8-day stay).
+  Official page now: "Prices from £59.99 (8 day stay in November 2026)"
+  (https://www.stanstedairport.com/parking/long-stay/). Dynamic sample-date "from" figure;
+  `snapshotDate` bumped to 2026-08-31. Stansted Mid Stay Turn Up & Park unchanged at £48/24h
+  (Short Stay drive-up still £70/24h).
+
+**Re-confirmed unchanged, `verifiedAt` → 2026-08-31 (4):**
+- `parking:gatwick` — roll-up Long Stay £38 first 24h + £32/subsequent 24h (official
+  roll-up-car-park-prices page shows £38.00 / £32.00).
+- `parking:newcastle` — Long Stay Turn Up & Park £50 / £80 (2d) / £120 (3d) / £160 (4d) then
+  £40/day (official car-parking-options page; jina browser render). NB this was on the
+  "hard-blocked" list but rendered fine.
+- `parking:liverpool` — Long Stay Gate Rate £60/£100/£120/£130/£140/£150/£160/£170 then
+  £30/day (official long-stay page, full table rendered).
+- `parking:belfast-international` — Long Stay Pricing £30/£45/£55 then £10/day (official
+  long-stay-car-park page).
+
+**Not re-verified this run (kept at existing values, `verifiedAt` unchanged) — need an
+interactive browser-render / disambiguation pass:**
+- `parking:birmingham` — birminghamairport.co.uk still Cloudflare-blocked on every rung.
+- `parking:leeds-bradford` — "Turn up on the day" prices are in a JS accordion; not rendered
+  by any headless rung.
+- `parking:aberdeen` — Turn Up price table is client-rendered; jina browser returned no table.
+- `parking:teesside` — page rendered a £24/£48(2d)/£55(3d)/£70(7d) table, materially lower
+  than the recorded Standard turn-up (£36/£72/£82/£105). Almost certainly the "Pre-bookable
+  online rates" table (explicitly excluded before), not a real turn-up change — but the
+  rendered markdown didn't label which table it was. Needs a human to expand the correct
+  panel.
+- `parking:prestwick` — rendered £42(1d)/£60(2d)/£74(3d)/£86.50(4d)/£98.50(5d)/£109.50(6d);
+  the recorded Car Park Two turn-up is £37.50/£44.50/£66.50/... The rendered 3-day £74 matches
+  the OLD *Car Park One* (Premium) 3-day figure, so the render likely picked up a different
+  car park's tariff. Needs a human to confirm which car park / whether Car Park Two changed.
+- `parking:exeter` — page now shows "£20 per day or part thereof" alongside the £8 drop-off
+  line; recorded P2 rate is £40/day. Could be a new cheaper car park column or a real P2
+  reduction — the earlier note flags the page's own P3/P4 numbering inconsistency. Needs a
+  human read.

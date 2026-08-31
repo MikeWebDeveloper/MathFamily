@@ -507,3 +507,40 @@ NCP Customer Service cabin) is retained unverified from 2026-06-10.
 Newcastle drop-off page were both read successfully via `r.jina.ai` with `X-Engine: browser`,
 and both matched our held values exactly. Newcastle's page also publishes the full Express /
 Short Stay 1 / Short Stay 2 / Minibus tariff grid.
+
+---
+
+## 2026-08-31 — daily ParkMath freshness sweep (drop-off NOT changed — flagged for human)
+
+Two MAG drop-off records came up stale (`verifiedAt` > 46 days). Both official pages have
+been restructured and now publish a **new tiered barrierless tariff table** that does not map
+onto the recorded 1–2-band model. Values were **left unchanged** pending a human decision on
+how to model them.
+
+- `drop-off:stansted` — https://www.stanstedairport.com/getting-to-and-from/pick-up-and-drop-off/
+  Rendered page, section "Express Set Down":
+  | Up to 30 minutes | £13 |
+  | Up to 1 hour | £21 |
+  | Up to 2 hours | £25 |
+  | Up to 4 hours | £38 |
+  Non-payment: £100 PCN, £60 if paid within 14 days. Blue Badge: charges still apply, marshal
+  can extend the 15-min allocated period. The recorded value ("£10 up to 15 min, £28 over
+  15 min") is no longer on the page. A plain fetch attributes the same table to "the Green and
+  Blue Short Stay car parks"; the browser render attributes it to "Express Set Down". The
+  first band clearly rose (£10 → £13) and the threshold moved (15 → 30 min), but the
+  zone attribution needs a human eyeball before rewriting the record.
+
+- `drop-off:east-midlands` — https://www.eastmidlandsairport.com/parking/pick-up-and-drop-off/
+  Rendered page, section "Rapid Drop Off":
+  | Up to 30 minutes | £6 |
+  | Up to 30 minutes, Blue Badge (Short Stay 1 only) | Free |
+  | Up to 1 hour | £8 |
+  | Up to 2 hours | £12 |
+  | Up to 3 hours | £16 |
+  Non-payment: £100, £60 within 14 days. Recorded value ("£5 for up to 15 minutes") is gone.
+  Same attribution ambiguity as Stansted (plain fetch labels it "Short Stay 1 car park";
+  browser render labels it "Rapid Drop Off"). First band £5 → £6, threshold 15 → 30 min.
+  Needs a human read.
+
+- `drop-off:leeds-bradford` — prices still behind a JS accordion; not re-verified.
+- `drop-off:london-city` — standing hard-blocked target; not fetched, value kept.
