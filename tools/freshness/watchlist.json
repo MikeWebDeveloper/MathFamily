@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-12",
+  "generatedAt": "2026-08-13",
   "entries": [
     {
       "url": "https://binaries.vodafone.co.uk/gbnnsauqav4t/3ynRZJ6BvgpyYyPmoIAHX0/ff9c9463c41c25d0cbf8f5d27f955afb/evo-paym-charges-guide.pdf",
@@ -9,16 +9,16 @@
       "watchable": true
     },
     {
-      "url": "https://cardiff-airport.com/latest-news/",
+      "url": "https://cardiff-airport.com/car-parking-options/drop-off-and-pick-up-cwl/",
       "refs": [
-        "news:cardiff"
+        "drop-off:cardiff"
       ],
       "watchable": true
     },
     {
-      "url": "https://cardiff-airport.com/parking-cwl/drop-off-and-pick-up-cwl/",
+      "url": "https://cardiff-airport.com/latest-news/",
       "refs": [
-        "drop-off:cardiff"
+        "news:cardiff"
       ],
       "watchable": true
     },
@@ -49,7 +49,8 @@
     {
       "url": "https://exeter-airport.co.uk/car-parking/",
       "refs": [
-        "drop-off:exeter"
+        "drop-off:exeter",
+        "parking:exeter"
       ],
       "watchable": true
     },
@@ -120,6 +121,13 @@
       "url": "https://www.aberdeenairport.com/about-us/media-centre/",
       "refs": [
         "news:aberdeen"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.aberdeenairport.com/transport-and-directions/aberdeen-airport-parking/long-stay-parking/",
+      "refs": [
+        "parking:aberdeen"
       ],
       "watchable": true
     },
@@ -425,7 +433,14 @@
       "watchable": true
     },
     {
-      "url": "https://www.belfastairport.com/car-parking/drop-off-zone",
+      "url": "https://www.belfastairport.com/parking/long-stay-car-park",
+      "refs": [
+        "parking:belfast-international"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.belfastairport.com/parking/pick-up-and-drop-off",
       "refs": [
         "drop-off:belfast-international"
       ],
@@ -594,6 +609,14 @@
       "watchable": false
     },
     {
+      "url": "https://www.glasgowprestwick.com/parking/",
+      "refs": [
+        "drop-off:prestwick",
+        "parking:prestwick"
+      ],
+      "watchable": true
+    },
+    {
       "url": "https://www.heathrow.com/transport-and-directions/heathrow-parking/heathrow-park-and-ride",
       "refs": [
         "parking:heathrow"
@@ -630,9 +653,10 @@
       "watchable": true
     },
     {
-      "url": "https://www.leedsbradfordairport.co.uk/parking/pick-up-drop-off",
+      "url": "https://www.leedsbradfordairport.co.uk/parking",
       "refs": [
-        "drop-off:leeds-bradford"
+        "drop-off:leeds-bradford",
+        "parking:leeds-bradford"
       ],
       "watchable": false
     },
@@ -654,6 +678,13 @@
       "url": "https://www.liverpoolairport.com/parking/express-drop-off",
       "refs": [
         "drop-off:liverpool"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.liverpoolairport.com/parking/long-stay",
+      "refs": [
+        "parking:liverpool"
       ],
       "watchable": true
     },
@@ -708,7 +739,14 @@
       "watchable": true
     },
     {
-      "url": "https://www.newcastleairport.com/car-parking/pick-up-drop-off/",
+      "url": "https://www.newcastleairport.com/car-parking/car-parking-options/",
+      "refs": [
+        "parking:newcastle"
+      ],
+      "watchable": true
+    },
+    {
+      "url": "https://www.newcastleairport.com/car-parking/picking-up-dropping-off/",
       "refs": [
         "drop-off:newcastle"
       ],
@@ -802,7 +840,8 @@
     {
       "url": "https://www.teessideinternational.com/teesside-airport-parking/",
       "refs": [
-        "drop-off:teesside"
+        "drop-off:teesside",
+        "parking:teesside"
       ],
       "watchable": true
     },
