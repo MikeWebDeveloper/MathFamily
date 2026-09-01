@@ -1,6 +1,6 @@
 {
-  "version": "1.3.0",
-  "lastUpdated": "2026-07-03",
+  "version": "1.3.1",
+  "lastUpdated": "2026-09-01",
   "records": [
     {
       "airportSlug": "heathrow",
@@ -36,7 +36,7 @@
         }
       ],
       "sourceUrl": "https://www.gatwickairport.com/parking/roll-up-car-park-prices.html",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-09-01"
     },
     {
       "airportSlug": "manchester",

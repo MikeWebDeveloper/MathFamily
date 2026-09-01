@@ -466,3 +466,35 @@ both Birmingham lounge entries kept at their 2026-06-10 values and `verifiedAt` 
 **New product spotted, NOT added:** escapelounges.com now lists "Manchester Terminal 2 - The
 Executive by Escape Lounges — From £56.99 per person" as a separate lounge. Adding a new record
 is outside a re-verification pass, so it is flagged for a human decision rather than written in.
+
+---
+
+## 2026-09-01 — daily ParkMath data check (sweep, parking scope)
+
+Re-verified the oldest ParkMath parking records against the airports' own pages.
+
+**Confirmed unchanged — `verifiedAt` bumped to 2026-09-01:**
+
+| Record | Product | Official figure (verbatim) | Source |
+| --- | --- | --- | --- |
+| parking:gatwick | Long Stay roll-up | "2-24 hours: £38.00 / Each subsequent day: £32.00" | gatwickairport.com/parking/roll-up-car-park-prices.html |
+
+Gatwick 3/7/14-day totals (10200 / 23000 / 45400 pence) still match the official
+£38 first-24h + £32-per-day tariff exactly — no change, only the freshness stamp moved.
+
+**Could not re-verify this run (old value kept, `verifiedAt` NOT bumped — see PR NEEDS-HUMAN):**
+
+- parking:stansted — stanstedairport.com now publishes only "from" pre-book prices
+  (Mid Stay "from £64.99" 8-day, Turn Up & Park "from £79" 8-day); the flat £48/24h
+  Turn Up & Park gate tariff our record models is no longer shown on the official page.
+- parking:birmingham — birminghamairport.co.uk Cloudflare-blocked on every transport
+  (WebFetch 403, jina empty); already flagged in the record notes.
+- parking:newcastle / liverpool / teesside / prestwick / aberdeen /
+  belfast-international / exeter — not reached this run (belfastairport.com 403s per
+  the news watchdog); still within tolerance-ish but now >46 days.
+- drop-off:stansted, drop-off:east-midlands — barrierless Express Set Down / Rapid
+  Drop-Off; the per-visit tariff (£10/£28 and £5 respectively) is no longer printed
+  on the official pages, which now describe only "pay online later". Structural facts
+  (15-min allowance, £100/£60 PCN, midnight-next-day deadline) all still match.
+- drop-off:leeds-bradford — price sits behind a client-side FAQ accordion that no
+  transport rung renders; curl is hard-blocked.
