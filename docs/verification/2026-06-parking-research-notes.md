@@ -466,3 +466,39 @@ both Birmingham lounge entries kept at their 2026-06-10 values and `verifiedAt` 
 **New product spotted, NOT added:** escapelounges.com now lists "Manchester Terminal 2 - The
 Executive by Escape Lounges — From £56.99 per person" as a separate lounge. Adding a new record
 is outside a re-verification pass, so it is flagged for a human decision rather than written in.
+
+---
+
+## 2026-09-02 — daily ParkMath data check (freshness sweep)
+
+Re-verified every ParkMath parking record with `verifiedAt` older than 46 days. Seven
+confirmed unchanged against the airport's own live page (read via `r.jina.ai`, browser engine
+where the tariff table is client-rendered); `verifiedAt` bumped to 2026-09-02, no value
+changes. Dataset version 1.3.0 → 1.3.1.
+
+| record | official page figures re-confirmed | stored 3d / 7d / 14d |
+| --- | --- | --- |
+| `parking:newcastle` | Long Stay Turn Up & Park: up to 24h £50, 2d £80, 3d £120, 4d £160, +£40/day | £120 / £280 / £560 ✓ |
+| `parking:liverpool` | Long Stay gate rate: 1d £60, 2d £100, 3d £120, 4d £130, 5d £140, 6d £150, 7d £160, 8d £170, +£30/day | £120 / £160 / £350 ✓ |
+| `parking:teesside` | "Standard turn-up and park rates": 24h £36, 2d £72, 3d £82, 7d £105, 11d £165, +£15/day | £82 / £105 / £210 ✓ |
+| `parking:aberdeen` | Long Stay Turn Up: ≤24h £35, 2d £60, 3d £80, 4d £96, 5d £105, 6d £115, 7d £125, +£10/day; pre-book "starts at £49.99" | £80 / £125 / £195 ✓ (+ prebook £49.99) |
+| `parking:belfast-international` | Long Stay gate rate: 1d £30, 2d £45, 3d £55, +£10/day | £55 / £95 / £165 ✓ |
+| `parking:prestwick` | Car Park Two Turn Up (as of 01 Apr 26): 1d £37.50, 3d £66.50, 7d £103.50, 8d £112, +£8/day | £66.50 / £103.50 / £160 ✓ |
+| `parking:exeter` | Car Park P2 "not booked" tariff: ≤15min £15 … 12-24h £40, +£40/24h | £120 / £280 / £560 ✓ |
+
+**Unverifiable today — value kept, `verifiedAt` NOT bumped, flagged for human:**
+- `parking:gatwick` (verifiedAt 2026-06-10): roll-up prices live behind a per-car-park JS
+  accordion / API on `roll-up-car-park-prices.html`; no priced rows on any transport rung.
+- `parking:birmingham` (2026-06-10): `birminghamairport.co.uk` still Cloudflare-blocked to
+  every automated transport; no Wayback snapshot available for `/parking/turn-up-prices/`.
+- `parking:stansted` (2026-06-10): Mid Stay "Turn Up & Park" gate rate is JS-rendered on
+  `/parking/long-stay/`; only the pre-book "from £71.99 / 8 days" point is visible.
+- `parking:leeds-bradford` (2026-06-27): `/parking` SPA accordion returned no priced content.
+
+**priority-pass (`priority-pass:tiers`)** — re-confirmed on `prioritypass.com/en-GB/join-prioritypass`:
+Standard £69/yr (0 included, £24/visit), Standard Plus £229/yr (10 free visits, then £24),
+Prestige £419/yr (all member visits free), £24 guest fee across all tiers. Matches stored
+6900 / 22900 / 41900 and 2400 per-visit exactly. `verifiedAt` 2026-06-10 → 2026-09-02.
+
+**lounges (`lounges:birmingham`, verifiedAt 2026-06-10)** — `birminghamairport.co.uk/at-the-airport/lounges/`
+returned no content on any rung (Cloudflare). Value kept, `verifiedAt` NOT bumped.

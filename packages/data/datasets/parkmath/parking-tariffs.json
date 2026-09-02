@@ -1,6 +1,6 @@
 {
-  "version": "1.3.0",
-  "lastUpdated": "2026-07-03",
+  "version": "1.3.1",
+  "lastUpdated": "2026-09-02",
   "records": [
     {
       "airportSlug": "heathrow",
@@ -207,7 +207,7 @@
         }
       ],
       "sourceUrl": "https://www.newcastleairport.com/car-parking/car-parking-options/",
-      "verifiedAt": "2026-06-27"
+      "verifiedAt": "2026-09-02"
     },
     {
       "airportSlug": "leeds-bradford",
@@ -243,7 +243,7 @@
         }
       ],
       "sourceUrl": "https://www.liverpoolairport.com/parking/long-stay",
-      "verifiedAt": "2026-06-27"
+      "verifiedAt": "2026-09-02"
     },
     {
       "airportSlug": "teesside",
@@ -261,7 +261,7 @@
         }
       ],
       "sourceUrl": "https://www.teessideinternational.com/teesside-airport-parking/",
-      "verifiedAt": "2026-06-27"
+      "verifiedAt": "2026-09-02"
     },
     {
       "airportSlug": "prestwick",
@@ -279,7 +279,7 @@
         }
       ],
       "sourceUrl": "https://www.glasgowprestwick.com/parking/",
-      "verifiedAt": "2026-07-03"
+      "verifiedAt": "2026-09-02"
     },
     {
       "airportSlug": "aberdeen",
@@ -304,7 +304,7 @@
         }
       ],
       "sourceUrl": "https://www.aberdeenairport.com/transport-and-directions/aberdeen-airport-parking/long-stay-parking/",
-      "verifiedAt": "2026-07-03"
+      "verifiedAt": "2026-09-02"
     },
     {
       "airportSlug": "belfast-international",
@@ -322,7 +322,7 @@
         }
       ],
       "sourceUrl": "https://www.belfastairport.com/parking/long-stay-car-park",
-      "verifiedAt": "2026-07-03"
+      "verifiedAt": "2026-09-02"
     },
     {
       "airportSlug": "exeter",
@@ -340,7 +340,7 @@
         }
       ],
       "sourceUrl": "https://exeter-airport.co.uk/car-parking/",
-      "verifiedAt": "2026-07-03"
+      "verifiedAt": "2026-09-02"
     }
   ]
 }

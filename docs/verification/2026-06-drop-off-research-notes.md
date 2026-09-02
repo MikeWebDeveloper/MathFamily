@@ -507,3 +507,29 @@ NCP Customer Service cabin) is retained unverified from 2026-06-10.
 Newcastle drop-off page were both read successfully via `r.jina.ai` with `X-Engine: browser`,
 and both matched our held values exactly. Newcastle's page also publishes the full Express /
 Short Stay 1 / Short Stay 2 / Minibus tariff grid.
+
+---
+
+## 2026-09-02 — daily ParkMath data check (freshness sweep)
+
+**London City drop-off (`drop-off:london-city`) — standing hard-blocked target, cleared.**
+Read via `r.jina.ai` with `X-Engine: browser`. Official page states verbatim: "0 - 5 minutes
+£8.00", "5 minutes and above £1 per minute thereafter", "Maximum stay 10 minutes", and
+"Blue Badge holders may register to get 10 minutes free parking in the Drop-off area. Please
+use the Main Stay if you need more time and get 1 hour free parking." All held values match
+exactly. `verifiedAt` bumped 2026-08-13 → 2026-09-02; no value change. dataset version
+1.4.0 → 1.4.1.
+
+**Stansted / Leeds Bradford / East Midlands drop-off — still unverifiable, prior flags stand.**
+- Stansted Express Set Down: page still renders the "Pick Up & Drop Off charges" table for
+  Express Set Down as empty; it only publishes the Green/Blue Short Stay "pick up or drop off"
+  tariff (£13/30min, £21/1h, £25/2h, £38/4h) and confirms "the allocated 15-minute period" and
+  the £100 → £60 PCN. The £10 / £28 bands could not be re-confirmed. Value kept, `verifiedAt`
+  NOT bumped (still 2026-06-26).
+- East Midlands Rapid Drop-Off: charge table still empty in the live DOM; page publishes only
+  Short Stay 1 (£6/30min, Blue Badge free 30min, £8/1h, £12/2h, £16/3h) and the £100 → £60
+  charge. The £5 / 15-minute headline could not be re-confirmed. Value kept, `verifiedAt` NOT
+  bumped (still 2026-06-26).
+- Leeds Bradford: `/parking` is still an SPA; the "How much does the Pick Up and Drop Off car
+  park cost?" accordion returned no priced content on any rung. Value kept, `verifiedAt` NOT
+  bumped (still 2026-06-22).
