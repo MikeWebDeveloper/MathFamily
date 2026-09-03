@@ -466,3 +466,20 @@ both Birmingham lounge entries kept at their 2026-06-10 values and `verifiedAt` 
 **New product spotted, NOT added:** escapelounges.com now lists "Manchester Terminal 2 - The
 Executive by Escape Lounges — From £56.99 per person" as a separate lounge. Adding a new record
 is outside a re-verification pass, so it is flagged for a human decision rather than written in.
+
+---
+
+## 2026-09-03 — daily ParkMath freshness sweep (re-verification, no value changes)
+
+Re-verified against official sources today; all confirmed **unchanged**, `verifiedAt` bumped to 2026-09-03. Dataset `version` 1.3.0 → 1.3.1.
+
+| Record | Field | Old | New | Source |
+| --- | --- | --- | --- | --- |
+| parking:liverpool | verifiedAt | 2026-06-27 | 2026-09-03 | https://www.liverpoolairport.com/parking/long-stay — Gate Rate table still: up to 1 day £60, 2 days £100, 3 days £120, 4 £130, 5 £140, 6 £150, 7 days £160, 8 days £170, then £30.00 per 24h. Matches stored 3d/7d/14d (£120 / £160 / £350). |
+| parking:belfast-international | verifiedAt | 2026-07-03 | 2026-09-03 | https://www.belfastairport.com/parking/long-stay-car-park — "Gate Rate Price" table still: One Day £30.00, Two Days £45.00, Three Days £55.00, Each Day Thereafter + £10.00 per day. Matches stored 3d/7d/14d (£55 / £95 / £165). |
+| parking:exeter | verifiedAt | 2026-07-03 | 2026-09-03 | https://exeter-airport.co.uk/car-parking/ — Car Park P2 "not booked": 12-24h £40.00, each additional 24h £40.00; overstay list "Car Park P2 – £40 per day or part thereof". Matches stored 3d/7d/14d (£120 / £280 / £560). |
+
+Also re-verified (separate dataset): **priority-pass** — prioritypass.com/en-GB/join-prioritypass still Standard £69 / Standard Plus £229 / Prestige £419, per-visit £24. Unchanged; `priority-pass.json` verifiedAt bumped to 2026-09-03.
+
+### Could not re-verify today (JS-rendered tariff widgets / 403) — values left unchanged, see PR NEEDS-HUMAN
+parking: gatwick, stansted, birmingham, newcastle, leeds-bradford, teesside, prestwick (Car Park Two turn-up), aberdeen. drop-off: stansted, leeds-bradford, east-midlands, london-city (standing hard-block). lounges: birmingham (403).
