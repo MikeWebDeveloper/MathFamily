@@ -544,3 +544,82 @@ string in `blueBadgeSeoDescription` → 2026-09-03; dataset `version` 1.4.0 → 
 
 Not re-verified this run (still WARN-stale, out of scope): `drop-off:leeds-bradford`
 (2026-06-22), `drop-off:east-midlands` (2026-06-26).
+
+---
+
+## 2026-09-04 — Daily ParkMath sweep (drop-off)
+
+News-watch sweep first: no changed refs, no price-relevant airport news, so no
+STEP 2 refs. Freshness sweep then covered the WARN-stale drop-off records plus the
+standing hard-blocked London City target.
+
+### `drop-off:london-city` — verified, penalty amount now published
+
+Fetched via `r.jina.ai` (direct still 403s). Official page
+`https://www.londoncityairport.com/parking/drop-off`:
+
+- "| 0 - 5 minutes | £8.00 |", "| 5 minutes and above | £1 per minute thereafter |",
+  "_Maximum stay 10 minutes._" — matches stored bands / `perMinuteAfterPence` / `maxStayMinutes`.
+- NEW on the page: "A £100.00 enforcement charge is payable by drivers who stay past
+  10 minutes. This charge is reduced to £60.00 if paid within 14 days. This will be
+  strictly enforced with CCTV cameras." The stored record previously said "no amount
+  is confirmed on the official page".
+- Payment deadline re-confirmed: "settle the charge by midnight the day after".
+- Blue Badge re-confirmed: 10 min free in the Drop-off area on registration; Main
+  Stay 1 hour free.
+
+Changes: `penaltyPence` null → 10000; `penaltyNotes` rewritten to state the £100/£60
+enforcement charge; `verifiedAt` 2026-08-13 → 2026-09-04.
+
+### `drop-off:east-midlands` — verified, per-minute rate added
+
+`https://www.eastmidlandsairport.com/parking/pick-up-and-drop-off/` renders the
+Rapid Drop-Off price in a JS radio-tab component; read the embedded Storyblok payload
+from the raw served HTML (browser UA). "Drop Off charges" table:
+"Up to 15 minutes → £5", "Every minute after the first 15 minutes → £1", and body
+copy "Maximum stay is 30 minutes. Payments must be made online by midnight the
+following day." Non-payment: "£100 Parking Charge … reduced to £60 if paid within 14
+days." Blue Badge (Assisted Travel block): "Short Stay 1 for up to 30 minutes and
+Long Stay 2 for up to 60 minutes free of charge, for both pick-up and drop-off."
+Long Stay 2 "Pick Up & Drop Off charges" table: "Up to 60 minutes → Free", "Every
+minute after the first 60 minutes → £1"; "Long Stay 2 is a 15 - 20 minute walk".
+
+Changes: `perMinuteAfterPence` null → 100 (£1/min, was missing); `penaltyNotes` and
+`blueBadgePolicy` tightened to the current wording; dropped the unconfirmed "£70
+debt-recovery fee" (not on the page today); `verifiedAt` 2026-06-26 → 2026-09-04.
+Headline £5/15min band unchanged.
+
+### `drop-off:leeds-bradford` — verified, stale SmoothPark & EV claims removed
+
+`https://www.leedsbradfordairport.co.uk/parking` — FAQ accordion answers are in the
+Next.js RSC payload of the raw HTML. Pick Up & Drop Off car park (cars):
+"0-10 minutes £8.00 / 10-20 minutes £10.00 / 20-30 minutes £13.50 / 30-60 minutes
+£16.50". Blue Badge: "The standard fee is £8 for 10 minutes, while Blue Badge
+holders who are travelling can stay for up to 60 minutes for the same £8 fee."
+One Hour Free Parking Zone: "located within the Mid Stay car park … approximately a
+five-minute walk to the terminal, including a slight incline … Parking is free for
+up to one hour." Car park "operates a ticketless system … cameras automatically
+record your vehicle's entry and exit times."
+
+No "SmoothPark" and no "10% off" anywhere on the page any more, and no electric-vehicle
+free-drop-off concession — both were in the stored record and are now removed as
+unverifiable. Changes: `paymentDeadline` rewritten (ticketless ANPR, no SmoothPark
+discount); `freeAlternative` name/details corrected (Mid Stay location, ~5-min walk,
+EV clause removed); `blueBadgePolicy` reworded; SEO description date bumped;
+`verifiedAt` 2026-06-22 → 2026-09-04. Headline £8/10min band unchanged.
+
+Dataset `version` 1.4.1 → 1.4.2, `lastUpdated` → 2026-09-04.
+
+### Priority Pass (`priority-pass:tiers`) — verified, no change
+
+`https://www.prioritypass.com/en-GB/join-prioritypass` (UK): Standard £69/yr, £24
+visit fee, 0 free visits; Standard Plus £229/yr, 10 free visits then £24; Prestige
+£419/yr, all member visits free, £24 guest fee. All match stored pence values.
+`verifiedAt` 2026-06-10 → 2026-09-04 only.
+
+### Not reached this run (still WARN-stale, deferred to the weekly sweep)
+
+`parking:{gatwick,stansted,birmingham}` (2026-06-10), `parking:{newcastle,leeds-bradford,
+liverpool,teesside}` (2026-06-27), `parking:{prestwick,aberdeen,belfast-international,exeter}`
+(2026-07-03), `lounges:birmingham` (2026-06-10). Newcastle parking remains excluded
+from the dataset (no official prices obtained).

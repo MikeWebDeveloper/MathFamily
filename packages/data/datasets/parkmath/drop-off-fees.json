@@ -1,6 +1,6 @@
 {
-  "version": "1.4.1",
-  "lastUpdated": "2026-09-03",
+  "version": "1.4.2",
+  "lastUpdated": "2026-09-04",
   "records": [
     {
       "airportSlug": "heathrow",
@@ -411,8 +411,8 @@
       "maxStayMinutes": 10,
       "perMinuteAfterPence": 100,
       "maxChargePence": null,
-      "penaltyPence": null,
-      "penaltyNotes": "After the first 5 minutes the charge is £1 per minute up to the 10-minute maximum stay; a Parking Charge may apply for non-payment but no amount is confirmed on the official page",
+      "penaltyPence": 10000,
+      "penaltyNotes": "After the first 5 minutes the charge is £1 per minute up to the 10-minute maximum stay; a £100 enforcement charge is payable by drivers who stay past 10 minutes, reduced to £60 if paid within 14 days (strictly enforced with CCTV)",
       "paymentDeadline": "Midnight the following day (online, barrierless ANPR)",
       "blueBadgePolicy": "Blue Badge holders may register to get 10 minutes' free parking in the Drop-off area; use the Main Stay car park instead for 1 hour free parking if more time is needed",
       "freeAlternative": {
@@ -423,7 +423,7 @@
       },
       "priorYearFeePence": 0,
       "sourceUrl": "https://www.londoncityairport.com/parking/drop-off",
-      "verifiedAt": "2026-08-13"
+      "verifiedAt": "2026-09-04"
     },
     {
       "airportSlug": "leeds-bradford",
@@ -440,18 +440,18 @@
       "maxChargePence": null,
       "penaltyPence": null,
       "penaltyNotes": null,
-      "paymentDeadline": "Cashless — pay at the barrier on exit (SmoothPark automatic payment gives 10% off the standard tariff)",
-      "blueBadgePolicy": "Blue Badge holders can use the dedicated Blue Badge bays in the Pick Up & Drop Off car park for up to 60 minutes for the £8 fee",
+      "paymentDeadline": "Cashless, ticketless — ANPR cameras record entry and exit and the tariff is calculated on exit; pay at the barrier on exit",
+      "blueBadgePolicy": "Blue Badge holders who are travelling can stay in the Pick Up & Drop Off car park for up to 60 minutes for the same £8 fee",
       "freeAlternative": {
-        "name": "One Hour Free Zone",
+        "name": "One Hour Free Parking Zone",
         "minutesFree": 60,
-        "details": "Free for up to one hour, a 3–4 minute walk from the terminal; fully electric private cars may also use the Pick Up & Drop Off car park free for up to 1 hour (max 2 visits/day)"
+        "details": "Free for up to one hour, in the Mid Stay car park (follow signs for 'Mid Stay & 1 Hour Free'); approximately a five-minute walk to the terminal, including a slight incline. Charges apply if you exceed an hour or exit and re-enter"
       },
       "priorYearFeePence": 700,
       "sourceUrl": "https://www.leedsbradfordairport.co.uk/parking",
-      "verifiedAt": "2026-06-22",
+      "verifiedAt": "2026-09-04",
       "optionsSeoTitle": "Leeds Bradford Airport drop-off charges 2026 — £8 fee, free option & cheapest way in",
-      "optionsSeoDescription": "How much does Leeds Bradford Airport charge for drop-off? £8 for up to 10 minutes, or free via the One Hour Free Zone. Compare against parking and pre-booked options — every figure verified against the official Leeds Bradford Airport page, updated 2026-06-22."
+      "optionsSeoDescription": "How much does Leeds Bradford Airport charge for drop-off? £8 for up to 10 minutes, or free via the One Hour Free Parking Zone. Compare against parking and pre-booked options — every figure verified against the official Leeds Bradford Airport page, updated 2026-09-04."
     },
     {
       "airportSlug": "east-midlands",
@@ -464,20 +464,20 @@
         }
       ],
       "maxStayMinutes": 30,
-      "perMinuteAfterPence": null,
+      "perMinuteAfterPence": 100,
       "maxChargePence": null,
       "penaltyPence": 10000,
-      "penaltyNotes": "£100 Parking Charge for overstaying the 30-minute maximum or non-payment, reduced to £60 if paid within 14 days, plus a debt-recovery fee of up to £70",
-      "paymentDeadline": "Barrier-free — pay by 23:59 the day after your visit (online or by phone; payment cannot be made on exit)",
-      "blueBadgePolicy": "Blue Badge holders get up to 30 minutes free at Short Stay 1 (nearest the terminal); general drivers pay £6 for up to 30 minutes there (£8 up to 1 hour). The 60-minute free drop-off/pick-up at Long Stay 2 is open to all drivers (see free alternative). No specific Blue Badge concession is published for the Rapid Drop-off area",
+      "penaltyNotes": "Rapid Drop-Off is £5 for up to 15 minutes, then £1 per minute; maximum stay 30 minutes. A £100 Parking Charge is issued if payment is not received by midnight the day after your visit, reduced to £60 if paid within 14 days",
+      "paymentDeadline": "Barrier-free — pay online by midnight the day after your visit (payment cannot be made on exit; no cash or cheque)",
+      "blueBadgePolicy": "Blue Badge holders park free for up to 30 minutes at Short Stay 1 (nearest the terminal) and up to 60 minutes at Long Stay 2, for both drop-off and pick-up. General drivers pay £6 for up to 30 minutes at Short Stay 1 (£8 up to 1 hour). No separate Blue Badge concession is published for the barrierless Rapid Drop-off lane",
       "freeAlternative": {
         "name": "Long Stay 2 car park",
         "minutesFree": 60,
-        "details": "Free for up to 60 minutes for drop-off and pick-up, then £1 per minute. A 15-20 minute walk from the terminal, or take the free shuttle bus"
+        "details": "Free for up to 60 minutes for drop-off and pick-up, then £1 per minute. Long Stay 2 is a 15–20 minute walk from the terminal, or take the free shuttle bus"
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://www.eastmidlandsairport.com/parking/pick-up-and-drop-off/",
-      "verifiedAt": "2026-06-26"
+      "verifiedAt": "2026-09-04"
     },
     {
       "airportSlug": "aberdeen",
