@@ -507,3 +507,40 @@ NCP Customer Service cabin) is retained unverified from 2026-06-10.
 Newcastle drop-off page were both read successfully via `r.jina.ai` with `X-Engine: browser`,
 and both matched our held values exactly. Newcastle's page also publishes the full Express /
 Short Stay 1 / Short Stay 2 / Minibus tariff grid.
+
+---
+
+## 2026-09-03 — Stansted targeted re-verification (`drop-off:stansted`)
+
+Prompted by a backlink-campaign prerequisite: the Stansted row was stamped
+`2026-06-26` (10 weeks stale) and the 2026-08-29 automated sweep left it
+NEEDS-HUMAN, believing the barrierless page "no longer publishes the per-visit
+forecourt charge".
+
+**All figures re-confirmed against official Stansted sources today; nothing changed.**
+
+- Source page: `https://www.stanstedairport.com/getting-to-and-from/pick-up-and-drop-off/`
+  (the no-trailing-slash form 301s to this one — the stored `sourceUrl` is already
+  canonical, unchanged).
+- The Express Set Down price table IS still on the official page — it lives in a
+  JS radio-tab component ("Short Stay / Mid Stay / Express Set Down") and only the
+  default Short Stay tab renders in reader/though-fetch mode, which is why the
+  jina-reader rungs the automated sweep uses came back empty. Fetched the raw served
+  HTML with a browser UA: the embedded Storyblok payload contains
+  `"Up to 15 minutes" → "£10"` and `"Over 15 minutes" → "£28"`, plus
+  "There is a £28 charge for re-entering within 30 minutes of first entering" and
+  "Non-payment will result in a £100 Parking Charge, reduced to £60 if paid within 14 days".
+- Cross-checked against the official T&C page
+  `https://www.stanstedairport.com/terms-and-conditions/express-set-down/`
+  (§2.2 "must be paid by 23:59 on the day after your visit"; §2.3 "maximum 30-minute
+  stay period"; §4.1 Blue Badge max-stay extension; §6.2 reduced amount if paid within
+  14 days). All match the stored record.
+- Free alternative re-confirmed: official page states "up to 60 minutes free pick up
+  or drop off" at the Mid Stay car park with a free shuttle bus.
+
+Changes made: `verifiedAt` 2026-06-26 → 2026-09-03; stale "verified 2026-06-10"
+string in `blueBadgeSeoDescription` → 2026-09-03; dataset `version` 1.4.0 → 1.4.1,
+`lastUpdated` → 2026-09-03. No price/policy/band/penalty field changed.
+
+Not re-verified this run (still WARN-stale, out of scope): `drop-off:leeds-bradford`
+(2026-06-22), `drop-off:east-midlands` (2026-06-26).
