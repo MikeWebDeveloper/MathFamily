@@ -466,3 +466,69 @@ both Birmingham lounge entries kept at their 2026-06-10 values and `verifiedAt` 
 **New product spotted, NOT added:** escapelounges.com now lists "Manchester Terminal 2 - The
 Executive by Escape Lounges — From £56.99 per person" as a separate lounge. Adding a new record
 is outside a re-verification pass, so it is flagged for a human decision rather than written in.
+
+## 2026-09-05 — daily ParkMath sweep (parking, drop-off, lounges)
+
+Scope: every parking record whose `verifiedAt` was older than 46 days
+(gatwick, stansted, birmingham, newcastle, leeds-bradford, liverpool, teesside, prestwick,
+aberdeen, belfast-international, exeter), `lounges:birmingham`, and the standing hard-blocked
+target `drop-off:london-city`. Also re-checked reachability of the ~24 ParkMath-domain URLs
+carrying `pendingSince: 2026-08-13` in `tools/freshness/hashes.json`.
+
+**Confirmed unchanged (verifiedAt bumped to 2026-09-05):**
+
+| Record | Source | Result |
+| --- | --- | --- |
+| parking:gatwick | gatwickairport.com/parking/roll-up-car-park-prices.html | "0-2 hours: free", "2-24 hours: £38.00", "Each subsequent day: £32.00" — matches £38/£32 on file |
+| parking:newcastle | newcastleairport.com/car-parking/car-parking-options/ | Turn up & park table: up to 24h £50, 2d £80, 3d £120, 4d £160, +£40/day — exact match |
+| parking:liverpool | liverpoolairport.com/parking/long-stay | Gate Rate table: 1d £60…8d £170, +£30/day — exact match |
+| parking:teesside | teessideinternational.com/teesside-airport-parking/ | Standard turn-up table: 1d £36…11d £165, +£15/day — exact match |
+| parking:prestwick | glasgowprestwick.com/parking/ | Car Park Two Turn Up Prices: 1d £37.50…8d £112, +£8/day — exact match |
+| parking:aberdeen | aberdeenairport.com .../long-stay-parking/ | Turn Up Prices: up to 24h £35…7d £125, +£10/day; pre-book "from £49.99" (1-week) — both exact match |
+| parking:belfast-international | belfastairport.com/parking/long-stay-car-park | One Day £30, Two Days £45, Three Days £55, +£10/day — exact match |
+| parking:exeter | exeter-airport.co.uk/car-parking/ | Car Park P2 tariff: 0-15min £15…12-24h £40, +£40/24h — exact match |
+| drop-off:london-city | londoncityairport.com/parking/drop-off | £8 (0-5 min), £1/min thereafter, max stay 10 min, £100 enforcement (£60 if paid within 14 days) — exact match; standing hard-blocked target is reachable again (also confirmed by yesterday's 2026-09-04 sweep) |
+
+**Not re-verified — kept unchanged, flagged for human follow-up:**
+
+- **parking:stansted.** stanstedairport.com's `/parking/long-stay/` and `/parking/mid-stay/`
+  pages have been redesigned into booking-funnel landing pages. The flat "Mid Stay £48/24h
+  Turn Up & Park" gate rate we hold is no longer published anywhere on the site — only dynamic
+  pre-book "From £X (N days)" teasers remain, which change with whatever future search dates the
+  booking widget defaults to on the day of the check (today: "From £59.99 (8 days)" vs our
+  £71.99/Oct-2026 snapshot from 2026-06-10 — not a like-for-like comparison, so not applied as a
+  change). Kept the existing gate + pre-book values; `verifiedAt` left at 2026-06-10.
+- **parking:birmingham.** birminghamairport.co.uk is still Cloudflare-blocked on every rung
+  (WebFetch, r.jina.ai plain, r.jina.ai browser-engine, and the nearest Wayback snapshot,
+  2026-06-30, which itself only captured the page's static nav shell with no price table).
+  Kept unchanged; `verifiedAt` left at 2026-06-10.
+- **parking:leeds-bradford.** leedsbradfordairport.co.uk's parking price is still rendered
+  client-side inside a collapsed FAQ accordion ("What are your parking prices?"); every rung
+  (WebFetch, r.jina.ai plain/browser-engine, raw curl, Wayback nearest snapshot 2026-06-13)
+  returns the collapsed question with no expanded answer. Kept unchanged; `verifiedAt` left at
+  2026-06-27.
+- **lounges:birmingham.** birminghamairport.co.uk/at-the-airport/lounges/ is likewise
+  Cloudflare-blocked on WebFetch and both r.jina.ai modes; the nearest Wayback snapshot is from
+  2024-12-03, well before the existing 2026-06-10 verification, so it cannot be used to
+  reconfirm current prices. Kept unchanged.
+
+**hashes.json reachability sweep (tools/freshness/hashes.json, ParkMath-domain URLs only):**
+all ~24 URLs carrying `pendingSince: 2026-08-13` (gatwick, stansted, aberdeen, edinburgh,
+eastmidlands, heathrow, hial/inverness, luton, manchester, norwich, southampton, no1lounges x3,
+escapelounges, exeter, londonsouthend — see the PR body for the full list) loaded successfully
+today with real airport-specific content (confirmed by title/body inspection, not a Cloudflare
+or CAPTCHA interstitial). Every one of them produced a content fingerprint that differs from the
+stored 2026-08-13 hash — that this is uniform across 24 unrelated sites on the same day points to
+a shared, price-irrelevant cause (e.g. a sitewide template/cookie-banner/footer change) rather
+than 24 simultaneous tariff changes; this run's own manual price checks above confirm several of
+these exact pages' tariffs are unchanged despite the hash differing. Recorded today's hash +
+`checkedAt: 2026-09-05` and cleared `pendingSince` for all 24 as the new reviewed baseline. One
+entry, `cardiff-airport.com/parking-cwl/drop-off-and-pick-up-cwl/`, is orphaned in hashes.json
+(the live dataset/watchlist now use `.../car-parking-options/drop-off-and-pick-up-cwl/`); left
+untouched — cleanup of orphaned hash keys is outside this run's bounded-change list.
+
+**Not touched:** all RoamMath-domain `pendingSince` entries (Airalo eSIM pages, BA/Emirates/
+Jet2/TUI/Wizz baggage, O2/Three roaming) — out of scope for this ParkMath-only run, per a
+separate weekly job.
+
+News-watch sweep (run before this one): no changed refs, no price-relevant news.
