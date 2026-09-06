@@ -466,3 +466,43 @@ both Birmingham lounge entries kept at their 2026-06-10 values and `verifiedAt` 
 **New product spotted, NOT added:** escapelounges.com now lists "Manchester Terminal 2 - The
 Executive by Escape Lounges — From £56.99 per person" as a separate lounge. Adding a new record
 is outside a re-verification pass, so it is flagged for a human decision rather than written in.
+
+---
+
+## 2026-09-06 — freshness sweep (parking + London City drop-off)
+
+Re-verified every parking record with `verifiedAt` older than 46 days, plus the
+standing hard-blocked targets.
+
+**Changed:**
+
+| record | field | old | new | source |
+| --- | --- | --- | --- | --- |
+| parking:birmingham | gate Car Park 7 tariff | £49.00 first 24h + £42.00/day → 3d £133 / 7d £301 / 14d £595 | £51.00 first 24h + £44.00/day → 3d £139 / 7d £315 / 14d £623 | official birminghamairport.co.uk turn-up-prices page via Wayback Machine capture 2026-06-30 (live site Cloudflare-blocked on every rung) |
+| parking:stansted | prebook Long Stay 'from' price (8 days) | £71.99 (Oct-2026 sample, read 2026-06-10) | £59.99 (Nov-2026 sample, read 2026-09-06) | stanstedairport.com/parking/long-stay/ |
+
+**Confirmed unchanged (verifiedAt bumped to 2026-09-06):**
+
+- parking:gatwick — roll-up £38 first 24h + £32/day (gatwickairport.com roll-up-car-park-prices).
+- parking:stansted — Mid Stay Turn Up & Park £48/24h, Short Stay £70/24h (stanstedairport.com turn-up-and-park).
+- parking:liverpool — Gate Rate ladder £60/£100/£120/£130/£140/£150/£160/£170 then £30/day (liverpoolairport.com long-stay, jina browser render).
+- parking:teesside — Standard turn-up table £36…£165 (11 days) then £15/day (teessideinternational.com).
+- parking:prestwick — Car Park Two Turn Up £37.50…£112 (8 days) then £8/day, "price as of 01 April 26" (glasgowprestwick.com/parking).
+- parking:aberdeen — Long Stay Turn Up £35 up to 24h, £60/£80/£96/£105/£115/£125 then £10/day; prebook 'from' "£49.99" 1-week (aberdeenairport.com long-stay-parking).
+- parking:belfast-international — Long Stay gate £30/£45/£55 then £10/day (belfastairport.com long-stay-car-park).
+- parking:exeter — Car Park P2 'not booked' 12-24h £40, £40/additional 24h; P1/P2/P4 columns now consistent with the overstay list so the earlier P3/P4 numbering flag is cleared (exeter-airport.co.uk/car-parking).
+- drop-off:london-city — £8 for 0-5 min, £1/min thereafter, max stay 10 min, Blue Badge 10-min free registration (londoncityairport.com/parking/drop-off, jina browser render — live site 403s WebFetch).
+
+**Not re-verified (value kept, `verifiedAt` NOT bumped):**
+
+- parking:newcastle — the car-parking-options page no longer renders the Turn Up & Park price
+  table inline (behind the quote widget) and the only Wayback capture (2026-06-25) predates the
+  record's own 2026-06-27 verification, so nothing newer to confirm against. Kept at 2026-06-27.
+- parking:leeds-bradford — "Turn up on the day" prices are inside a JS accordion that no reader
+  rung expanded today; newest Wayback capture (2026-06-13) predates the record. Kept at 2026-06-27.
+
+**Not attempted this run:** all RoamMath eSIM bundles (sweep rule b) — a full re-quote of ~128
+Airalo bundles via the `__NUXT_DATA__` / UK-egress path is a separate large job and was left for
+a dedicated RoamMath sweep. eSIM `snapshotDate`s remain 2026-06-10/2026-06-28. Also untouched:
+roaming (3 stale records @ 2026-06-10), baggage (12 @ 2026-06-10), parkmath lounges Birmingham
+(1 @ 2026-06-10, page still returns no content).
