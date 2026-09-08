@@ -466,3 +466,56 @@ both Birmingham lounge entries kept at their 2026-06-10 values and `verifiedAt` 
 **New product spotted, NOT added:** escapelounges.com now lists "Manchester Terminal 2 - The
 Executive by Escape Lounges — From £56.99 per person" as a separate lounge. Adding a new record
 is outside a re-verification pass, so it is flagged for a human decision rather than written in.
+
+---
+
+## 2026-09-08 — daily ParkMath sweep (parking tariffs)
+
+Scope: every parking-tariffs record with `verifiedAt` older than 46 days, plus the
+standing hard-blocked targets. News-watch sweep the same morning found no changed
+official airport news, so no news-derived refs were added.
+
+**Re-verified against the airport's own page, values UNCHANGED — `verifiedAt` bumped to 2026-09-08:**
+
+| Record | Source check |
+| --- | --- |
+| parking:gatwick | Roll-up Long Stay: "£38.00" first 24h + "£32.00" each subsequent day — matches. |
+| parking:stansted | Turn Up & Park: Mid Stay "£48" / Short Stay "£70" per 24h — matches gate product. |
+| parking:newcastle | Long Stay Turn up & park: up to 24h £50, 2d £80, 3d £120, 4d £160, then £40/day — matches. |
+| parking:liverpool | Gate rate: 1d £60, 2d £100, 3d £120, 4d £130 … 8d £170, then £30/24h — matches. |
+| parking:teesside | Standard turn-up: up to 24h £36 … 3d £82, 7d £105, 11d £165, then £15/day — matches. |
+| parking:prestwick | Car Park Two Turn Up ("price as of 01 April 26"): 1d £37.50 … 3d £66.50, 7d £103.50, 8d £112, then £8/day — matches. |
+| parking:aberdeen | Long Stay Turn Up: up to 24h £35, 2d £60, 3d £80 … 7d £125, then £10/day; pre-book "starts at £49.99" — matches. |
+| parking:belfast-international | Long Stay gate rate: One Day £30, Two Days £45, Three Days £55, then +£10/day — matches. |
+| parking:exeter | Car Park P2 not-booked: 12–24h £40, +£40/day (cross-confirmed by overstay line "£40 per day or part thereof") — matches. |
+
+**Changed — one field:**
+
+| Record | Field | Old | New | Source |
+| --- | --- | --- | --- | --- |
+| parking:stansted (pre-book sub-product) | 8-day "from" price | £71.99 (snapshot 2026-06-10, Oct sample dates) | **£59.99** (snapshot 2026-09-08, Nov sample dates) | https://www.stanstedairport.com/parking/long-stay/ — "Prices from £59.99" |
+
+The Stansted gate product (£48/24h Mid Stay) was independently confirmed on
+stanstedairport.com/parking/turn-up-and-park/ the same day and is unchanged.
+
+**Not re-verified (kept, `verifiedAt` NOT bumped):**
+
+- parking:birmingham — birminghamairport.co.uk still Cloudflare/CAPTCHA-blocked on every
+  transport (direct 403, r.jina.ai returns the security-check page). Value held at its
+  2026-06-10 figure. NEEDS-HUMAN.
+- parking:leeds-bradford — prices are JS-rendered inside an accordion on the official page;
+  not retrievable via WebFetch, r.jina.ai (plain or browser engine) or a current Wayback
+  snapshot. Value held at its 2026-06-27 figure. NEEDS-HUMAN.
+- drop-off:london-city — standing hard-blocked target; londoncityairport.com/parking/drop-off
+  returns HTTP 403 on every rung. Last verified 2026-09-04 (4 days ago) so that verification
+  still stands; no change made.
+
+Dataset `version` 1.3.0 → 1.3.1.
+
+### Lounges (2026-09-08 sweep)
+
+- lounges:birmingham (`verifiedAt` 2026-06-10, 90 days) — birminghamairport.co.uk remains
+  Cloudflare-blocked on every transport (direct 403, r.jina.ai security-check page). Record
+  held at its existing value, `verifiedAt` NOT bumped. NEEDS-HUMAN — this is now the oldest
+  ParkMath record and needs a manual browser check.
+- All other lounge records are within the 46-day window and were not in scope this run.
