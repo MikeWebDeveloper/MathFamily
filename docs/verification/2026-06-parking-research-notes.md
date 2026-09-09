@@ -466,3 +466,41 @@ both Birmingham lounge entries kept at their 2026-06-10 values and `verifiedAt` 
 **New product spotted, NOT added:** escapelounges.com now lists "Manchester Terminal 2 - The
 Executive by Escape Lounges — From £56.99 per person" as a separate lounge. Adding a new record
 is outside a re-verification pass, so it is flagged for a human decision rather than written in.
+
+---
+
+## 2026-09-09 — daily ParkMath sweep (freshness + news)
+
+News-watch sweep (`watchdog:news`) surfaced **no changed news refs** (Edinburgh newsroom
+fetch-failed; Belfast/Belfast City/Bournemouth/Bristol/Newcastle newsrooms 403 — standing
+blocks), so STEP 2 produced no price-relevant refs.
+
+Re-verified every parking-tariff record with `verifiedAt` older than 46 days against the
+airport's own page today.
+
+| record | field | old | new | source |
+|---|---|---|---|---|
+| parking:gatwick | verifiedAt | 2026-06-10 | 2026-09-09 | gatwickairport.com/parking/roll-up-car-park-prices.html — £38 first 24h + £32/subsequent, unchanged |
+| parking:stansted | prebook 8-day "from" totalPence | 7199 | 5999 | stanstedairport.com/parking/long-stay/ — "Prices from £59.99" 8-day (Nov 2026 sample) |
+| parking:stansted | verifiedAt / snapshotDate | 2026-06-10 | 2026-09-09 | as above; Mid Stay Turn Up & Park still £48/24h, Short Stay £70/24h (turn-up-and-park page) |
+| parking:newcastle | verifiedAt | 2026-06-27 | 2026-09-09 | newcastleairport.com/car-parking/car-parking-options/ — Long Stay up to 24h £50 / 2d £80 / 3d £120 / 4d £160 / +£40 per day, unchanged |
+| parking:liverpool | verifiedAt | 2026-06-27 | 2026-09-09 | liverpoolairport.com/parking/long-stay (rendered) — Gate Rate 1d £60 / 3d £120 / 7d £160 / 8d £170 / +£30 per 24h, unchanged |
+| parking:teesside | verifiedAt | 2026-06-27 | 2026-09-09 | teessideinternational.com/teesside-airport-parking/ — Standard turn-up 3d £82 / 7d £105 / 11d £165 / +£15 per day, unchanged |
+| parking:prestwick | verifiedAt | 2026-07-03 | 2026-09-09 | glasgowprestwick.com/parking/ — Car Park Two turn-up 3d £66.50 / 7d £103.50 / 8d £112 / +£8 per day (price as of 01 Apr 26), unchanged |
+| parking:aberdeen | verifiedAt | 2026-07-03 | 2026-09-09 | aberdeenairport.com/…/long-stay-parking/ — turn-up up to 24h £35 / 3d £80 / 7d £125 / +£10 per day; pre-book "1-week from £49.99", unchanged |
+| parking:belfast-international | verifiedAt | 2026-07-03 | 2026-09-09 | belfastairport.com/parking/long-stay-car-park (via r.jina.ai) — gate rate 1d £30 / 2d £45 / 3d £55 / +£10 per day, unchanged |
+| parking:exeter | verifiedAt | 2026-07-03 | 2026-09-09 | exeter-airport.co.uk/car-parking/ — Car Park P2 12-24h £40 + £40 per additional 24h (overstay line cross-confirms), unchanged |
+
+Dataset `version` 1.3.0 → 1.3.1.
+
+**NOT re-verified (kept at old value + verifiedAt, flagged for human):**
+- `parking:birmingham` (verifiedAt 2026-06-10) — birminghamairport.co.uk Cloudflare bot-wall
+  on every transport rung; only stale Wayback snapshot (2026-06-30) available.
+- `parking:leeds-bradford` (verifiedAt 2026-06-27) — prices are JS-rendered inside an
+  accordion on leedsbradfordairport.co.uk/parking; not readable via WebFetch or r.jina.ai
+  (plain or browser engine).
+- `lounges:birmingham` (verifiedAt 2026-06-10, >60 days) — both birminghamairport.co.uk and
+  aspirelounges.com bot-blocked; no official price obtainable today.
+
+**In scope but already fresh, no action:** all drop-off-fees records (verifiedAt ≥ 2026-08-13,
+incl. the London City hard-blocked target re-done 2026-09-04); priority-pass (2026-09-04).
