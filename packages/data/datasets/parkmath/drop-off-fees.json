@@ -1,6 +1,6 @@
 {
-  "version": "1.4.2",
-  "lastUpdated": "2026-09-04",
+  "version": "1.4.3",
+  "lastUpdated": "2026-09-15",
   "records": [
     {
       "airportSlug": "heathrow",
@@ -594,20 +594,20 @@
     {
       "airportSlug": "exeter",
       "isFree": false,
-      "feeSummary": "£6 for up to 15 minutes in Car Park P1 (drop-off & pick-up bays opposite the Main Terminal)",
+      "feeSummary": "£8 for up to 15 minutes in Car Park P1 (drop-off & pick-up bays opposite the Main Terminal)",
       "bands": [
         {
           "upToMinutes": 15,
-          "totalPence": 600
+          "totalPence": 800
         }
       ],
       "maxStayMinutes": null,
       "perMinuteAfterPence": null,
       "maxChargePence": null,
       "penaltyPence": null,
-      "penaltyNotes": "P1 tariff continues beyond 15 minutes (15–60 min £7.50, then higher bands); overstay beyond a pre-booked period is charged at £20 per day or part thereof",
+      "penaltyNotes": "P1 tariff continues beyond 15 minutes per the official 'Car Park Tariff (not booked)' table: 15–30 min £15.00, 30–60 min £15.00, 1–4h £20.00, 4–12h £30.00, 12–24h £50.00; overstay beyond a pre-booked period is charged at £50 per day or part thereof (the official 'Car Park Overstay Tariff' list) — up from £6/£7.50/£20-per-day at the prior check.",
       "paymentDeadline": "Card / contactless / Apple Pay / Google Pay at the exit barrier",
-      "blueBadgePolicy": "Blue Badge holders can stay in Car Park P1 for up to 4 hours for the current up-to-15-minutes rate (£6)",
+      "blueBadgePolicy": "Blue Badge holders can stay in Car Park P1 for up to 4 hours for the current up-to-15-minutes rate (£8)",
       "freeAlternative": {
         "name": "Car Park P4 free drop-off",
         "minutesFree": 30,
@@ -615,7 +615,7 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://exeter-airport.co.uk/car-parking/",
-      "verifiedAt": "2026-08-13",
+      "verifiedAt": "2026-09-15",
       "optionsSeoTitle": "Exeter Airport drop-off charge 2026 — £6 fee, or free in Car Park P4",
       "optionsSeoDescription": "How much does Exeter Airport charge for drop-off? £6 for up to 15 minutes in Car Park P1, or free for 30 minutes in Car Park P4. Compare against parking and pre-booked options — verified against the official Exeter Airport page, updated 2026-06-10."
     },

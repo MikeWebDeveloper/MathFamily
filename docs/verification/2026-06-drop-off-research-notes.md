@@ -623,3 +623,62 @@ visit fee, 0 free visits; Standard Plus £229/yr, 10 free visits then £24; Pres
 liverpool,teesside}` (2026-06-27), `parking:{prestwick,aberdeen,belfast-international,exeter}`
 (2026-07-03), `lounges:birmingham` (2026-06-10). Newcastle parking remains excluded
 from the dataset (no official prices obtained).
+
+**Correction (2026-09-15):** the line above about Newcastle parking being excluded was
+stale/wrong by the next sweep — Newcastle has been present in `parking-tariffs.json`
+for some time and is in the `parking-coverage.test.ts` roster. See the 2026-09-15
+section below.
+
+## 2026-09-15 — Daily ParkMath sweep (drop-off) — Exeter price change + pendingSince cleanup
+
+**Changed — Exeter drop-off (`drop-off:exeter`)**, source
+`https://exeter-airport.co.uk/car-parking/`, official "Car Park Tariff (not booked)"
+table (Car Park P1, opposite the Main Terminal):
+
+| Field | Old | New |
+| --- | --- | --- |
+| Up to 15 min | £6.00 | **£8.00** |
+| 15–30 min | (£7.50 for 15–60 min, old table) | **£15.00** |
+| 30–60 min | (same £7.50 band) | **£15.00** |
+| 1–4h | not previously banded | £20.00 |
+| 4–12h | not previously banded | £30.00 |
+| 12–24h | not previously banded | £50.00 |
+| Overstay (per additional 24h) | £20/day | **£50/day** |
+
+The airport republished its Car Park Tariff (not booked) table with a finer band
+structure and higher P1 rates across the board. The page also independently states,
+in its Drop-off & Pick-up Procedures copy, "£8 for stays up to 15 minutes in Car Park
+P1" and a separate "Car Park Overstay Tariff" list confirming "Car Park P1 – £50 per
+day or part thereof" — two independent mentions on the same page agreeing with the
+table, so this is treated as a confirmed change, not a scrape artefact. `feeSummary`,
+`bands[0].totalPence` (600→800), `penaltyNotes`, and `blueBadgePolicy` updated;
+`verifiedAt` 2026-08-13 → 2026-09-15. Car Park P2 (feeds `parking-tariffs.json`
+exeter gate product) and Car Park P4 (the free alternative, still free 30 min then £2
+for 30–60 min) on the same page are unchanged.
+
+**Cardiff sourceUrl correction:** `tools/freshness/hashes.json` carried a stale/wrong
+pendingSince key, `https://cardiff-airport.com/parking-cwl/drop-off-and-pick-up-cwl/`
+— that exact path now redirects to the Cardiff Airport Careers page, not drop-off
+info. The dataset's actual `sourceUrl` for `drop-off:cardiff` is
+`https://cardiff-airport.com/car-parking-options/drop-off-and-pick-up-cwl/` (correct,
+already in the dataset) — fetched via the jina reader's headless-browser engine
+(the page is a client-rendered Vue SPA) and confirmed **unchanged**: "£4.50 for the
+first 10 minutes … £4.50 for every 10 minutes thereafter", pick-up tariff table
+£4.50/£6.00/£9.00/£20.00/£50.00 for 10min/20min/1h/2h/2-24h, matching the stored
+record exactly. `hashes.json` updated to key on the correct URL (old wrong key
+removed); no dataset change since the price is unchanged and the record was not
+stale.
+
+**pendingSince cleanup:** successfully re-fetched and refreshed the hash (cleared
+`pendingSince`) for 24 of the 25 URLs flagged pending since 2026-08-13 in
+`tools/freshness/hashes.json` (plus the corrected Cardiff URL above, 25 total
+resolved). All were spot-checked against their corresponding dataset record's stored
+figures where one exists and matched — no other price changes found among these.
+None required moving past the WebFetch/jina ladder except where noted (Newcastle
+parking, Belfast International parking, Aberdeen parking used the browser-engine or
+WebFetch rungs; all others resolved on a plain fetch).
+
+**Not resolved:** none of the 25 URLs remain pending — Birmingham (lounges + parking)
+were separately confirmed still-blocked (see the 2026-09-15 entry in
+`2026-06-parking-research-notes.md`), but those two URLs were never in the
+`hashes.json` pendingSince set, so they don't affect that count.

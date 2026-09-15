@@ -466,3 +466,71 @@ both Birmingham lounge entries kept at their 2026-06-10 values and `verifiedAt` 
 **New product spotted, NOT added:** escapelounges.com now lists "Manchester Terminal 2 - The
 Executive by Escape Lounges — From £56.99 per person" as a separate lounge. Adding a new record
 is outside a re-verification pass, so it is flagged for a human decision rather than written in.
+
+## 2026-09-15 — Daily ParkMath sweep (parking, backlog stale records)
+
+Cleared the parking-tariffs backlog flagged as stale (>46 days) in prior sweeps:
+gatwick/stansted/birmingham (2026-06-10), newcastle/leeds-bradford/liverpool/teesside
+(2026-06-27), prestwick/aberdeen/belfast-international/exeter (2026-07-03).
+
+**Correction to a stale assumption in earlier notes:** "Newcastle parking is currently
+excluded from the parking dataset by design" (see prior "Not reached this run" note
+above) is wrong/outdated. Newcastle IS present in `parking-tariffs.json` today and IS
+in the `parking-coverage.test.ts` expected roster. Re-verified normally below, not
+treated as excluded.
+
+**Confirmed unchanged** (re-read the official page/table for each, figures match the
+stored record exactly; `verifiedAt` bumped to 2026-09-15):
+
+- Gatwick (`https://www.gatwickairport.com/parking/roll-up-car-park-prices.html`) —
+  Long Stay "2-24 hours: £38.00, Each subsequent day: £32.00".
+- Newcastle (`https://www.newcastleairport.com/car-parking/car-parking-options/`) —
+  Long Stay Turn Up & Park table: up to 24h £50, 2 days £80, 3 days £120, 4 days £160,
+  then £40/day. Page was Cloudflare-challenged on plain fetch; read via the jina
+  reader's headless-browser engine.
+- Leeds Bradford (`https://www.leedsbradfordairport.co.uk/parking`) — JS-rendered
+  accordion (`&pound;57` / `&pound;18.00` in the page's embedded JSON):
+  1st day £57.00, each additional day £18.00.
+- Liverpool (`https://www.liverpoolairport.com/parking/long-stay`) — Gate Rate table:
+  1 day £60, 2d £100, 3d £120, 4d £130, 5d £140, 6d £150, 7d £160, 8d £170, then
+  £30/24h. SPA shell on plain fetch; read via jina headless-browser engine.
+- Teesside (`https://www.teessideinternational.com/teesside-airport-parking/`) —
+  Standard turn-up table: 24h £36, 2d £72, 3d £82, 4d £87, 5d £93, 6d £99, 7d £105,
+  8d £120, 9d £135, 10d £150, 11d £165, then £15/day.
+- Prestwick (`https://www.glasgowprestwick.com/parking/`) — Car Park Two Turn Up
+  table: 1d £37.50, 2d £44.50, 3d £66.50, 4d £75.50, 5d £85.50, 6d £94.50, 7d £103.50,
+  8d £112.00, then £8/day.
+- Aberdeen (`https://www.aberdeenairport.com/transport-and-directions/aberdeen-airport-parking/long-stay-parking/`)
+  — Turn Up Prices table (client-rendered; read via WebFetch): up to 24h £35, 2d £60,
+  3d £80, 4d £96, 5d £105, 6d £115, 7d £125, then £10/day. Pre-book 'from' price still
+  £49.99/week.
+- Belfast International (`https://www.belfastairport.com/parking/long-stay-car-park`)
+  — Long Stay Pricing: One Day £30, Two Days £45, Three Days £55, then +£10/day.
+  Cloudflare-blocked on plain fetch; read via jina headless-browser engine.
+- Exeter (`https://exeter-airport.co.uk/car-parking/`) — Car Park P2 (gate/turn-up)
+  band table unchanged: 0-15/15-30/30-60min £15, 1-4h £20, 4-12h £30, 12-24h £40,
+  +24h £40/day.
+
+**Changed — Stansted pre-book 'from' price** (`https://www.stanstedairport.com/parking/long-stay/`):
+the Long Stay pre-book 8-day 'from' price dropped from **£71.99** (Oct 2026 sample,
+read 2026-06-10) to **£59.99** (November 2026 sample, read 2026-09-15). The Mid Stay
+/ Short Stay gate rates (£48/24h and £70/24h respectively) are unchanged, but the site
+has restructured: the "long-stay" page now says Long Stay is pre-book only and links
+out to a separate `/parking/turn-up-and-park/` page for the Mid/Short Stay gate table
+(confirmed identical figures there). `sourceUrl` left as the long-stay page since it's
+still the record's primary source; the turn-up-and-park page is noted in the gate
+product's `notes`.
+
+**Still unverifiable — Birmingham (lounges AND parking), NEEDS-HUMAN:**
+`https://www.birminghamairport.co.uk/at-the-airport/lounges/` and
+`https://www.birminghamairport.co.uk/parking/turn-up-prices/` both return a Cloudflare
+"Just a moment…" / CAPTCHA challenge on every rung tried today (plain fetch, jina
+plain, jina `X-Return-Format: html`, jina `X-Engine: browser` with cache disabled —
+all blocked). The Wayback Machine fallback was also tried and is itself down today
+("Internet Archive services are temporarily offline"). Both Birmingham records are
+left unchanged at their prior values (`verifiedAt` NOT bumped) pending a working rung.
+
+**Bookkeeping only, not stale but confirmed via today's fetch (no dataset change):**
+Heathrow Park & Ride (£46.80+£37.40/day), Manchester Turn Up & Park (£63.40/day,
+JetParks £54.99/8d), Luton on-the-day (£35/day), Edinburgh Long Stay (£60/24h+£40/day)
+— all matched the stored record exactly.
