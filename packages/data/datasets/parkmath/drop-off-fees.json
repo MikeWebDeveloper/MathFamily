@@ -1,6 +1,6 @@
 {
-  "version": "1.4.2",
-  "lastUpdated": "2026-09-04",
+  "version": "1.4.3",
+  "lastUpdated": "2026-09-16",
   "records": [
     {
       "airportSlug": "heathrow",
@@ -423,7 +423,7 @@
       },
       "priorYearFeePence": 0,
       "sourceUrl": "https://www.londoncityairport.com/parking/drop-off",
-      "verifiedAt": "2026-09-04"
+      "verifiedAt": "2026-09-16"
     },
     {
       "airportSlug": "leeds-bradford",
@@ -503,7 +503,7 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://www.aberdeenairport.com/transport-and-directions/dropping-off-at-aberdeen-airport/",
-      "verifiedAt": "2026-08-13"
+      "verifiedAt": "2026-09-16"
     },
     {
       "airportSlug": "belfast-city",
@@ -644,9 +644,9 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://londonsouthendairport.com/getting-to-and-from/pick-up-drop-off",
-      "verifiedAt": "2026-08-13",
+      "verifiedAt": "2026-09-16",
       "seoTitle": "Southend drop-off charge 2026 — £8, pay online, no barrier",
-      "seoDescription": "Southend Airport Express drop-off: £8 for up to 10 min, opposite the terminal. Pay online by midnight next day, barrierless ANPR. Verified June 2026."
+      "seoDescription": "Southend Airport Express drop-off: £8 for up to 10 min, opposite the terminal. Pay online by midnight next day, barrierless ANPR. Verified September 2026."
     },
     {
       "airportSlug": "bournemouth",

@@ -466,3 +466,86 @@ both Birmingham lounge entries kept at their 2026-06-10 values and `verifiedAt` 
 **New product spotted, NOT added:** escapelounges.com now lists "Manchester Terminal 2 - The
 Executive by Escape Lounges — From £56.99 per person" as a separate lounge. Adding a new record
 is outside a re-verification pass, so it is flagged for a human decision rather than written in.
+
+## 2026-09-16 — daily ParkMath sweep (stale parking/lounges + hard-block + pendingSince)
+
+**Confirmed unchanged (verifiedAt bumped to 2026-09-16, no value edits):**
+- **Gatwick** roll-up: "£38.00" first 24h + "£32.00" per subsequent 24h (WebFetch, direct).
+- **Newcastle** Turn Up & Park: "Up to 24 hours £50.00 / 2 days £80.00 / 3 days £120.00 /
+  4 days £160.00 / Per day or part thereafter £40.00" (live 403'd; confirmed via r.jina.ai).
+- **Leeds Bradford** Turn up on the day: "Long Stay — 10-20 min by shuttle bus, 1st Day £57,
+  Per Additional Day £18" — recovered from the accordion's JSON payload embedded in the raw
+  page HTML (both plain and browser-engine jina reader returned no price text at all).
+- **Liverpool** Gate Rate: "Up to 1 day £60.00 / 2 days £100.00 / 3 days £120.00 / 4 days
+  £130.00 / 5 days £140.00 / 6 days £150.00 / 7 days £160.00 / 8 days £170.00 / Each 24 hours
+  thereafter £30.00 per day" (jina reader, browser engine — plain reader and a direct curl only
+  returned the client-side app shell).
+- **Teesside** Standard turn-up and park: full table "Up to 24 hours £36.00 ... 11 days
+  £165.00, £15 per day thereafter" (r.jina.ai) — unchanged from the pre-bookable rates too.
+- **Prestwick** Car Park Two Turn Up Prices: "1 Day £37.50 ... 8 Days £112.00, Per day
+  thereafter £8.00" — page now labels the table "Price as of 01 April 26" but the figures
+  match (r.jina.ai). Car Park One (Premium, not used) is now £42.00/day-1 (was described
+  differently in an earlier WebFetch summary that turned out to be lossy — the raw jina text
+  confirms the stored Car Park Two figures directly).
+- **Belfast International** Long Stay Pricing: "One Day £30.00 / Two Days £45.00 / Three Days
+  £55.00 / Each Day Thereafter +£10.00" (r.jina.ai, after the cookie-banner preamble).
+- **Exeter** Car Park Overstay Tariff: "Car Park P2 – £40 per day or part thereof" (WebFetch),
+  consistent with P1 £50/day and P4 £30/day — matches the stored P2-based record.
+- **Aberdeen (parking)** Turn Up Prices: "Up to 24 hours £35.00 / 2 days £60.00 / ... / 7 days
+  £125.00, then £10.00 per day" (WebFetch) — matches exactly.
+- **London City (drop-off, standing hard-block)**: "0–5 minutes £8.00, 5 minutes and above £1
+  per minute thereafter", "Maximum stay 10 minutes", "£100.00 enforcement charge... reduced to
+  £60.00 if paid within 14 days" (r.jina.ai; live WebFetch 403'd) — unchanged since 2026-09-04.
+- **Aberdeen (drop-off, pendingSince 2026-08-13)**: "Drop Off - 15 minutes £7.00", "£1.00 per
+  minute" after, "£50.00" flat fee beyond 30 minutes (WebFetch) — unchanged; pendingSince
+  cleared in `tools/freshness/hashes.json`.
+- **Southend (drop-off, pendingSince 2026-08-13)**: "£8 per visit, paid after exit online by
+  midnight the following day", "Stay for up to 10 minutes" (WebFetch) — unchanged; pendingSince
+  cleared.
+- **Escape Lounges (pendingSince 2026-08-13, covers Manchester/Stansted/Edinburgh/Bristol)**:
+  Bristol Escape "£39.99", Bristol Essence "£35", Edinburgh "£36.99", Stansted Essence "£28.99",
+  Manchester T2 Escape "£39.99", Manchester T3 Escape "£29.99" (WebFetch of
+  escapelounges.com/uk/airport-lounges/) — all four dataset records unchanged; pendingSince
+  cleared.
+- **No1 Lounges (pendingSince 2026-08-13, three pages)**: Newcastle Aspire "Prices from: £46",
+  Gatwick Club Aspire South "Prices from: £34", Heathrow Club Aspire T5 "Prices from: £40"
+  (WebFetch, each page individually) — all three dataset records unchanged; pendingSince
+  cleared for all three URLs.
+
+**Changed — Birmingham (parking:birmingham).** birminghamairport.co.uk is Cloudflare-blocked to
+every automated transport again (live WebFetch and r.jina.ai both 403/CAPTCHA); recovered a
+newer Wayback Machine capture than the one previously used
+(`web.archive.org/web/20260630180319/https://www.birminghamairport.co.uk/parking/turn-up-prices/`,
+captured 2026-06-30, vs. the 2025-09-06 capture the current record was sourced from). Car Park 7
+(the off-site long-stay car park, turn-up) now shows: "Up to 24 hours £51.00", "Per day
+thereafter £44.00" (previously £49.00 / £42.00).
+
+| Field | Old | New |
+| --- | --- | --- |
+| 3-day total | £133.00 | **£139.00** |
+| 7-day total | £301.00 | **£315.00** |
+| 14-day total | £595.00 | **£623.00** |
+
+## NEEDS-HUMAN — 2026-09-16
+
+1. **Stansted Mid Stay drive-up (parking:stansted).** The live `/parking/mid-stay/` page no
+   longer states a flat per-24h turn-up price. Its FAQ ("What is the cost of Mid Stay
+   parking?") now answers "prices depend on how long you want to stay... enter your details
+   into the booking tool" and only dynamic pre-book "from" prices are shown (£54.99–£99.99
+   depending on dates, up from the £71.99 8-day snapshot on file). Could not confirm whether the
+   stored flat £48/24h gate rate still applies at the barrier for a genuine walk-up. Value kept
+   unchanged (verifiedAt NOT bumped, still 2026-06-10) pending a human check — either a live
+   booking-tool quote with no dates selected, or a call to 08081 697031.
+2. **Cardiff drop-off (drop-off:cardiff, pendingSince 2026-08-13 — still pending).**
+   `cardiff-airport.com/parking-cwl/drop-off-and-pick-up-cwl/` returned a bot-block 403 page on
+   direct fetch (title "403 - Forbidden") despite `curl -I` reporting 200; r.jina.ai redirected
+   to an ad-tracker pixel (`match.adsrvr.org/track/cmf/google`) instead of the page; the Wayback
+   Machine's most recent capture of this URL is 2026-03-10 — older than the current record's
+   `verifiedAt` (2026-08-13), so it cannot be used to re-confirm anything. Value and
+   `verifiedAt` left unchanged; `pendingSince` deliberately NOT cleared in
+   `tools/freshness/hashes.json` since the page was not actually re-checked.
+3. **Birmingham lounges (lounges:birmingham).** `birminghamairport.co.uk/at-the-airport/lounges/`
+   is Cloudflare-blocked on every rung (live 403, r.jina.ai 403/CAPTCHA); the most recent Wayback
+   Machine capture is 2026-01-14 — older than the record's `verifiedAt` (2026-06-10) — so it
+   cannot be used either. Value kept unchanged (£20.99 Aspire Lounge, No1 Lounge dynamic/null);
+   `verifiedAt` not bumped.
