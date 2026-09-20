@@ -466,3 +466,37 @@ both Birmingham lounge entries kept at their 2026-06-10 values and `verifiedAt` 
 **New product spotted, NOT added:** escapelounges.com now lists "Manchester Terminal 2 - The
 Executive by Escape Lounges — From £56.99 per person" as a separate lounge. Adding a new record
 is outside a re-verification pass, so it is flagged for a human decision rather than written in.
+
+## 2026-09-20 — daily sweep (scheduled task, parking only, 9 records reconfirmed)
+
+Scope: every ParkMath `parking-tariffs.json` record whose `verifiedAt` was older than 46 days.
+All figures cross-checked against the airport's own official page today; every value matched
+the previously stored figure exactly, so only `verifiedAt` moved (no price/tariff changes).
+
+| record | official page confirmed | stored value | result |
+|---|---|---|---|
+| parking:gatwick | £38 first 24h + £32/day thereafter | 3d £102 / 7d £230 / 14d £454 | unchanged |
+| parking:stansted | Mid Stay Turn Up & Park £48/24h (Long Stay is pre-book only) | 3d £144 / 7d £336 / 14d £672 | unchanged |
+| parking:newcastle | Turn Up & Park: 3d £120, 4d £160 + £40/day | 3d £120 / 7d £280 / 14d £560 | unchanged |
+| parking:liverpool | Gate rate: 1d £60…8d £170 + £30/day | 3d £120 / 7d £160 / 14d £350 | unchanged |
+| parking:teesside | Standard turn-up: 1d £36…11d £165 + £15/day | 3d £82 / 7d £105 / 14d £210 | unchanged |
+| parking:prestwick | Car Park Two turn-up: 1d £37.50…8d £112 + £8/day | 3d £66.50 / 7d £103.50 / 14d £160 | unchanged |
+| parking:aberdeen | Long Stay turn-up: 1d £35…7d £125 + £10/day | 3d £80 / 7d £125 / 14d £195 | unchanged |
+| parking:belfast-international | Gate rate: 1d £30, 2d £45, 3d £55 + £10/day | 3d £55 / 7d £95 / 14d £165 | unchanged |
+| parking:exeter | Car Park P2 tariff: 12-24h £40 + £40/24h | 3d £120 / 7d £280 / 14d £560 | unchanged |
+
+**Not re-verified — NEEDS-HUMAN:**
+- `parking:birmingham` (birminghamairport.co.uk/parking/turn-up-prices/) — Cloudflare bot-check
+  blocked every transport rung (direct, r.jina.ai plain, r.jina.ai browser-engine, browser-UA curl).
+  Kept at the 2026-06-10 value; `verifiedAt` not bumped.
+- `parking:leeds-bradford` (leedsbradfordairport.co.uk/parking) — the price table is loaded into
+  an FAQ accordion by client-side JS/API and is absent from every static/rendered fetch attempted
+  (WebFetch, r.jina.ai plain and browser-engine, in-app browser navigate — which timed out twice).
+  Kept at the 2026-06-27 value; `verifiedAt` not bumped.
+- `lounges:birmingham` (birminghamairport.co.uk/at-the-airport/lounges/) — same Cloudflare block.
+  Kept at the 2026-06-10 value; `verifiedAt` not bumped. **Flag for a human look:** a site-scoped
+  WebSearch surfaced Birmingham's own page titles/snippets describing an expanded three-tier lounge
+  line-up — "Aspire Lounge" (from £42.99), "Luxe by Aspire" (from £52.99), "Suite by Aspire" (from
+  £62.99) — replacing the single "Aspire Lounge" (£20.99) record currently stored, apparently
+  launched "Summer 2026". This was NOT read from the official page directly (still blocked), so it
+  is not applied — but it is suspicious enough that a human should check it manually.
