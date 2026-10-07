@@ -466,3 +466,13 @@ both Birmingham lounge entries kept at their 2026-06-10 values and `verifiedAt` 
 **New product spotted, NOT added:** escapelounges.com now lists "Manchester Terminal 2 - The
 Executive by Escape Lounges — From £56.99 per person" as a separate lounge. Adding a new record
 is outside a re-verification pass, so it is flagged for a human decision rather than written in.
+
+## Freshness sweep 2026-10-07 (ParkMath parking v1.3.1, lounges v1.1.1)
+
+All 16 parking records and 10 lounge records were older than 46 days on main. Read from official pages 2026-10-07 (jina browser engine, browser-UA curl, in-app Browser pane for Birmingham / Newcastle).
+
+**Parking changed:** Birmingham Car Park 7 turn-up is now £51.00 first 24h then £44.00/day (was £49 + £42); 3/7/14d = £139 / £315 / £623 (computed 51+2x44, 51+6x44, 51+13x44). Stansted pre-book 'from' point is now £49.99 (8-day stay in January 2027) vs £71.99 for an October 2026 sample; the page's sample date moves, so this is a date-dependent from-price.
+**Parking reconfirmed (gate rates unchanged):** Heathrow £46.80 + £37.40/day; Gatwick £38 + £32/day; Manchester T2 P3 £63.40/day, JetParks from £54.99 (8d); Stansted Mid Stay £48/day; Luton Long Stay £35/day (prices effective 22 June 2026); Edinburgh £60 + £40/day; Bristol Silver 3d £100 + £35/day; Glasgow Long Stay 3d £80 + £15/day; Newcastle Long Stay 24h £50 / 3d £120 / 4d £160 + £40; Leeds Bradford £57 + £18/day (read from the RSC payload); Liverpool 3d £120 / 7d £160 / 8d £170 + £30; Teesside standard 3d £82 / 7d £105 / 11d £165 + £15; Prestwick Car Park Two 3d £66.50 / 7d £103.50 / 8d £112 + £8; Aberdeen 3d £80 / 7d £125 + £10, pre-book from £49.99; Belfast Intl 3d £55 + £10; Exeter P2 £40/day. Not re-seen: Glasgow pre-book 'from £49.99' (snapshotDate left at 2026-06-10).
+
+**Lounges changed:** Gatwick North No1 Lounge £40 (was £38); Birmingham Aspire Lounge (South) £42.99 on the official airport page (was £20.99 on an operator one-day-admission basis) — see PR NEEDS-HUMAN; Birmingham No1 Lounge now published from £38 (was null).
+**Lounges reconfirmed:** Heathrow Club Aspire £40; Gatwick South Club Aspire £34; Manchester T2 £39.99 / T3 £29.99; Stansted Essence £28.99; Luton MyLounge £37.99; Edinburgh £36.99; Glasgow UpperDeck from £27; Bristol Escape £39.99 / Essence £35; Newcastle Aspire £46. Not verifiable: Heathrow Plaza Premium T5 £47.50 (plazapremiumlounge.com 403 on every rung) — Heathrow lounge record verifiedAt NOT bumped.

@@ -623,3 +623,14 @@ visit fee, 0 free visits; Standard Plus £229/yr, 10 free visits then £24; Pres
 liverpool,teesside}` (2026-06-27), `parking:{prestwick,aberdeen,belfast-international,exeter}`
 (2026-07-03), `lounges:birmingham` (2026-06-10). Newcastle parking remains excluded
 from the dataset (no official prices obtained).
+
+## Freshness sweep 2026-10-07 (ParkMath drop-off, dataset v1.4.3)
+
+Scope: 22 records with verifiedAt 2026-08-13 plus the standing target london-city. Transport: jina `X-Engine: browser` (text), plain browser-UA curl for Luton/Gatwick/Exeter/Norwich/Teesside/Prestwick, in-app Browser pane for Birmingham, Cardiff, London City, Bournemouth. All values read from each airport's own page on 2026-10-07; verifiedAt bumped on all 23.
+
+Changed (3):
+- **Luton** — now £9 for up to 12 minutes, then £1/min, max stay 30 min (was £7 / 10 min). Enforcement charge £95 (£55 if paid in 14 days) unchanged. Source: london-luton.co.uk/to-and-from-lla/dropping-off.
+- **Liverpool** — Express Drop-off up to 10 min now £7.00 (was £6.00); the page states the increase applies from 1 September 2026. 20 min £10, up to 1 hour £25 unchanged. priorYearFeePence stays 500 (the £5 -> £7 trend is real). SEO title/description updated.
+- **Exeter** — Car Park P1 0-15 min now £8.00 (was £6.00); 15-60 min is £15 (the old penaltyNotes said £7.50). SEO title/description + Blue Badge text updated.
+
+Reconfirmed unchanged (20): heathrow £7 (PCN £80/£40), gatwick £10 / 10 min + £1/min to 20 min, £30 daily max, 30 min max stay, manchester £5.50/£6.50/£25, edinburgh £8.50 + £1/min, birmingham free first 10 min (Premium Set Down £7/15 min), glasgow £7/15 min + £1/min, bristol 8.50/10.50/13/30/60, belfast-international 5/8/13, newcastle Express 6/12/16/20/28, london-city £8/5 min + £1/min, max 10 min (the page does not restate the penalty amount; penaltyPence 10000 not re-read), aberdeen £7/15 min + £1/min, belfast-city £4/10 min, southampton £7/20 min (enforcement £80), cardiff 4.50/6/9/20, southend £8/10 min, bournemouth £8 up to 30 min (60-min £15 band not re-read: tariff table not exposed to the browser pane), norwich £8/20 min, inverness free 15 min, teesside £2.50/£5/£7 per hour, prestwick 4.50/8.50/14.50/21/33.
