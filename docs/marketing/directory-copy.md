@@ -10,7 +10,7 @@ MicroLaunch, IndieHackers, and similar launch/directory sites.
 - **No affiliate links anywhere in this copy.** The only link is `https://parkmath.co.uk`.
 - `{placeholder}` tokens are for per-recipient / per-directory personalisation (e.g. your maker name, the directory's category field).
 
-> **Maintenance note:** the figures cited here are point-in-time (verified June 2026). Re-check against the live datasets before each new submission — drop-off fees in particular change often (e.g. Bristol rose from £7 to £8.50 on 5 Jan 2026; Edinburgh from £6 to £8.50 on 18 May 2025).
+> **Maintenance note:** the figures cited here are point-in-time (most verified June 2026; the Glasgow and Manchester parking figures re-checked 17 Oct 2026). Re-check against the live datasets before each new submission — drop-off fees in particular change often (e.g. Bristol rose from £7 to £8.50 on 5 Jan 2026; Edinburgh from £6 to £8.50 on 18 May 2025).
 
 ---
 
@@ -48,7 +48,7 @@ We cover **{airportCount}** UK airports — from Heathrow, Gatwick and Mancheste
 - **Manchester** — £5 for 5 minutes, up to £25 for 30 minutes. Free alternative: **JetParks 1 free drop-off** with a 24/7 shuttle.
 - **Stansted** — £10 for 15 minutes (£28 over 15, from 19 March 2026), £100 PCN for non-payment. Free alternative: **Mid Stay, 1 hour free**.
 
-**Parking that isn't a rip-off.** ParkMath compares the **drive-up "gate" price** with the **pre-book price** so you can see the gap — and it's enormous. Turning up and paying at the barrier for **7 days at Glasgow** costs **£140**; the airport's own pre-booked Long Stay starts from **£49.99** — a difference of around **£90** for the identical car park. At **Manchester**, 7 days driving up to Turn Up & Park is **£429.80**, while the official JetParks pre-book starts from **£59.99 (8 days)**. The single most valuable thing you can do is book ahead — ParkMath shows you by how much.
+**Parking that isn't a rip-off.** ParkMath compares the **drive-up "gate" price** with the **pre-book price** so you can see the gap — and it's enormous. Turning up and paying at the barrier for **7 days at Glasgow** costs **£140**; the airport's own pre-booked Long Stay was **£55.99** for a week in mid-November — a difference of around **£84** for the identical car park. At **Manchester**, 7 days driving up to Turn Up & Park is **£443.80**, while the official JetParks pre-book starts from **£54.99 (8 days)**. The single most valuable thing you can do is book ahead — ParkMath shows you by how much.
 
 **Why "independent" matters.** ParkMath isn't a booking site and doesn't run an auction. Some booking links on the site are labelled affiliate links that can earn ParkMath a small commission, but the ranking is commission-blind: no car park is pushed up for paying more, so the cheapest genuine option is the one you'll see first. No upsells, no "only 2 spaces left" pressure, no aggregator bias.
 
@@ -93,7 +93,7 @@ When I looked for a straight answer to "what does this actually cost, and is the
 
 So I built ParkMath. It covers **{airportCount} UK airports**. Every drop-off fee and parking price is **hand-verified against the airport's own official page** and date-stamped — no scraping a competitor's quotes, no aggregator feed. It's deliberately **not** a booking engine, and nothing is ranked for money: the cheapest genuine option is just... the first one you see. Some booking links are labelled affiliate links, so ParkMath can earn a small commission if you book through one. That's what pays for the checking, and it never changes the order.
 
-The bit people find most useful is the parking gap. Drive up and pay at the barrier for a week at Glasgow and it's **£140**; the airport's own pre-book Long Stay starts from **£49.99** — about **£90** saved on the *same* car park, just for booking ahead. ParkMath's whole job is to make that gap obvious before you've committed to anything.
+The bit people find most useful is the parking gap. Drive up and pay at the barrier for a week at Glasgow and it's **£140**; the airport's own pre-book Long Stay was **£55.99** for a week in November when I checked — about **£84** saved on the *same* car park, just for booking ahead. ParkMath's whole job is to make that gap obvious before you've committed to anything.
 
 Keeping it accurate is the real product. Fees move constantly — Bristol's drop-off went from £7 to £8.50 this January, Edinburgh's jumped to £8.50 last May, London City introduced an £8 charge in January — so I run a watchdog that re-checks the data against official sources and logs every change, with a human reviewing each correction before it goes live. That review gate is the whole point: I'd rather be slower and right than fast and wrong.
 
@@ -115,5 +115,5 @@ It's free and there's no account. I'd love feedback on the data, the airports I'
 
 **Verified figures used (do not edit without re-checking the datasets):**
 - Heathrow drop-off £7 / Park & Ride 30 min free · Gatwick £10 for 10 min, max £30 / Long Stay 2h free · Manchester £5–£25 / JetParks free drop-off · Stansted £10 (£28 over 15 min from 19 Mar 2026), £100 PCN / Mid Stay 1h free — `drop-off-fees.json` (verified 2026-06-10).
-- Glasgow 7-day gate £140 vs pre-book from £49.99 (≈£90 saved) · Manchester 7-day gate £429.80 vs JetParks pre-book from £59.99 (8 days) — `parking-tariffs.json` (verified 2026-06-10).
+- Glasgow 7-day gate £140 vs pre-book £55.99 for 16–23 Nov 2026 (≈£84 saved; official online quote, 2026-10-17) · Manchester 7-day gate £443.80 vs JetParks pre-book from £54.99 (8 days, snapshot 2026-10-07) — `parking-tariffs.json`.
 - Bristol drop-off £7→£8.50 (5 Jan 2026) · Edinburgh £6→£8.50 (18 May 2025) · London City £8 charge (6 Jan 2026) · East Midlands barrier-free ANPR (1 May 2025) — `news.json` (verified 2026-06-12).

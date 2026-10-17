@@ -135,11 +135,27 @@ describe("every generated airport page fits the SERP budget", () => {
       });
     }
   });
-  it("news descriptions fit, and titles no longer double the brand", () => {
+  it("news titles and descriptions fit, and titles no longer double the brand", () => {
     for (const item of loadNewsDataset().items) {
       const meta = newsMeta(item);
-      expect(meta.description.length, item.id).toBeLessThanOrEqual(MAX_DESCRIPTION_LENGTH);
+      expectFits(`news/${item.id}`, meta);
       expect(meta.title).not.toContain("ParkMath");
+    }
+  });
+  it("dataset SEO overrides fit too, and carry no hard-coded verified date (it would go stale)", () => {
+    const pairs = [
+      ["seoTitle", "seoDescription"],
+      ["blueBadgeSeoTitle", "blueBadgeSeoDescription"],
+      ["optionsSeoTitle", "optionsSeoDescription"]
+    ] as const;
+    for (const r of dropOffs) {
+      for (const [t, d] of pairs) {
+        const title = r[t];
+        const description = r[d];
+        if (title) expect(renderedTitleLength(title), `${r.airportSlug}.${t}: "${title}"`).toBeLessThanOrEqual(MAX_TITLE_LENGTH);
+        if (description) expect(description.length, `${r.airportSlug}.${d}: "${description}"`).toBeLessThanOrEqual(MAX_DESCRIPTION_LENGTH);
+        for (const s of [title, description]) if (s) expect(s, `${r.airportSlug}: "${s}"`).not.toMatch(/20\d\d-\d\d-\d\d|[Vv]erified 20\d\d/);
+      }
     }
   });
   it("hub pages", () => {
