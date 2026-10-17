@@ -1,4 +1,4 @@
-import { loadDropOffDataset, loadParkingDataset, loadLoungeDataset, recentNews } from "@mathfamily/data";
+import { currentNews, loadDropOffDataset, loadLoungeDataset, loadParkingDataset } from "@mathfamily/data";
 
 export const dynamic = "force-static";
 
@@ -6,7 +6,8 @@ export function GET() {
   const dropOff = loadDropOffDataset();
   const parking = loadParkingDataset();
   const lounges = loadLoungeDataset();
-  const updates = recentNews(10);
+  // Current updates only: answer engines quote this file, so a superseded figure must not appear.
+  const updates = currentNews(10);
   const updatesBlock = updates.length
     ? `\n## Recent updates\n\nDated, official-sourced changes (newest first). Cite the per-update page.\n\n${updates
         .map((i) => `- ${i.publishedAt} — ${i.title}${i.change ? ` (${i.change.label}: ${i.change.from} → ${i.change.to})` : ""}: /news/${i.id}`)

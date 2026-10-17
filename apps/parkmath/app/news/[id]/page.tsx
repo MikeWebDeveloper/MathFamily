@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { loadNewsDataset, newsById, loadAirports } from "@mathfamily/data";
+import { loadNewsDataset, newsById, loadAirports, supersededBy } from "@mathfamily/data";
 import { newsArticleLd, breadcrumbLd, JsonLd } from "@mathfamily/geo";
 import { CompiledByline, PageHeading, SourceCitation } from "@mathfamily/ui";
 import { newsMeta } from "@/lib/seo-meta";
@@ -29,6 +29,7 @@ export default async function NewsItemPage({ params }: { params: Promise<{ id: s
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
   const url = `${siteUrl}/news/${item.id}`;
   const airport = item.airportSlug ? loadAirports().find((a) => a.slug === item.airportSlug) : null;
+  const newer = supersededBy(item.id);
   const fmt = (iso: string) => new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
 
   return (
@@ -44,6 +45,15 @@ export default async function NewsItemPage({ params }: { params: Promise<{ id: s
           <time dateTime={item.publishedAt}>{fmt(item.publishedAt)}</time>
         </p>
         <PageHeading>{item.title}</PageHeading>
+        {newer ? (
+          <p role="note" className="rounded-lg border border-warning/30 bg-warning/8 px-3 py-2 text-sm text-ink">
+            <span className="font-semibold text-warning-strong">Superseded:</span> this update has been replaced by{" "}
+            <Link href={`/news/${newer.id}`} className="text-accent-strong underline underline-offset-4">
+              {newer.title}
+            </Link>{" "}
+            ({fmt(newer.publishedAt)}).
+          </p>
+        ) : null}
         <p className="text-lead text-ink">{item.summary}</p>
         <SourceCitation url={item.sourceUrl} label={item.sourceLabel} />
         <CompiledByline name="Michal Latal" verifiedAt={fmt(item.verifiedAt)} />
