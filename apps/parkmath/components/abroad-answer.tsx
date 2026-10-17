@@ -32,7 +32,7 @@ export function AbroadAnswer({ model, roammathUrl }: { model: AbroadModel; roamm
           {cheapestParkingPence !== null ? (
             <li>
               Cheapest 7-day parking: <span className="font-medium text-ink">{formatPence(cheapestParkingPence)}</span>{" "}
-              <a href={`/airport-parking/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
+              <a href={`/airport-parking/${airport.slug}`} className="text-accent-strong underline underline-offset-4">
                 full parking comparison →
               </a>
             </li>
@@ -42,7 +42,7 @@ export function AbroadAnswer({ model, roammathUrl }: { model: AbroadModel; roamm
             <span className="font-medium text-ink">
               {dropOff.isFree ? "Free" : dropOff.chargePence !== null ? formatPence(dropOff.chargePence) : "see page"}
             </span>{" "}
-            <a href={`/drop-off-charges/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
+            <a href={`/drop-off-charges/${airport.slug}`} className="text-accent-strong underline underline-offset-4">
               drop-off details →
             </a>
           </li>
@@ -63,7 +63,7 @@ export function AbroadAnswer({ model, roammathUrl }: { model: AbroadModel; roamm
         </p>
         {roammathUrl ? (
           <p className="mt-2 text-sm">
-            <a href={`${roammathUrl}/roaming`} rel="noopener noreferrer" className="font-medium text-brand-accent underline underline-offset-4">
+            <a href={`${roammathUrl}/roaming`} rel="noopener noreferrer" className="font-medium text-accent-strong underline underline-offset-4">
               See the exact cost for your destination → RoamMath
             </a>
           </p>

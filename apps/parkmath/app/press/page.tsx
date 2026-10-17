@@ -62,7 +62,7 @@ export default function PressPage() {
 
       <nav aria-label="Breadcrumb" className="text-sm text-ink-muted">
         <ol className="flex flex-wrap items-center gap-1">
-          <li><a href="/" className="hover:text-brand-accent transition-colors">ParkMath</a></li>
+          <li><a href="/" className="hover:text-accent-strong transition-colors">ParkMath</a></li>
           <li aria-hidden="true" className="text-ink-muted/50">/</li>
           <li aria-current="page" className="text-ink font-medium">Press &amp; data</li>
         </ol>
@@ -109,7 +109,7 @@ export default function PressPage() {
             <>The full, ranked, date-stamped picture of UK airport drop-off charges in one place.{" "}</>
           )}
           The full ranked table, every figure sourced to the airport&apos;s own page, is the{" "}
-          <Link href="/drop-off-charges/price-index" className="font-semibold text-brand-accent underline underline-offset-4">
+          <Link href="/drop-off-charges/price-index" className="font-semibold text-accent-strong underline underline-offset-4">
             UK Airport Drop-Off Price Index
           </Link>{" "}
           &mdash; please link to it when you cite a figure.
@@ -126,14 +126,14 @@ export default function PressPage() {
         <p className="text-sm text-ink-muted">
           A self-contained, always-current widget &mdash; it updates itself whenever a fee changes.
           Free to use under{" "}
-          <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener" className="text-brand-accent underline underline-offset-4">CC BY 4.0</a>
+          <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener" className="text-accent-strong underline underline-offset-4">CC BY 4.0</a>
           ; the credit link to ParkMath is already inside it. Paste this where you want the table to appear:
         </p>
-        <pre className="overflow-x-auto rounded-md border border-ink/10 bg-white px-3 py-3 text-xs leading-relaxed text-ink dark:bg-card">
+        <pre tabIndex={0} className="overflow-x-auto rounded-md border border-ink/10 bg-white px-3 py-3 text-xs leading-relaxed text-ink dark:bg-card">
           <code>{buildIframeSnippet(siteUrl)}</code>
         </pre>
         <p className="text-xs text-ink-muted">
-          <Link href="/embed" className="text-brand-accent underline underline-offset-4">
+          <Link href="/embed" className="text-accent-strong underline underline-offset-4">
             Pick a single airport or customise the embed &rarr;
           </Link>
         </p>
@@ -170,7 +170,7 @@ export default function PressPage() {
           <li>
             Every figure is the airport&apos;s own published charge, verified {fmtLongDate(latestVerified)}{" "}
             &mdash; see the{" "}
-            <Link href="/methodology" className="text-brand-accent underline underline-offset-4">methodology</Link>.
+            <Link href="/methodology" className="text-accent-strong underline underline-offset-4">methodology</Link>.
           </li>
         </ul>
       </section>
@@ -187,12 +187,12 @@ export default function PressPage() {
         <h2 className="text-base font-semibold text-ink">For journalists</h2>
         <p className="text-ink-muted">
           For comment, a custom cut of the data, or the figure for a specific airport, email{" "}
-          <a href="mailto:press@parkmath.co.uk" className="text-brand-accent underline underline-offset-4">press@parkmath.co.uk</a>.
+          <a href="mailto:press@parkmath.co.uk" className="text-accent-strong underline underline-offset-4">press@parkmath.co.uk</a>.
           We respond by email or message &mdash; quotes attributable to the ParkMath UK airport pricing
           data desk. The data is free to cite under{" "}
-          <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener" className="text-brand-accent underline underline-offset-4">CC BY 4.0</a>{" "}
+          <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener" className="text-accent-strong underline underline-offset-4">CC BY 4.0</a>{" "}
           with a link to{" "}
-          <Link href="/drop-off-charges/price-index" className="text-brand-accent underline underline-offset-4">the Price Index</Link>.
+          <Link href="/drop-off-charges/price-index" className="text-accent-strong underline underline-offset-4">the Price Index</Link>.
         </p>
       </section>
     </article>

@@ -48,6 +48,12 @@
      --color-positive (#4ade80) already clears AA as text, so it's left unmixed there. */
   --color-positive-strong: color-mix(in srgb, var(--color-positive) 60%, black);
 
+  /* --color-warning (#b45309) clears 4.5:1 as text on white/--color-surface, but not on its own
+     amber tints (bg-warning/8-10, bg-amber-100 measure ~4.3-4.5:1). --color-warning-strong is the
+     text twin for amber text sitting ON an amber tint (chips, the penalty callout), same pattern as
+     --color-positive-strong; dark mode's --color-warning (#fbbf24) already clears AA unmixed. */
+  --color-warning-strong: color-mix(in srgb, var(--color-warning) 85%, black);
+
   /* Typography: IBM Plex Sans (UI) + IBM Plex Mono (verified numbers) */
   --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
@@ -109,6 +115,7 @@
      above) — cancel the light-mode darkening so text-positive-strong doesn't go
      duller/harder-to-read on a dark surface. */
   --color-positive-strong: var(--color-positive);
+  --color-warning-strong: var(--color-warning);
   /* shadows are invisible on dark — use a subtle inset light ring */
   --shadow-card: 0 0 0 1px rgb(148 163 184 / 0.12), 0 2px 8px -2px rgb(0 0 0 / 0.4);
   --shadow-raised: 0 0 0 1px rgb(148 163 184 / 0.15), 0 4px 16px -4px rgb(0 0 0 / 0.5);

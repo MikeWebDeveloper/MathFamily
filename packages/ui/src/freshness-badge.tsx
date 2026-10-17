@@ -31,8 +31,8 @@ export function FreshnessBadge({
     : stale ? `Last verified ${formatted}` : `Verified ${formatted}`;
   const className =
     stale
-      ? "mf-fade-in inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-warning ring-1 ring-warning/20"
-      : "mf-fade-in inline-flex items-center gap-1.5 rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-positive-strong ring-1 ring-positive/20";
+      ? "mf-fade-in inline-flex items-center gap-1.5 rounded-full bg-amber-100 dark:bg-warning/[0.12] px-3 py-1 text-xs font-semibold text-warning-strong ring-1 ring-warning/20"
+      : "mf-fade-in inline-flex items-center gap-1.5 rounded-full bg-green-100 dark:bg-positive/[0.12] px-3 py-1 text-xs font-semibold text-positive-strong ring-1 ring-positive/20";
   const inner = (
     <>
       <CheckTick />

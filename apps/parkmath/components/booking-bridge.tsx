@@ -23,7 +23,7 @@ export function BookingBridge({
   return (
     <p className="mf-reveal rounded-card border border-brand-accent/25 bg-brand-accent/5 px-4 py-3 text-sm leading-relaxed text-ink">
       {text}{" "}
-      <a href={href} className="font-semibold text-brand-accent underline underline-offset-4 whitespace-nowrap">
+      <a href={href} className="font-semibold text-accent-strong underline underline-offset-4 whitespace-nowrap">
         {linkLabel}
       </a>
     </p>

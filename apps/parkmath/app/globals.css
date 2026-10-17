@@ -7,6 +7,10 @@
   --font-mono: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, monospace;
   /* ParkMath accent override — teal-green for data-trust editorial */
   --color-brand-accent: #1A6B52;
+  /* #1A6B52 already clears 4.5:1 as text on the light surfaces (~6.6:1), so its readable-text twin is the
+     accent itself in light mode. tokens.css's [data-theme="dark"] rule still lightens it (raw #1A6B52
+     is only ~2.8:1 on the dark surface), which is why links use text-accent-strong, never text-brand-accent. */
+  --color-accent-strong: var(--color-brand-accent);
   --color-surface: #FAFAF9;
   --color-ink: #111111;
   /* Stat size override — unmissable prices (56px → 100px) */

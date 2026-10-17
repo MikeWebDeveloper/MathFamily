@@ -55,7 +55,7 @@ export default async function AbroadAirportPage({ params }: { params: Promise<{ 
       </section>
 
       <p className="text-sm">
-        <Link href="/abroad" className="text-brand-accent underline underline-offset-4">
+        <Link href="/abroad" className="text-accent-strong underline underline-offset-4">
           ← All airports: going abroad by car
         </Link>
       </p>

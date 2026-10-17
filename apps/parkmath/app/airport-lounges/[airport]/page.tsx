@@ -98,7 +98,7 @@ export default async function LoungePage({ params }: { params: Promise<{ airport
 
       {hasParking ? (
         <p className="text-sm">
-          <Link href={`/airport-parking/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
+          <Link href={`/airport-parking/${airport.slug}`} className="text-accent-strong underline underline-offset-4">
             Parking at {airport.name} compared →
           </Link>
         </p>

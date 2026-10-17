@@ -75,7 +75,7 @@ export default function AvoidIndexPage() {
                     <span className="block font-semibold text-ink">{a?.name ?? r.airportSlug}</span>
                     <span className="block text-sm text-ink-muted">Free: {r.freeAlternative!.name}{isPublicTransportAlt(r.freeAlternative!) ? " (public transport)" : ` (${r.freeAlternative!.minutesFree} min)`}</span>
                   </span>
-                  <span className="mf-num shrink-0 rounded-full bg-positive/10 px-2.5 py-1 text-sm font-semibold text-positive">
+                  <span className="mf-num shrink-0 rounded-full bg-positive/10 px-2.5 py-1 text-sm font-semibold text-positive-strong">
                     save {formatPence(r.bands[0]?.totalPence ?? 0)}
                   </span>
                 </Link>
@@ -86,7 +86,7 @@ export default function AvoidIndexPage() {
       </section>
 
       <p>
-        <Link href="/drop-off-charges" className="text-sm font-medium text-brand-accent underline underline-offset-4">
+        <Link href="/drop-off-charges" className="text-sm font-medium text-accent-strong underline underline-offset-4">
           Compare every UK airport&apos;s drop-off charge →
         </Link>
       </p>

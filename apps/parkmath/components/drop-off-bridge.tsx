@@ -48,7 +48,7 @@ export function DropOffParkingBridge({ slug, airportName }: { slug: string; airp
           >
             Compare parking vs drop-off at {airportName} →
           </Link>
-          <Link href={parkingHref} className="font-medium text-brand-accent underline underline-offset-4">
+          <Link href={parkingHref} className="font-medium text-accent-strong underline underline-offset-4">
             Compare all {airportName} parking options →
           </Link>
         </p>

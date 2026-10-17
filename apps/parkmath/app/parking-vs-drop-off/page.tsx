@@ -93,7 +93,7 @@ export default function ParkingVsDropOffIndexPage() {
               <li key={r.slug}>
                 <Link
                   href={`/parking-vs-drop-off/${r.slug}`}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-brand-accent/30 bg-brand-accent/[0.04] px-3 py-1.5 font-medium text-brand-accent hover:bg-brand-accent/10"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-brand-accent/30 bg-brand-accent/[0.04] px-3 py-1.5 font-medium text-accent-strong hover:bg-brand-accent/10"
                 >
                   Park or drop off at {r.name}?
                 </Link>
@@ -119,7 +119,7 @@ export default function ParkingVsDropOffIndexPage() {
                     Drop-off {formatPence(r.dropOffFeePence)} · {r.parkingDays}-day park {formatPence(r.parkingPence)}
                   </span>
                 </span>
-                <span className="mf-num shrink-0 rounded-full bg-brand-accent/10 px-2.5 py-1 text-sm font-semibold text-brand-accent">
+                <span className="mf-num shrink-0 rounded-full bg-brand-accent/10 px-2.5 py-1 text-sm font-semibold text-accent-strong">
                   compare →
                 </span>
               </Link>
@@ -130,12 +130,12 @@ export default function ParkingVsDropOffIndexPage() {
 
       <nav aria-label="Related pages" className="space-y-2">
         <p>
-          <Link href="/airport-parking" className="text-sm font-medium text-brand-accent underline underline-offset-4">
+          <Link href="/airport-parking" className="text-sm font-medium text-accent-strong underline underline-offset-4">
             Compare every UK airport&apos;s parking prices →
           </Link>
         </p>
         <p>
-          <Link href="/avoid-drop-off-charge" className="text-sm font-medium text-brand-accent underline underline-offset-4">
+          <Link href="/avoid-drop-off-charge" className="text-sm font-medium text-accent-strong underline underline-offset-4">
             How to avoid the drop-off charge at every UK airport →
           </Link>
         </p>

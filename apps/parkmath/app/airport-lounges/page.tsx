@@ -48,7 +48,7 @@ export default function LoungeIndexPage() {
         columns={["Airport", "Lounges", "From (pre-book)"]}
         numericColumns={[1, 2]}
         rows={rows.map((r) => [
-          <Link key="a" href={`/airport-lounges/${r.slug}`} className="font-medium text-brand-accent underline-offset-4 hover:underline">{r.name}</Link>,
+          <Link key="a" href={`/airport-lounges/${r.slug}`} className="font-medium text-accent-strong underline-offset-4 hover:underline">{r.name}</Link>,
           String(r.count),
           r.from !== null ? formatPence(r.from) : "—"
         ])}

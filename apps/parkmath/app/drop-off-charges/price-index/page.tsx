@@ -144,9 +144,9 @@ export default function PriceIndexPage() {
 
       <nav aria-label="Breadcrumb" className="text-sm text-ink-muted">
         <ol className="flex flex-wrap items-center gap-1">
-          <li><a href="/" className="hover:text-brand-accent transition-colors">ParkMath</a></li>
+          <li><a href="/" className="hover:text-accent-strong transition-colors">ParkMath</a></li>
           <li aria-hidden="true" className="text-ink-muted/50">/</li>
-          <li><a href="/drop-off-charges" className="hover:text-brand-accent transition-colors">Drop-off charges</a></li>
+          <li><a href="/drop-off-charges" className="hover:text-accent-strong transition-colors">Drop-off charges</a></li>
           <li aria-hidden="true" className="text-ink-muted/50">/</li>
           <li aria-current="page" className="text-ink font-medium">Price Index</li>
         </ol>
@@ -165,7 +165,7 @@ export default function PriceIndexPage() {
           {oldestVerified && oldestVerified !== latestVerified ? (
             <> &middot; oldest row verified {fmtDate(oldestVerified)}</>
           ) : null}
-          . Maintained continuously &mdash; see <Link href="#methodology" className="text-brand-accent underline underline-offset-4">how we verify</Link>.
+          . Maintained continuously &mdash; see <Link href="#methodology" className="text-accent-strong underline underline-offset-4">how we verify</Link>.
         </p>
       </header>
 
@@ -200,7 +200,7 @@ export default function PriceIndexPage() {
             <em>headline</em> charge &mdash; it&apos;s{" "}
             <Link
               href={`/drop-off-charges/${dearestOverstay.airportSlug}`}
-              className="font-semibold text-brand-accent underline underline-offset-4 hover:opacity-80"
+              className="font-semibold text-accent-strong underline underline-offset-4 hover:opacity-80"
             >
               {dearestOverstay.airportName}
             </Link>
@@ -232,7 +232,7 @@ export default function PriceIndexPage() {
             , while most guides still quote the old figure.{" "}
             <Link
               href="/drop-off-charges/stansted"
-              className="font-semibold text-brand-accent underline underline-offset-4 hover:opacity-80"
+              className="font-semibold text-accent-strong underline underline-offset-4 hover:opacity-80"
             >
               See the full Stansted drop-off breakdown →
             </Link>
@@ -256,12 +256,12 @@ export default function PriceIndexPage() {
           attribution is already inside the widget). Paste this snippet where you want the table to
           appear:
         </p>
-        <pre className="overflow-x-auto rounded-md border border-ink/10 bg-white px-3 py-3 text-xs leading-relaxed text-ink dark:bg-card">
+        <pre tabIndex={0} className="overflow-x-auto rounded-md border border-ink/10 bg-white px-3 py-3 text-xs leading-relaxed text-ink dark:bg-card">
           <code>{buildIframeSnippet(siteUrl)}</code>
         </pre>
         <p className="text-xs text-ink-muted">
           Select all and copy.{" "}
-          <Link href="/embed" className="text-brand-accent underline underline-offset-4">
+          <Link href="/embed" className="text-accent-strong underline underline-offset-4">
             Pick a single airport or customise the embed →
           </Link>
         </p>
@@ -280,7 +280,7 @@ export default function PriceIndexPage() {
             <div key={r.airportSlug} className="flex items-center justify-between gap-3 rounded-lg border border-ink/8 bg-card px-4 py-3">
               <div className="flex items-center gap-3 min-w-0">
                 <span className="text-xs font-medium text-ink-muted w-5 shrink-0">{r.rank}</span>
-                <Link href={`/drop-off-charges/${r.airportSlug}`} className="font-medium text-brand-accent underline underline-offset-4 hover:opacity-80 truncate">
+                <Link href={`/drop-off-charges/${r.airportSlug}`} className="font-medium text-accent-strong underline underline-offset-4 hover:opacity-80 truncate">
                   {r.airportName}
                 </Link>
               </div>
@@ -316,7 +316,7 @@ export default function PriceIndexPage() {
                 <tr key={r.airportSlug} className="border-b border-ink/8 last:border-0 hover:bg-surface-muted/50">
                   <td className="px-3 py-2 tabular-nums text-ink-muted">{r.rank}</td>
                   <th scope="row" className="px-3 py-2 text-left font-medium text-ink">
-                    <Link href={`/drop-off-charges/${r.airportSlug}`} className="text-brand-accent underline underline-offset-4 hover:opacity-80">
+                    <Link href={`/drop-off-charges/${r.airportSlug}`} className="text-accent-strong underline underline-offset-4 hover:opacity-80">
                       {r.airportName}
                     </Link>{" "}
                     <span className="font-mono text-xs text-ink-muted">{r.iata}</span>
@@ -343,7 +343,7 @@ export default function PriceIndexPage() {
                       href={r.sourceUrl}
                       target="_blank"
                       rel="noopener nofollow"
-                      className="text-brand-accent underline underline-offset-4 hover:opacity-80"
+                      className="text-accent-strong underline underline-offset-4 hover:opacity-80"
                     >
                       Official page<span className="sr-only"> for {r.airportName} (opens the airport&apos;s own drop-off page)</span> ↗
                     </a>
@@ -376,7 +376,7 @@ export default function PriceIndexPage() {
               <li key={r.airportSlug}>
                 <Link
                   href={`/drop-off-charges/${r.airportSlug}`}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-brand-accent/30 bg-brand-accent/[0.04] px-3 py-1.5 font-medium text-brand-accent hover:bg-brand-accent/10"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-brand-accent/30 bg-brand-accent/[0.04] px-3 py-1.5 font-medium text-accent-strong hover:bg-brand-accent/10"
                 >
                   {r.airportName} drop-off charge
                   <span className="text-xs font-normal text-ink-muted">{r.fee}</span>
@@ -396,7 +396,7 @@ export default function PriceIndexPage() {
           <ul className="space-y-1 text-sm text-ink-muted">
             {movers.map((m) => (
               <li key={m.airportSlug}>
-                <Link href={`/drop-off-charges/${m.airportSlug}`} className="font-medium text-ink underline underline-offset-4 hover:text-brand-accent">
+                <Link href={`/drop-off-charges/${m.airportSlug}`} className="font-medium text-ink underline underline-offset-4 hover:text-accent-strong">
                   {m.airportName}
                 </Link>
                 : {m.yoy}
@@ -419,8 +419,8 @@ export default function PriceIndexPage() {
         <ul className="ml-4 list-disc space-y-1 text-ink-muted">
           <li>Figures are the published standard drop-off charge in pounds sterling, current for 2026.</li>
           <li>&ldquo;Free alternative&rdquo; is a free option named on the airport&apos;s own page (a free waiting car park, or rail/tram reaching the terminal) &mdash; not an off-site third party.</li>
-          <li>The full machine-readable dataset is free to download (CSV) and free to reuse or embed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener" className="text-brand-accent underline underline-offset-4">CC BY 4.0</a> &mdash; just attribute &ldquo;ParkMath UK Airport Drop-Off Price Index&rdquo; with a link to this page.</li>
-          <li>Found a fee that has changed? It is corrected here within days. See our full <Link href="/methodology" className="text-brand-accent underline underline-offset-4">verification method</Link>.</li>
+          <li>The full machine-readable dataset is free to download (CSV) and free to reuse or embed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener" className="text-accent-strong underline underline-offset-4">CC BY 4.0</a> &mdash; just attribute &ldquo;ParkMath UK Airport Drop-Off Price Index&rdquo; with a link to this page.</li>
+          <li>Found a fee that has changed? It is corrected here within days. See our full <Link href="/methodology" className="text-accent-strong underline underline-offset-4">verification method</Link>.</li>
         </ul>
       </section>
 
@@ -428,27 +428,27 @@ export default function PriceIndexPage() {
         <h2 className="text-lg font-semibold text-ink">Go deeper</h2>
         <ul className="space-y-1 text-sm">
           <li>
-            <Link href="/drop-off-charges" className="text-brand-accent underline underline-offset-4">
+            <Link href="/drop-off-charges" className="text-accent-strong underline underline-offset-4">
               Sortable league table: filter every UK airport drop-off charge by fee or £/min →
             </Link>
           </li>
           <li>
-            <Link href="/parking-vs-drop-off" className="text-brand-accent underline underline-offset-4">
+            <Link href="/parking-vs-drop-off" className="text-accent-strong underline underline-offset-4">
               Park or get dropped off? Which is cheaper at every UK airport →
             </Link>
           </li>
           <li>
-            <Link href="/airport-parking-options" className="text-brand-accent underline underline-offset-4">
+            <Link href="/airport-parking-options" className="text-accent-strong underline underline-offset-4">
               Cheapest way in and out of each airport: drop-off vs parking, compared →
             </Link>
           </li>
           <li>
-            <Link href="/parking-price-index-2026" className="text-brand-accent underline underline-offset-4">
+            <Link href="/parking-price-index-2026" className="text-accent-strong underline underline-offset-4">
               The 2026 UK airport parking price index →
             </Link>
           </li>
           <li>
-            <Link href="/embed" className="text-brand-accent underline underline-offset-4">
+            <Link href="/embed" className="text-accent-strong underline underline-offset-4">
               Embed this always-current data on your own site (free) →
             </Link>
           </li>

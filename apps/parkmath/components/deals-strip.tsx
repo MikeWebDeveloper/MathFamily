@@ -15,13 +15,13 @@ export function DealsStrip() {
         <p className="mt-1 text-xs text-ink-muted">
           Compare pre-book vs drive-up prices at your airport.
           {partner ? (
-            <span className="text-ink-muted/80"> *We may earn commission ({partner}). We show absolute prices and stay neutral.</span>
+            <span className="text-ink-muted"> *We may earn commission ({partner}). We show absolute prices and stay neutral.</span>
           ) : null}
         </p>
       </div>
       <a
         href="/airport-parking"
-        className="mf-press mt-3 inline-flex min-h-11 items-center gap-1 rounded-card border border-brand-accent/40 bg-card px-4 text-sm font-semibold text-brand-accent outline-none transition hover:border-brand-accent focus-visible:ring-2 focus-visible:ring-brand-accent/40 sm:mt-0"
+        className="mf-press mt-3 inline-flex min-h-11 items-center gap-1 rounded-card border border-brand-accent/40 bg-card px-4 text-sm font-semibold text-accent-strong outline-none transition hover:border-brand-accent focus-visible:ring-2 focus-visible:ring-brand-accent/40 sm:mt-0"
       >
         Compare parking{partner ? " *" : ""} <span aria-hidden>→</span>
       </a>

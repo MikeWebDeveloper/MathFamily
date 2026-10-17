@@ -63,7 +63,7 @@ export default function ParkingIndexPage() {
         columns={["Airport", "Cheapest 7-day option", "From", "Verified"]}
         numericColumns={[2]}
         rows={rows.map((r) => [
-          <Link key="a" href={`/airport-parking/${r.slug}`} className="font-medium text-brand-accent underline-offset-4 hover:underline">
+          <Link key="a" href={`/airport-parking/${r.slug}`} className="font-medium text-accent-strong underline-offset-4 hover:underline">
             {r.name}
           </Link>,
           r.cheapest?.name ?? "—",

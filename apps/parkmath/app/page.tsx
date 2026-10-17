@@ -88,7 +88,7 @@ export default function HomePage() {
             <span>· {records.length} UK airports tracked</span>
           </span>
           <h1 className="max-w-3xl text-h1 font-bold tracking-tight text-balance text-ink">
-            What does it cost to <span className="text-brand-accent whitespace-nowrap">drop someone off</span> at a UK airport?
+            What does it cost to <span className="text-accent-strong whitespace-nowrap">drop someone off</span> at a UK airport?
           </h1>
           <p className="max-w-2xl text-base text-ink-muted sm:text-lg">
             Every UK airport&apos;s drop-off charge, time limit, penalty and the free alternative — verified against
@@ -98,7 +98,7 @@ export default function HomePage() {
               framing is the SEO/E-E-A-T asset — but a visitor who already knows they want to park,
               not just drop off, gets an exit before scrolling 9 sections down to find one. */}
           <p>
-            <a href="/airport-parking-options" className="text-sm font-semibold text-brand-accent hover:underline">
+            <a href="/airport-parking-options" className="text-sm font-semibold text-accent-strong hover:underline">
               Or compare parking prices <span aria-hidden>→</span>
             </a>
           </p>
@@ -186,7 +186,7 @@ export default function HomePage() {
             date-stamped. We&apos;re independent — not owned by any airport or booking site.
           </p>
         </div>
-        <a href="/methodology" className="text-sm font-semibold text-brand-accent hover:underline">
+        <a href="/methodology" className="text-sm font-semibold text-accent-strong hover:underline">
           Sources &amp; method <span aria-hidden>→</span>
         </a>
       </section>

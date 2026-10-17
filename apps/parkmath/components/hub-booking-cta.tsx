@@ -71,7 +71,7 @@ export function HubBookingCta({ league }: { league: LeagueEntry[] }) {
               href={l.href}
               rel="sponsored noopener noreferrer"
               target="_blank"
-              className="inline-flex min-h-[44px] items-center gap-1 font-medium text-brand-accent underline-offset-4 hover:underline"
+              className="inline-flex min-h-[44px] items-center gap-1 font-medium text-accent-strong underline-offset-4 hover:underline"
             >
               Pre-book {l.name} <span aria-hidden="true">↗</span>
             </a>

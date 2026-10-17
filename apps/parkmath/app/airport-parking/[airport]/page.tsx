@@ -150,7 +150,7 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
             i === winnerIndex ? (
               <span key="w" className="inline-flex items-center gap-2">
                 {p.name}
-                <span className="rounded-full bg-brand-accent/15 px-2 py-0.5 text-[11px] font-bold text-brand-accent">Cheapest 7-day</span>
+                <span className="rounded-full bg-brand-accent/15 px-2 py-0.5 text-[11px] font-bold text-accent-strong">Cheapest 7-day</span>
               </span>
             ) : (
               p.name
@@ -169,7 +169,7 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
         style={{ "--mf-delay": "80ms" } as React.CSSProperties}
       >
         {DURATION_SLUGS.map((s) => (
-          <Link key={s} href={`/airport-parking/${airport.slug}/${s}`} className="font-medium text-brand-accent underline underline-offset-4">
+          <Link key={s} href={`/airport-parking/${airport.slug}/${s}`} className="font-medium text-accent-strong underline underline-offset-4">
             {s.replace("-", " ")} guide →
           </Link>
         ))}
@@ -185,21 +185,21 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
       </section>
 
       <p className="mf-reveal text-sm" style={{ "--mf-delay": "0ms" } as React.CSSProperties}>
-        <Link href={`/drop-off-charges/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
+        <Link href={`/drop-off-charges/${airport.slug}`} className="text-accent-strong underline underline-offset-4">
           Just dropping someone off at {airport.name}? See the drop-off charge →
         </Link>
       </p>
 
       {airportHasParkingVsDropOff(airport.slug) ? (
         <p className="mf-reveal text-sm" style={{ "--mf-delay": "0ms" } as React.CSSProperties}>
-          <Link href={`/parking-vs-drop-off/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
+          <Link href={`/parking-vs-drop-off/${airport.slug}`} className="text-accent-strong underline underline-offset-4">
             Park or get dropped off at {airport.name}? See which is cheaper →
           </Link>
         </p>
       ) : null}
 
       <p className="mf-reveal text-sm" style={{ "--mf-delay": "0ms" } as React.CSSProperties}>
-        <Link href={`/abroad/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
+        <Link href={`/abroad/${airport.slug}`} className="text-accent-strong underline underline-offset-4">
           Going abroad from {airport.name}? See parking + roaming + baggage together →
         </Link>
       </p>

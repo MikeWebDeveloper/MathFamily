@@ -60,7 +60,7 @@ export default function AboutPage() {
         </p>
         <p>
           Read exactly how we source and re-verify every price on our{" "}
-          <Link href="/methodology" className="font-semibold text-brand-accent hover:underline">
+          <Link href="/methodology" className="font-semibold text-accent-strong hover:underline">
             methodology page
           </Link>
           .
@@ -120,7 +120,7 @@ export default function AboutPage() {
           the whole point.
         </p>
         <p className="text-base text-ink">
-          <a href="mailto:Mike@parkmath.co.uk" className="font-semibold text-brand-accent hover:underline">
+          <a href="mailto:Mike@parkmath.co.uk" className="font-semibold text-accent-strong hover:underline">
             Mike@parkmath.co.uk
           </a>
         </p>

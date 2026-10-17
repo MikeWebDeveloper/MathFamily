@@ -87,7 +87,7 @@ export function BookingOptions({
                 <li>✓ Compare every car park in one place</li>
               </ul>
               {savingStr ? (
-                <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-positive/10 px-3 py-1 text-sm font-semibold text-positive">
+                <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-positive/10 px-3 py-1 text-sm font-semibold text-positive-strong">
                   <span aria-hidden>✓</span>
                   {savingStr}
                 </p>
@@ -149,7 +149,7 @@ export function BookingOptions({
               href={officialUrl}
               rel="noopener noreferrer"
               target="_blank"
-              className="mt-3 inline-flex min-h-[44px] items-center rounded-card border border-brand-accent px-4 text-sm font-semibold text-brand-accent"
+              className="mt-3 inline-flex min-h-[44px] items-center rounded-card border border-brand-accent px-4 text-sm font-semibold text-accent-strong"
             >
               Go to airport site ▸
             </a>
@@ -166,7 +166,7 @@ export function BookingOptions({
             href={officialUrl}
             rel="noopener noreferrer"
             target="_blank"
-            className="mt-3 inline-flex min-h-[44px] items-center rounded-card border border-brand-accent px-4 text-sm font-semibold text-brand-accent"
+            className="mt-3 inline-flex min-h-[44px] items-center rounded-card border border-brand-accent px-4 text-sm font-semibold text-accent-strong"
           >
             Go to airport site ▸
           </a>

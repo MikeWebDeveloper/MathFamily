@@ -60,7 +60,7 @@ export function CommandSearch({
       {hint ? (
         <kbd
           aria-hidden
-          className="mf-num pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 rounded-md bg-ink/10 px-1.5 py-0.5 text-[11px] text-ink-muted"
+          className="mf-num pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 rounded-md bg-ink/10 px-1.5 py-0.5 text-[11px] text-ink-muted dark:text-ink"
         >
           {hint}
         </kbd>

@@ -189,14 +189,14 @@ export default function MasterTablePage() {
         <p className="text-ink-muted">
           <span className="font-semibold text-ink">Citing these figures?</span> The ranked, date-stamped
           reference is the{" "}
-          <Link href="/drop-off-charges/price-index" className="text-brand-accent underline underline-offset-4">
+          <Link href="/drop-off-charges/price-index" className="text-accent-strong underline underline-offset-4">
             UK Airport Drop-Off Price Index
           </Link>{" "}
           — every airport, cheapest to dearest, each fee sourced to its official page.
         </p>
         <Link
           href="/drop-off-charges/price-index"
-          className="inline-flex min-h-[40px] items-center gap-1 rounded-md border border-brand-accent/40 px-3 py-1.5 font-semibold text-brand-accent hover:bg-brand-accent/5"
+          className="inline-flex min-h-[40px] items-center gap-1 rounded-md border border-brand-accent/40 px-3 py-1.5 font-semibold text-accent-strong hover:bg-brand-accent/5"
         >
           Open the Price Index →
         </Link>
@@ -210,7 +210,7 @@ export default function MasterTablePage() {
               <li key={f.slug}>
                 <Link
                   href={`/drop-off-charges/${f.slug}`}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-brand-accent/30 bg-brand-accent/[0.04] px-3 py-1.5 font-medium text-brand-accent hover:bg-brand-accent/10"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-brand-accent/30 bg-brand-accent/[0.04] px-3 py-1.5 font-medium text-accent-strong hover:bg-brand-accent/10"
                 >
                   {f.name} drop-off charge
                   <span className="text-xs font-normal text-ink-muted">{f.fee}</span>
@@ -229,7 +229,7 @@ export default function MasterTablePage() {
               <li key={a.slug}>
                 <Link
                   href={`/drop-off-charges/${a.slug}`}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-ink/15 bg-surface-muted px-3 py-1.5 font-medium text-ink hover:border-brand-accent/40 hover:text-brand-accent"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-ink/15 bg-surface-muted px-3 py-1.5 font-medium text-ink hover:border-brand-accent/40 hover:text-accent-strong"
                 >
                   {a.name} drop-off charge
                   <span className="text-xs font-normal text-ink-muted">{a.fee}</span>
@@ -251,7 +251,7 @@ export default function MasterTablePage() {
             <strong className="text-ink">{stanstedWedge.worst}</strong> for longer stays
             {stanstedWedge.effectiveDate ? ` from ${stanstedWedge.effectiveDate}` : ""} &mdash; while
             most guides still quote the old figure.{" "}
-            <Link href="/drop-off-charges/stansted" className="font-semibold text-brand-accent underline underline-offset-4 hover:opacity-80">
+            <Link href="/drop-off-charges/stansted" className="font-semibold text-accent-strong underline underline-offset-4 hover:opacity-80">
               See the full Stansted drop-off breakdown →
             </Link>
           </p>
@@ -265,7 +265,7 @@ export default function MasterTablePage() {
         </p>
         <Link
           href="/embed"
-          className="inline-flex min-h-[40px] items-center gap-1 rounded-md border border-brand-accent/40 px-3 py-1.5 font-semibold text-brand-accent hover:bg-brand-accent/5"
+          className="inline-flex min-h-[40px] items-center gap-1 rounded-md border border-brand-accent/40 px-3 py-1.5 font-semibold text-accent-strong hover:bg-brand-accent/5"
         >
           Get the embed code →
         </Link>
@@ -319,7 +319,7 @@ export default function MasterTablePage() {
               <li key={r.airportSlug}>
                 <Link
                   href={`/drop-off-charges/${r.airportSlug}`}
-                  className="text-brand-accent underline underline-offset-4 hover:opacity-80"
+                  className="text-accent-strong underline underline-offset-4 hover:opacity-80"
                 >
                   {nameFor(r.airportSlug)} drop-off charges →
                 </Link>
@@ -333,7 +333,7 @@ export default function MasterTablePage() {
         <p className="text-sm text-ink-muted">
           See the cheapest way in and out of each airport — drop-off, the free alternative, drive-up gate parking, Park &amp;
           Ride and Meet &amp; Greet, compared neutrally:{" "}
-          <Link href="/airport-parking-options" className="text-brand-accent underline underline-offset-4">
+          <Link href="/airport-parking-options" className="text-accent-strong underline underline-offset-4">
             UK airport parking options compared →
           </Link>
         </p>
@@ -346,11 +346,11 @@ export default function MasterTablePage() {
           the ✓ in any row to open that source. We never republish a price we haven&apos;t checked, which is why the figures
           here differ from the older aggregator and money-saving pages. Found a fee that&apos;s changed? It&apos;ll be reflected
           here within days. For the ranked, citable reference see the{" "}
-          <Link href="/drop-off-charges/price-index" className="text-brand-accent underline underline-offset-4">
+          <Link href="/drop-off-charges/price-index" className="text-accent-strong underline underline-offset-4">
             UK Airport Drop-Off Price Index
           </Link>{" "}
           or our{" "}
-          <Link href="/parking-price-index-2026" className="text-brand-accent underline underline-offset-4">
+          <Link href="/parking-price-index-2026" className="text-accent-strong underline underline-offset-4">
             2026 UK airport parking price index
           </Link>
           .
