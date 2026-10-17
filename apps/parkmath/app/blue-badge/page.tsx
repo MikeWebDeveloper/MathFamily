@@ -11,11 +11,10 @@ import {
   qualifiesForBlueBadgePage,
   type BlueBadgeIndexRow
 } from "@/lib/blue-badge-content";
+import { HUB_META } from "@/lib/seo-meta";
 
 export const metadata: Metadata = {
-  title: "Blue Badge airport drop-off 2026 — is it free at every UK airport?",
-  description:
-    "Blue Badge drop-off at every UK airport: where the charge is waived, where there's a free window, where there's only a concession, and where nothing is published — each read from the airport's own page.",
+  ...HUB_META.blueBadge,
   alternates: { canonical: "/blue-badge" }
 };
 

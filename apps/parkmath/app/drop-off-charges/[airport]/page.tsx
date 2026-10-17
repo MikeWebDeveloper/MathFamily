@@ -12,6 +12,7 @@ import { HolidayExtrasCard } from "@/components/holiday-extras-card";
 import { StickyBookingBar } from "@/components/sticky-booking-bar";
 import { bandPriceParenthetical, buildDropOffFaqs, dropOffChangeNote, dropOffTimeLimitNote, freshnessDelta, isPerEntryTariff, nearbyDropOffComparison, paymentDeadlineChip, searchName, trendNote } from "@/lib/content";
 import { airportHasParkingVsDropOff, dropOffParkingBridge } from "@/lib/parking-vs-drop-off-content";
+import { dropOffMeta } from "@/lib/seo-meta";
 
 export const dynamicParams = false;
 
@@ -29,24 +30,11 @@ export async function generateMetadata({ params }: { params: Promise<{ airport: 
   const { airport } = await params;
   const data = getData(airport);
   if (!data) return {};
-  // Lead the title/description with the searched token + "Airport" + plural "charges & fees"
-  // (the literal GSC queries: "stansted drop off charges", "stansted airport drop off fees").
-  const sn = searchName(data.airport.name);
-  const headlineFee = data.record.isFree ? "free" : formatPence(data.record.bands[0]?.totalPence ?? 0);
-  const structureWord = data.record.isFree ? "rules" : isPerEntryTariff(data.record) ? "per entry" : "time limit";
-  // Per-airport SEO override (CTR fix on page-1 quick-win pages): when the dataset carries an
-  // explicit seoTitle/seoDescription for this airport, use it verbatim to front-match the literal
-  // searched query; otherwise fall back to the generated template. These fields NEVER affect any
-  // price/policy — they only relabel the SERP entry.
-  const title =
-    data.record.seoTitle ??
-    `${sn} Airport drop-off charges 2026 — ${data.record.isFree ? "free" : `${headlineFee} fee`}, ${structureWord} & how to avoid it`;
-  const description =
-    data.record.seoDescription ??
-    `${sn} Airport drop-off charges: ${data.record.feeSummary}. How much it costs, the time limit, penalty, payment deadline, Blue Badge rules and how to avoid the fee. Current for 2026 — verified ${data.record.verifiedAt} against the official ${data.airport.name} page.`;
+  // Lead with the searched token + "Airport" + "drop-off charges" (the literal GSC queries:
+  // "stansted drop off charges"), fitted to the SERP budget. A dataset seoTitle/seoDescription
+  // override (CTR fix on page-1 quick-win pages) is used verbatim — see lib/seo-meta.ts.
   return {
-    title,
-    description,
+    ...dropOffMeta(data.airport.name, data.record),
     alternates: { canonical: `/drop-off-charges/${airport}` },
     // Per-page Open Graph: the root layout sets og:url to the site root, so without this every
     // airport page emitted og:url=homepage (an authority/duplicate signal). Override to the page's
@@ -98,7 +86,7 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
           a purchasable Product/Offer, so modelling it as InStock gave no rich-result benefit on an
           independent data site and was the page's one genuine schema-misuse/quality risk. FAQPage +
           BreadcrumbList do all the SERP work. */}
-      <JsonLd data={speakableLd({ url: `${siteUrl}/drop-off-charges/${airport.slug}` })} />
+      <JsonLd data={speakableLd({ url: `${siteUrl}/drop-off-charges/${airport.slug}`, dateModified: pageVerifiedAt })} />
 
       {/* Visible breadcrumb nav — BreadcrumbList JSON-LD already in head */}
       <nav aria-label="Breadcrumb" className="text-sm text-ink-muted">

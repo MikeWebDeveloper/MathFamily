@@ -3,11 +3,10 @@ import Link from "next/link";
 import { loadDropOffDataset } from "@mathfamily/data";
 import { breadcrumbLd, JsonLd } from "@mathfamily/geo";
 import { FreshnessBadge, PageHeading } from "@mathfamily/ui";
+import { HUB_META } from "@/lib/seo-meta";
 
 export const metadata: Metadata = {
-  title: "How we verify — ParkMath methodology",
-  description:
-    "Exactly how ParkMath sources and keeps UK airport drop-off and parking fees current: every figure read from the airport's own official page, date-stamped, and re-checked on a schedule. What 'Verified [date]' means and how it stays true.",
+  ...HUB_META.methodology,
   alternates: { canonical: "/methodology" }
 };
 

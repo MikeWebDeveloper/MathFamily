@@ -242,11 +242,14 @@ export function personLd(input: { siteUrl: string; name: string; jobTitle: strin
   };
 }
 
-export function speakableLd(input: { url: string; cssSelectors?: string[] }) {
+/** The page's WebPage node. `dateModified` is the verifiedAt of the record(s) the page shows — a
+ *  freshness signal for search and answer engines — and is omitted rather than guessed. */
+export function speakableLd(input: { url: string; cssSelectors?: string[]; dateModified?: string }) {
   return {
     "@context": "https://schema.org",
     "@type": "WebPage" as const,
     url: input.url,
+    ...(input.dateModified ? { dateModified: input.dateModified } : {}),
     speakable: { "@type": "SpeakableSpecification" as const, cssSelector: input.cssSelectors ?? ["h1", ".mf-speakable"] }
   };
 }

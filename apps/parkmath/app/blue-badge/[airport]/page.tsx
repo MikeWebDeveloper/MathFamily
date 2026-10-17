@@ -20,6 +20,7 @@ import {
 } from "@/lib/blue-badge-content";
 import { airportHasParkingVsDropOff } from "@/lib/parking-vs-drop-off-content";
 import { resolveAllParkingMerchants } from "@/lib/partners";
+import { blueBadgeMeta } from "@/lib/seo-meta";
 
 export const dynamicParams = false;
 
@@ -43,18 +44,10 @@ export async function generateMetadata({ params }: { params: Promise<{ airport: 
   const { airport } = await params;
   const data = getData(airport);
   if (!data) return {};
-  const { airport: a, record } = data;
-  const status = blueBadgeStatusLabel(record).toLowerCase();
-  // Per-airport SEO override (CTR fix on page-1 quick-win pages): front-match the literal searched
-  // query and lead with the free option, replacing the generic "is it free?" template where the
-  // dataset carries an explicit override. Never affects any price/policy figure on the page.
-  const title = record.blueBadgeSeoTitle ?? `Blue Badge drop-off at ${a.name} 2026 — is it free?`;
-  const description =
-    record.blueBadgeSeoDescription ??
-    `Blue Badge drop-off at ${a.name}: ${status}. The exact policy, how to claim it, and the free option for everyone — read from the official ${a.name} page, verified ${record.verifiedAt}.`;
+  // A dataset blueBadgeSeoTitle/-Description override (CTR fix on page-1 quick-win pages) is used
+  // verbatim; otherwise the fitted template. Never affects any price/policy figure on the page.
   return {
-    title,
-    description,
+    ...blueBadgeMeta(data.airport.name, data.record, blueBadgeStatusLabel(data.record)),
     alternates: { canonical: `/blue-badge/${airport}` }
   };
 }
@@ -100,7 +93,7 @@ export default async function BlueBadgePage({ params }: { params: Promise<{ airp
           { name: `${airport.name} Blue Badge drop-off`, url: pageUrl }
         ])}
       />
-      <JsonLd data={speakableLd({ url: pageUrl })} />
+      <JsonLd data={speakableLd({ url: pageUrl, dateModified: pageVerifiedAt })} />
 
       <header className="space-y-3">
         <PageHeading>Blue Badge drop-off at {airport.name}</PageHeading>

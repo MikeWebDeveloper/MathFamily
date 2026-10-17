@@ -101,7 +101,7 @@ export default async function ParkingVsDropOffPage({ params }: { params: Promise
           { name: `${airport.name} — park or drop off`, url: pageUrl }
         ])}
       />
-      <JsonLd data={speakableLd({ url: pageUrl })} />
+      <JsonLd data={speakableLd({ url: pageUrl, dateModified: pageVerifiedAt })} />
       {/* HowTo JSON-LD intentionally NOT emitted: Google retired HowTo rich results (Sep 2023) so it
           earns zero SERP benefit, and its steps duplicate the FAQPage's decision Q&A on the same page
           (a duplicate-structured-data quality risk). FAQPage carries the decision intent for AI/LLM

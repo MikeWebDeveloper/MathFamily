@@ -4,11 +4,10 @@ import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, itemListLd, JsonLd } from "@mathfamily/geo";
 import { PageHeading } from "@mathfamily/ui";
 import { abroadModel, abroadAirportSlugs } from "@/lib/abroad-content";
+import { HUB_META } from "@/lib/seo-meta";
 
 export const metadata: Metadata = {
-  title: "Going abroad by car — what the whole trip costs from each UK airport",
-  description:
-    "The combined cost of driving to a UK airport and going abroad: parking or drop-off, phone roaming and baggage — verified per airport.",
+  ...HUB_META.abroad,
   alternates: { canonical: "/abroad" }
 };
 

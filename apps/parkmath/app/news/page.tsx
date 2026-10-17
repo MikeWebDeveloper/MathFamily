@@ -3,12 +3,11 @@ import Link from "next/link";
 import { recentNews } from "@mathfamily/data";
 import { itemListLd, breadcrumbLd, JsonLd } from "@mathfamily/geo";
 import { NewsCard, PageHeading } from "@mathfamily/ui";
+import { HUB_META } from "@/lib/seo-meta";
 
 export const metadata: Metadata = {
-  title: "UK airport updates & news — drop-off, parking & lounge changes",
-  description:
-    "Dated, official-sourced updates to UK airport drop-off charges, parking, lounges and operations — verified and tracked by ParkMath.",
-  alternates: { canonical: "/news" },
+  ...HUB_META.news,
+  alternates: { canonical: "/news" }
 };
 
 export default function NewsHubPage() {

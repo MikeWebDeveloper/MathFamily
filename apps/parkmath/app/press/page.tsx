@@ -6,6 +6,7 @@ import { breadcrumbLd, JsonLd } from "@mathfamily/geo";
 import { FreshnessBadge, OpenDataBand, PageHeading, StatStrip } from "@mathfamily/ui";
 import { buildPriceIndex, dearestWorstCase } from "@/lib/content";
 import { buildIframeSnippet } from "@/lib/embed";
+import { HUB_META } from "@/lib/seo-meta";
 
 /**
  * /press — the press & data hub. A thin KIT + coverage + contact page: it surfaces the headline
@@ -16,9 +17,7 @@ import { buildIframeSnippet } from "@/lib/embed";
  * dataset (no new/fabricated numbers).
  */
 export const metadata: Metadata = {
-  title: "Press & data — ParkMath UK airport drop-off & parking data desk",
-  description:
-    "Press kit and free-to-cite data for journalists: the UK Airport Drop-Off Price Index (the £28 worst-case figure), an embeddable always-current widget, the raw CSV, key figures and contact. Independent, verified, CC BY 4.0.",
+  ...HUB_META.press,
   alternates: { canonical: "/press" }
 };
 

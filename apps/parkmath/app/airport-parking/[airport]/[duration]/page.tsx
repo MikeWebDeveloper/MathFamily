@@ -7,6 +7,7 @@ import { breadcrumbLd, faqPageLd, JsonLd, offerLd, speakableLd } from "@mathfami
 import { AnswerLead, Callout, FaqAccordion, FeeGrid, FreshnessBadge, SourcesBlock } from "@mathfamily/ui";
 import { BookingOptions } from "@/components/booking-options";
 import { DURATION_SLUGS, buildParkingFaqs, durationFromSlug, parkingPageModel } from "@/lib/parking-content";
+import { parkingDurationMeta } from "@/lib/seo-meta";
 
 export const dynamicParams = false;
 
@@ -31,10 +32,8 @@ export async function generateMetadata({
   const data = getData(airport);
   const days = durationFromSlug(duration);
   if (!data || days === null) return {};
-  const m = parkingPageModel(data.record, days);
   return {
-    title: `${days}-day parking at ${data.airport.name} — cheapest verified price`,
-    description: `${m.answer} Gate vs pre-book for ${days} days at ${data.airport.name}, verified ${data.record.verifiedAt}.`,
+    ...parkingDurationMeta(data.airport.name, data.record, days),
     alternates: { canonical: `/airport-parking/${airport}/${duration}` }
   };
 }
@@ -68,7 +67,7 @@ export default async function DurationPage({
           { name: `${days} days`, url: pageUrl }
         ])}
       />
-      <JsonLd data={speakableLd({ url: pageUrl })} />
+      <JsonLd data={speakableLd({ url: pageUrl, dateModified: record.verifiedAt })} />
       {/* Single verified price for this exact duration — genuine Product/Offer, not the
           AggregateOffer used on the parent hub (which spans all durations). Only emitted when a
           real cheapest price exists for this duration; never a fabricated figure. */}

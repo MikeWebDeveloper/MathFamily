@@ -11,6 +11,7 @@ import { freshnessDelta } from "@/lib/content";
 import { avoidAnswer, avoidLeadFacts, buildAvoidFaqs, buildAvoidSteps, qualifiesForAvoidPage } from "@/lib/avoid-content";
 import { airportHasParkingVsDropOff } from "@/lib/parking-vs-drop-off-content";
 import { resolveAllParkingMerchants } from "@/lib/partners";
+import { avoidDropOffMeta } from "@/lib/seo-meta";
 
 export const dynamicParams = false;
 
@@ -33,11 +34,8 @@ export async function generateMetadata({ params }: { params: Promise<{ airport: 
   const { airport } = await params;
   const data = getData(airport);
   if (!data) return {};
-  const { airport: a, record } = data;
-  const fee = record.bands[0]?.totalPence ?? 0;
   return {
-    title: `How to avoid the ${a.name} drop-off charge 2026`,
-    description: `Skip the ${formatPence(fee)} ${a.name} drop-off fee: use ${record.freeAlternative?.name}${record.freeAlternative && isPublicTransportAlt(record.freeAlternative) ? " (public transport to the terminal)" : ` (free for ${record.freeAlternative?.minutesFree} min)`}, plus Blue Badge rules — verified ${record.verifiedAt}.`,
+    ...avoidDropOffMeta(data.airport.name, data.record),
     alternates: { canonical: `/avoid-drop-off-charge/${airport}` }
   };
 }
@@ -79,7 +77,7 @@ export default async function AvoidDropOffPage({ params }: { params: Promise<{ a
           { name: `${airport.name} — avoid the charge`, url: pageUrl }
         ])}
       />
-      <JsonLd data={speakableLd({ url: pageUrl })} />
+      <JsonLd data={speakableLd({ url: pageUrl, dateModified: pageVerifiedAt })} />
 
       <header className="space-y-3">
         <PageHeading>How to avoid the {airport.name} drop-off charge</PageHeading>

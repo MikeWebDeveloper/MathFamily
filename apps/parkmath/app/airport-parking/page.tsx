@@ -4,11 +4,10 @@ import { loadAirports, loadParkingDataset } from "@mathfamily/data";
 import { formatPence, compareParking } from "@mathfamily/engine";
 import { breadcrumbLd, itemListLd, JsonLd } from "@mathfamily/geo";
 import { FeeGrid, FreshnessBadge, PageHeading } from "@mathfamily/ui";
+import { HUB_META } from "@/lib/seo-meta";
 
 export const metadata: Metadata = {
-  title: "UK airport parking compared — verified gate vs pre-book prices",
-  description:
-    "Gate (drive-up) vs pre-book parking prices at major UK airports for 3, 7 and 14 days — verified against official airport tariffs and dated portal snapshots.",
+  ...HUB_META.airportParking,
   alternates: { canonical: "/airport-parking" }
 };
 

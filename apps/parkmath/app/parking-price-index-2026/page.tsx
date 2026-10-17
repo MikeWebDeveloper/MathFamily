@@ -6,11 +6,10 @@ import { breadcrumbLd, datasetLd, itemListLd, JsonLd } from "@mathfamily/geo";
 import { AnswerLead, Callout, FreshnessBadge, OpenDataBand, PageHeading, SourcesBlock } from "@mathfamily/ui";
 import { dropOffIndexSummary, trendNote } from "@/lib/content";
 import { parkingPageModel } from "@/lib/parking-content";
+import { HUB_META } from "@/lib/seo-meta";
 
 export const metadata: Metadata = {
-  title: "UK Airport Parking & Drop-off Price Index 2026",
-  description:
-    "The 2026 index of UK airport drop-off charges and pre-book parking prices — every major airport, verified against official sources and date-stamped, with the raw data free to download.",
+  ...HUB_META.parkingPriceIndex,
   alternates: { canonical: "/parking-price-index-2026" }
 };
 
