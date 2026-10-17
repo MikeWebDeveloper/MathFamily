@@ -4,11 +4,10 @@ import { loadAirports, loadDropOffDataset } from "@mathfamily/data";
 import { breadcrumbLd, JsonLd } from "@mathfamily/geo";
 import { PageHeading } from "@mathfamily/ui";
 import { EmbedBuilder, type EmbedAirportOption } from "@/components/embed-builder";
+import { HUB_META } from "@/lib/seo-meta";
 
 export const metadata: Metadata = {
-  title: "Embed the UK airport drop-off charges table — free widget",
-  description:
-    "Add the live, verified UK airport drop-off charges league table to your own site with one line of copy-paste code. Free iframe + script embed, always up to date, sourced from each airport's official page.",
+  ...HUB_META.embed,
   alternates: { canonical: "/embed" }
 };
 

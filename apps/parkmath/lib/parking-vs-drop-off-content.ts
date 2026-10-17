@@ -1,6 +1,8 @@
 import { compareParking, formatPence } from "@mathfamily/engine";
 import { isPublicTransportAlt, loadDropOffDataset, loadParkingDataset, type DropOffRecord, type ParkingRecord } from "@mathfamily/data";
+import { searchName } from "./content";
 import { goLink, resolveParkingMerchant } from "./partners";
+import { fitDescription, fitTitle } from "./seo-meta";
 
 /** Inputs needed to decide whether an airport can have a "parking vs drop-off" page.
  *  We need BOTH a real drop-off charge (a charging airport with a priced first band) AND
@@ -111,18 +113,28 @@ export function parkingEquivalenceLine(model: ParkingVsDropOffModel, airportName
   return `At ${airportName}'s drive-up gate rate (${formatPence(model.perDayPence)}/24h), ${model.parkingMinutesPerDropOff} minutes of parking costs the same as one ${formatPence(model.dropOffFeePence)} drop-off.`;
 }
 
-/** The literal decision-query <title> (front-matches "is it cheaper to park or get dropped off at X").
- *  Kept close to 60 chars where the airport name is short; longer names exceed slightly — acceptable. */
+/** The decision-query <title>, front-matching "(is it) cheaper to park or get dropped off at X" — the
+ *  full question never fits the rendered 60-char budget, so it leads with "Cheaper…" and shortens
+ *  further only as far as a long airport name needs. */
 export function parkingVsDropOffDecisionTitle(airportName: string): string {
-  return `Is it cheaper to park or get dropped off at ${airportName}? (2026)`;
+  const sn = searchName(airportName);
+  return fitTitle([
+    `Cheaper to park or get dropped off at ${sn}?`,
+    `${sn}: cheaper to park or drop off?`,
+    `${sn}: park or drop off?`
+  ]);
 }
 
 /** The decision <meta description> — leads with the literal answer + the £-equivalence, every figure
  *  from the model. Mirrors the on-page AnswerLead framing so SERP snippet and page agree. */
 export function parkingVsDropOffDecisionDescription(model: ParkingVsDropOffModel, airportName: string): string {
+  const sn = searchName(airportName);
   const fee = formatPence(model.dropOffFeePence);
   const park = formatPence(model.parkingPence);
-  return `Park or drop off at ${airportName}? One drop-off is ${fee}; ${model.parkingDays}-day drive-up parking is ${park}. Honest, verified ${model.verifiedAt} both-ways comparison + the free alternative.`;
+  return fitDescription(`Park or drop off at ${sn}? One drop-off is ${fee}; ${model.parkingDays}-day drive-up parking is ${park}.`, [
+    "Both-ways comparison plus the free alternative.",
+    `Verified ${model.verifiedAt}.`
+  ]);
 }
 
 /** The literal decision-query H1 (the exact phrasing of "is it cheaper to park or get dropped off at X"). */

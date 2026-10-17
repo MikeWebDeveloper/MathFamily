@@ -8,11 +8,10 @@ import { buildDropOffLeague, dropOffHubAnswer, dropOffIndexSummary, dropOffPerMi
 import { SortableFeeTable, type DropOffRow } from "@/components/sortable-fee-table";
 import { DropOffLeagueTable } from "@/components/dropoff-league-table";
 import { HubBookingCta } from "@/components/hub-booking-cta";
+import { HUB_META } from "@/lib/seo-meta";
 
 export const metadata: Metadata = {
-  title: "UK airport drop-off charges 2026 — all airports compared (verified)",
-  description:
-    "Every major UK airport's drop-off (kiss-and-fly) charge for 2026 in one sortable table: fee, time window, £-per-minute, penalty and the free alternative — each verified against the airport's own official page. The only all-airports league table that's actually current.",
+  ...HUB_META.dropOffCharges,
   alternates: { canonical: "/drop-off-charges" }
 };
 

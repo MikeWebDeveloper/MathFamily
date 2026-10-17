@@ -6,6 +6,7 @@ import { breadcrumbLd, datasetLd, newsArticleLd, tableLd, JsonLd } from "@mathfa
 import { FreshnessBadge, OpenDataBand, PageHeading, SourcesBlock, StatStrip } from "@mathfamily/ui";
 import { buildPriceIndex, dearestWorstCase, dropOffIndexSummary } from "@/lib/content";
 import { buildIframeSnippet } from "@/lib/embed";
+import { HUB_META } from "@/lib/seo-meta";
 
 /**
  * The UK Airport Drop-Off Price Index — the canonical, citable reference page.
@@ -15,9 +16,7 @@ import { buildIframeSnippet } from "@/lib/embed";
  * This is the linkable asset journalists / the Commons Library can cite verbatim.
  */
 export const metadata: Metadata = {
-  title: "UK Airport Drop-Off Price Index 2026 — every airport ranked, verified",
-  description:
-    "The UK Airport Drop-Off Price Index: every major UK airport's drop-off (kiss-and-fly) charge ranked cheapest to dearest, each figure date-stamped and sourced to the airport's own official page. Free to cite, with the raw dataset to download.",
+  ...HUB_META.dropOffPriceIndex,
   alternates: { canonical: "/drop-off-charges/price-index" }
 };
 

@@ -159,10 +159,11 @@ describe("buildParkingVsDropOffFaqs", () => {
 });
 
 describe("decision-query title / H1 / description", () => {
-  it("title contains the literal decision phrasing + the airport name", () => {
-    const t = parkingVsDropOffDecisionTitle("London Stansted");
-    expect(t).toContain("cheaper to park or get dropped off");
-    expect(t).toContain("London Stansted");
+  it("title contains the literal decision phrasing + the searched airport token", () => {
+    expect(parkingVsDropOffDecisionTitle("London Stansted")).toBe("Cheaper to park or get dropped off at Stansted?");
+  });
+  it("title degrades to a shorter phrasing for a long airport name instead of overflowing", () => {
+    expect(parkingVsDropOffDecisionTitle("Teesside International")).toBe("Teesside International: park or drop off?");
   });
   it("H1 is the literal decision query for the airport", () => {
     const h1 = parkingVsDropOffDecisionH1("London Stansted");
@@ -173,7 +174,8 @@ describe("decision-query title / H1 / description", () => {
     const d = parkingVsDropOffDecisionDescription(parkingVsDropOffModel({ dropOff, parking })!, "London Gatwick");
     expect(d).toContain("£10"); // one drop-off
     expect(d).toContain("£230"); // 7-day drive-up parking
-    expect(d).toContain("London Gatwick");
+    expect(d).toContain("Gatwick");
+    expect(d.length).toBeLessThanOrEqual(155);
   });
 });
 

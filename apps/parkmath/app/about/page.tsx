@@ -3,11 +3,10 @@ import Link from "next/link";
 import { loadDropOffDataset } from "@mathfamily/data";
 import { breadcrumbLd, personLd, JsonLd } from "@mathfamily/geo";
 import { PageHeading } from "@mathfamily/ui";
+import { HUB_META } from "@/lib/seo-meta";
 
 export const metadata: Metadata = {
-  title: "About ParkMath — who runs it and why",
-  description:
-    "ParkMath is run by Mike, its founder, to keep every UK airport drop-off and parking charge current — verified against each airport's own official page, not copied from stale comparison sites.",
+  ...HUB_META.about,
   alternates: { canonical: "/about" }
 };
 

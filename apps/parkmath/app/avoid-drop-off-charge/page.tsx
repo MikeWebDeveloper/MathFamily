@@ -5,11 +5,10 @@ import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, itemListLd, JsonLd, speakableLd } from "@mathfamily/geo";
 import { AnswerPassage, FreshnessBadge, PageHeading } from "@mathfamily/ui";
 import { avoidIndexSummary, qualifiesForAvoidPage } from "@/lib/avoid-content";
+import { HUB_META } from "@/lib/seo-meta";
 
 export const metadata: Metadata = {
-  title: "How to avoid UK airport drop-off charges 2026 — every airport",
-  description:
-    "The verified free alternative at every UK airport that charges to drop off: where to park free, for how long, and how much you save. Read from official airport pages.",
+  ...HUB_META.avoidDropOffCharge,
   alternates: { canonical: "/avoid-drop-off-charge" }
 };
 

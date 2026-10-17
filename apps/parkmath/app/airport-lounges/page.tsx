@@ -4,10 +4,10 @@ import { loadAirports, loadLoungeDataset } from "@mathfamily/data";
 import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, itemListLd, JsonLd } from "@mathfamily/geo";
 import { EmailCaptureSlot, FeeGrid, PageHeading } from "@mathfamily/ui";
+import { HUB_META } from "@/lib/seo-meta";
 
 export const metadata: Metadata = {
-  title: "UK airport lounge prices & Priority Pass, compared",
-  description: "Pre-book from-prices for lounges at major UK airports, which lounges take Priority Pass, and break-even calculators for membership.",
+  ...HUB_META.airportLounges,
   alternates: { canonical: "/airport-lounges" }
 };
 

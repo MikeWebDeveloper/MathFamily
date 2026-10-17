@@ -5,11 +5,10 @@ import { formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, itemListLd, JsonLd, speakableLd } from "@mathfamily/geo";
 import { AnswerPassage, FreshnessBadge, PageHeading } from "@mathfamily/ui";
 import { searchName } from "@/lib/content";
+import { HUB_META } from "@/lib/seo-meta";
 
 export const metadata: Metadata = {
-  title: "UK airport parking options 2026 — drop-off, Park & Ride & Meet & Greet compared",
-  description:
-    "The cheapest way to park or drop off at every UK airport: forecourt drop-off, the free alternative, drive-up gate parking, Park & Ride and Meet & Greet — a neutral, verified comparison. No fabricated 'from £X'.",
+  ...HUB_META.airportParkingOptions,
   alternates: { canonical: "/airport-parking-options" }
 };
 

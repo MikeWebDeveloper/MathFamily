@@ -8,6 +8,7 @@ import { AnswerPassage, EmailCaptureSlot, FaqAccordion, FeeGrid, FreshnessBadge,
 import { HolidayExtrasCard } from "@/components/holiday-extras-card";
 import { LoungeAnswer } from "@/components/lounge-answer";
 import { buildLoungeFaqs } from "@/lib/content";
+import { loungeMeta } from "@/lib/seo-meta";
 
 export const dynamicParams = false;
 
@@ -25,10 +26,8 @@ export async function generateMetadata({ params }: { params: Promise<{ airport: 
   const { airport } = await params;
   const data = getData(airport);
   if (!data) return {};
-  const cheapest = data.record.lounges.filter((l) => l.walkInPence !== null).sort((a, b) => a.walkInPence! - b.walkInPence!)[0];
   return {
-    title: `${data.airport.name} lounges 2026 — prices & Priority Pass break-even`,
-    description: `${data.airport.name} lounge pre-book from-prices${cheapest ? ` from ${formatPence(cheapest.walkInPence!)}` : ""}, which take Priority Pass, and when membership beats paying per visit. Verified ${data.record.verifiedAt}.`,
+    ...loungeMeta(data.airport.name, data.record),
     alternates: { canonical: `/airport-lounges/${airport}` }
   };
 }
@@ -53,7 +52,7 @@ export default async function LoungePage({ params }: { params: Promise<{ airport
         { name: "Airport lounges", url: `${siteUrl}/airport-lounges` },
         { name: airport.name, url: `${siteUrl}/airport-lounges/${airport.slug}` }
       ])} />
-      <JsonLd data={speakableLd({ url: `${siteUrl}/airport-lounges/${airport.slug}` })} />
+      <JsonLd data={speakableLd({ url: `${siteUrl}/airport-lounges/${airport.slug}`, dateModified: record.verifiedAt })} />
 
       <header className="space-y-3">
         <PageHeading>{airport.name} lounges: pay per visit or join?</PageHeading>

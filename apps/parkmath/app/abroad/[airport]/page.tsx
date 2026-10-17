@@ -5,6 +5,7 @@ import { breadcrumbLd, faqPageLd, speakableLd, JsonLd } from "@mathfamily/geo";
 import { FaqAccordion, FreshnessBadge, PageHeading, SourcesBlock, EmailCaptureSlot } from "@mathfamily/ui";
 import { abroadModel, abroadAirportSlugs } from "@/lib/abroad-content";
 import { AbroadAnswer } from "@/components/abroad-answer";
+import { abroadMeta } from "@/lib/seo-meta";
 
 export const dynamicParams = false;
 export function generateStaticParams() {
@@ -16,8 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ airport: 
   const m = abroadModel(airport);
   if (!m) return {};
   return {
-    title: `Going abroad from ${m.airport.name}? Parking + roaming + bags — total cost 2026`,
-    description: `What it really costs to drive to ${m.airport.name} and go abroad: cheapest parking or drop-off, phone roaming and baggage — every figure verified and date-stamped.`,
+    ...abroadMeta(m.airport.name),
     alternates: { canonical: `/abroad/${airport}` }
   };
 }
@@ -33,7 +33,7 @@ export default async function AbroadAirportPage({ params }: { params: Promise<{ 
   return (
     <article className="space-y-6">
       <JsonLd data={faqPageLd(m.faqs)} />
-      <JsonLd data={speakableLd({ url })} />
+      <JsonLd data={speakableLd({ url, dateModified: m.verifiedAt })} />
       <JsonLd
         data={breadcrumbLd([
           { name: "Home", url: siteUrl },

@@ -8,6 +8,7 @@ import { AnswerPassage, FaqAccordion, FeeGrid, FreshnessBadge, PageHeading, Sour
 import { ParkingAnswer } from "@/components/parking-answer";
 import { DURATION_SLUGS, buildParkingFaqs, coveredParkingDurations, parkingCtaModel, parkingPageModel } from "@/lib/parking-content";
 import { airportHasParkingVsDropOff } from "@/lib/parking-vs-drop-off-content";
+import { parkingMeta } from "@/lib/seo-meta";
 
 export const dynamicParams = false;
 
@@ -25,10 +26,8 @@ export async function generateMetadata({ params }: { params: Promise<{ airport: 
   const { airport } = await params;
   const data = getData(airport);
   if (!data) return {};
-  const m = parkingPageModel(data.record, 7);
   return {
-    title: `${data.airport.name} parking prices 2026 — gate vs pre-book, verified`,
-    description: `${data.airport.name} parking compared for 3, 7 and 14 days. ${m.answer} Verified ${data.record.verifiedAt}.`,
+    ...parkingMeta(data.airport.name, data.record),
     alternates: { canonical: `/airport-parking/${airport}` }
   };
 }
@@ -76,7 +75,7 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
           { name: airport.name, url: `${siteUrl}/airport-parking/${airport.slug}` }
         ])}
       />
-      <JsonLd data={speakableLd({ url: `${siteUrl}/airport-parking/${airport.slug}` })} />
+      <JsonLd data={speakableLd({ url: `${siteUrl}/airport-parking/${airport.slug}`, dateModified: record.verifiedAt })} />
       {validSevenDay.length > 0 ? (
         <JsonLd
           data={aggregateOfferLd({

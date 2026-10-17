@@ -214,6 +214,10 @@ describe("speakableLd", () => {
     const s = speakableLd({ url: "https://x.co/p", cssSelectors: ["#a"] });
     expect(s.speakable.cssSelector).toEqual(["#a"]);
   });
+  it("carries dateModified when given, and omits the key (never guesses) when not", () => {
+    expect(speakableLd({ url: "https://x.co/p", dateModified: "2026-10-07" })).toMatchObject({ dateModified: "2026-10-07" });
+    expect("dateModified" in speakableLd({ url: "https://x.co/p" })).toBe(false);
+  });
 });
 
 describe("organizationLd founder", () => {

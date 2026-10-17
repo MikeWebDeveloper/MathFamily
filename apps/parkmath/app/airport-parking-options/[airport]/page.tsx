@@ -10,6 +10,7 @@ import { parkingCtaModel } from "@/lib/parking-content";
 import { searchName } from "@/lib/content";
 import { airportHasParkingVsDropOff } from "@/lib/parking-vs-drop-off-content";
 import { buildBreakEvenModel, buildOptionRows, buildOptionsFaqs, optionsAnswer, optionsInputs, type OptionRow } from "@/lib/options-content";
+import { latestDate, optionsMeta } from "@/lib/seo-meta";
 
 export const dynamicParams = false;
 
@@ -28,25 +29,12 @@ export async function generateMetadata({ params }: { params: Promise<{ airport: 
   const { airport } = await params;
   const data = getData(airport);
   if (!data) return {};
-  const { airport: a, inputs } = data;
-  const sn = searchName(a.name);
-  const fee = inputs.dropOff.isFree ? "free drop-off" : inputs.dropOff.bands[0] ? `${inputs.dropOff.feeSummary.split(",")[0]}` : "drop-off";
-  // Re-pointed (cycle 3) OFF the locked "cheapest/compare [airport] parking" OTA fortress and ONTO
-  // the winnable decision seam — "is it cheaper to park or get dropped off / how to avoid drop-off
-  // charges / when is each option cheaper" — where Reddit/MSE/Guardian rank, not booking OTAs. The
-  // page's differentiated asset is the verified trip-length break-even, which the fortress can't match.
-  //
-  // Per-airport override (2026-07-12 striking-distance pass): GSC search-analytics showed Google
-  // already ranks THIS page — not the dedicated /drop-off-charges page — for literal "[airport] drop
-  // off charge(s)" queries at some airports (e.g. Exeter, Leeds Bradford), yet the generated title
-  // above never used the word "charge(s)" so it under-matched the exact searched phrase. When the
-  // dataset carries an explicit optionsSeoTitle/optionsSeoDescription, use it verbatim; otherwise the
-  // generated template is unchanged (a no-op for every other airport).
+  // Pointed at the winnable decision seam — "is it cheaper to park or get dropped off / when is each
+  // option cheaper" — not the locked "compare [airport] parking" OTA fortress. A dataset
+  // optionsSeoTitle/-Description override (GSC showed this page ranking for "[airport] drop off
+  // charge" at Exeter / Leeds Bradford) is used verbatim — see lib/seo-meta.ts.
   return {
-    title: inputs.dropOff.optionsSeoTitle ?? `Park or get dropped off at ${sn} Airport? Cheapest option by trip length (2026)`,
-    description:
-      inputs.dropOff.optionsSeoDescription ??
-      `Is it cheaper to park or get dropped off at ${sn} Airport? An honest, verified break-even: the free drop-off alternative, the ${fee} forecourt fee, drive-up gate parking and when pre-booking wins — by how long you're going. Updated ${inputs.dropOff.verifiedAt}.`,
+    ...optionsMeta(data.airport.name, data.inputs.dropOff, data.inputs.parking),
     alternates: { canonical: `/airport-parking-options/${airport}` }
   };
 }
@@ -73,6 +61,7 @@ export default async function AirportParkingOptionsPage({ params }: { params: Pr
   const answer = optionsAnswer(dropOff, parking, airport.name);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
   const pageUrl = `${siteUrl}/airport-parking-options/${airport.slug}`;
+  const pageVerifiedAt = latestDate(dropOff.verifiedAt, parking?.verifiedAt);
 
   return (
     <article className="space-y-8">
@@ -90,10 +79,10 @@ export default async function AirportParkingOptionsPage({ params }: { params: Pr
           url: pageUrl,
           columns: ["Option", "When it wins", "Cost basis", "Source"],
           rowCount: rows.length,
-          dateModified: dropOff.verifiedAt
+          dateModified: pageVerifiedAt
         })}
       />
-      <JsonLd data={speakableLd({ url: pageUrl })} />
+      <JsonLd data={speakableLd({ url: pageUrl, dateModified: pageVerifiedAt })} />
 
       <header className="space-y-3">
         <PageHeading>Is it cheaper to park or get dropped off at {sn} Airport?</PageHeading>

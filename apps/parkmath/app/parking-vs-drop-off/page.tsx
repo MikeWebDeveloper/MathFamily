@@ -10,11 +10,10 @@ import {
   qualifiesForParkingVsDropOff,
   type ParkingVsDropOffIndexRow
 } from "@/lib/parking-vs-drop-off-content";
+import { HUB_META } from "@/lib/seo-meta";
 
 export const metadata: Metadata = {
-  title: "Parking vs drop-off at UK airports 2026 — which is cheaper?",
-  description:
-    "Should you park or get dropped off? A verified, official-figures comparison of the forecourt drop-off charge against drive-up parking at every UK airport we cover.",
+  ...HUB_META.parkingVsDropOff,
   alternates: { canonical: "/parking-vs-drop-off" }
 };
 

@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { loadNewsDataset, newsById, loadAirports } from "@mathfamily/data";
 import { newsArticleLd, breadcrumbLd, JsonLd } from "@mathfamily/geo";
 import { CompiledByline, PageHeading, SourceCitation } from "@mathfamily/ui";
+import { newsMeta } from "@/lib/seo-meta";
 
 export const dynamicParams = false;
 export function generateStaticParams() {
@@ -15,8 +16,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const item = newsById(id);
   if (!item) return {};
   return {
-    title: `${item.title} — ParkMath update`,
-    description: item.summary,
+    ...newsMeta(item),
     alternates: { canonical: `/news/${id}` },
     openGraph: { type: "article", publishedTime: item.publishedAt, modifiedTime: item.verifiedAt }
   };
