@@ -1,6 +1,6 @@
 {
-  "version": "1.3.1",
-  "lastUpdated": "2026-10-07",
+  "version": "1.3.2",
+  "lastUpdated": "2026-10-17",
   "records": [
     {
       "airportSlug": "heathrow",
@@ -176,20 +176,20 @@
             { "days": 14, "totalPence": 24500 }
           ],
           "snapshotDate": null,
-          "notes": "Official Long Stay 'TURN UP PRICES' (roll-up/drive-up) table: up to 1h free; 2h £15; 1 day £50.00; 2 days £65.00; 3 days £80.00; each additional day (or part) thereafter £15.00. 3-day total used directly (£80); 7/14-day totals computed from the official 3-day base plus the official £15/day (7d=80+4x15; 14d=80+11x15). 2-day cross-check matches (£65 = 50+15). FLAG: glasgowairport.com is Cloudflare-blocked to plain fetch tools; this official turn-up table was obtained by rendering the official Long Stay page through the jina reader's headless-browser engine (X-Engine: browser) on 2026-06-10."
+          "notes": "Official Long Stay 'TURN UP PRICES' (roll-up/drive-up) table: up to 1h free; 2h £15; 1 day £50.00; 2 days £65.00; 3 days £80.00; each additional day (or part) thereafter £15.00. 3-day total used directly (£80); 7/14-day totals computed from the official 3-day base plus the official £15/day (7d=80+4x15; 14d=80+11x15). 2-day cross-check matches (£65 = 50+15). FLAG: glasgowairport.com is Cloudflare-blocked to plain fetch tools; this official turn-up table was first obtained via the jina reader's headless-browser engine (X-Engine: browser) on 2026-06-10 and re-read unchanged in a full browser on 2026-10-17."
         },
         {
           "productType": "prebook",
-          "name": "Long Stay (pre-book) — published 'from' price",
+          "name": "Long Stay (pre-book) — official online quote",
           "prices": [
-            { "days": 7, "totalPence": 4999 }
+            { "days": 7, "totalPence": 5599 }
           ],
-          "snapshotDate": "2026-06-10",
-          "notes": "Officially published pre-book 'from' price: '1-week (7-day) Long Stay from £49.99' (read 2026-06-10). Single published 'from' point; the gate product above provides the 3/7/14 coverage."
+          "snapshotDate": "2026-10-17",
+          "notes": "Official online quote from Glasgow Airport's own booking site (book.glasgowairport.com) for a 7-day stay, 16 Nov 2026 11:00 to 23 Nov 2026 11:00, read 2026-10-17: Long Stay Car Park £55.99 (fully flexible booking). Same dates: Mid Stay £68.99, Valet £76.00, Terminal Multi-Storey £102.00, Priority Parking £121.00. The Long Stay page no longer publishes a 'from' price (it previously read '1-week (7-day) Long Stay from £49.99', 2026-06-10); it now says only 'save up to 60% on turn-up prices'. Pre-book prices depend on dates and demand, so this is a dated sample: re-quote on each sweep. Single pre-book point; the gate product above provides the 3/7/14 coverage."
         }
       ],
       "sourceUrl": "https://www.glasgowairport.com/at-the-airport/airport-services/parking/long-stay/",
-      "verifiedAt": "2026-10-07"
+      "verifiedAt": "2026-10-17"
     },
     {
       "airportSlug": "newcastle",
