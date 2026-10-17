@@ -476,3 +476,18 @@ All 16 parking records and 10 lounge records were older than 46 days on main. Re
 
 **Lounges changed:** Gatwick North No1 Lounge £40 (was £38); Birmingham Aspire Lounge (South) £42.99 on the official airport page (was £20.99 on an operator one-day-admission basis) — see PR NEEDS-HUMAN; Birmingham No1 Lounge now published from £38 (was null).
 **Lounges reconfirmed:** Heathrow Club Aspire £40; Gatwick South Club Aspire £34; Manchester T2 £39.99 / T3 £29.99; Stansted Essence £28.99; Luton MyLounge £37.99; Edinburgh £36.99; Glasgow UpperDeck from £27; Bristol Escape £39.99 / Essence £35; Newcastle Aspire £46. Not verifiable: Heathrow Plaza Premium T5 £47.50 (plazapremiumlounge.com 403 on every rung) — Heathrow lounge record verifiedAt NOT bumped.
+
+## 2026-10-17 — targeted check `parking:glasgow`
+
+Triggered by the 2026-10-17 full site check: the Glasgow pre-book "from £49.99" (snapshot 2026-06-10) could no longer be found on the official page, though it still drives the site's gate-vs-pre-book saving.
+
+- **Long Stay page** (https://www.glasgowairport.com/at-the-airport/airport-services/parking/long-stay/), read in a full browser (the site blocks plain fetches):
+  - The turn-up table is unchanged: up to 1 hour £0.00; up to 2 hours £15.00; 1 day £50.00; 2 days £65.00; 3 days £80.00; each additional day £15.00. So 3/7/14 days stay £80 / £140 / £245.
+  - The page **no longer publishes a pre-book "from" price**. It says only "Book in advance and save up to 60% on turn-up prices for a duration greater than 24 hours", plus a date-entry booking widget.
+  - The one Wayback Machine snapshot in range (2026-07-16) returned an empty body, so it can't show when the "from £49.99" line went.
+- **Official online quote**, with Mike's OK, on Glasgow Airport's own booking site (https://book.glasgowairport.com/). Dates only were entered; no personal details, no booking. Non-essential cookies were declined.
+  - **Stay:** 16 Nov 2026 11:00 to 23 Nov 2026 11:00 (7 days), sorted by price, high to low.
+  - **Long Stay Car Park** (7-minute electric bus, "fully flexible booking"): **£55.99**.
+  - Same dates, other products: Mid Stay £68.99, Valet £76.00, Terminal Multi-Storey £102.00, Priority Parking £121.00.
+- **Dataset change:** the prebook product is renamed from "published 'from' price" to "official online quote", price 4999 → **5599**, snapshotDate 2026-06-10 → **2026-10-17**. Record verifiedAt → 2026-10-17; dataset version 1.3.1 → 1.3.2.
+- **Effect on the site:** the 7-day saving vs the £140 gate price goes from £90.01 to **£84.01**. This is a dated sample; re-quote on each sweep, as for Stansted's date-dependent "from" point.
