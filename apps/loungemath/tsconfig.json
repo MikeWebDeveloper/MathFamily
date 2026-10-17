@@ -9,5 +9,7 @@
     "paths": { "@/*": ["./*"] }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  // agent-feed/ is a standalone sidecar (`pnpm agent-feed`), not part of the Next app. It imports
+  // @mathfamily/agent-feed, which is not committed yet; drop this exclude once that package is.
+  "exclude": ["node_modules", "agent-feed"]
 }
