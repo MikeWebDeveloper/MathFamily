@@ -4,7 +4,8 @@ Submission-ready copy for Product Hunt, AlternativeTo, Uneed, SaaSHub, BetaList,
 MicroLaunch, IndieHackers, and similar launch/directory sites.
 
 **Rules baked into this copy:**
-- ParkMath is **free** and **independent** — no aggregator bias, no booking engine, no commission steering which airport or car park appears first.
+- ParkMath is **free** and **independent** — no aggregator bias, no booking engine, and rankings are **commission-blind**: nothing is ordered by what it earns.
+- **ParkMath does earn affiliate commission** on some clearly labelled booking links on the site (via AWIN). Never write "no commission", "sells nothing" or "I make nothing from your clicks"; say instead that the ranking is commission-blind and affiliate links are labelled.
 - Every figure below is drawn from the verified ParkMath datasets (`drop-off-fees.json`, `parking-tariffs.json`, `news.json`), all **verified 2026-06-10 / 2026-06-12** against official airport sources.
 - **No affiliate links anywhere in this copy.** The only link is `https://parkmath.co.uk`.
 - `{placeholder}` tokens are for per-recipient / per-directory personalisation (e.g. your maker name, the directory's category field).
@@ -49,7 +50,7 @@ We cover **{airportCount}** UK airports — from Heathrow, Gatwick and Mancheste
 
 **Parking that isn't a rip-off.** ParkMath compares the **drive-up "gate" price** with the **pre-book price** so you can see the gap — and it's enormous. Turning up and paying at the barrier for **7 days at Glasgow** costs **£140**; the airport's own pre-booked Long Stay starts from **£49.99** — a difference of around **£90** for the identical car park. At **Manchester**, 7 days driving up to Turn Up & Park is **£429.80**, while the official JetParks pre-book starts from **£59.99 (8 days)**. The single most valuable thing you can do is book ahead — ParkMath shows you by how much.
 
-**Why "independent" matters.** ParkMath isn't a booking site and doesn't run an auction. We don't take a cut to push one car park above another, so the cheapest genuine option is the one you'll see first. No upsells, no "only 2 spaces left" pressure, no aggregator bias.
+**Why "independent" matters.** ParkMath isn't a booking site and doesn't run an auction. Some booking links on the site are labelled affiliate links that can earn ParkMath a small commission, but the ranking is commission-blind: no car park is pushed up for paying more, so the cheapest genuine option is the one you'll see first. No upsells, no "only 2 spaces left" pressure, no aggregator bias.
 
 **Always current.** A lightweight watchdog re-verifies the data against official sources and logs every change (recent examples: Bristol's drop-off rising to £8.50 in January 2026; East Midlands going barrier-free ANPR; London City introducing an £8 drop-off charge from 6 January 2026). Every datapoint carries a "verified on" date and a link to the official source.
 
@@ -61,13 +62,13 @@ Free to use. No account. No app to install. Just the number you actually need.
 
 ## 4. "Alternative to" positioning
 
-> **ParkMath is the free, independent alternative to airport-parking booking aggregators like Holiday Extras, APH (Airport Parking & Hotels) and Purple Parking.**
+> **ParkMath is the free, independent price check to use before you book with airport-parking sites like Holiday Extras, APH (Airport Parking & Hotels) and Purple Parking.**
 
 **How it's different:**
 
 | | Booking aggregators (Holiday Extras, APH, Purple Parking) | **ParkMath** |
 |---|---|---|
-| Business model | Sell you parking, earn commission on the booking | **Free; sells nothing — informational only** |
+| Business model | Sell you parking, earn commission on the booking | **Free to use; some labelled booking links earn a small affiliate commission, which never changes the ordering** |
 | Ordering | Results ranked by what they can monetise | **No bias — cheapest genuine option shown first** |
 | Drop-off fees | Not the focus; you're there to buy parking | **Front-and-centre, with the free alternative named** |
 | Sourcing | Their own inventory | **Hand-verified against each airport's official page, date-stamped** |
@@ -76,7 +77,7 @@ Free to use. No account. No app to install. Just the number you actually need.
 **Positioning line for the "alternative to" field:**
 > *A free, independent cost-comparison and drop-off-fee checker for UK airports — use it before you book with Holiday Extras, APH or Purple Parking to know what the fair price actually is.*
 
-*Note: ParkMath complements these services rather than competing for bookings — it's the impartial reference you check first. We don't claim to undercut anyone; we just show the verified official numbers so you can judge any quote against them.*
+*Note: ParkMath complements these services rather than competing for bookings — it's the impartial reference you check first. We don't claim to undercut anyone; we just show the verified official numbers so you can judge any quote against them. ParkMath is an affiliate of some of these companies, so a booking made through one of its labelled links can earn it a commission. Keep that disclosure wherever copy compares ParkMath with them.*
 
 ---
 
@@ -90,13 +91,13 @@ This started with a small, stupid annoyance: pulling up at a UK airport to drop 
 
 When I looked for a straight answer to "what does this actually cost, and is there a free option?", everything I found was a booking site trying to sell me parking. Useful if you want to buy, but they're not neutral — the ordering follows the commission, not your wallet. I wanted the boring, honest version: **the real number, the free alternative, and a date showing when it was last checked.**
 
-So I built ParkMath. It covers **{airportCount} UK airports**. Every drop-off fee and parking price is **hand-verified against the airport's own official page** and date-stamped — no scraping a competitor's quotes, no aggregator feed. It's deliberately **not** a booking engine: I take no commission and rank nothing for money, so the cheapest genuine option is just... the first one you see.
+So I built ParkMath. It covers **{airportCount} UK airports**. Every drop-off fee and parking price is **hand-verified against the airport's own official page** and date-stamped — no scraping a competitor's quotes, no aggregator feed. It's deliberately **not** a booking engine, and nothing is ranked for money: the cheapest genuine option is just... the first one you see. Some booking links are labelled affiliate links, so ParkMath can earn a small commission if you book through one. That's what pays for the checking, and it never changes the order.
 
 The bit people find most useful is the parking gap. Drive up and pay at the barrier for a week at Glasgow and it's **£140**; the airport's own pre-book Long Stay starts from **£49.99** — about **£90** saved on the *same* car park, just for booking ahead. ParkMath's whole job is to make that gap obvious before you've committed to anything.
 
 Keeping it accurate is the real product. Fees move constantly — Bristol's drop-off went from £7 to £8.50 this January, Edinburgh's jumped to £8.50 last May, London City introduced an £8 charge in January — so I run a watchdog that re-checks the data against official sources and logs every change, with a human reviewing each correction before it goes live. That review gate is the whole point: I'd rather be slower and right than fast and wrong.
 
-It's free, there's no account, and I make nothing from your clicks. I'd love feedback on the data, the airports I'm missing, and whether the drop-off-vs-free-alternative framing actually saves you money next time you fly.
+It's free and there's no account. I'd love feedback on the data, the airports I'm missing, and whether the drop-off-vs-free-alternative framing actually saves you money next time you fly.
 
 🔗 {ctaUrl|https://parkmath.co.uk}
 
