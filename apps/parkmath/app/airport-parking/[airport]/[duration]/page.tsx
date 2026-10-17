@@ -133,7 +133,7 @@ export default async function DurationPage({
       </section>
 
       <p className="text-sm">
-        <Link href={`/airport-parking/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
+        <Link href={`/airport-parking/${airport.slug}`} className="text-accent-strong underline underline-offset-4">
           All durations and options at {airport.name} →
         </Link>
       </p>

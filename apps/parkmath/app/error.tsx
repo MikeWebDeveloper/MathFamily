@@ -19,7 +19,7 @@ export default function Error({ reset }: { error: Error & { digest?: string }; r
         >
           Try again
         </button>
-        <Link href="/" className="text-brand-accent underline underline-offset-4">Back to home →</Link>
+        <Link href="/" className="text-accent-strong underline underline-offset-4">Back to home →</Link>
       </div>
     </section>
   );

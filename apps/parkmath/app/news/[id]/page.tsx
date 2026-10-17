@@ -40,7 +40,7 @@ export default async function NewsItemPage({ params }: { params: Promise<{ id: s
 
       <header className="space-y-3">
         <p className="flex items-center gap-2 text-xs text-ink-muted">
-          <Link href="/news" className="text-brand-accent underline underline-offset-4">Updates</Link> ·
+          <Link href="/news" className="text-accent-strong underline underline-offset-4">Updates</Link> ·
           <time dateTime={item.publishedAt}>{fmt(item.publishedAt)}</time>
         </p>
         <PageHeading>{item.title}</PageHeading>
@@ -62,13 +62,13 @@ export default async function NewsItemPage({ params }: { params: Promise<{ id: s
 
       {airport ? (
         <p className="text-sm">
-          <Link href={`/drop-off-charges/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
+          <Link href={`/drop-off-charges/${airport.slug}`} className="text-accent-strong underline underline-offset-4">
             See {airport.name}&apos;s current drop-off charge →
           </Link>
         </p>
       ) : null}
       <p className="text-sm">
-        <Link href="/news" className="text-brand-accent underline underline-offset-4">← All updates</Link>
+        <Link href="/news" className="text-accent-strong underline underline-offset-4">← All updates</Link>
       </p>
     </article>
   );

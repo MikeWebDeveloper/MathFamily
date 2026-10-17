@@ -49,13 +49,13 @@ function CopyBlock({ label, code }: { label: string; code: string }) {
               /* clipboard blocked — the code is still selectable below */
             }
           }}
-          className="inline-flex min-h-[36px] items-center gap-1 rounded-md border border-brand-accent/40 px-3 py-1 text-xs font-semibold text-brand-accent hover:bg-brand-accent/5"
+          className="inline-flex min-h-[36px] items-center gap-1 rounded-md border border-brand-accent/40 px-3 py-1 text-xs font-semibold text-accent-strong hover:bg-brand-accent/5"
           aria-live="polite"
         >
           {copied ? "Copied ✓" : "Copy code"}
         </button>
       </div>
-      <pre className="select-all overflow-x-auto rounded-lg border border-ink/10 bg-surface-muted p-3 text-xs leading-relaxed text-ink">
+      <pre tabIndex={0} className="select-all overflow-x-auto rounded-lg border border-ink/10 bg-surface-muted p-3 text-xs leading-relaxed text-ink">
         <code>{code}</code>
       </pre>
     </div>

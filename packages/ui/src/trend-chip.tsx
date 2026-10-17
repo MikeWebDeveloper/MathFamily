@@ -28,7 +28,7 @@ export function TrendChip({
   return (
     <span
       className={`inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-[11px] font-bold ${
-        up ? "bg-warning/10 text-warning" : "bg-positive/10 text-positive"
+        up ? "bg-warning/10 text-warning-strong" : "bg-positive/10 text-positive-strong"
       }`}
     >
       <span aria-hidden>{up ? "↑" : "↓"}</span>

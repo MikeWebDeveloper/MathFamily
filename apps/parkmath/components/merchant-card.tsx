@@ -59,7 +59,7 @@ export function MerchantCard({
           </div>
 
           {offer?.hook ? (
-            <span className="inline-block rounded-full bg-positive/10 px-2.5 py-1 text-xs font-semibold text-positive">
+            <span className="inline-block rounded-full bg-positive/10 px-2.5 py-1 text-xs font-semibold text-positive-strong">
               {offer.hook}
             </span>
           ) : null}

@@ -50,7 +50,7 @@ export function AirportBentoSearch({ airports }: { airports: AirportTile[] }) {
                   className="mf-card-lg mf-soft-lift mf-press mf-edge group flex min-h-[44px] h-full flex-col gap-3 p-4 outline-none focus-visible:ring-2 focus-visible:ring-brand-accent/40"
                 >
                   <div className="flex items-center gap-2">
-                    <span className="flex-1 min-w-0 flex items-center gap-2 text-sm font-semibold text-ink transition-colors group-hover:text-brand-accent">
+                    <span className="flex-1 min-w-0 flex items-center gap-2 text-sm font-semibold text-ink transition-colors group-hover:text-accent-strong">
                       <span className="truncate">{a.name}</span>
                       <IataTile code={a.iata} />
                     </span>
@@ -75,7 +75,7 @@ export function AirportBentoSearch({ airports }: { airports: AirportTile[] }) {
           <button
             type="button"
             onClick={() => setQuery("")}
-            className="mt-1 inline-flex min-h-9 items-center rounded-full border border-ink/15 bg-card px-4 text-xs font-medium text-ink-muted transition hover:border-brand-accent/40 hover:text-brand-accent"
+            className="mt-1 inline-flex min-h-9 items-center rounded-full border border-ink/15 bg-card px-4 text-xs font-medium text-ink-muted transition hover:border-brand-accent/40 hover:text-accent-strong"
           >
             Clear search
           </button>

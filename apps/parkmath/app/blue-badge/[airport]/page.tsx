@@ -149,7 +149,7 @@ export default async function BlueBadgePage({ params }: { params: Promise<{ airp
               <li key={step.name} className="flex gap-4">
                 <span
                   aria-hidden
-                  className="mf-num mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-accent/10 text-sm font-semibold text-brand-accent"
+                  className="mf-num mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-accent/10 text-sm font-semibold text-accent-strong"
                 >
                   {i + 1}
                 </span>
@@ -198,26 +198,26 @@ export default async function BlueBadgePage({ params }: { params: Promise<{ airp
         <h2 className="text-lg font-semibold text-ink">More at this airport</h2>
         <ul className="space-y-1 text-sm">
           <li>
-            <Link href={`/drop-off-charges/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
+            <Link href={`/drop-off-charges/${airport.slug}`} className="text-accent-strong underline underline-offset-4">
               Full {airport.name} drop-off charge breakdown →
             </Link>
           </li>
           {!record.isFree && record.freeAlternative ? (
             <li>
-              <Link href={`/avoid-drop-off-charge/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
+              <Link href={`/avoid-drop-off-charge/${airport.slug}`} className="text-accent-strong underline underline-offset-4">
                 How to avoid the {airport.name} drop-off charge →
               </Link>
             </li>
           ) : null}
           {airportHasParkingVsDropOff(airport.slug) ? (
             <li>
-              <Link href={`/parking-vs-drop-off/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
+              <Link href={`/parking-vs-drop-off/${airport.slug}`} className="text-accent-strong underline underline-offset-4">
                 Parking vs drop-off at {airport.name}: which is cheaper? →
               </Link>
             </li>
           ) : null}
           <li>
-            <a href="/blue-badge" className="text-brand-accent underline underline-offset-4">
+            <a href="/blue-badge" className="text-accent-strong underline underline-offset-4">
               Blue Badge drop-off at every UK airport →
             </a>
           </li>

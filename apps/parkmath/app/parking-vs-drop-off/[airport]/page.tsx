@@ -216,7 +216,7 @@ export default async function ParkingVsDropOffPage({ params }: { params: Promise
                         <>
                           {formatPence(row.prebookPence)}
                           {row.savingPence !== null ? (
-                            <span className="ml-1.5 rounded-full bg-positive/10 px-1.5 py-0.5 text-[11px] font-semibold text-positive">
+                            <span className="ml-1.5 rounded-full bg-positive/10 px-1.5 py-0.5 text-[11px] font-semibold text-positive-strong">
                               save {formatPence(row.savingPence)}
                             </span>
                           ) : null}
@@ -251,7 +251,7 @@ export default async function ParkingVsDropOffPage({ params }: { params: Promise
       {dropOff.freeAlternative ? (
         <Callout variant="free" title={`Want to avoid both? Use the ${dropOff.freeAlternative.name}`}>
           {isPublicTransportAlt(dropOff.freeAlternative) ? "" : `Free for ${dropOff.freeAlternative.minutesFree} minutes. `}{dropOff.freeAlternative.details}{" "}
-          <Link href={`/avoid-drop-off-charge/${airport.slug}`} className="font-medium text-brand-accent underline underline-offset-4">
+          <Link href={`/avoid-drop-off-charge/${airport.slug}`} className="font-medium text-accent-strong underline underline-offset-4">
             See how to avoid the {airport.name} drop-off charge →
           </Link>
         </Callout>
@@ -271,22 +271,22 @@ export default async function ParkingVsDropOffPage({ params }: { params: Promise
 
       <nav aria-label="Related pages" className="space-y-2">
         <p>
-          <Link href={`/airport-parking-options/${airport.slug}`} className="text-sm font-medium text-brand-accent underline underline-offset-4">
+          <Link href={`/airport-parking-options/${airport.slug}`} className="text-sm font-medium text-accent-strong underline underline-offset-4">
             See every parking &amp; drop-off option at {airport.name}, compared →
           </Link>
         </p>
         <p>
-          <Link href={`/airport-parking/${airport.slug}`} className="text-sm font-medium text-brand-accent underline underline-offset-4">
+          <Link href={`/airport-parking/${airport.slug}`} className="text-sm font-medium text-accent-strong underline underline-offset-4">
             Full {airport.name} parking comparison — gate vs pre-book →
           </Link>
         </p>
         <p>
-          <Link href={`/drop-off-charges/${airport.slug}`} className="text-sm font-medium text-brand-accent underline underline-offset-4">
+          <Link href={`/drop-off-charges/${airport.slug}`} className="text-sm font-medium text-accent-strong underline underline-offset-4">
             Full {airport.name} drop-off charge breakdown →
           </Link>
         </p>
         <p>
-          <Link href="/parking-vs-drop-off" className="text-sm font-medium text-brand-accent underline underline-offset-4">
+          <Link href="/parking-vs-drop-off" className="text-sm font-medium text-accent-strong underline underline-offset-4">
             Park or drop off? Compare every UK airport →
           </Link>
         </p>

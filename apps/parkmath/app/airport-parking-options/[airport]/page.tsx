@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: { params: Promise<{ airport: 
 
 function SourceTag({ row }: { row: OptionRow }) {
   return row.source === "official" ? (
-    <span className="rounded border border-positive/40 px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-wide text-positive">Verified</span>
+    <span className="rounded border border-positive/40 px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-wide text-positive-strong">Verified</span>
   ) : (
     <span className="rounded border border-ink-muted/40 px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Ad</span>
   );
@@ -134,7 +134,7 @@ export default async function AirportParkingOptionsPage({ params }: { params: Pr
                 <td className="py-3 pr-3 text-ink-muted">{row.whenItWins}</td>
                 <td className="py-3 pr-3 text-ink">
                   {row.costBasis ?? (
-                    <a href="#mf-merchant-block" className="text-brand-accent underline underline-offset-4">
+                    <a href="#mf-merchant-block" className="text-accent-strong underline underline-offset-4">
                       Pre-book price coming ↓
                     </a>
                   )}
@@ -174,14 +174,14 @@ export default async function AirportParkingOptionsPage({ params }: { params: Pr
                     <td className="py-3 pr-3 font-medium text-ink">{row.option}</td>
                     <td className="py-3 pr-3 text-ink">
                       {row.cost ?? (
-                        <a href="#mf-merchant-block" className="text-brand-accent underline underline-offset-4">
+                        <a href="#mf-merchant-block" className="text-accent-strong underline underline-offset-4">
                           Live price below ↓
                         </a>
                       )}
                     </td>
                     <td className="py-3">
                       {row.source === "official" ? (
-                        <span className="rounded border border-positive/40 px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-wide text-positive">Verified</span>
+                        <span className="rounded border border-positive/40 px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-wide text-positive-strong">Verified</span>
                       ) : (
                         <span className="rounded border border-ink-muted/40 px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Ad</span>
                       )}
@@ -222,27 +222,27 @@ export default async function AirportParkingOptionsPage({ params }: { params: Pr
         <h2 className="text-lg font-semibold text-ink">More at this airport</h2>
         <ul className="space-y-1 text-sm">
           <li>
-            <Link href={`/drop-off-charges/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
+            <Link href={`/drop-off-charges/${airport.slug}`} className="text-accent-strong underline underline-offset-4">
               Full {airport.name} drop-off charge breakdown →
             </Link>
           </li>
           {!dropOff.isFree && dropOff.freeAlternative ? (
             <li>
-              <Link href={`/avoid-drop-off-charge/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
+              <Link href={`/avoid-drop-off-charge/${airport.slug}`} className="text-accent-strong underline underline-offset-4">
                 How to avoid the {airport.name} drop-off charge →
               </Link>
             </li>
           ) : null}
           {airportHasParkingVsDropOff(airport.slug) ? (
             <li>
-              <Link href={`/parking-vs-drop-off/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
+              <Link href={`/parking-vs-drop-off/${airport.slug}`} className="text-accent-strong underline underline-offset-4">
                 Parking vs drop-off at {airport.name}: which is cheaper? →
               </Link>
             </li>
           ) : null}
           {parking ? (
             <li>
-              <Link href={`/airport-parking/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
+              <Link href={`/airport-parking/${airport.slug}`} className="text-accent-strong underline underline-offset-4">
                 {airport.name} parking prices compared →
               </Link>
             </li>

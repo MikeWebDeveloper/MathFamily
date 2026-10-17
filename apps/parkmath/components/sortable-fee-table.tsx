@@ -60,7 +60,7 @@ export function SortableFeeTable({ rows: initialRows }: { rows: DropOffRow[] }) 
     <Link
       key="a"
       href={`/drop-off-charges/${r.airportSlug}`}
-      className="inline-flex items-center gap-2 font-medium text-brand-accent underline-offset-4 hover:underline"
+      className="inline-flex items-center gap-2 font-medium text-accent-strong underline-offset-4 hover:underline"
     >
       {r.airportName}
       <IataTile code={r.iata} />

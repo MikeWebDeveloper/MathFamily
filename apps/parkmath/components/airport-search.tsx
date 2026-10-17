@@ -34,7 +34,7 @@ export function AirportSearch({ airports, feeBySlug }: { airports: Airport[]; fe
               className="mf-sheen mf-press group flex h-full flex-col justify-between gap-1 rounded-card border border-ink/10 bg-card p-3.5 outline-none transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-accent/40 focus-visible:ring-2 focus-visible:ring-brand-accent/40"
               style={{ boxShadow: "var(--shadow-card)" }}
             >
-              <span className="text-sm font-semibold text-ink transition-colors group-hover:text-brand-accent">{a.name}</span>
+              <span className="text-sm font-semibold text-ink transition-colors group-hover:text-accent-strong">{a.name}</span>
               {feeBySlug?.[a.slug] ? (
                 <span className="mf-num text-xs text-ink-muted">{feeBySlug[a.slug]}</span>
               ) : null}
@@ -56,7 +56,7 @@ export function AirportSearch({ airports, feeBySlug }: { airports: Airport[]; fe
           <button
             type="button"
             onClick={() => setQuery("")}
-            className="mt-1 inline-flex min-h-9 items-center rounded-full border border-ink/15 bg-card px-4 text-xs font-medium text-ink-muted transition hover:border-brand-accent/40 hover:text-brand-accent"
+            className="mt-1 inline-flex min-h-9 items-center rounded-full border border-ink/15 bg-card px-4 text-xs font-medium text-ink-muted transition hover:border-brand-accent/40 hover:text-accent-strong"
           >
             Clear search
           </button>

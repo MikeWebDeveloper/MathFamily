@@ -51,7 +51,7 @@ export default function NewsHubPage() {
       <p className="text-sm">
         <Link
           href="/drop-off-charges"
-          className="text-brand-accent underline underline-offset-4"
+          className="text-accent-strong underline underline-offset-4"
         >
           Compare every UK airport&apos;s drop-off charge →
         </Link>

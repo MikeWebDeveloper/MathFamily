@@ -34,7 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ScrollReveal />
         <AmbientBackdrop />
         <SiteHeader brandName="LoungeMath" brandPrefix="Lounge" links={NAV} />
-        <main className="mx-auto max-w-5xl px-4 py-8">{children}</main>
+        <main id="main-content" className="mx-auto max-w-5xl px-4 py-8">{children}</main>
         <SiteFooter brandName="LoungeMath" links={NAV} />
         {/* Cross-sell credit (Mike's decision): nofollow "Built by" attribution. */}
         <div className="mx-auto max-w-5xl px-4 pb-8 text-xs text-ink-muted">

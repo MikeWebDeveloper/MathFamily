@@ -131,7 +131,7 @@ export function HolidayExtrasCard({ product, airportName, airportSlug, surface, 
         href={primaryHref}
         rel="sponsored noopener noreferrer"
         target="_blank"
-        className="flex min-h-[44px] items-center justify-between gap-3 font-semibold text-brand-accent sm:hidden"
+        className="flex min-h-[44px] items-center justify-between gap-3 font-semibold text-accent-strong sm:hidden"
       >
         <span>Pre-book {airportName} {productLabel} — free cancellation</span>
         <span aria-hidden="true">↗</span>

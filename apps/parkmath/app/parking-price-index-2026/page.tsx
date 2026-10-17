@@ -130,12 +130,12 @@ export default function PriceIndexPage() {
         <h2 className="text-h2 font-semibold text-ink">The full tables</h2>
         <ul className="space-y-1 text-sm">
           <li>
-            <Link href="/drop-off-charges" className="text-brand-accent underline underline-offset-4">
+            <Link href="/drop-off-charges" className="text-accent-strong underline underline-offset-4">
               Every UK airport drop-off charge, compared →
             </Link>
           </li>
           <li>
-            <Link href="/airport-parking" className="text-brand-accent underline underline-offset-4">
+            <Link href="/airport-parking" className="text-accent-strong underline underline-offset-4">
               Every UK airport parking comparison (gate vs pre-book) →
             </Link>
           </li>

@@ -19,9 +19,9 @@ export const metadata: Metadata = {
 };
 
 const STATUS_PILL: Record<BlueBadgeIndexRow["kind"], string> = {
-  exempt: "bg-positive/10 text-positive",
-  "free-window": "bg-brand-accent/10 text-brand-accent",
-  reduced: "bg-warning/10 text-warning",
+  exempt: "bg-positive/10 text-positive-strong",
+  "free-window": "bg-brand-accent/10 text-accent-strong",
+  reduced: "bg-warning/10 text-warning-strong",
   none: "bg-ink-muted/10 text-ink-muted"
 };
 
@@ -118,12 +118,12 @@ export default function BlueBadgeIndexPage() {
       </section>
 
       <p>
-        <Link href="/drop-off-charges" className="text-sm font-medium text-brand-accent underline underline-offset-4">
+        <Link href="/drop-off-charges" className="text-sm font-medium text-accent-strong underline underline-offset-4">
           Compare every UK airport&apos;s drop-off charge →
         </Link>
       </p>
       <p>
-        <Link href="/avoid-drop-off-charge" className="text-sm font-medium text-brand-accent underline underline-offset-4">
+        <Link href="/avoid-drop-off-charge" className="text-sm font-medium text-accent-strong underline underline-offset-4">
           How to avoid the drop-off charge at every UK airport →
         </Link>
       </p>

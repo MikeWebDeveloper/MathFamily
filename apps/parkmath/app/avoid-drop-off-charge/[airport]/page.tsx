@@ -129,7 +129,7 @@ export default async function AvoidDropOffPage({ params }: { params: Promise<{ a
             <li key={step.name} className="flex gap-4">
               <span
                 aria-hidden
-                className="mf-num mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-accent/10 text-sm font-semibold text-brand-accent"
+                className="mf-num mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-accent/10 text-sm font-semibold text-accent-strong"
               >
                 {i + 1}
               </span>
@@ -163,24 +163,24 @@ export default async function AvoidDropOffPage({ params }: { params: Promise<{ a
       />
 
       <p>
-        <Link href={`/drop-off-charges/${airport.slug}`} className="text-sm font-medium text-brand-accent underline underline-offset-4">
+        <Link href={`/drop-off-charges/${airport.slug}`} className="text-sm font-medium text-accent-strong underline underline-offset-4">
           Full {airport.name} drop-off charge breakdown →
         </Link>
       </p>
       {airportHasParkingVsDropOff(airport.slug) ? (
         <p>
-          <Link href={`/parking-vs-drop-off/${airport.slug}`} className="text-sm font-medium text-brand-accent underline underline-offset-4">
+          <Link href={`/parking-vs-drop-off/${airport.slug}`} className="text-sm font-medium text-accent-strong underline underline-offset-4">
             Parking vs drop-off at {airport.name}: which is cheaper? →
           </Link>
         </p>
       ) : null}
       <p>
-        <Link href={`/blue-badge/${airport.slug}`} className="text-sm font-medium text-brand-accent underline underline-offset-4">
+        <Link href={`/blue-badge/${airport.slug}`} className="text-sm font-medium text-accent-strong underline underline-offset-4">
           Blue Badge drop-off at {airport.name}: is it free? →
         </Link>
       </p>
       <p>
-        <a href="/avoid-drop-off-charge" className="text-sm font-medium text-brand-accent underline underline-offset-4">
+        <a href="/avoid-drop-off-charge" className="text-sm font-medium text-accent-strong underline underline-offset-4">
           How to avoid the charge at every UK airport →
         </a>
       </p>

@@ -100,7 +100,7 @@ export default function MethodologyPage() {
           {steps.map((step, i) => (
             <li key={step.title} className="mf-card-lg mf-edge flex gap-4 p-5">
               <span
-                className="mf-num-display flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-accent/10 text-sm font-bold text-brand-accent"
+                className="mf-num-display flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-accent/10 text-sm font-bold text-accent-strong"
                 aria-hidden
               >
                 {i + 1}
@@ -126,11 +126,11 @@ export default function MethodologyPage() {
         </p>
         <p>
           You can always see and download the underlying data on the{" "}
-          <Link href="/drop-off-charges" className="font-semibold text-brand-accent hover:underline">
+          <Link href="/drop-off-charges" className="font-semibold text-accent-strong hover:underline">
             drop-off charges table
           </Link>{" "}
           (each row links to its official source), and read who runs ParkMath and why on our{" "}
-          <Link href="/about" className="font-semibold text-brand-accent hover:underline">
+          <Link href="/about" className="font-semibold text-accent-strong hover:underline">
             about page
           </Link>
           .

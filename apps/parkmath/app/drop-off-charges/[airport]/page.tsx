@@ -91,9 +91,9 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
       {/* Visible breadcrumb nav — BreadcrumbList JSON-LD already in head */}
       <nav aria-label="Breadcrumb" className="text-sm text-ink-muted">
         <ol className="flex flex-wrap items-center gap-1">
-          <li><a href="/" className="hover:text-brand-accent transition-colors">ParkMath</a></li>
+          <li><a href="/" className="hover:text-accent-strong transition-colors">ParkMath</a></li>
           <li aria-hidden="true" className="text-ink-muted/50">/</li>
-          <li><a href="/drop-off-charges" className="hover:text-brand-accent transition-colors">Drop-off charges</a></li>
+          <li><a href="/drop-off-charges" className="hover:text-accent-strong transition-colors">Drop-off charges</a></li>
           <li aria-hidden="true" className="text-ink-muted/50">/</li>
           <li aria-current="page" className="text-ink font-medium">{sn}</li>
         </ol>
@@ -172,7 +172,7 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
           <div className="flex items-center gap-2 rounded-lg border border-ink/10 bg-surface-muted px-3 py-2 text-sm">
             <span className="font-bold text-ink">{formatPence(record.bands[0]?.totalPence ?? 0)}</span>
             {record.bands[0] ? <span className="text-ink-muted">· {record.bands[0].upToMinutes} min</span> : null}
-            <span className="text-xs text-ink-muted/70 ml-1">charge</span>
+            <span className="text-xs text-ink-muted ml-1">charge</span>
           </div>
           <div className="flex items-center gap-2 rounded-lg border border-warning/30 bg-warning/8 px-3 py-2 text-sm">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-warning)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="shrink-0">
@@ -180,8 +180,8 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
               <line x1="12" y1="9" x2="12" y2="13"/>
               <line x1="12" y1="17" x2="12.01" y2="17"/>
             </svg>
-            <span className="font-bold text-warning">{formatPence(record.penaltyPence)}</span>
-            <span className="text-xs text-ink-muted/80">penalty if unpaid</span>
+            <span className="font-bold text-warning-strong">{formatPence(record.penaltyPence)}</span>
+            <span className="text-xs text-ink-muted">penalty if unpaid</span>
           </div>
         </div>
       ) : null}
@@ -286,33 +286,33 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
           <h2 className="text-lg font-semibold text-ink">More at this airport</h2>
           <ul className="space-y-1 text-sm">
             <li>
-              <Link href={`/airport-parking-options/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
+              <Link href={`/airport-parking-options/${airport.slug}`} className="text-accent-strong underline underline-offset-4">
                 Cheapest way to park or drop off at {airport.name}: all options compared →
               </Link>
             </li>
             {hasCompare ? (
               <li>
-                <Link href={`/parking-vs-drop-off/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
+                <Link href={`/parking-vs-drop-off/${airport.slug}`} className="text-accent-strong underline underline-offset-4">
                   Is it cheaper to park or get dropped off at {airport.name}? →
                 </Link>
               </li>
             ) : null}
             {hasParking ? (
               <li>
-                <Link href={`/airport-parking/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
+                <Link href={`/airport-parking/${airport.slug}`} className="text-accent-strong underline underline-offset-4">
                   Parking at {airport.name} compared →
                 </Link>
               </li>
             ) : null}
             {hasLounge ? (
               <li>
-                <Link href={`/airport-lounges/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
+                <Link href={`/airport-lounges/${airport.slug}`} className="text-accent-strong underline underline-offset-4">
                   Lounges at {airport.name} — prices &amp; Priority Pass →
                 </Link>
               </li>
             ) : null}
             <li>
-              <Link href={`/blue-badge/${airport.slug}`} className="text-brand-accent underline underline-offset-4">
+              <Link href={`/blue-badge/${airport.slug}`} className="text-accent-strong underline underline-offset-4">
                 Blue Badge drop-off at {airport.name}: is it free? →
               </Link>
             </li>
@@ -327,23 +327,23 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
 
       {!record.isFree && record.freeAlternative ? (
         <p>
-          <Link href={`/avoid-drop-off-charge/${airport.slug}`} className="text-sm font-medium text-brand-accent underline underline-offset-4">
+          <Link href={`/avoid-drop-off-charge/${airport.slug}`} className="text-sm font-medium text-accent-strong underline underline-offset-4">
             How to avoid the {airport.name} drop-off charge →
           </Link>
         </p>
       ) : null}
       <p>
-        <a href="/drop-off-charges" className="text-sm font-medium text-brand-accent underline underline-offset-4">
+        <a href="/drop-off-charges" className="text-sm font-medium text-accent-strong underline underline-offset-4">
           Compare drop-off charges at all UK airports →
         </a>
       </p>
       <p>
-        <Link href="/drop-off-charges/price-index" className="text-sm font-medium text-brand-accent underline underline-offset-4">
+        <Link href="/drop-off-charges/price-index" className="text-sm font-medium text-accent-strong underline underline-offset-4">
           See where {sn} ranks in the UK Airport Drop-Off Price Index →
         </Link>
       </p>
       <p>
-        <Link href={`/abroad/${airport.slug}`} className="text-sm font-medium text-brand-accent underline underline-offset-4">
+        <Link href={`/abroad/${airport.slug}`} className="text-sm font-medium text-accent-strong underline underline-offset-4">
           Going abroad from {airport.name}? See the full travel cost →
         </Link>
       </p>

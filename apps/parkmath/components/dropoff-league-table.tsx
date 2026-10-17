@@ -14,7 +14,7 @@ export function DropOffLeagueTable({ league }: { league: LeagueEntry[] }) {
     <a
       key="name"
       href={`/drop-off-charges/${e.airportSlug}`}
-      className="font-medium text-brand-accent underline-offset-4 hover:underline"
+      className="font-medium text-accent-strong underline-offset-4 hover:underline"
     >
       {e.name}
     </a>,

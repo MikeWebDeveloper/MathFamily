@@ -121,8 +121,8 @@ function ExtraCardEl({
           className={[
             "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl",
             card.hero
-              ? "bg-brand-accent/15 text-brand-accent ring-1 ring-brand-accent/20"
-              : "bg-brand-accent/10 text-brand-accent",
+              ? "bg-brand-accent/15 text-accent-strong ring-1 ring-brand-accent/20"
+              : "bg-brand-accent/10 text-accent-strong",
           ].join(" ")}
         >
           {card.icon}
@@ -130,7 +130,7 @@ function ExtraCardEl({
 
         {/* Text */}
         <span className="space-y-1">
-          <span className="block text-sm font-semibold text-ink transition-colors group-hover:text-brand-accent">
+          <span className="block text-sm font-semibold text-ink transition-colors group-hover:text-accent-strong">
             {card.title}
           </span>
           <span className="block text-[13px] text-ink-muted leading-snug">
@@ -139,7 +139,7 @@ function ExtraCardEl({
         </span>
 
         {/* CTA row */}
-        <span className="mt-auto inline-flex items-center gap-1 pt-1 text-[13px] font-semibold text-brand-accent">
+        <span className="mt-auto inline-flex items-center gap-1 pt-1 text-[13px] font-semibold text-accent-strong">
           {card.cta}
           <span aria-hidden className="transition-transform group-hover:translate-x-0.5">
             {external ? "↗" : "→"}
@@ -166,7 +166,7 @@ export function AffiliateExtras() {
           <span className="mf-underline-grow">Travel extras</span>
         </h2>
         <p
-          className="mf-reveal shrink-0 text-xs text-ink-muted/60 italic"
+          className="mf-reveal shrink-0 text-xs text-ink-muted italic"
           style={{ "--mf-delay": "40ms" } as CSSProperties}
         >
           via Holiday Extras
@@ -182,7 +182,7 @@ export function AffiliateExtras() {
 
       {/* Section-level disclosure — shown once for all affiliate cards */}
       {showDisclosure ? (
-        <p className="text-xs text-ink-muted/70 leading-relaxed">
+        <p className="text-xs text-ink-muted leading-relaxed">
           * We may earn commission (Holiday Extras) if you book through these links — at no extra cost to you. It never affects which option we show as cheapest.
         </p>
       ) : null}

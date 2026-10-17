@@ -19,7 +19,7 @@ export function DropOffCalculatorBridge({ slug }: { slug: string }) {
       <a
         href={bridge.ctaHref}
         rel="sponsored nofollow"
-        className="shrink-0 font-semibold text-brand-accent underline underline-offset-4 hover:opacity-80"
+        className="shrink-0 font-semibold text-accent-strong underline underline-offset-4 hover:opacity-80"
       >
         Compare →
       </a>

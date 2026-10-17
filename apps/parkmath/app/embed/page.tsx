@@ -65,11 +65,11 @@ export default function EmbedPage() {
           </li>
           <li>
             <strong className="text-ink">Prefer the raw data?</strong> Download the{" "}
-            <Link href="/data/drop-off-charges.csv" className="font-semibold text-brand-accent hover:underline">
+            <Link href="/data/drop-off-charges.csv" className="font-semibold text-accent-strong hover:underline">
               open CSV
             </Link>{" "}
             or read{" "}
-            <Link href="/methodology" className="font-semibold text-brand-accent hover:underline">
+            <Link href="/methodology" className="font-semibold text-accent-strong hover:underline">
               how we verify every price
             </Link>
             .
@@ -78,7 +78,7 @@ export default function EmbedPage() {
       </section>
 
       <p className="text-sm">
-        <Link href="/drop-off-charges" className="font-semibold text-brand-accent underline underline-offset-4">
+        <Link href="/drop-off-charges" className="font-semibold text-accent-strong underline underline-offset-4">
           ← Back to the full drop-off charges comparison
         </Link>
       </p>

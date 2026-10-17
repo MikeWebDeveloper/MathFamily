@@ -76,7 +76,7 @@ export default function AirportParkingOptionsIndex() {
               <li key={f.slug}>
                 <Link
                   href={`/airport-parking-options/${f.slug}`}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-brand-accent/30 bg-brand-accent/[0.04] px-3 py-1.5 font-medium text-brand-accent hover:bg-brand-accent/10"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-brand-accent/30 bg-brand-accent/[0.04] px-3 py-1.5 font-medium text-accent-strong hover:bg-brand-accent/10"
                 >
                   {f.name} parking options
                   <span className="text-xs font-normal text-ink-muted">{f.fee}</span>
@@ -105,7 +105,7 @@ export default function AirportParkingOptionsIndex() {
                       {r.isFree ? "Free drop-off" : r.feeSummary.split(",")[0]} · all options compared
                     </span>
                   </span>
-                  <span aria-hidden className="text-brand-accent">→</span>
+                  <span aria-hidden className="text-accent-strong">→</span>
                 </Link>
               </li>
             );
@@ -114,7 +114,7 @@ export default function AirportParkingOptionsIndex() {
       </section>
 
       <p>
-        <Link href="/drop-off-charges" className="text-sm font-medium text-brand-accent underline underline-offset-4">
+        <Link href="/drop-off-charges" className="text-sm font-medium text-accent-strong underline underline-offset-4">
           Compare drop-off charges at all UK airports →
         </Link>
       </p>

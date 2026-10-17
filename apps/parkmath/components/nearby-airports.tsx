@@ -41,7 +41,7 @@ export function NearbyAirports({ airports, feeBySlug }: { airports: Airport[]; f
       <button
         type="button"
         onClick={locate}
-        className="mf-press inline-flex min-h-11 items-center gap-2 rounded-card border border-ink/15 bg-card px-4 text-sm font-medium text-ink-muted outline-none transition hover:border-brand-accent/40 hover:text-brand-accent focus-visible:ring-2 focus-visible:ring-brand-accent/40"
+        className="mf-press inline-flex min-h-11 items-center gap-2 rounded-card border border-ink/15 bg-card px-4 text-sm font-medium text-ink-muted outline-none transition hover:border-brand-accent/40 hover:text-accent-strong focus-visible:ring-2 focus-visible:ring-brand-accent/40"
       >
         <svg aria-hidden width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
           <path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z" />
@@ -49,7 +49,7 @@ export function NearbyAirports({ airports, feeBySlug }: { airports: Airport[]; f
         </svg>
         {status === "locating" ? "Finding your location…" : "Find airports near me"}
       </button>
-      <p className="mt-1.5 text-xs text-ink-muted/80">Your location stays in your browser — we don&apos;t send or store it.</p>
+      <p className="mt-1.5 text-xs text-ink-muted">Your location stays in your browser — we don&apos;t send or store it.</p>
 
       {status === "error" ? (
         <p className="mt-2 text-xs text-warning">Couldn&apos;t get your location — search above instead.</p>
@@ -70,7 +70,7 @@ export function NearbyAirports({ airports, feeBySlug }: { airports: Airport[]; f
                     {r.miles} mi{feeBySlug?.[r.slug] ? ` · ${feeBySlug[r.slug]}` : ""}
                   </span>
                 </span>
-                <span aria-hidden className="text-brand-accent">→</span>
+                <span aria-hidden className="text-accent-strong">→</span>
               </a>
             </li>
           ))}
