@@ -491,3 +491,13 @@ Triggered by the 2026-10-17 full site check: the Glasgow pre-book "from £49.99"
   - Same dates, other products: Mid Stay £68.99, Valet £76.00, Terminal Multi-Storey £102.00, Priority Parking £121.00.
 - **Dataset change:** the prebook product is renamed from "published 'from' price" to "official online quote", price 4999 → **5599**, snapshotDate 2026-06-10 → **2026-10-17**. Record verifiedAt → 2026-10-17; dataset version 1.3.1 → 1.3.2.
 - **Effect on the site:** the 7-day saving vs the £140 gate price goes from £90.01 to **£84.01**. This is a dated sample; re-quote on each sweep, as for Stansted's date-dependent "from" point.
+
+## 2026-10-18 — daily ParkMath data check (lounges v1.1.2)
+
+Scope: ParkMath only. News watchdog (`watchdog:news`) reported no changed pages, so no news PR and no news-driven refs. Stale (>46 days, cutoff 2026-09-02) ParkMath records: only `lounges:heathrow` (verifiedAt 2026-08-13). Standing targets also re-checked.
+
+- **Heathrow — Club Aspire T5** (no1lounges.com via r.jina.ai): "Prices from: £40". Unchanged.
+- **Heathrow — Plaza Premium T5**: the official London listing and property page (`plazapremiumlounge.com/en-uk/find/europe/united-kingdom/london/london-heathrow-airport/international-departures-terminal-five`, read via r.jina.ai `X-Engine: browser`; plain jina hits a Cloudflare "Just a moment" page) show **"from GBP 49.00"**. The stored £47.50 was described as an "on-the-day 2-hour walk-in rate", but the operator no longer publishes a walk-in figure, so that value can't be checked. Changed `walkInPence` 4750 → 4900 and **re-based the notes to the official from-price**, which is the dataset-wide convention (see Escape/Aspire records). Note: the listing link carries `date=2026-10-18&time=0900`, so the online from-price may move with the date. Record verifiedAt → 2026-10-18.
+- **London City drop-off** (r.jina.ai `X-Engine: browser`): "0 - 5 minutes £8.00", "£1 per minute thereafter", "Maximum stay 10 minutes". Unchanged; record left at its 2026-10-07 verifiedAt.
+- **Newcastle parking** (`/car-parking/car-parking-options/`, jina browser rung): Long Stay up to 24h £50, 2 days £80, 3 days £120, 4 days £160, then £40/day. Unchanged.
+- **Cardiff drop-off** (in-app browser; the site is a single-page app): up to 10 min £4.50, 10–20 £6, up to 1h £9, up to 2h £20; Car Park 2 first 20 min free. Unchanged. Removed the orphaned `hashes.json` entry for the dead `/parking-cwl/…` URL. The record moved to `/car-parking-options/…` on 2026-08-06 and that URL is already tracked, so the old entry's `pendingSince` was a stale flag.
