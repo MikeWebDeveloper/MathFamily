@@ -491,3 +491,8 @@ Triggered by the 2026-10-17 full site check: the Glasgow pre-book "from £49.99"
   - Same dates, other products: Mid Stay £68.99, Valet £76.00, Terminal Multi-Storey £102.00, Priority Parking £121.00.
 - **Dataset change:** the prebook product is renamed from "published 'from' price" to "official online quote", price 4999 → **5599**, snapshotDate 2026-06-10 → **2026-10-17**. Record verifiedAt → 2026-10-17; dataset version 1.3.1 → 1.3.2.
 - **Effect on the site:** the 7-day saving vs the £140 gate price goes from £90.01 to **£84.01**. This is a dated sample; re-quote on each sweep, as for Stansted's date-dependent "from" point.
+
+## 2026-10-18 freshness sweep
+
+- **newcastle** (standing target) — `newcastleairport.com/car-parking/car-parking-options/` via jina `X-Engine: browser`: Long Stay turn-up table up to 24h £50, 2 days £80, 3 days £120, 4 days £160, then £40/day — unchanged; verifiedAt -> 2026-10-18.
+- **lounges:heathrow** (verifiedAt 2026-08-13, stale) — Club Aspire T5 "Prices from £40" confirmed on no1lounges.com. Plaza Premium T5 £47.50 could NOT be re-read: the plazapremiumlounge.com Heathrow T5 URL returns 404 via jina and the site 403s direct curl. Record left unchanged (not every value confirmed); flagged.
