@@ -363,3 +363,88 @@ montenegro|holafly|Montenegro Unlimited / 30 days (converted)|7836|8056czechia|h
 **Roaming (roaming.json 1.0.0 -> 1.0.1).** Sources read 2026-10-11: Vodafone price guide PDF (Zone B £2.75, Zone C/D £8 from 14 Apr 2026 - unchanged), Three Go Roam page (£2.75 / £8 from 1 Apr 2026 - unchanged), O2 Travel Bolt On £7/day (unchanged), EE Daily EU Charge £2.72 (unchanged). EE source switched to the 31 Mar 2026 price guide, where ROW passes rose: Zone 1 £5 -> £5.50/day (7-day £25 -> £26.50), Zone 2 £7.50 -> £8/day (7-day £37.50 -> £39.50), Zone 3 £7.50 -> £8/day. dailyPassPence 500->550 (12 records), 750->800 (5). Destination->zone membership was NOT re-checked.
 
 **Baggage (baggage.json untouched).** Official pages are JS-rendered/dynamic; only TUI's figures (hold bag £60/£80, extra kg £15/£20) were confirmed in static HTML. No record's verifiedAt bumped (not every fee confirmed). Others unverified.
+
+## 2026-10-18 freshness sweep (RoamMath)
+
+**eSIM (esim.json 1.0.2 -> 1.0.3).** All 40 countries re-quoted; snapshotDate/verifiedAt set to 2026-10-18 for every bundle.
+- Airalo: direct UK-egress `curl`, parsed from `__NUXT_DATA__` (GBP `selected:true` confirmed on 40/40). 39/40 unchanged. **Canada Unlimited / 5 days £21.50 -> £18.50** (single operator "Canada Mobile", slug `canada-mobile-5days-unlimited`, `minor_amount` 1850 GBP).
+- Holafly: server-rendered USD table (`esim.holafly.com/esim-<country>/`; czechia = `esim-czech-republic`, uae = `esim-dubai`). All 40 USD list prices **unchanged** vs 2026-10-11.
+- Saily: plain `r.jina.ai` (UAE needed `X-Engine: browser`; direct 403s). All 15 5 GB / 30 day USD prices **unchanged**.
+- FX: re-converted at **1 USD = £0.74989** (Frankfurter/ECB reference rate, 2026-10-16; was 0.75641 on 2026-10-09), rounded half-up to pence. So every Holafly/Saily delta below is the FX move only.
+- Changes (country|provider|bundle|old pence|new pence):
+```
+spain|holafly|Spain Unlimited / 30 days (converted)|5030|4987
+spain|saily|Spain 5GB / 30 days (converted)|756|749
+france|holafly|France Unlimited / 30 days (converted)|5590|5542
+france|saily|France 5GB / 30 days (converted)|831|824
+italy|holafly|Italy Unlimited / 30 days (converted)|4879|4837
+portugal|holafly|Portugal Unlimited / 30 days (converted)|5590|5542
+portugal|saily|Portugal 5GB / 30 days (converted)|756|749
+greece|holafly|Greece Unlimited / 30 days (converted)|5787|5737
+greece|saily|Greece 5GB / 30 days (converted)|1058|1049
+germany|holafly|Germany Unlimited / 30 days (converted)|5787|5737
+germany|saily|Germany 5GB / 30 days (converted)|831|824
+ireland|holafly|Ireland Unlimited / 30 days (converted)|5590|5542
+netherlands|holafly|Netherlands Unlimited / 30 days (converted)|5590|5542
+netherlands|saily|Netherlands 5GB / 30 days (converted)|756|749
+belgium|holafly|Belgium Unlimited / 30 days (converted)|5590|5542
+austria|holafly|Austria Unlimited / 30 days (converted)|5787|5737
+switzerland|holafly|Switzerland Unlimited / 30 days (converted)|5787|5737
+poland|holafly|Poland Unlimited / 30 days (converted)|5590|5542
+croatia|holafly|Croatia Unlimited / 30 days (converted)|5787|5737
+cyprus|holafly|Cyprus Unlimited / 30 days (converted)|5590|5542
+malta|holafly|Malta Unlimited / 30 days (converted)|5787|5737
+turkey|holafly|Turkey Unlimited / 30 days (converted)|5590|5542
+usa|holafly|United States Unlimited / 30 days (converted)|5590|5542
+canada|airalo|Canada Unlimited / 5 days|2150|1850
+canada|holafly|Canada Unlimited / 30 days (converted)|7254|7191
+mexico|holafly|Mexico Unlimited / 30 days (converted)|5030|4987
+australia|holafly|Australia Unlimited / 30 days (converted)|5787|5737
+new-zealand|holafly|New Zealand Unlimited / 30 days (converted)|5787|5737
+new-zealand|saily|New Zealand 5GB / 30 days (converted)|1058|1049
+uae|holafly|United Arab Emirates Unlimited / 15 days (converted)|3820|3787
+uae|saily|United Arab Emirates 5GB / 30 days (converted)|907|899
+thailand|holafly|Thailand Unlimited / 30 days (converted)|5590|5542
+japan|holafly|Japan Unlimited / 30 days (converted)|5590|5542
+japan|saily|Japan 5GB / 30 days (converted)|831|824
+china|holafly|China Unlimited / 30 days (converted)|5787|5737
+china|saily|China 5GB / 30 days (converted)|1209|1199
+india|holafly|India Unlimited / 30 days (converted)|8464|8391
+india|saily|India 5GB / 30 days (converted)|1058|1049
+south-africa|holafly|South Africa Unlimited / 30 days (converted)|8464|8391
+south-africa|saily|South Africa 5GB / 30 days (converted)|983|974
+egypt|holafly|Egypt Unlimited / 30 days (converted)|7254|7191
+morocco|holafly|Morocco Unlimited / 30 days (converted)|6573|6517
+morocco|saily|Morocco 5GB / 30 days (converted)|1663|1649
+tunisia|holafly|Tunisia Unlimited / 30 days (converted)|8616|8541
+tunisia|saily|Tunisia 5GB / 30 days (converted)|907|899
+norway|holafly|Norway Unlimited / 30 days (converted)|5590|5542
+iceland|holafly|Iceland Unlimited / 30 days (converted)|5787|5737
+iceland|saily|Iceland 5GB / 30 days (converted)|907|899
+sweden|holafly|Sweden Unlimited / 30 days (converted)|5590|5542
+denmark|holafly|Denmark Unlimited / 30 days (converted)|5590|5542
+czechia|holafly|Czech Republic Unlimited / 30 days (converted)|5787|5737
+hungary|holafly|Hungary Unlimited / 30 days (converted)|5787|5737
+romania|holafly|Romania Unlimited / 30 days (converted)|5787|5737
+bulgaria|holafly|Bulgaria Unlimited / 30 days (converted)|5787|5737
+albania|holafly|Albania Unlimited / 30 days (converted)|9523|9441
+montenegro|holafly|Montenegro Unlimited / 30 days (converted)|8056|7986
+```
+
+**Baggage (baggage.json 1.0.0 -> 1.0.1).** All 12 records were stale (verifiedAt 2026-06-10). Each official page fetched via `r.jina.ai` with `X-Engine: browser`; Ryanair's column headers read in the in-app browser pane. FX for EUR figures: **1 EUR = £0.84385** (Frankfurter/ECB, 2026-10-16).
+- **ryanair — re-verified, values changed.** Table has two columns, "At the Time of Booking" and "Post Booking/Airport". Recorded the booking-time column consistently (the June record had mixed columns): Priority & 2 Cabin Bags £12.49-£36 (was £12-£60); 10kg £10.49-£44.99 (was £9.49-£44.99); 20kg £21.49-£59.99 (was £18.99-£59.99); 23kg £28.99-£80.99 (was £29.99-£97). Post-booking ranges and £35.99 / £59.99 bag-drop prices in notes. £13/kg excess unchanged. (Page shows "€/£" parity; GBP figures used directly.)
+- **easyjet — re-verified, restructured.** Page no longer publishes the "from £5.99 / £6.99" online floors ("Fees vary with demand… You'll see exact price at time of purchase"). Split into online (null, not published) and fixed airport rows: large cabin bag at gate £60; hold bag at bag drop (≤23kg) £60; excess £12/kg; small cabin bag free (45x36x20, 15kg).
+- **tui — re-verified, unchanged** (plain jina rung; direct + browser rung 403): hand luggage 10kg 55x40x20 + personal item free; flight-only hold £60 (short-haul) / £80 (long-haul, Cape Verde, Egypt, Gambia, Senegal) per 15kg; extra kg £15 / £20.
+- **vueling — re-verified, values changed.** Overhead cabin bag (10kg, 55x40x20) EUR 10-59 online (EUR 45-75 at desk); checked bag 15-30kg now EUR 10-120 (was EUR 10-95; 30kg tier EUR 25-120); excess EUR 12/kg at desk. Old "oversized cabin bag EUR 60-140" row replaced by the overhead-cabin-bag row (the page no longer has a matching row). All converted at 0.84385.
+- **norwegian — re-verified, values changed (source contradicted old record).** Page now publishes EUR: overhead cabin bag EUR 13.90 domestic / 15.90-29.90 international (was "£5-£9"); first checked bag pre-booked EUR 19-45 international (EUR 20 domestic; EUR 45 at/after check-in); excess EUR 15/kg over 23kg (was USD 15/kg). Converted at 0.84385. Under-seat bag dimensions not restated on the page, so dropped from the item name.
+- **NOT re-verified (verifiedAt left at 2026-06-10, flagged in PR):**
+  - jet2 — hand luggage 10kg 56x45x25 + under-seat 40x30x20 confirmed, 22kg hold still unpublished, but the £12/kg excess is on neither the baggage page nor the baggage FAQ.
+  - british-airways — allowances confirmed (cabin 56x45x25, handbag 40x30x15, 23kg checked) but the £65 overweight fee is calculator-only; no £ on the page.
+  - wizz-air — EUR 13/kg airport surcharge confirmed; carry-on terms are on a different page not fetched.
+  - virgin-atlantic — the sourceUrl now just links to `help.virginatlantic.com/global/en/baggage/additional-baggage.html`, which renders an empty shell on every rung (browser rung times out). sourceUrl likely needs repointing.
+  - aer-lingus — "all fares except Saver include a 20kg checked bag", Smart/Flex 23kg transatlantic, and a new **EUR 10/kg excess** seen; the £68 / EUR 75 overweight figure not found.
+  - emirates — page now shows Economy weight concept Special 20kg / Saver 25kg / Flex 30kg / Flex Plus 35kg (so Special fares also include a bag); 7kg cabin allowance not on this page.
+  - lufthansa — `/gb/en/baggage` is a hub page with no figures.
+- The in-app browser pane refused navigation to new sites in this unattended run (only Ryanair loaded), so rung 0 was unavailable for the rest.
+
+**Roaming.** Three Go Roam page re-read: £2.75 (EU) / £8 (ROW) for joins on/after 18 Dec 2025 from 1 Apr 2026 — unchanged; its pending hash cleared. Record verifiedAt not bumped (destination->zone membership not re-checked). O2 Travel Inclusive Zone Ultimate page left pending (zone list not re-checked).

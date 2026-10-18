@@ -1,6 +1,6 @@
 {
-  "version": "1.4.3",
-  "lastUpdated": "2026-10-07",
+  "version": "1.4.4",
+  "lastUpdated": "2026-10-18",
   "records": [
     {
       "airportSlug": "heathrow",
@@ -423,7 +423,7 @@
       },
       "priorYearFeePence": 0,
       "sourceUrl": "https://www.londoncityairport.com/parking/drop-off",
-      "verifiedAt": "2026-10-07"
+      "verifiedAt": "2026-10-18"
     },
     {
       "airportSlug": "leeds-bradford",

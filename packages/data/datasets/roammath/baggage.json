@@ -1,34 +1,36 @@
 {
-  "version": "1.0.0",
-  "lastUpdated": "2026-06-10",
+  "version": "1.0.1",
+  "lastUpdated": "2026-10-18",
   "records": [
     {
       "airlineSlug": "ryanair",
       "airlineName": "Ryanair",
       "fees": [
         { "item": "Small personal bag (40x30x20cm, under seat)", "minPence": 0, "maxPence": 0, "note": "Included with every fare" },
-        { "item": "Priority & 2 Cabin Bags (10kg cabin bag)", "minPence": 1200, "maxPence": 6000, "note": "Online price; varies by route and date" },
-        { "item": "10kg Check-in Bag", "minPence": 949, "maxPence": 4499, "note": "Online price; airport bag drop £35.99-£40" },
-        { "item": "20kg Check-in Bag", "minPence": 1899, "maxPence": 5999, "note": "Online price; airport bag drop £59.99" },
-        { "item": "23kg Check-in Bag", "minPence": 2999, "maxPence": 9700, "note": "Online price; varies by route and date" },
-        { "item": "Excess baggage per kg", "minPence": 1300, "maxPence": 1300, "note": "£13 per kilo, fixed" }
+        { "item": "Priority & 2 Cabin Bags (10kg cabin bag)", "minPence": 1249, "maxPence": 3600, "note": "At time of booking; £19.99-£45.50 if added after booking; varies by route and date" },
+        { "item": "10kg Check-in Bag", "minPence": 1049, "maxPence": 4499, "note": "At time of booking (£24-£75 if added after booking); airport bag drop £35.99" },
+        { "item": "20kg Check-in Bag", "minPence": 2149, "maxPence": 5999, "note": "At time of booking (£39.99-£75 if added after booking); airport bag drop £59.99" },
+        { "item": "23kg Check-in Bag", "minPence": 2899, "maxPence": 8099, "note": "At time of booking (£54-£97 if added after booking); varies by route and date" },
+        { "item": "Excess baggage per kg", "minPence": 1300, "maxPence": 1300, "note": "£13 per kilo, fixed (airport/call centre/kiosk)" }
       ],
-      "dynamicPricingNote": "Ryanair prices bags dynamically; ranges reflect the official published online min-max charges per item",
+      "dynamicPricingNote": "Ryanair prices bags dynamically; ranges are the official published min-max charges at the time of booking (post-booking/airport ranges in notes)",
       "sourceUrl": "https://www.ryanair.com/gb/en/useful-info/help-centre/fees",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-10-18"
     },
     {
       "airlineSlug": "easyjet",
       "airlineName": "easyJet",
       "fees": [
         { "item": "Small cabin bag (45x36x20cm, up to 15kg)", "minPence": 0, "maxPence": 0, "note": "Free with every fare" },
-        { "item": "Large cabin bag (56x45x25cm)", "minPence": 599, "maxPence": 6000, "note": "From £5.99 online; £60 at the boarding gate" },
-        { "item": "Hold bag (up to 23kg)", "minPence": 699, "maxPence": 6000, "note": "From £6.99 online; £60 at airport bag drop" },
+        { "item": "Large cabin bag (56x45x25cm), bought online", "minPence": null, "maxPence": null, "note": "Price varies with demand, route, flight date and time of booking; shown at purchase" },
+        { "item": "Large cabin bag at the boarding gate", "minPence": 6000, "maxPence": 6000, "note": "£60 if not pre-booked" },
+        { "item": "Hold bag (15-32kg), bought online", "minPence": null, "maxPence": null, "note": "Price varies with demand, route, flight date and time of booking; shown at purchase" },
+        { "item": "Hold bag at airport bag drop (up to 23kg)", "minPence": 6000, "maxPence": 6000, "note": "£60 per bag not purchased in advance" },
         { "item": "Excess weight per kg", "minPence": 1200, "maxPence": 1200, "note": "£12 per kilo, fixed" }
       ],
-      "dynamicPricingNote": "easyJet prices cabin and hold bags dynamically by demand, route, date and time of booking; online floor prices and airport caps shown",
+      "dynamicPricingNote": "easyJet prices cabin and hold bags dynamically by demand, route, date and time of booking and does not publish an online price range; only the airport/gate charges are fixed",
       "sourceUrl": "https://www.easyjet.com/en/help-centre/policy-terms-and-conditions/fees-charges",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-10-18"
     },
     {
       "airlineSlug": "jet2",
@@ -79,7 +81,7 @@
       ],
       "dynamicPricingNote": "TUI publishes fixed flight-only hold-bag and excess rates (package bookings include 20kg+); short-haul vs long-haul rates differ",
       "sourceUrl": "https://www.tui.co.uk/destinations/info/luggage-allowance",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-10-18"
     },
     {
       "airlineSlug": "virgin-atlantic",
@@ -112,26 +114,26 @@
       "airlineName": "Vueling",
       "fees": [
         { "item": "Under-seat cabin bag (40x30x20cm)", "minPence": 0, "maxPence": 0, "note": "Free with every fare" },
-        { "item": "Checked bag (15/20/25/30kg, converted)", "minPence": 864, "maxPence": 8208, "note": "Published as EUR 10-95; converted at 1 EUR = 0.864 GBP (08 Jun 2026)" },
-        { "item": "Oversized cabin bag (over 40x30x20cm, converted)", "minPence": 5184, "maxPence": 12096, "note": "Published as EUR 60-140; converted at 1 EUR = 0.864 GBP (08 Jun 2026)" },
-        { "item": "Excess baggage per kg over 25kg (converted)", "minPence": 1037, "maxPence": 1037, "note": "Published as EUR 12/kg; converted at 1 EUR = 0.864 GBP (08 Jun 2026)" }
+        { "item": "Overhead cabin bag (55x40x20cm, up to 10kg, converted)", "minPence": 844, "maxPence": 4979, "note": "Published as EUR 10-59 online; EUR 45-75 at check-in desk; converted at 1 EUR = 0.84385 GBP (ECB, 16 Oct 2026)" },
+        { "item": "Checked bag (15/20/25/30kg, converted)", "minPence": 844, "maxPence": 10126, "note": "Published as EUR 10-120 online (15kg EUR 10-95, 30kg EUR 25-120); converted at 1 EUR = 0.84385 GBP (ECB, 16 Oct 2026)" },
+        { "item": "Excess baggage per kg (converted)", "minPence": 1013, "maxPence": 1013, "note": "Published as EUR 12/kg at check-in desk; converted at 1 EUR = 0.84385 GBP (ECB, 16 Oct 2026)" }
       ],
-      "dynamicPricingNote": "Vueling publishes EUR price ranges for checked and oversized bags; all figures recorded converted to GBP at 1 EUR = 0.864 GBP",
+      "dynamicPricingNote": "Vueling publishes EUR price ranges for cabin and checked bags; all figures recorded converted to GBP at 1 EUR = 0.84385 GBP",
       "sourceUrl": "https://www.vueling.com/en/vueling-services/supplementary-service-rates",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-10-18"
     },
     {
       "airlineSlug": "norwegian",
       "airlineName": "Norwegian",
       "fees": [
-        { "item": "Small under-seat cabin bag (30x40x20cm)", "minPence": 0, "maxPence": 0, "note": "Free with LowFare" },
-        { "item": "Overhead cabin bag (55x40x23cm)", "minPence": 500, "maxPence": 900, "note": "From £5-£9; varies by route and date" },
-        { "item": "Checked bag (up to 23kg)", "minPence": null, "maxPence": null, "note": "Priced dynamically by route; no fixed published GBP figure" },
-        { "item": "Excess baggage per kg over 23kg (converted)", "minPence": 1110, "maxPence": 1110, "note": "Published as USD 15/kg; converted at 1 USD = 0.74 GBP (Jun 2026)" }
+        { "item": "Small under-seat bag", "minPence": 0, "maxPence": 0, "note": "Included with LowFare" },
+        { "item": "Overhead cabin bag (55x40x23cm, LowFare, converted)", "minPence": 1173, "maxPence": 2523, "note": "Published as EUR 13.90 (domestic) to EUR 15.90-29.90 (international) per leg, incl. priority boarding; converted at 1 EUR = 0.84385 GBP (ECB, 16 Oct 2026)" },
+        { "item": "First checked bag (23kg, pre-booked, converted)", "minPence": 1603, "maxPence": 3797, "note": "Published as EUR 19-45 international (EUR 20 domestic) before check-in; EUR 45 at/after check-in on direct flights; included on LowFare+ and Flex; converted at 1 EUR = 0.84385 GBP" },
+        { "item": "Excess baggage per kg over 23kg (converted)", "minPence": 1266, "maxPence": 1266, "note": "Published as EUR 15/kg per leg; converted at 1 EUR = 0.84385 GBP (ECB, 16 Oct 2026)" }
       ],
-      "dynamicPricingNote": "Norwegian prices the overhead cabin bag and checked bags dynamically; cabin bag floor is published in GBP, checked/excess rates in USD (excess recorded converted)",
+      "dynamicPricingNote": "Norwegian publishes EUR fee ranges for cabin and checked bags (exact fee shown in booking); figures recorded converted to GBP at 1 EUR = 0.84385 GBP",
       "sourceUrl": "https://www.norwegian.com/en/booking/booking-information/optional-charges/",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-10-18"
     },
     {
       "airlineSlug": "emirates",
