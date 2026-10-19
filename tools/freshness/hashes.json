@@ -276,7 +276,7 @@
   },
   "https://www.eastmidlandsairport.com/parking/pick-up-and-drop-off/": {
     "hash": "f5ab3b8ce5a5269f818306d19542947ab375b6f010de4f24afa718250b2ebfab",
-    "checkedAt": "2026-10-07"
+    "checkedAt": "2026-10-19"
   },
   "https://www.easyjet.com/en/help-centre/policy-terms-and-conditions/fees-charges": {
     "hash": "69eca09463a751c3ee7f6188f3583eb93a2ba4dcdfa2da29a68c53c6fb4bc954",
@@ -366,8 +366,8 @@
     "pendingSince": "2026-08-13"
   },
   "https://www.prioritypass.com/en-GB/join-prioritypass": {
-    "hash": "c2726ad06cc2086bd4ebc276fa17acbbf31d14c5ff03b61fe21021ba5439aaf0",
-    "checkedAt": "2026-08-13"
+    "hash": "bce033fde0dd448908e3625f2918ea96252f73c9fec887b20bbc00329db7d901",
+    "checkedAt": "2026-10-19"
   },
   "https://www.ryanair.com/gb/en/useful-info/help-centre/fees": {
     "hash": "6d80486cc33a915c7f4e37a813aaef90930f1ed89057b2716fd71cd80ee8c046",
@@ -423,5 +423,21 @@
   "https://www.liverpoolairport.com/parking/long-stay": {
     "hash": "fe7a015671242f8e389c71ba14791743a9de4d875f06454e33bdb1cf6c9fb9d8",
     "checkedAt": "2026-10-07"
+  },
+  "https://www.stanstedairport.com/getting-to-and-from/pick-up-and-drop-off/": {
+    "hash": "32463b0a3446b1fbb9be9b80fc89798a43aeb369e79e382ecabfca53abb4f0ba",
+    "checkedAt": "2026-10-19"
+  },
+  "https://www.leedsbradfordairport.co.uk/parking": {
+    "hash": "40b81577b5f0b865101fafd5d5d88300ad7279fefeac1faf924c866999db8d42",
+    "checkedAt": "2026-10-19"
+  },
+  "https://www.londoncityairport.com/parking/drop-off": {
+    "hash": "2259731f41975508ce493174489e5680788dc7fcf1294ae0965f8a83a5967237",
+    "checkedAt": "2026-10-19"
+  },
+  "https://www.newcastleairport.com/car-parking/car-parking-options/": {
+    "hash": "3efb29d9b1180fa2da2e8b903f5bee5fb4b643a33d2291c8f3e3867b73a4062f",
+    "checkedAt": "2026-10-19"
   }
 }
