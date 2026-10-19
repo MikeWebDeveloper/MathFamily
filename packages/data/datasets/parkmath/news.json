@@ -1,6 +1,6 @@
 {
-  "version": "1.1.1",
-  "lastUpdated": "2026-10-17",
+  "version": "1.1.2",
+  "lastUpdated": "2026-10-19",
   "items": [
     {
       "id": "east-midlands-barrierless-anpr-may-2025",
@@ -163,6 +163,24 @@
       "publishedAt": "2026-10-07",
       "verifiedAt": "2026-10-17",
       "supersedes": null
+    },
+    {
+      "id": "east-midlands-fee-change-sep-2026",
+      "airportSlug": "east-midlands",
+      "category": "fee-change",
+      "title": "East Midlands drop-off now £8 for 10 minutes",
+      "summary": "East Midlands Airport's official pick-up and drop-off page now lists the barrierless Rapid Drop-Off at £8 for up to 10 minutes, then £1 per minute, with a 30-minute maximum stay. The airport's site notice says the new charges apply from Tuesday 29 September 2026; the previous official tariff was £5 for up to 15 minutes. Short Stay 1 pick-up and drop-off also rose to £12 for up to 30 minutes and £14 for up to an hour. Blue Badge holders still get 30 minutes free at Short Stay 1, and Long Stay 2 remains free for up to 60 minutes for everyone.",
+      "body": null,
+      "change": {
+        "label": "Rapid Drop-Off",
+        "from": "£5 for up to 15 min",
+        "to": "£8 for up to 10 min"
+      },
+      "sourceUrl": "https://www.eastmidlandsairport.com/parking/pick-up-and-drop-off/",
+      "sourceLabel": "East Midlands Airport - Pick Up & Drop Off (official)",
+      "publishedAt": "2026-09-29",
+      "verifiedAt": "2026-10-19",
+      "supersedes": "east-midlands-barrierless-anpr-may-2025"
     }
   ]
 }
