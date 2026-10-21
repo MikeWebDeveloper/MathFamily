@@ -491,3 +491,25 @@ Triggered by the 2026-10-17 full site check: the Glasgow pre-book "from £49.99"
   - Same dates, other products: Mid Stay £68.99, Valet £76.00, Terminal Multi-Storey £102.00, Priority Parking £121.00.
 - **Dataset change:** the prebook product is renamed from "published 'from' price" to "official online quote", price 4999 → **5599**, snapshotDate 2026-06-10 → **2026-10-17**. Record verifiedAt → 2026-10-17; dataset version 1.3.1 → 1.3.2.
 - **Effect on the site:** the 7-day saving vs the £140 gate price goes from £90.01 to **£84.01**. This is a dated sample; re-quote on each sweep, as for Stansted's date-dependent "from" point.
+
+## 2026-10-21 — daily ParkMath sweep (parking v1.3.3, lounges v1.1.2, Priority Pass)
+
+### Newcastle parking (`parking:newcastle`) — standing target, verified, no change
+jina `X-Engine: browser` read `/car-parking/car-parking-options/` in full. Long Stay "Turn up &
+park price": up to 24 hours £50.00, 2 days £80.00, 3 days £120.00, 4 days £160.00, per day or part
+thereafter £40.00 — matches the stored 3/7/14-day totals (£120 / £280 / £560, arithmetic as
+noted in the record). `verifiedAt` 2026-10-07 → 2026-10-21; dataset 1.3.2 → 1.3.3.
+
+### Heathrow lounges (`lounges:heathrow`) — Club Aspire verified; Plaza Premium unreadable
+- Club Aspire T5 (no1lounges.com, plain jina): "Prices from: £40", Priority Pass / Lounge Key /
+  Dragon Pass "pre-bookings only" — unchanged. The operator page adds: "From 16 November 2026,
+  the lounge will temporarily close … When it reopens in early Spring 2027" — recorded in the
+  lounge's `notes`.
+- Plaza Premium T5: plazapremiumlounge.com returned 403 to browser-UA curl and a 585-byte shell
+  via jina browser rung; £47.50 carried over from 2026-08-13 and flagged in `notes`.
+Record `verifiedAt` → 2026-10-21 (Club Aspire basis); lounges 1.1.1 → 1.1.2.
+
+### Priority Pass (`priority-pass:tiers`) — verified, no change
+Direct curl from UK egress (ipinfo country GB; page contains "United Kingdom"): Standard £69,
+£24 member/guest visit fee; Standard Plus £229, "10 FREE visits, then £24"; Prestige £419, all
+member visits free, £24 guest fee. `verifiedAt` 2026-09-04 → 2026-10-21.
