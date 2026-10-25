@@ -1,6 +1,6 @@
 {
-  "version": "1.0.0",
-  "lastUpdated": "2026-06-10",
+  "version": "1.0.1",
+  "lastUpdated": "2026-10-25",
   "records": [
     {
       "airlineSlug": "ryanair",
@@ -61,11 +61,11 @@
         { "item": "Carry-on bag (40x30x20cm, up to 10kg)", "minPence": 0, "maxPence": 0, "note": "Free for all passengers" },
         { "item": "Trolley/large cabin bag (55x40x23cm, WIZZ Priority)", "minPence": null, "maxPence": null, "note": "Priced dynamically by route and date; no fixed published GBP figure" },
         { "item": "Checked bag (10/20/26/32kg)", "minPence": null, "maxPence": null, "note": "Priced dynamically by route and date; no fixed published GBP figure" },
-        { "item": "Excess baggage per kg (converted)", "minPence": 1123, "maxPence": 1123, "note": "Published as EUR 13/kg; converted at 1 EUR = 0.864 GBP (08 Jun 2026)" }
+        { "item": "Excess baggage per kg (converted)", "minPence": 1088, "maxPence": 1088, "note": "Published as EUR 13/kg (airport surcharge for bags 10-20kg or 20-32kg); converted at 1 EUR = 0.83728 GBP (ECB reference rate, 23 Oct 2026)" }
       ],
       "dynamicPricingNote": "Wizz Air prices cabin and checked bags dynamically; the only published fixed rate is the EUR 13/kg airport excess fee (recorded converted to GBP)",
       "sourceUrl": "https://www.wizzair.com/en-gb/help-centre/booking-information-and-services/baggage/baggage-allowance/checked-in-baggage",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-10-25"
     },
     {
       "airlineSlug": "tui",
@@ -101,11 +101,11 @@
       "fees": [
         { "item": "10kg cabin bag (Saver)", "minPence": 0, "maxPence": 0, "note": "Free if checked at the gate, or carried on; included with Plus/Advantage/AerSpace" },
         { "item": "First checked bag (20kg/23kg)", "minPence": 0, "maxPence": null, "note": "Included free on Smart/Flex (23kg) and Plus/Advantage/AerSpace (20kg); Saver fares charged dynamically by route and channel" },
-        { "item": "Overweight bag (23-32kg, converted)", "minPence": 6800, "maxPence": 6800, "note": "Published as GBP 68 / EUR 75; recorded as GBP figure" }
+        { "item": "Overweight bag (23-32kg, converted)", "minPence": 6800, "maxPence": 6800, "note": "Transatlantic: published as EUR 75 / GBP 68 / USD 100 per bag weighing 23-32kg; recorded as the published GBP figure" }
       ],
       "dynamicPricingNote": "Aer Lingus includes a checked bag on all fares above Saver; Saver checked-bag fees are dynamic by route and booking channel, while the overweight rate is a published fixed figure",
       "sourceUrl": "https://www.aerlingus.com/travel-information/baggage-information/checked-baggage/",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-10-25"
     },
     {
       "airlineSlug": "vueling",
@@ -137,13 +137,13 @@
       "airlineSlug": "emirates",
       "airlineName": "Emirates",
       "fees": [
-        { "item": "Cabin baggage (up to 7kg) + personal item", "minPence": 0, "maxPence": 0, "note": "Included in Economy on all fares" },
-        { "item": "First checked bag (25kg, Saver+)", "minPence": 0, "maxPence": 0, "note": "Included free in Economy from Saver fare upwards (weight concept; 23kg piece concept to/from the Americas/Africa)" },
+        { "item": "Cabin baggage (up to 7kg, 55x38x22cm)", "minPence": 0, "maxPence": 0, "note": "Included in Economy on all fares" },
+        { "item": "Checked baggage allowance (Economy, all fares)", "minPence": 0, "maxPence": 0, "note": "Included on every Economy fare: Special 20kg / Saver 25kg / Flex 30kg / Flex Plus 35kg (weight concept); 23kg piece concept to/from the Americas/Africa" },
         { "item": "Extra/additional checked baggage", "minPence": null, "maxPence": null, "note": "Priced dynamically by route, fare and Skywards tier via Manage Booking; no fixed published GBP table" }
       ],
-      "dynamicPricingNote": "Emirates includes generous cabin and checked allowance on Economy fares; extra baggage is priced dynamically online (cheaper than airport)",
+      "dynamicPricingNote": "Emirates includes generous cabin and checked allowance on Economy fares; extra baggage is priced per journey via Manage Booking (no fixed published GBP table)",
       "sourceUrl": "https://www.emirates.com/english/before-you-fly/baggage/checked-baggage/",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-10-25"
     },
     {
       "airlineSlug": "lufthansa",
