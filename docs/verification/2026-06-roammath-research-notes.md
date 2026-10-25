@@ -363,3 +363,42 @@ montenegro|holafly|Montenegro Unlimited / 30 days (converted)|7836|8056czechia|h
 **Roaming (roaming.json 1.0.0 -> 1.0.1).** Sources read 2026-10-11: Vodafone price guide PDF (Zone B £2.75, Zone C/D £8 from 14 Apr 2026 - unchanged), Three Go Roam page (£2.75 / £8 from 1 Apr 2026 - unchanged), O2 Travel Bolt On £7/day (unchanged), EE Daily EU Charge £2.72 (unchanged). EE source switched to the 31 Mar 2026 price guide, where ROW passes rose: Zone 1 £5 -> £5.50/day (7-day £25 -> £26.50), Zone 2 £7.50 -> £8/day (7-day £37.50 -> £39.50), Zone 3 £7.50 -> £8/day. dailyPassPence 500->550 (12 records), 750->800 (5). Destination->zone membership was NOT re-checked.
 
 **Baggage (baggage.json untouched).** Official pages are JS-rendered/dynamic; only TUI's figures (hold bag £60/£80, extra kg £15/£20) were confirmed in static HTML. No record's verifiedAt bumped (not every fee confirmed). Others unverified.
+
+## 2026-10-25 freshness SWEEP (baggage — the 7 records no open PR covers)
+
+Scope: open PR #81 (2026-10-18) already re-verifies Ryanair, easyJet, TUI, Vueling, Norwegian
+and all eSIM bundles; #82/#83/#86 cover every stale ParkMath record; London City drop-off is
+2026-10-07 on `main`. This pass took only the baggage records still `verifiedAt: 2026-06-10`
+on every open branch. Transport: r.jina.ai (plain, then `X-Engine: browser`). FX: ECB euro
+reference rate 23 Oct 2026, 1 EUR = 0.83728 GBP.
+
+- **wizz-air — re-verified, value re-converted.** Baggage-allowance page: carry-on 40x30x20cm
+  max 10kg FOR FREE; trolley 55x40x23cm with WIZZ Priority; checked 10/20/26/32kg for purchase.
+  Checked-in-baggage page: "13 EUR/kg surcharge ... at the airport if your bag weighs between 10 kg
+  and 20 kg or between 20 kg and 32 kg". EUR 13 x 0.83728 = £10.88 → 1088 pence (was 1123 at the
+  June rate 0.864). The euro price did not change; only the conversion did.
+- **aer-lingus — re-verified, unchanged.** Transatlantic: "Excess baggage for all bags weighing
+  23kg-32kg ... EUR 75/GBP 68/USD 100/CAD 100" — the £68 that PR #81 couldn't find. All fares
+  except Saver include a 20kg bag (Europe) / Smart+Flex include 23kg (transatlantic); 10kg bag
+  55x40x24cm free. Not added: a new Europe excess rate of €10/kg (≈ £8.37) — flagged for review.
+- **emirates — corrected.** Economy now includes checked baggage on **every** fare, Special 20kg /
+  Saver 25kg / Flex 30kg / Flex Plus 35kg (piece concept to/from the Americas/Africa), so the old
+  "Saver+" row was wrong for Special fares. The cabin-rules page gives Economy 7kg at 55x38x22cm and
+  lists no separate personal item for Economy, so "+ personal item" was removed. "(cheaper than
+  airport)" removed from the note, because the page only says extra baggage is priced in Manage Booking.
+- **virgin-atlantic — figures match, verifiedAt NOT bumped.** The optional-fees page now renders.
+  Light bag 1 is £80, bag 2 is £80 (Light/Classic/Delight), bags 3-4 are £140, overweight is £65 and
+  oversized is £200, all matching the record. The hand-baggage row isn't on this page, and the
+  help-centre hand-baggage pages 404 or render empty, so the record date was left alone.
+- **jet2 — not re-verified.** The baggage page confirms 10kg 56x45x25cm hand luggage plus an
+  under-seat bag and a 22kg hold bag, but no £12/kg excess rate appears (it only says
+  "standard excess baggage"). /en/faqs/baggage and /en/baggage/hold-luggage both 404.
+- **british-airways — not re-verified.** Allowances are confirmed (23kg, max 32kg), but the £65
+  overweight fee isn't on the baggage-essentials page and the overweight-and-oversized subpage 404s.
+- **lufthansa — not re-verified.** The carry-on page confirms 55x40x23cm and 8kg. Fares are now
+  named Economy Light/Comfort/Comfort Green/Flex, so the record's "Economy Classic" label is
+  out of date. The free-baggage and excess-baggage pages 404, so the checked-bag rule couldn't be
+  confirmed.
+
+`tools/freshness/hashes.json` was left untouched: the hashes come from the watchdog's normaliser,
+and PR #81 also edits that file.
