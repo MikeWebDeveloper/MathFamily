@@ -634,3 +634,14 @@ Changed (3):
 - **Exeter** — Car Park P1 0-15 min now £8.00 (was £6.00); 15-60 min is £15 (the old penaltyNotes said £7.50). SEO title/description + Blue Badge text updated.
 
 Reconfirmed unchanged (20): heathrow £7 (PCN £80/£40), gatwick £10 / 10 min + £1/min to 20 min, £30 daily max, 30 min max stay, manchester £5.50/£6.50/£25, edinburgh £8.50 + £1/min, birmingham free first 10 min (Premium Set Down £7/15 min), glasgow £7/15 min + £1/min, bristol 8.50/10.50/13/30/60, belfast-international 5/8/13, newcastle Express 6/12/16/20/28, london-city £8/5 min + £1/min, max 10 min (the page does not restate the penalty amount; penaltyPence 10000 not re-read), aberdeen £7/15 min + £1/min, belfast-city £4/10 min, southampton £7/20 min (enforcement £80), cardiff 4.50/6/9/20, southend £8/10 min, bournemouth £8 up to 30 min (60-min £15 band not re-read: tariff table not exposed to the browser pane), norwich £8/20 min, inverness free 15 min, teesside £2.50/£5/£7 per hour, prestwick 4.50/8.50/14.50/21/33.
+
+## 2026-10-26 daily sweep (stale >46 days + pending refs)
+- **east-midlands — CHANGED.** Official page https://www.eastmidlandsairport.com/parking/pick-up-and-drop-off/ now lists Rapid Drop Off as £8 up to 10 minutes, then £1 per minute after the first 10; maximum stay 30 minutes; pay online by midnight the following day. Previously recorded £5 up to 15 minutes. `priorYearFeePence` left null (no official prior-year figure). verifiedAt → 2026-10-26.
+- **stansted — unchanged.** Express Set Down still £10 up to 15 min / £28 over 15 min, 30 min max, £100 PCN reduced to £60 within 14 days. verifiedAt → 2026-10-26.
+- **leeds-bradford — unchanged.** Official parking page FAQ data: standard fee £8 for 10 minutes (Pick Up & Drop Off car park); Blue Badge up to 60 min for the same £8. verifiedAt → 2026-10-26.
+- **cardiff — NOT verifiable.** cardiff-airport.com/parking-cwl/... and /car-parking-options/... both return a generic "website improvements" homepage; kept existing record (verifiedAt 2026-10-07 stands).
+- **london-city — not re-fetched** (hard-blocked target; verifiedAt 2026-10-07 still within window).
+
+## 2026-10-26 priority-pass / lounges
+- priority-pass: https://www.prioritypass.com/en-GB/join-prioritypass shows Standard £69 / Standard Plus £229 (10 free visits) / Prestige £419, £24 visit fee — matches the dataset. verifiedAt → 2026-10-26.
+- lounges:heathrow: Club Aspire T5 "Prices from: £40" re-confirmed on no1lounges.com, but the Plaza Premium T5 £47.50 figure could not be re-fetched (official pages returned no price), so the record's verifiedAt was NOT bumped (stays 2026-08-13).
