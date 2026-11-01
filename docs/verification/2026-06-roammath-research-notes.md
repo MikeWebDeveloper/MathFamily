@@ -363,3 +363,88 @@ montenegro|holafly|Montenegro Unlimited / 30 days (converted)|7836|8056czechia|h
 **Roaming (roaming.json 1.0.0 -> 1.0.1).** Sources read 2026-10-11: Vodafone price guide PDF (Zone B £2.75, Zone C/D £8 from 14 Apr 2026 - unchanged), Three Go Roam page (£2.75 / £8 from 1 Apr 2026 - unchanged), O2 Travel Bolt On £7/day (unchanged), EE Daily EU Charge £2.72 (unchanged). EE source switched to the 31 Mar 2026 price guide, where ROW passes rose: Zone 1 £5 -> £5.50/day (7-day £25 -> £26.50), Zone 2 £7.50 -> £8/day (7-day £37.50 -> £39.50), Zone 3 £7.50 -> £8/day. dailyPassPence 500->550 (12 records), 750->800 (5). Destination->zone membership was NOT re-checked.
 
 **Baggage (baggage.json untouched).** Official pages are JS-rendered/dynamic; only TUI's figures (hold bag £60/£80, extra kg £15/£20) were confirmed in static HTML. No record's verifiedAt bumped (not every fee confirmed). Others unverified.
+
+## 2026-11-01 freshness sweep (RoamMath eSIM)
+
+Weekly scheduled sweep. Every stale ParkMath record on `origin/main` is already re-verified in an open PR (#81–#89), so this run covered only work that no open PR touches: the sweep's eSIM re-quote (rule b), one more pass at the four unconfirmed baggage airlines, and a read-only check of the standing targets.
+
+**eSIM (esim.json 1.0.2 -> 1.0.3).** All 40 countries and all 95 bundles were re-quoted with the same bundle definitions as 2026-10-11. snapshotDate and verifiedAt are now 2026-11-01 everywhere.
+- **Airalo:** direct UK-egress `curl` (ipinfo = GB) of each country page, parsed from `__NUXT_DATA__`. Matched on `day` + `is_unlimited`/`data`. Every price carries `currency.code: "GBP"`, 40/40 pages. Where a tier is sold by two operators (austria 5GB/30d £6.50 vs £8.50, south-africa 5GB/30d £10.00 vs £10.50), the cheaper one is tracked, as before. These are list prices with no strike-through or discount field. Canada (operator "Canada Mobile") and Morocco ("Morocco Unlimited") both now list Unlimited/5 days at £18.00. 7 changed, 33 unchanged.
+- **Holafly:** server-rendered USD table on `esim.holafly.com/esim-<country>/` (czechia = `esim-czech-republic`, uae = `esim-dubai`). All 40 read. **Every USD list price is unchanged** since 2026-10-11. All 40 GBP values move only because of FX.
+- **Saily:** read via r.jina.ai; spain and japan needed the `X-Engine: browser` rung because plain jina hit a 403. All 15 read, 5 GB / 30 days. **Every USD list price is unchanged.** All 15 GBP values move only because of FX.
+- **FX:** 1 USD = **£0.74633** (Frankfurter/ECB reference rate dated 2026-10-30, the latest before this Sunday run). The previous rate was £0.75641. Converted values are rounded to the nearest penny.
+- Changes per bundle (country|provider|bundle|old pence|new pence):
+```
+spain|holafly|Spain Unlimited / 30 days (converted)|5030|4963
+spain|saily|Spain 5GB / 30 days (converted)|756|746
+france|airalo|France 5GB / 30 days|900|850
+france|holafly|France Unlimited / 30 days (converted)|5590|5515
+france|saily|France 5GB / 30 days (converted)|831|820
+italy|holafly|Italy Unlimited / 30 days (converted)|4879|4814
+portugal|holafly|Portugal Unlimited / 30 days (converted)|5590|5515
+portugal|saily|Portugal 5GB / 30 days (converted)|756|746
+greece|holafly|Greece Unlimited / 30 days (converted)|5787|5709
+greece|saily|Greece 5GB / 30 days (converted)|1058|1044
+germany|holafly|Germany Unlimited / 30 days (converted)|5787|5709
+germany|saily|Germany 5GB / 30 days (converted)|831|820
+ireland|holafly|Ireland Unlimited / 30 days (converted)|5590|5515
+netherlands|holafly|Netherlands Unlimited / 30 days (converted)|5590|5515
+netherlands|saily|Netherlands 5GB / 30 days (converted)|756|746
+belgium|holafly|Belgium Unlimited / 30 days (converted)|5590|5515
+austria|holafly|Austria Unlimited / 30 days (converted)|5787|5709
+switzerland|airalo|Switzerland Unlimited / 5 days|1450|1400
+switzerland|holafly|Switzerland Unlimited / 30 days (converted)|5787|5709
+poland|holafly|Poland Unlimited / 30 days (converted)|5590|5515
+croatia|holafly|Croatia Unlimited / 30 days (converted)|5787|5709
+cyprus|holafly|Cyprus Unlimited / 30 days (converted)|5590|5515
+malta|holafly|Malta Unlimited / 30 days (converted)|5787|5709
+turkey|holafly|Turkey Unlimited / 30 days (converted)|5590|5515
+usa|holafly|United States Unlimited / 30 days (converted)|5590|5515
+canada|airalo|Canada Unlimited / 5 days|2150|1800
+canada|holafly|Canada Unlimited / 30 days (converted)|7254|7157
+mexico|airalo|Mexico Unlimited / 5 days|1400|1350
+mexico|holafly|Mexico Unlimited / 30 days (converted)|5030|4963
+australia|holafly|Australia Unlimited / 30 days (converted)|5787|5709
+new-zealand|holafly|New Zealand Unlimited / 30 days (converted)|5787|5709
+new-zealand|saily|New Zealand 5GB / 30 days (converted)|1058|1044
+uae|holafly|United Arab Emirates Unlimited / 15 days (converted)|3820|3769
+uae|saily|United Arab Emirates 5GB / 30 days (converted)|907|895
+thailand|holafly|Thailand Unlimited / 30 days (converted)|5590|5515
+japan|holafly|Japan Unlimited / 30 days (converted)|5590|5515
+japan|saily|Japan 5GB / 30 days (converted)|831|820
+china|holafly|China Unlimited / 30 days (converted)|5787|5709
+china|saily|China 5GB / 30 days (converted)|1209|1193
+india|airalo|India Unlimited / 5 days|2500|2450
+india|holafly|India Unlimited / 30 days (converted)|8464|8351
+india|saily|India 5GB / 30 days (converted)|1058|1044
+south-africa|holafly|South Africa Unlimited / 30 days (converted)|8464|8351
+south-africa|saily|South Africa 5GB / 30 days (converted)|983|969
+egypt|airalo|Egypt Unlimited / 5 days|2250|2200
+egypt|holafly|Egypt Unlimited / 30 days (converted)|7254|7157
+morocco|airalo|Morocco Unlimited / 5 days|2300|1800
+morocco|holafly|Morocco Unlimited / 30 days (converted)|6573|6486
+morocco|saily|Morocco 5GB / 30 days (converted)|1663|1641
+tunisia|holafly|Tunisia Unlimited / 30 days (converted)|8616|8501
+tunisia|saily|Tunisia 5GB / 30 days (converted)|907|895
+norway|holafly|Norway Unlimited / 30 days (converted)|5590|5515
+iceland|holafly|Iceland Unlimited / 30 days (converted)|5787|5709
+iceland|saily|Iceland 5GB / 30 days (converted)|907|895
+sweden|holafly|Sweden Unlimited / 30 days (converted)|5590|5515
+denmark|holafly|Denmark Unlimited / 30 days (converted)|5590|5515
+czechia|holafly|Czech Republic Unlimited / 30 days (converted)|5787|5709
+hungary|holafly|Hungary Unlimited / 30 days (converted)|5787|5709
+romania|holafly|Romania Unlimited / 30 days (converted)|5787|5709
+bulgaria|holafly|Bulgaria Unlimited / 30 days (converted)|5787|5709
+albania|holafly|Albania Unlimited / 30 days (converted)|9523|9396
+montenegro|holafly|Montenegro Unlimited / 30 days (converted)|8056|7948
+```
+
+**Baggage (baggage.json untouched).** One jina `X-Engine: browser` pass at the four airlines that PR #88 couldn't confirm: jet2 `/en/baggage`, BA `checked-baggage-allowances`, Virgin `help/baggage/hand-baggage` (HTTP 422) and Lufthansa `/gb/en/excess-baggage`. None of them published the missing figures (Jet2 £12/kg excess, BA £65 overweight, Virgin hand-baggage row, Lufthansa checked-bag rule). No change and no verifiedAt bump; these stay flagged as in #88.
+
+**Standing targets (read-only, no edit).** Both were read via jina browser and match the dataset:
+- London City drop-off: £8.00 for 0–5 min, then £1/min, maximum 10 min, £100 enforcement charge (£60 within 14 days).
+- Newcastle Long Stay: £50, £80, £120 and £160 for up to 1, 2, 3 and 4 days, then £40/day.
+
+Both are inside 46 days and not stale, so neither record was bumped. This keeps the run out of the files the open PRs edit.
+
+`tools/freshness/hashes.json` is untouched. The 40 Airalo `pendingSince` entries are from 2026-08-13, but their hashes come from the watchdog normaliser and have not been hand-written. PR #81/#83/#86 also edit the file.
