@@ -6,9 +6,9 @@ import { formatPence } from "@mathfamily/engine";
 import { aggregateOfferLd, breadcrumbLd, faqPageLd, JsonLd, speakableLd } from "@mathfamily/geo";
 import { AnswerPassage, FaqAccordion, FeeGrid, FreshnessBadge, PageHeading, SourceCitation, SourcesBlock, EmailCaptureSlot } from "@mathfamily/ui";
 import { ParkingAnswer } from "@/components/parking-answer";
-import { DURATION_SLUGS, buildParkingFaqs, coveredParkingDurations, parkingCtaModel, parkingPageModel } from "@/lib/parking-content";
+import { DURATION_SLUGS, buildParkingFaqs, coveredParkingDurations, hasPrebookProduct, parkingCtaModel, parkingPageModel } from "@/lib/parking-content";
 import { airportHasParkingVsDropOff } from "@/lib/parking-vs-drop-off-content";
-import { parkingMeta } from "@/lib/seo-meta";
+import { parkingHubHeading, parkingMeta } from "@/lib/seo-meta";
 
 export const dynamicParams = false;
 
@@ -80,7 +80,9 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
         <JsonLd
           data={aggregateOfferLd({
             name: `${airport.name} airport parking`,
-            description: `Gate vs pre-book parking at ${airport.name} for 3, 7 and 14 days — verified prices.`,
+            description: hasPrebookProduct(record)
+              ? `Gate vs pre-book parking at ${airport.name} for 3, 7 and 14 days — verified prices.`
+              : `Official drive-up gate parking prices at ${airport.name} for 3, 7 and 14 days — verified.`,
             image: `${siteUrl}/airport-parking/${airport.slug}/opengraph-image`,
             url: `${siteUrl}/airport-parking/${airport.slug}`,
             lowPricePence: Math.min(...validSevenDay),
@@ -94,7 +96,7 @@ export default async function ParkingHubPage({ params }: { params: Promise<{ air
 
       {/* Above the fold — NO mf-reveal: header + LCP hero must render instantly */}
       <header className="space-y-3">
-        <PageHeading>{airport.name} parking: gate vs pre-book</PageHeading>
+        <PageHeading>{parkingHubHeading(airport.name, record)}</PageHeading>
         <div className="flex flex-wrap items-center gap-3">
           <FreshnessBadge verifiedAt={record.verifiedAt} />
           <SourceCitation url={record.sourceUrl} label={`Official ${airport.name} parking`} />

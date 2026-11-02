@@ -1,7 +1,7 @@
 import { formatPence } from "@mathfamily/engine";
 import { isPublicTransportAlt, type DropOffRecord, type LoungeRecord, type NewsItem, type ParkingRecord } from "@mathfamily/data";
 import { isPerEntryTariff, searchName } from "./content";
-import { parkingPageModel } from "./parking-content";
+import { hasPrebookProduct, parkingPageModel } from "./parking-content";
 
 /**
  * SERP <title>/<meta description> builders. Every route used to hand-roll its strings and most ran
@@ -169,16 +169,40 @@ function cheapestParkingLead(record: ParkingRecord, days: number, where: string)
   return `Cheapest ${days}-day parking at ${where}: ${m.cheapest.name} at ${formatPence(m.cheapest.totalPence)}${saving}.`;
 }
 
+/** The `/airport-parking/[airport]` H1. "Gate vs pre-book" only where the page shows both. */
+export function parkingHubHeading(airportName: string, record: ParkingRecord): string {
+  return hasPrebookProduct(record) ? `${airportName} parking: gate vs pre-book` : `${airportName} parking: drive-up gate prices`;
+}
+
+/** Gate-only lead: the official drive-up gate tariff, named as such. Not "cheapest": with no pre-book
+ *  price on the page the gate rate is a ceiling, not the cheapest way to park. */
+function gateParkingLead(record: ParkingRecord, days: number, where: string): string | null {
+  const gate = parkingPageModel(record, days).gate;
+  return gate ? `${where} Airport parking: the official drive-up gate rate is ${formatPence(gate.totalPence)} for ${days} days.` : null;
+}
+
 export function parkingMeta(airportName: string, record: ParkingRecord): PageMeta {
   const sn = searchName(airportName);
+  // 2026-11-02: the title promised "gate vs pre-book" for every airport although only those whose record
+  // holds a pre-book product show one. Everyone else leads with what the page does show: gate rates.
+  const prebook = hasPrebookProduct(record);
   return {
-    title: fitTitle([
-      `${airportName} parking prices 2026 — gate vs pre-book`,
-      `${sn} parking prices 2026 — gate vs pre-book`,
-      `${sn} parking 2026 — gate vs pre-book`,
-      `${sn} parking prices 2026`
-    ]),
-    description: fitDescription(cheapestParkingLead(record, 7, sn), [
+    title: fitTitle(
+      prebook
+        ? [
+            `${airportName} parking prices 2026 — gate vs pre-book`,
+            `${sn} parking prices 2026 — gate vs pre-book`,
+            `${sn} parking 2026 — gate vs pre-book`,
+            `${sn} parking prices 2026`
+          ]
+        : [
+            `${airportName} parking prices 2026 — gate rates`,
+            `${sn} parking prices 2026 — gate rates`,
+            `${sn} parking 2026 — gate rates`,
+            `${sn} parking prices 2026`
+          ]
+    ),
+    description: fitDescription((!prebook && gateParkingLead(record, 7, sn)) || cheapestParkingLead(record, 7, sn), [
       "Compared for 3, 7 and 14 days.",
       `Verified ${record.verifiedAt}.`
     ])
