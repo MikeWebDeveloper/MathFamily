@@ -3,6 +3,7 @@ import Link from "next/link";
 import { loadRoamingDataset, loadEsimDataset, loadBaggageDataset } from "@mathfamily/data";
 import { breadcrumbLd, JsonLd } from "@mathfamily/geo";
 import { FreshnessBadge, PageHeading } from "@mathfamily/ui";
+import { siteUrl as siteUrlFromEnv } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "How we verify — RoamMath methodology",
@@ -15,7 +16,7 @@ export default function MethodologyPage() {
   const roamingDataset = loadRoamingDataset();
   const esimDataset = loadEsimDataset();
   const baggageDataset = loadBaggageDataset();
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3001";
+  const siteUrl = siteUrlFromEnv();
 
   const destinationCount = roamingDataset.destinations.length;
   const airlineCount = baggageDataset.records.length;

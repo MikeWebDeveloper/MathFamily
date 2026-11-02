@@ -1,12 +1,19 @@
 import type { NextConfig } from "next";
 
+// Allowlist the self-hosted Umami host (beacon load + /api/send POST) when configured, mirroring
+// SiteAnalytics and ParkMath's next.config.ts. Inert until NEXT_PUBLIC_UMAMI_HOST is set — without this
+// the strict CSP below would silently block the Umami beacon even after the env vars are added.
+const umamiHost = process.env.NEXT_PUBLIC_UMAMI_HOST
+  ? ` ${process.env.NEXT_PUBLIC_UMAMI_HOST.replace(/\/+$/, "")}`
+  : "";
+
 const csp = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://www.dwin1.com",
+  `script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://www.dwin1.com${umamiHost}`,
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com",
   "img-src 'self' data: https:",
-  "connect-src 'self' https://cloudflareinsights.com https://static.cloudflareinsights.com",
+  `connect-src 'self' https://cloudflareinsights.com https://static.cloudflareinsights.com${umamiHost}`,
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "object-src 'none'",

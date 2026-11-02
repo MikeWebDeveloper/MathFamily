@@ -4,6 +4,7 @@ import { loadBaggageDataset } from "@mathfamily/data";
 import { breadcrumbLd, datasetLd, itemListLd, JsonLd } from "@mathfamily/geo";
 import { FeeGrid, OpenDataBand, PageHeading } from "@mathfamily/ui";
 import { feeRangeLabel } from "@/lib/baggage-content";
+import { siteUrl as siteUrlFromEnv } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Airline baggage fees 2026 — cabin & checked bag prices, verified",
@@ -14,7 +15,7 @@ export const metadata: Metadata = {
 
 export default function BaggageFeesIndexPage() {
   const { records, lastUpdated } = loadBaggageDataset();
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3001";
+  const siteUrl = siteUrlFromEnv();
 
   return (
     <article className="space-y-8">

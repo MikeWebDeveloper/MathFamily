@@ -5,6 +5,7 @@ import { loadBaggageDataset, type BaggageRecord } from "@mathfamily/data";
 import { breadcrumbLd, faqPageLd, JsonLd, speakableLd } from "@mathfamily/geo";
 import { AnswerLead, AnswerPassage, Callout, FaqAccordion, FeeGrid, FreshnessBadge, PageHeading, SourceCitation, SourcesBlock } from "@mathfamily/ui";
 import { baggageAnswer, feeRangeLabel } from "@/lib/baggage-content";
+import { siteUrl as siteUrlFromEnv } from "@/lib/site";
 
 export const dynamicParams = false;
 
@@ -32,7 +33,7 @@ export default async function AirlineBaggagePage({ params }: { params: Promise<{
   const record = getData(slug);
   if (!record) notFound();
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3001";
+  const siteUrl = siteUrlFromEnv();
 
   const cabin = record.fees.find((f) => f.item.toLowerCase().includes("cabin"));
   const checked = record.fees.find(

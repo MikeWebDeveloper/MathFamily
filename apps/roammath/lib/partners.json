@@ -10,7 +10,7 @@
       "name": "Saily",
       "active": false,
       "deeplinkTemplate": "",
-      "trackingNote": "TODO-MIKE: fill after saily.com/affiliate signup (Nord Security program, ~30-day cookie per public docs). Same rule as Airalo — paste Saily's own generated tracking link, only substitute {clickref} into their subid param, don't hand-encode a destination."
+      "trackingNote": "TODO-MIKE: Saily runs its UK programme on AWIN (\"Saily UK\", awinmid 128611, GBP, verified via the AWIN Publisher API and https://ui.awin.com/merchant-profile/128611 on 2026-11-02) — apply from the existing AWIN account (2932035), not a separate saily.com signup. Once approved, paste AWIN's own generated link here and only substitute {clickref} into AWIN's clickref param; don't hand-encode a destination. Cookie window: confirm in the AWIN programme terms."
     },
     "holafly": {
       "name": "Holafly",
@@ -20,38 +20,38 @@
     }
   },
   "awin": {
-    "publisherId": ""
+    "publisherId": "2932035"
   },
   "car-hire": {
     "discoverCars": {
       "name": "DiscoverCars",
       "active": false,
-      "awinmid": "",
+      "awinmid": "90743",
       "destinationTemplate": "https://discovercars.com/car-hire/{countrySlug}",
-      "trackingNote": "TODO-MIKE: fill awinmid after signup at partners.discovercars.com (AWIN), and set the shared awin.publisherId above from your AWIN account. buildAwinLink() combines awinmid + publisherId + destinationTemplate safely (percent-encoded) — do not hand-build a cread.php?...&ued=... string yourself."
+      "trackingNote": "awinmid 90743 = \"Discover Car Hire AS\" (discovercars.com), verified via the AWIN Publisher API and https://ui.awin.com/merchant-profile/90743 on 2026-11-02; programme currency USD, primary region US; relationship NOT JOINED. TODO-MIKE: add roammath.co.uk as a site in the AWIN account, apply, check the programme terms (UK traffic accepted? brand-bidding rules), then flip active to true. buildAwinLink() combines awinmid + publisherId + destinationTemplate safely (percent-encoded) — do not hand-build a cread.php?...&ued=... string yourself."
     },
     "rentalCars": {
       "name": "RentalCars",
       "active": false,
       "awinmid": "",
       "destinationTemplate": "https://www.rentalcars.com/SearchResults.do?country={countrySlug}",
-      "trackingNote": "TODO-MIKE: fill awinmid (~5547) after AWIN signup for RentalCars, and set the shared awin.publisherId above."
+      "trackingNote": "UNVERIFIED — leave awinmid empty. The July guess (~5547) is wrong: https://ui.awin.com/merchant-profile/5547 returns Not found, and no Rentalcars programme appears among the ~21.5k programmes the AWIN Publisher API lists for this account (checked 2026-11-02). Rentalcars.com is now part of Booking.com and its affiliate rail may not be AWIN at all. TODO-MIKE: only wire this slot if a real AWIN merchant id for Rentalcars turns up; otherwise leave it inactive (discoverCars is the car-hire slot)."
     }
   },
   "travel-insurance": {
     "coverForYou": {
       "name": "CoverForYou",
       "active": false,
-      "awinmid": "",
+      "awinmid": "18981",
       "destinationTemplate": "https://www.coverforyou.com/",
-      "trackingNote": "TODO-MIKE: fill awinmid (~15978) after AWIN signup for CoverForYou, and set the shared awin.publisherId above."
+      "trackingNote": "awinmid 18981 = \"CoverForYou\" (GBP, UK, Insurance), verified via the AWIN Publisher API and https://ui.awin.com/merchant-profile/18981 on 2026-11-02; relationship NOT JOINED. The July guess (~15978) was wrong (that id is an unrelated German merchant). TODO-MIKE: add roammath.co.uk as a site in the AWIN account, apply, check the programme terms, then flip active to true."
     },
     "holidayExtras": {
       "name": "Holiday Extras",
       "active": false,
-      "awinmid": "",
+      "awinmid": "3496",
       "destinationTemplate": "https://www.holidayextras.com/travel-insurance.html",
-      "trackingNote": "TODO-MIKE: fill awinmid (~1250) after AWIN signup for Holiday Extras, and set the shared awin.publisherId above."
+      "trackingNote": "awinmid 3496 = \"Holiday Extras\" (GBP, UK) — the same programme ParkMath already earns on, ALREADY JOINED on AWIN account 2932035; verified via the AWIN Publisher API and https://ui.awin.com/merchant-profile/3496 on 2026-11-02. The July guess (~1250) is not an AWIN merchant id. www.holidayextras.com is a listed valid domain, so the ued below is accepted. TODO-MIKE: 3496 is listed under Airport Parking & Transfers — confirm in the AWIN programme terms/commission groups that travel insurance is commissionable, and that the new site is covered, before flipping active to true. Do not confuse with 20881 (Holiday Extras Breaks)."
     }
   }
 }

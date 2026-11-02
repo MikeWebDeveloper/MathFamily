@@ -8,6 +8,7 @@ import { FaqAccordion, FreshnessBadge, SourcesBlock } from "@mathfamily/ui";
 import { buildRoamingFaqs, NETWORK_LABELS } from "@/lib/roaming-content";
 import { resolveSlot } from "@/lib/partners";
 import { RoamingAnswer } from "@/components/roaming-answer";
+import { siteUrl as siteUrlFromEnv } from "@/lib/site";
 
 export const dynamicParams = false;
 
@@ -66,7 +67,7 @@ export default async function NetworkPage({
   const networkLabel = NETWORK_LABELS[networkSlug] ?? networkSlug;
   const { networkSources } = loadRoamingDataset();
   const networkSource = networkSources.find((s) => s.network === networkSlug);
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3001";
+  const siteUrl = siteUrlFromEnv();
 
   // eSIM affiliate provider (Airalo runs its affiliate program on Impact, not AWIN — inactive
   // until that Impact application is approved and a real deep link is set — falls back to official site)

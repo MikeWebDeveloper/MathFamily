@@ -2,25 +2,34 @@ import type { Metadata } from "next";
 import { IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import { AmbientBackdrop, ScrollProgress, ScrollReveal, SiteAnalytics, SiteFooter, SiteHeader } from "@mathfamily/ui";
 import { organizationLd, JsonLd } from "@mathfamily/geo";
+import { siteUrl } from "@/lib/site";
 import "./globals.css";
 
 const plexSans = IBM_Plex_Sans({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-plex-sans" });
 const plexMono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500", "600"], variable: "--font-plex-mono" });
 
 // Not exported: Next.js layouts only allow framework-known exports.
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3001";
+const SITE_URL = siteUrl();
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: "RoamMath — what your phone and bags cost abroad, verified", template: "%s | RoamMath" },
   description:
     "UK mobile roaming charges per network per country, eSIM comparisons and airline baggage fees — every figure verified against official pages and date-stamped.",
-  alternates: { canonical: "/" }
+  alternates: { canonical: "/" },
+  // No `url` here on purpose: a layout-level openGraph.url is inherited by every child page, which would
+  // stamp the homepage URL as og:url on /roaming/spain etc. Each page's canonical carries its own URL.
+  openGraph: {
+    type: "website",
+    siteName: "RoamMath",
+    locale: "en_GB"
+  }
 };
 
 const NAV = [
   { label: "Roaming charges", href: "/roaming" },
   { label: "Baggage fees", href: "/baggage-fees" },
+  { label: "About", href: "/about" },
   { label: "Privacy", href: "/privacy" }
 ];
 
@@ -30,6 +39,8 @@ const FOOTER_NAV = [
   { label: "Roaming charges", href: "/roaming" },
   { label: "Baggage fees", href: "/baggage-fees" },
   { label: "How we verify", href: "/methodology" },
+  { label: "About", href: "/about" },
+  { label: "Affiliate disclosure", href: "/affiliate-disclosure" },
   { label: "Privacy", href: "/privacy" }
 ];
 
