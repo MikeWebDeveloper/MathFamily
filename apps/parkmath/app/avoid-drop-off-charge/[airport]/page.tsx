@@ -176,6 +176,11 @@ export default async function AvoidDropOffPage({ params }: { params: Promise<{ a
         </p>
       ) : null}
       <p>
+        <Link href={`/airport-parking-options/${airport.slug}`} className="text-sm font-medium text-accent-strong underline underline-offset-4">
+          Parking for the trip? All {airport.name} options compared →
+        </Link>
+      </p>
+      <p>
         <Link href={`/blue-badge/${airport.slug}`} className="text-sm font-medium text-accent-strong underline underline-offset-4">
           Blue Badge drop-off at {airport.name}: is it free? →
         </Link>
