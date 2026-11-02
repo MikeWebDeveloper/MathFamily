@@ -115,6 +115,9 @@ export function buildFeedListUrl(feedApiKey) {
 /** Legacy fallback only — see airportSlugs() for why this must not be the primary path. */
 const KNOWN_SURFACES = new Set([
   "parking", "lounge", "dropoff", "drop-off", "hotel", "hotels", "transfer", "transfers", "extras",
+  // Page-type surfaces added since (the dataset-driven path above never needed them; kept so the
+  // fallback does not mis-parse them as part of an airport slug).
+  "options", "hub", "badge", "avoid", "dropoffbridge", "parkvsdropoff", "home",
 ]);
 
 /** Airport slugs read from the dataset at runtime rather than hardcoded.
@@ -177,6 +180,25 @@ export function surfaceFromClickRef(clickRef) {
   return parseClickRef(clickRef).surface;
 }
 
+/** Product suffixes the "extras" links append to their page's surface ("badge" -> "badge-hotels"),
+ *  plus the de-gated bridge variant. They belong to the page that carries them. */
+const SURFACE_PRODUCT_SUFFIX = /-(hotels|lounge|transfers|degated)$/;
+
+/** Roll a clickRef surface up to the PAGE TYPE that earned it, so revenue can be split by template.
+ *
+ *  Page types are not enumerated here (an allowlist rots - see the 2026-08-14 fix above): a surface
+ *  is its own page type unless it is a known product suffix on top of one ("dropoff-hotels" ->
+ *  "dropoff") or the above-the-fold bridge, which lives on the drop-off page ("dropoffbridge" ->
+ *  "dropoff"). A surface nobody has invented yet passes through unchanged.
+ *
+ *  Note: before 2026-11-02 blue-badge and avoid-drop-off-charge pages also emitted "dropoff", so
+ *  older transactions under "dropoff" mix three templates; "badge" and "avoid" are clean from then on. */
+export function pageTypeFromSurface(surface) {
+  if (typeof surface !== "string" || surface.trim() === "") return "(no surface)";
+  const s = surface.trim().toLowerCase().replace(SURFACE_PRODUCT_SUFFIX, "");
+  return s === "dropoffbridge" ? "dropoff" : s;
+}
+
 // ---- transaction aggregation -----------------------------------------------
 
 /** Awin's transactions API nests the click reference under `clickRefs.clickRef` (confirmed against a
@@ -219,6 +241,7 @@ export function aggregateTransactions(transactions) {
   const byAdvertiser = {};
   const byAirport = {};
   const bySurface = {};
+  const byPageType = {};
   const byClickRef = {};
   let count = 0;
   let commission = 0;
@@ -237,18 +260,21 @@ export function aggregateTransactions(transactions) {
     bump(byAdvertiser, t.advertiserName || String(t.advertiserId ?? "unknown"), comm, saleAmt);
     bump(byAirport, airportFromClickRef(clickRef) || "unattributed", comm, saleAmt);
     bump(bySurface, surfaceFromClickRef(clickRef) || "(no surface)", comm, saleAmt);
+    bump(byPageType, pageTypeFromSurface(surfaceFromClickRef(clickRef)), comm, saleAmt);
     bump(byClickRef, clickRef || "(none)", comm, saleAmt);
   }
 
   finalize(byAdvertiser);
   finalize(byAirport);
   finalize(bySurface);
+  finalize(byPageType);
   finalize(byClickRef);
   return {
     totals: { count, commission: round2(commission), sale: round2(sale), currency: currency || "GBP" },
     byAdvertiser,
     byAirport,
     bySurface,
+    byPageType,
     byClickRef,
   };
 }

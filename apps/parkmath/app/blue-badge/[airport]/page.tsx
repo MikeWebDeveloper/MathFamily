@@ -70,9 +70,11 @@ export default async function BlueBadgePage({ params }: { params: Promise<{ airp
   const pageVerifiedAt = latestNews && latestNews.verifiedAt > record.verifiedAt ? latestNews.verifiedAt : record.verifiedAt;
 
   const calloutVariant = kind === "exempt" ? "free" : kind === "none" ? "warning" : "info";
-  // Same surface as the HolidayExtrasCard rendered further down this page — count always matches
-  // what's actually in the merchant block the bridge below links to.
-  const bridgeMerchantCount = resolveAllParkingMerchants(airport.slug, "dropoff").length;
+  // Page-type surface for /go attribution: AWIN's clickref becomes parkmath-<airport>-badge, so a booking
+  // from this template is distinguishable from the drop-off page (which keeps "dropoff"). Same surface as
+  // the HolidayExtrasCard below, so the bridge's merchant count always matches the block it links to.
+  const surface = "badge";
+  const bridgeMerchantCount = resolveAllParkingMerchants(airport.slug, surface).length;
 
   return (
     <article className="space-y-8">
@@ -183,7 +185,7 @@ export default async function BlueBadgePage({ params }: { params: Promise<{ airp
         </Callout>
       ) : null}
 
-      <HolidayExtrasCard product="parking" surface="dropoff" airportName={airport.name} airportSlug={airport.slug} extras={["hotels", "lounge", "transfers"]} />
+      <HolidayExtrasCard product="parking" surface={surface} airportName={airport.name} airportSlug={airport.slug} extras={["hotels", "lounge", "transfers"]} />
 
       <section className="mf-reveal space-y-2">
         <h2 className="mf-underline-grow text-xl font-semibold text-ink">Frequently asked questions</h2>

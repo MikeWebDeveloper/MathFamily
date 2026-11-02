@@ -14,6 +14,7 @@ import {
   buildFeedListUrl,
   airportFromClickRef,
   surfaceFromClickRef,
+  pageTypeFromSurface,
   aggregateTransactions,
   diffProgrammes,
   parseFeedListCsv,
@@ -168,4 +169,54 @@ test("aggregateTransactions splits revenue by surface (page type)", () => {
   assert.equal(agg.bySurface.options.commission, 2.53);
   assert.equal(agg.bySurface.parking.commission, 0.83);
   assert.equal(agg.byAirport.exeter.commission, 2.53);
+});
+
+// 2026-11-02: drop-off, blue-badge and avoid-drop-off-charge all emitted the single surface "dropoff",
+// so the revenue split could not tell the three page types apart. Blue-badge now emits "badge" and
+// avoid emits "avoid" (plus the "-hotels|-lounge|-transfers" product suffix on the extras links).
+test("clickRef parsing handles the page-type surfaces for blue-badge and avoid pages", () => {
+  assert.equal(airportFromClickRef("parkmath-exeter-badge"), "exeter");
+  assert.equal(surfaceFromClickRef("parkmath-exeter-badge"), "badge");
+  assert.equal(airportFromClickRef("parkmath-belfast-international-avoid-transfers"), "belfast-international");
+  assert.equal(surfaceFromClickRef("parkmath-belfast-international-avoid-transfers"), "avoid-transfers");
+  assert.equal(airportFromClickRef("parkmath-leeds-bradford-badge-hotels"), "leeds-bradford");
+  assert.equal(surfaceFromClickRef("parkmath-leeds-bradford-badge-hotels"), "badge-hotels");
+});
+
+test("pageTypeFromSurface rolls a surface up to its page type without an allowlist", () => {
+  // Product extras and the above-the-fold bridge belong to the page that carries them.
+  assert.equal(pageTypeFromSurface("dropoff"), "dropoff");
+  assert.equal(pageTypeFromSurface("dropoff-hotels"), "dropoff");
+  assert.equal(pageTypeFromSurface("dropoff-transfers"), "dropoff");
+  assert.equal(pageTypeFromSurface("dropoff-degated"), "dropoff");
+  assert.equal(pageTypeFromSurface("dropoffbridge"), "dropoff");
+  assert.equal(pageTypeFromSurface("badge-lounge"), "badge");
+  assert.equal(pageTypeFromSurface("avoid-transfers"), "avoid");
+  // A surface that merely IS a product (the lounges page) must not be stripped to nothing.
+  assert.equal(pageTypeFromSurface("lounge"), "lounge");
+  // Surfaces nobody has invented yet pass through untouched.
+  assert.equal(pageTypeFromSurface("options"), "options");
+  assert.equal(pageTypeFromSurface("somethingnew"), "somethingnew");
+  assert.equal(pageTypeFromSurface(null), "(no surface)");
+  assert.equal(pageTypeFromSurface(""), "(no surface)");
+});
+
+test("aggregateTransactions also rolls revenue up by page type, keeping the raw surface split", () => {
+  const txns = [
+    { commissionAmount: { amount: 1, currency: "GBP" }, saleAmount: { amount: 10 }, clickRefs: { clickRef: "parkmath-exeter-badge" } },
+    { commissionAmount: { amount: 2, currency: "GBP" }, saleAmount: { amount: 20 }, clickRefs: { clickRef: "parkmath-exeter-badge-hotels" } },
+    { commissionAmount: { amount: 4, currency: "GBP" }, saleAmount: { amount: 40 }, clickRefs: { clickRef: "parkmath-exeter-dropoff" } },
+    { commissionAmount: { amount: 8, currency: "GBP" }, saleAmount: { amount: 80 }, clickRefs: { clickRef: "parkmath-exeter-dropoffbridge" } },
+    { commissionAmount: { amount: 16, currency: "GBP" }, saleAmount: { amount: 160 }, clickRefs: { clickRef: "parkmath-exeter-options" } },
+    { commissionAmount: { amount: 32, currency: "GBP" }, saleAmount: { amount: 320 }, clickRef: "someone-else" },
+  ];
+  const agg = aggregateTransactions(txns);
+  assert.equal(agg.byPageType.badge.commission, 3);
+  assert.equal(agg.byPageType.badge.count, 2);
+  assert.equal(agg.byPageType.dropoff.commission, 12);
+  assert.equal(agg.byPageType.options.commission, 16);
+  assert.equal(agg.byPageType["(no surface)"].commission, 32);
+  // The raw surface split is unchanged, so historical comparisons still work.
+  assert.equal(agg.bySurface["badge-hotels"].commission, 2);
+  assert.equal(agg.bySurface.dropoffbridge.commission, 8);
 });

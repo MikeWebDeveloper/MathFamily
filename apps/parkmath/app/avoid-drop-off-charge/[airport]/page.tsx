@@ -53,9 +53,11 @@ export default async function AvoidDropOffPage({ params }: { params: Promise<{ a
   const faqs = buildAvoidFaqs(record, airport.name);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
   const pageUrl = `${siteUrl}/avoid-drop-off-charge/${airport.slug}`;
-  // Same surface as the HolidayExtrasCard rendered further down this page — the bridge's count
-  // always matches what's actually in the merchant block it links to.
-  const bridgeMerchantCount = resolveAllParkingMerchants(airport.slug, "dropoff").length;
+  // Page-type surface for /go attribution: AWIN's clickref becomes parkmath-<airport>-avoid, so a booking
+  // from this template is distinguishable from the drop-off page (which keeps "dropoff"). Same surface as
+  // the HolidayExtrasCard below, so the bridge's count always matches the block it links to.
+  const surface = "avoid";
+  const bridgeMerchantCount = resolveAllParkingMerchants(airport.slug, surface).length;
 
   const latestNews = newsForAirport(airport.slug, 1)[0];
   const pageVerifiedAt = latestNews && latestNews.verifiedAt > record.verifiedAt ? latestNews.verifiedAt : record.verifiedAt;
@@ -151,7 +153,7 @@ export default async function AvoidDropOffPage({ params }: { params: Promise<{ a
         </Callout>
       ) : null}
 
-      <HolidayExtrasCard product="parking" surface="dropoff" airportName={airport.name} airportSlug={airport.slug} extras={["hotels", "lounge", "transfers"]} />
+      <HolidayExtrasCard product="parking" surface={surface} airportName={airport.name} airportSlug={airport.slug} extras={["hotels", "lounge", "transfers"]} />
 
       <section className="mf-reveal space-y-2">
         <h2 className="mf-underline-grow text-xl font-semibold text-ink">Frequently asked questions</h2>
