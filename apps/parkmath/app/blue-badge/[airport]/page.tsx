@@ -7,6 +7,7 @@ import { breadcrumbLd, faqPageLd, howToLd, JsonLd, speakableLd } from "@mathfami
 import { AnswerLead, AnswerPassage, Callout, CaveatChip, EmailCaptureSlot, FaqAccordion, FreshnessBadge, LatestUpdates, MiniAnswerBar, PageHeading, SourceCitation, SourcesBlock } from "@mathfamily/ui";
 import { BookingBridge } from "@/components/booking-bridge";
 import { HolidayExtrasCard } from "@/components/holiday-extras-card";
+import { StickyBookingBar } from "@/components/sticky-booking-bar";
 import { freshnessDelta } from "@/lib/content";
 import {
   blueBadgeAnswer,
@@ -233,6 +234,16 @@ export default async function BlueBadgePage({ params }: { params: Promise<{ airp
         sources={[{ label: `Official ${airport.name} drop-off page`, url: record.sourceUrl, verifiedAt: record.verifiedAt }]}
         method="The Blue Badge policy, the forecourt charge and any free alternative are read verbatim from the airport's official page and re-verified on the date shown. We classify the outcome (exempt, free window, concession or none) only from that published wording — we never invent a concession the airport doesn't publish."
       />
+
+      {/* Mobile booking exit (2026-11-02 audit: this template carries a large share of GSC clicks and a
+          visitor who scrolls past the bridge above had no way back to the merchant block). Same
+          component and anchor as the drop-off, options and parking-vs-drop-off templates; it only
+          scrolls to #mf-merchant-block (never a direct /go link), so the `dropoff` /go surface is
+          untouched. Gated on the same merchant count as the bridge, since HolidayExtrasCard renders
+          the target block only when a merchant resolves. */}
+      {bridgeMerchantCount > 0 ? (
+        <StickyBookingBar airportName={airport.name} targetId="mf-merchant-block" hook="Leaving the car? Compare parking prices" />
+      ) : null}
     </article>
   );
 }
