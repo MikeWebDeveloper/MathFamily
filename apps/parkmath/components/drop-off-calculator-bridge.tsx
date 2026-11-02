@@ -1,7 +1,9 @@
+import Link from "next/link";
 import { dropOffCalculatorBridge, dropOffCalculatorBridgeLine } from "../lib/parking-vs-drop-off-content";
 
-/** Compact, above-the-fold teaser CTA on `/drop-off-charges/[airport]` — "One drop-off costs £X — N
- *  days of parking from £Y. Compare →". Positioned right after the page's primary answer stat, ahead
+/** Compact, above-the-fold teaser CTA on `/drop-off-charges/[airport]` — "One drop-off costs £X. The
+ *  drive-up gate rate for N days is £Y — pre-booking online is usually cheaper, so compare live prices.
+ *  Compare live prices →". Positioned right after the page's primary answer stat, ahead
  *  of the fuller `DropOffParkingBridge` Callout lower down (that one stays untouched; this is additive).
  *
  *  FAIL-CLOSED (2026-07-03 parking sprint, tranche 2 item 7): `dropOffCalculatorBridge` already checks
@@ -11,18 +13,23 @@ import { dropOffCalculatorBridge, dropOffCalculatorBridgeLine } from "../lib/par
 export function DropOffCalculatorBridge({ slug }: { slug: string }) {
   const bridge = dropOffCalculatorBridge(slug);
   const line = dropOffCalculatorBridgeLine(bridge);
-  if (!bridge.show || !line) return null;
+  if (!bridge.show || !line || !bridge.cta) return null;
+  const linkClass = "shrink-0 font-semibold text-accent-strong underline underline-offset-4 hover:opacity-80";
 
   return (
     <p className="mf-edge flex flex-wrap items-center justify-between gap-x-3 gap-y-1.5 rounded-card border border-brand-accent/25 bg-brand-accent/[0.05] px-4 py-2.5 text-sm">
       <span className="text-ink">{line}</span>
-      <a
-        href={bridge.ctaHref}
-        rel="sponsored nofollow"
-        className="shrink-0 font-semibold text-accent-strong underline underline-offset-4 hover:opacity-80"
-      >
-        Compare →
-      </a>
+      {bridge.cta.kind === "compare" ? (
+        // A real comparison: the airport's own options page (internal link — not an ad, no rel).
+        <Link href={bridge.cta.href} className={linkClass}>
+          {bridge.cta.label}
+        </Link>
+      ) : (
+        // Only one merchant serves this airport: say so, and keep the tracked, disclosed /go link.
+        <a href={bridge.cta.href} rel="sponsored nofollow" className={linkClass}>
+          {bridge.cta.label}
+        </a>
+      )}
     </p>
   );
 }

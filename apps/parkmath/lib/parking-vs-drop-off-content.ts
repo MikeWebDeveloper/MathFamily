@@ -1,7 +1,8 @@
 import { compareParking, formatPence } from "@mathfamily/engine";
 import { isPublicTransportAlt, loadDropOffDataset, loadParkingDataset, type DropOffRecord, type ParkingRecord } from "@mathfamily/data";
 import { searchName } from "./content";
-import { goLink, resolveParkingMerchant } from "./partners";
+import { parkingCtaModel } from "./parking-content";
+import { goLink, resolveAllParkingMerchants, resolveParkingMerchant } from "./partners";
 import { fitDescription, fitTitle } from "./seo-meta";
 
 /** Inputs needed to decide whether an airport can have a "parking vs drop-off" page.
@@ -305,29 +306,83 @@ export function parkingVsDropOffIndexSummary(rows: ParkingVsDropOffIndexRow[]): 
   return `We compare drive-up parking against the forecourt drop-off charge at ${rows.length} UK airports, all from official figures. The steepest drive-up parking is at ${dearest.name}: ${formatPence(dearest.parkingPence)} for ${dearest.parkingDays} days versus a single ${formatPence(dearest.dropOffFeePence)} drop-off.`;
 }
 
+// ─── Where a drop-off → parking "Compare" CTA goes ───────────────────────────────────────────────
+// Both drop-off bridges say "compare". Until 2026-11 the CTA was a /go redirect that opened ONE
+// merchant's booking page (the airport's first-ranked partner), so the label promised a comparison
+// the click didn't deliver. With two or more merchants serving an airport the honest destination is
+// the airport's own options page (verified gate rate, the free alternative, every merchant side by
+// side); only a lone merchant still goes straight to that merchant, and says so in its label.
+
+export interface ParkingCompareCta {
+  /** "compare" → plain internal link to the options page; "merchant" → tracked /go link to the only partner. */
+  kind: "compare" | "merchant";
+  href: string;
+  label: string;
+  /** Set only for kind "merchant". */
+  partnerName: string | null;
+}
+
+/** Pure: choose the CTA from the merchants that genuinely serve the airport. `surface` is the /go
+ *  attribution surface, used only for the lone-merchant branch. Null when no merchant resolves. */
+export function buildParkingCompareCta(args: {
+  slug: string;
+  surface: string;
+  merchants: ReadonlyArray<{ partnerId: string; partnerName: string }>;
+}): ParkingCompareCta | null {
+  const { slug, surface, merchants } = args;
+  if (merchants.length === 0) return null;
+  if (merchants.length === 1) {
+    const only = merchants[0]!;
+    return { kind: "merchant", href: goLink(surface, slug, "parking"), label: `Check ${only.partnerName} prices →`, partnerName: only.partnerName };
+  }
+  return { kind: "compare", href: `/airport-parking-options/${slug}`, label: "Compare live prices →", partnerName: null };
+}
+
+/** The drop-off bridges' CTA for an airport, from the live partner config (fail-closed: null when no
+ *  merchant resolves). The options page exists for every airport that has a drop-off record. */
+export function parkingCompareCta(slug: string, surface: string): ParkingCompareCta | null {
+  return buildParkingCompareCta({ slug, surface, merchants: resolveAllParkingMerchants(slug, surface) });
+}
+
 // ─── Above-the-fold calculator bridge (2026-07-03 parking sprint, tranche 2 item 7) ───────────────
 // A compact, punchy teaser CTA for `/drop-off-charges/[airport]`, positioned right after the page's
 // primary answer stat — separate from and higher up than the fuller `DropOffParkingBridge` Callout
 // further down the page. FAIL-CLOSED on three independent things: a real (non-free) drop-off fee, a
 // verified parking price for the reference duration, AND a live resolving affiliate link — so this
 // can never render a fabricated price or a CTA that 404s.
+//
+// 2026-11-02 wording fix: the figure used to be shown as "N days of parking from £Y" where £Y is the
+// official drive-up GATE tariff for most airports (the dataset holds no pre-book price for them), so
+// "from" implied a floor it isn't and made parking look dearer than a pre-booked stay. The figure is
+// now always labelled for what it is. A pre-book price appears only where the dataset carries a real,
+// dated, same-duration pre-book snapshot that beats the gate (parkingCtaModel's "saving" state).
 
 export interface DropOffCalculatorBridgeModel {
   /** Render the bridge at all. False when any of: free drop-off, no parking tariff for this airport,
    *  or no affiliate merchant currently resolves for it (never guess/half-render). */
   show: boolean;
   dropOffFeePence: number | null;
-  /** The CHEAPEST verified price for `parkingDays` — gate or pre-book, whichever is lower (an honest
-   *  "from £Y"; the gate price alone is a ceiling, not a floor, so it is not used verbatim here). */
-  parkingFromPence: number | null;
   parkingDays: number;
-  /** Tracked /go redirect for the CTA, surface "dropoffbridge" (distinct from the lower bridge's
-   *  "dropoff" surface, so the two CTAs are attributable separately in the click log). Empty when show is false. */
-  ctaHref: string;
+  /** The official drive-up GATE tariff for `parkingDays`, integer pence (a ceiling, not a floor). */
+  gatePence: number | null;
+  /** A real pre-book snapshot for the same duration that is cheaper than the gate, else null. */
+  prebookPence: number | null;
+  /** ISO date of that pre-book snapshot (set exactly when prebookPence is). */
+  prebookSnapshotDate: string | null;
+  /** Where "Compare" goes: the options page for 2+ merchants (a real comparison), or the lone merchant. */
+  cta: ParkingCompareCta | null;
 }
 
 export function dropOffCalculatorBridge(slug: string): DropOffCalculatorBridgeModel {
-  const empty: DropOffCalculatorBridgeModel = { show: false, dropOffFeePence: null, parkingFromPence: null, parkingDays: REFERENCE_DAYS, ctaHref: "" };
+  const empty: DropOffCalculatorBridgeModel = {
+    show: false,
+    dropOffFeePence: null,
+    parkingDays: REFERENCE_DAYS,
+    gatePence: null,
+    prebookPence: null,
+    prebookSnapshotDate: null,
+    cta: null
+  };
 
   const dropOff = loadDropOffDataset().records.find((r) => r.airportSlug === slug);
   const parking = loadParkingDataset().records.find((r) => r.airportSlug === slug);
@@ -336,26 +391,34 @@ export function dropOffCalculatorBridge(slug: string): DropOffCalculatorBridgeMo
   const model = parkingVsDropOffModel({ dropOff, parking });
   if (!model) return empty;
 
-  // Fail-closed on the affiliate link actually resolving — never render a CTA that would 404.
-  if (!resolveParkingMerchant(slug, "dropoffbridge")) return empty;
+  // Fail-closed on a merchant actually resolving — never render a CTA that leads nowhere.
+  const cta = parkingCompareCta(slug, "dropoffbridge");
+  if (!cta) return empty;
 
-  // The honest "from £Y": the cheapest verified option for the reference duration (gate or a
-  // same-duration pre-book snapshot), not just the (higher) drive-up gate price used by the model.
+  // Pre-book is stated only when a real dated snapshot beats the gate for the same duration.
   const cheapest = compareParking(parking, REFERENCE_DAYS).cheapest;
-  const parkingFromPence = cheapest?.totalPence ?? model.parkingPence;
+  const hasPrebook = parkingCtaModel(parking, REFERENCE_DAYS).state === "saving" && cheapest !== null;
 
   return {
     show: true,
     dropOffFeePence: model.dropOffFeePence,
-    parkingFromPence,
     parkingDays: model.parkingDays,
-    ctaHref: goLink("dropoffbridge", slug, "parking")
+    gatePence: model.parkingPence,
+    prebookPence: hasPrebook ? cheapest!.totalPence : null,
+    prebookSnapshotDate: hasPrebook ? (cheapest!.snapshotDate ?? null) : null,
+    cta
   };
 }
 
-/** The exact "One drop-off costs £X — N days of parking from £Y." line. Returns null whenever the
- *  bridge shouldn't show, so callers never have to duplicate the fail-closed check. Pure + tested. */
+/** The honest one-liner above the CTA. Returns null whenever the bridge shouldn't show, so callers
+ *  never have to duplicate the fail-closed check. Pure + tested. */
 export function dropOffCalculatorBridgeLine(bridge: DropOffCalculatorBridgeModel): string | null {
-  if (!bridge.show || bridge.dropOffFeePence === null || bridge.parkingFromPence === null) return null;
-  return `One drop-off costs ${formatPence(bridge.dropOffFeePence)} — ${bridge.parkingDays} days of parking from ${formatPence(bridge.parkingFromPence)}.`;
+  if (!bridge.show || bridge.dropOffFeePence === null || bridge.gatePence === null) return null;
+  const fee = formatPence(bridge.dropOffFeePence);
+  const gate = formatPence(bridge.gatePence);
+  if (bridge.prebookPence !== null) {
+    const when = bridge.prebookSnapshotDate ? ` (snapshot ${bridge.prebookSnapshotDate})` : "";
+    return `One drop-off costs ${fee}. A pre-booked ${bridge.parkingDays}-day stay is from ${formatPence(bridge.prebookPence)}${when}, against ${gate} at the drive-up gate.`;
+  }
+  return `One drop-off costs ${fee}. The drive-up gate rate for ${bridge.parkingDays} days is ${gate} — pre-booking online is usually cheaper, so compare live prices.`;
 }
