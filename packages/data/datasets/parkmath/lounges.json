@@ -1,15 +1,15 @@
 {
-  "version": "1.1.1",
+  "version": "1.1.2",
   "lastUpdated": "2026-10-07",
   "records": [
     {
       "airportSlug": "heathrow",
       "lounges": [
         { "name": "Club Aspire Lounge (Terminal 5)", "walkInPence": 4000, "priorityPass": true, "notes": "Operator No1 Lounges; from-price per adult, pre-booking recommended. Priority Pass accepted pre-booking only." },
-        { "name": "Plaza Premium Lounge (Terminal 5)", "walkInPence": 4750, "priorityPass": true, "notes": "Operator Plaza Premium; on-the-day 2-hour walk-in rate (~10% off if booked online). Priority Pass accepted subject to capacity." }
+        { "name": "Plaza Premium Lounge (Terminal 5)", "walkInPence": 4900, "priorityPass": true, "notes": "Operator Plaza Premium; official from-price per adult ('from GBP 49.00' on plazapremiumlounge.com, checked 2026-10-18; online price varies by date/time). Priority Pass accepted subject to capacity." }
       ],
       "sourceUrl": "https://no1lounges.com/lounges-by-location/club-aspire-at-heathrow-t5/",
-      "verifiedAt": "2026-08-13"
+      "verifiedAt": "2026-10-18"
     },
     {
       "airportSlug": "gatwick",
