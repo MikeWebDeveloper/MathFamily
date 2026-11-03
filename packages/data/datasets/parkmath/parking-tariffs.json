@@ -1,6 +1,6 @@
 {
-  "version": "1.3.2",
-  "lastUpdated": "2026-10-17",
+  "version": "1.3.3",
+  "lastUpdated": "2026-10-21",
   "records": [
     {
       "airportSlug": "heathrow",
@@ -207,7 +207,7 @@
         }
       ],
       "sourceUrl": "https://www.newcastleairport.com/car-parking/car-parking-options/",
-      "verifiedAt": "2026-10-07"
+      "verifiedAt": "2026-10-21"
     },
     {
       "airportSlug": "leeds-bradford",
