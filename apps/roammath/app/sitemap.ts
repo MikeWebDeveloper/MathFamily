@@ -1,8 +1,9 @@
 import type { MetadataRoute } from "next";
-import { loadRoamingDataset, loadEsimDataset, loadBaggageDataset, NETWORKS } from "@mathfamily/data";
+import { loadRoamingDataset, loadBaggageDataset, NETWORKS } from "@mathfamily/data";
+import { siteUrl } from "../lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3001";
+  const base = siteUrl();
 
   const roamingDataset = loadRoamingDataset();
   const baggageDataset = loadBaggageDataset();
@@ -20,6 +21,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: base, changeFrequency: "weekly" as const, priority: 1, lastModified: latestRoamingModified },
     { url: `${base}/roaming`, changeFrequency: "weekly" as const, priority: 0.9, lastModified: latestRoamingModified },
     { url: `${base}/methodology`, changeFrequency: "monthly" as const, priority: 0.6, lastModified: latestRoamingModified },
+    { url: `${base}/about`, changeFrequency: "monthly" as const, priority: 0.5 },
+    { url: `${base}/affiliate-disclosure`, changeFrequency: "yearly" as const, priority: 0.3 },
+    { url: `${base}/privacy`, changeFrequency: "yearly" as const, priority: 0.3 },
     ...destinations.map((d) => {
       const destVerified = d.perNetwork
         .map((n) => networkSourcesByNetwork.get(n.network)?.verifiedAt ?? "")

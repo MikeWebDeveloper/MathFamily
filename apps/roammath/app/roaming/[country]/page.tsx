@@ -9,6 +9,7 @@ import { RoamingCalculator } from "@/components/roaming-calculator";
 import { AffiliateBlock } from "@/components/affiliate-block";
 import { TravelRailBlock } from "@/components/travel-rail-block";
 import { buildRoamingFaqs, roamingPageModel, networkIncludedVerdict, NETWORK_LABELS } from "@/lib/roaming-content";
+import { siteUrl as siteUrlFromEnv } from "@/lib/site";
 
 export const dynamicParams = false;
 
@@ -56,7 +57,7 @@ export default async function CountryHubPage({ params }: { params: Promise<{ cou
       ? `${destination.countryName} · 7 days from ${formatPence(Math.min(...miniPrices))}`
       : `${destination.countryName} · see network price guides`;
   const faqs = buildRoamingFaqs(destination, esim, 7);
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3001";
+  const siteUrl = siteUrlFromEnv();
 
   const networkFacts = destination.perNetwork.map((n) => {
     const label = NETWORK_LABELS[n.network] ?? n.network;

@@ -12,7 +12,8 @@ node_modules
 !apps/parkmath/public/social/*.png
 graphify-out
 tools/reels
-apps/roammath
+# apps/roammath is small and RoamMath deploys from the repo root too (its Root Directory is
+# apps/roammath), so it must NOT be ignored here — see docs/launch-checklist.md.
 .agents
 .codex
 .superpowers

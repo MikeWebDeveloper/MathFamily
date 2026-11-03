@@ -21,16 +21,17 @@ When parkmath.co.uk (+ .uk / maths twins) exists and DNS points at Vercel:
 When roammath.co.uk (+ .uk / maths twins) exists and DNS points at Vercel:
 
 1. **Run the 15-minute name ritual on roammath.co.uk BEFORE buying** — check trademark registers, existing brand use, and social-handle availability.
-2. Set `NEXT_PUBLIC_SITE_URL=https://roammath.co.uk` in Vercel (Production), redeploy `--prod`.
+2. Set `NEXT_PUBLIC_SITE_URL=https://www.roammath.co.uk` in Vercel (Production **and** Preview; `www` is canonical, the apex 308-redirects to it — same as ParkMath) **before** the prod deploy, then redeploy `--prod`. `apps/roammath/lib/site.ts` defaults to the same host when the var is unset, but a stale value such as the old `*.vercel.app` URL would override it, so check `vercel env ls`. Deploy from the **repo root** with the project linked to `math-family-roammath` (Root Directory `apps/roammath`); the root `.vercelignore` must not list `apps/roammath`.
 3. Verify robots.txt serves WITHOUT the preview `x-robots-tag: noindex` header.
-4. Google Search Console: verify domain property, submit `https://roammath.co.uk/sitemap.xml`.
+4. Google Search Console: verify domain property (`tools/gsc/add-domain.py`, needs the zone to exist in Cloudflare), submit `https://www.roammath.co.uk/sitemap.xml`.
 5. Bing Webmaster Tools: verify, submit sitemap, enable IndexNow (Bing feeds ChatGPT Search).
    - **Cloudflare Crawler Hints** (preferred IndexNow path while Bing verification is pending): Cloudflare dash → **Cache → Configuration → Crawler Hints → enable**. CF submits IndexNow signals as a trusted submitter, sidestepping the Bing `403` the custom ping hits before site-verification (see ParkMath checklist item 4 for the full rationale).
 6. Set `NEXT_PUBLIC_MAILERLITE_FORM_ACTION` once the MailerLite account + group (RoamMath segment) exist.
 7. Activate eSIM affiliate slots only after Ltd + Awin/affiliate-network approval: fill `deeplinkTemplate`, set `active: true` in `apps/roammath/lib/partners.json` (disclosure renders automatically).
-8. **Family cross-links:** set `NEXT_PUBLIC_PARKMATH_URL=https://parkmath.co.uk` on RoamMath's Vercel environment and `NEXT_PUBLIC_ROAMMATH_URL=https://roammath.co.uk` on ParkMath's — both apps render the family-links block only when the env var exists.
+8. **Family cross-links:** set `NEXT_PUBLIC_PARKMATH_URL=https://www.parkmath.co.uk` on RoamMath's Vercel environment and `NEXT_PUBLIC_ROAMMATH_URL=https://www.roammath.co.uk` on ParkMath's — both apps render the family-links block only when the env var exists. Use the `www` hosts (`https://www.parkmath.co.uk`, `https://www.roammath.co.uk`). ParkMath needs its own redeploy to pick up the new value.
 9. **Re-verify data before launch** — if roaming network price guides or eSIM snapshots are >30 days old, refresh the research and update `packages/data/datasets/roammath/` before the first `--prod` deploy.
-10. Analytics: confirm Vercel Analytics events; create a GA4/analytics segment for AI-referral traffic (chatgpt.com, perplexity.ai, copilot.microsoft.com referrers).
+10. Analytics: create a RoamMath website in the self-hosted Umami and set `NEXT_PUBLIC_UMAMI_HOST` + `NEXT_PUBLIC_UMAMI_WEBSITE_ID` (the CSP and `/go` click logging pick them up automatically); create a Cloudflare Web Analytics site and set `NEXT_PUBLIC_CF_BEACON_TOKEN`; when an AWIN programme is approved also set `NEXT_PUBLIC_AWIN_PUBLISHER_ID=2932035` (MasterTag). The privacy page names these tools. Create a GA4/analytics segment for AI-referral traffic (chatgpt.com, perplexity.ai, copilot.microsoft.com referrers).
+10a. **Contact mailbox:** the About, Affiliate-disclosure and Privacy pages publish `hello@roammath.co.uk` — add a Cloudflare Email Routing rule for it (→ the operator's inbox) before the first prod deploy.
 11. Lighthouse pass on /, /roaming/spain, /roaming/spain/three, /baggage-fees/ryanair — budget LCP < 1.2s, CLS ≈ 0.
 12. Monitor Search Console for scaled-content/spam manual actions weekly for the first month (expected: none — every page is data-distinct).
 

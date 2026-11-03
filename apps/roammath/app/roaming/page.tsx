@@ -5,6 +5,7 @@ import { roamingTripCost, formatPence } from "@mathfamily/engine";
 import { breadcrumbLd, datasetLd, itemListLd, JsonLd } from "@mathfamily/geo";
 import { CountryFlag, FeeGrid, FreshnessBadge, OpenDataBand, PageHeading } from "@mathfamily/ui";
 import { NETWORK_LABELS } from "@/lib/roaming-content";
+import { siteUrl as siteUrlFromEnv } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "UK mobile roaming charges by destination — EE, O2, Vodafone, Three",
@@ -17,7 +18,7 @@ export default function RoamingIndexPage() {
   const { destinations, networkSources } = loadRoamingDataset();
   const esimDataset = loadEsimDataset();
   const esimMap = new Map(esimDataset.records.map((r) => [r.countrySlug, r]));
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3001";
+  const siteUrl = siteUrlFromEnv();
 
   const latestVerified = networkSources.map((s) => s.verifiedAt).sort().at(-1) ?? "";
 

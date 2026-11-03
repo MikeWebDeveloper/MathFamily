@@ -6,6 +6,7 @@ import { CountryFlag, EmailCaptureSlot, StatStrip } from "@mathfamily/ui";
 import { FamilyLinks } from "@/components/family-links";
 import { NETWORK_LABELS } from "@/lib/roaming-content";
 import { HomeTripCalculator } from "../components/home-trip-calculator";
+import { siteUrl as siteUrlFromEnv } from "@/lib/site";
 
 export default function HomePage() {
   const roamingDataset = loadRoamingDataset();
@@ -68,7 +69,8 @@ export default function HomePage() {
     spainStatNote = noteParts.join(" · ");
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3001";
+  const siteUrl = siteUrlFromEnv();
+  const mailerLiteAction = process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION || undefined;
 
   return (
     <div className="space-y-10">
@@ -132,10 +134,12 @@ export default function HomePage() {
         </Link>
       </p>
 
-      <EmailCaptureSlot
-        formAction={process.env.NEXT_PUBLIC_MAILERLITE_FORM_ACTION}
-        hook="Get notified when roaming charges change"
-      />
+      {/* Render the sign-up ONLY when a MailerLite form action is configured. EmailCaptureSlot treats
+          `formAction={undefined}` as "use the /api/subscribe funnel" (ParkMath's route, which RoamMath
+          does not have), so an unset env var would otherwise show a live form that POSTs to a 404. */}
+      {mailerLiteAction ? (
+        <EmailCaptureSlot formAction={mailerLiteAction} hook="Get notified when roaming charges change" />
+      ) : null}
 
       <FamilyLinks />
     </div>
