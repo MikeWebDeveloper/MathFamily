@@ -1,6 +1,8 @@
 import { formatPence } from "@mathfamily/engine";
 import { isPublicTransportAlt, loadDropOffDataset, loadParkingDataset, type DropOffRecord, type ParkingRecord } from "@mathfamily/data";
+import { searchName } from "./content";
 import { gateParkingPence, REFERENCE_DAYS } from "./parking-vs-drop-off-content";
+import { dropOffFeePhrase } from "./seo-meta";
 
 /**
  * The booking-intent "airport parking options" decision table — ParkMath's neutral-referee answer
@@ -170,6 +172,81 @@ export function buildOptionsFaqs(
   });
 
   return faqs;
+}
+
+// ─── Striking-distance airports (2026-11-02) ───────────────────────────────────────────────────────
+// GSC 2026-10-05..31 shows these four options pages within reach of page 1 (Leeds Bradford 8.4, Exeter
+// 10.9, Norwich 15.1, Prestwick 27.6 average position). Their queries mix "drop off", "pick up", "free
+// drop off" and "parking", while the H1 only said "park or get dropped off". So these four — and only
+// these, while the 10-27 rank drop is still being diagnosed — get a plainer H1, a verified-figure intro
+// and the "how much is parking" / pick-up questions people actually type. Titles and descriptions are
+// NOT touched. Editorial list (it comes from GSC, not from the dataset); revisit with fresh GSC data.
+export const STRIKING_DISTANCE_OPTIONS_SLUGS = ["exeter", "norwich", "prestwick", "leeds-bradford"] as const;
+
+export function isStrikingDistanceOptionsPage(slug: string): boolean {
+  return (STRIKING_DISTANCE_OPTIONS_SLUGS as readonly string[]).includes(slug);
+}
+
+export interface StrikingDistanceOptions {
+  heading: string;
+  /** Plain-language, verified-figure intro rendered under the H1. */
+  intro: string;
+  /** Extra FAQs, appended after the standard ones. */
+  extraFaqs: { question: string; answer: string }[];
+}
+
+/** Pure: the on-page additions for a striking-distance options page, or null for any other airport.
+ *  `airportName` is the dataset name ("Exeter", "Glasgow Prestwick"). Every figure is the verified
+ *  drop-off fee, the verified free option, or the official drive-up gate tariff — never a pre-book price. */
+export function strikingDistanceOptions(
+  slug: string,
+  dropOff: DropOffRecord,
+  parking: ParkingRecord | null,
+  airportName: string
+): StrikingDistanceOptions | null {
+  if (!isStrikingDistanceOptionsPage(slug)) return null;
+  const airport = `${searchName(airportName)} Airport`;
+  const pickUp = /pick[- ]?up/i.test(dropOff.feeSummary);
+  const fee = dropOffFeePhrase(dropOff);
+  const alt = dropOff.freeAlternative;
+  const gate = (days: number) => (parking ? gateParkingPence(parking, days) : null);
+  const gate7 = gate(REFERENCE_DAYS);
+
+  const freeBit = dropOff.isFree
+    ? ""
+    : alt
+      ? isPublicTransportAlt(alt)
+        ? `, or skip the forecourt with the ${alt.name}`
+        : `, or free for ${alt.minutesFree} minutes via the ${alt.name}`
+      : "";
+  const intro =
+    `${airport} ${pickUp ? "drop-off and pick-up" : "drop-off"} ${dropOff.isFree ? "is free" : `costs ${fee}`}${freeBit}. ` +
+    (gate7 !== null
+      ? `Drive-up parking at the gate is ${formatPence(gate7)} for ${REFERENCE_DAYS} days; pre-booking online is usually cheaper, so compare live prices below.`
+      : `Pre-booking parking online is usually cheaper than paying at the gate, so compare live prices below.`);
+
+  const extraFaqs: { question: string; answer: string }[] = [];
+
+  const stays = ([3, 7, 14] as const)
+    .map((d) => ({ d, p: gate(d) }))
+    .filter((x): x is { d: 3 | 7 | 14; p: number } => x.p !== null)
+    .map((x) => `${formatPence(x.p)} for ${x.d} days`);
+  extraFaqs.push({
+    question: `How much is parking at ${airport}?`,
+    answer:
+      parking && stays.length > 0
+        ? `The official drive-up gate rate at ${airport} is ${stays.join(", ")}. Pre-booking online is usually cheaper than turning up at the gate, so compare live prices in the booking options on this page. Verified ${parking.verifiedAt}.`
+        : `We haven't verified a drive-up parking tariff for ${airport}, so we don't quote one. Dropping off ${dropOff.isFree ? "is free" : `costs ${fee}`}${freeBit}. For a longer trip, compare pre-booked parking prices in the booking options on this page and check the airport's own site before you travel. Verified ${dropOff.verifiedAt}.`
+  });
+
+  if (pickUp) {
+    extraFaqs.push({
+      question: `How much does it cost to pick someone up at ${airport}?`,
+      answer: `Pick-up uses the same area as drop-off at ${airport}: ${dropOff.feeSummary.replace(/\.$/, "")}. Verified ${dropOff.verifiedAt}.`
+    });
+  }
+
+  return { heading: `${airport} parking & drop-off: which is cheaper?`, intro, extraFaqs };
 }
 
 /** Load the inputs for an airport's options page. Drop-off is required (every airport has one);

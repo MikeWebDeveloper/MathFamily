@@ -7,6 +7,7 @@ import { breadcrumbLd, faqPageLd, howToLd, JsonLd, speakableLd } from "@mathfami
 import { AnswerLead, AnswerPassage, Callout, CaveatChip, EmailCaptureSlot, FaqAccordion, FreshnessBadge, LatestUpdates, MiniAnswerBar, PageHeading, SourceCitation, SourcesBlock } from "@mathfamily/ui";
 import { BookingBridge } from "@/components/booking-bridge";
 import { HolidayExtrasCard } from "@/components/holiday-extras-card";
+import { StickyBookingBar } from "@/components/sticky-booking-bar";
 import { freshnessDelta } from "@/lib/content";
 import { avoidAnswer, avoidLeadFacts, buildAvoidFaqs, buildAvoidSteps, qualifiesForAvoidPage } from "@/lib/avoid-content";
 import { airportHasParkingVsDropOff } from "@/lib/parking-vs-drop-off-content";
@@ -52,9 +53,11 @@ export default async function AvoidDropOffPage({ params }: { params: Promise<{ a
   const faqs = buildAvoidFaqs(record, airport.name);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
   const pageUrl = `${siteUrl}/avoid-drop-off-charge/${airport.slug}`;
-  // Same surface as the HolidayExtrasCard rendered further down this page — the bridge's count
-  // always matches what's actually in the merchant block it links to.
-  const bridgeMerchantCount = resolveAllParkingMerchants(airport.slug, "dropoff").length;
+  // Page-type surface for /go attribution: AWIN's clickref becomes parkmath-<airport>-avoid, so a booking
+  // from this template is distinguishable from the drop-off page (which keeps "dropoff"). Same surface as
+  // the HolidayExtrasCard below, so the bridge's count always matches the block it links to.
+  const surface = "avoid";
+  const bridgeMerchantCount = resolveAllParkingMerchants(airport.slug, surface).length;
 
   const latestNews = newsForAirport(airport.slug, 1)[0];
   const pageVerifiedAt = latestNews && latestNews.verifiedAt > record.verifiedAt ? latestNews.verifiedAt : record.verifiedAt;
@@ -150,7 +153,7 @@ export default async function AvoidDropOffPage({ params }: { params: Promise<{ a
         </Callout>
       ) : null}
 
-      <HolidayExtrasCard product="parking" surface="dropoff" airportName={airport.name} airportSlug={airport.slug} extras={["hotels", "lounge", "transfers"]} />
+      <HolidayExtrasCard product="parking" surface={surface} airportName={airport.name} airportSlug={airport.slug} extras={["hotels", "lounge", "transfers"]} />
 
       <section className="mf-reveal space-y-2">
         <h2 className="mf-underline-grow text-xl font-semibold text-ink">Frequently asked questions</h2>
@@ -175,6 +178,11 @@ export default async function AvoidDropOffPage({ params }: { params: Promise<{ a
         </p>
       ) : null}
       <p>
+        <Link href={`/airport-parking-options/${airport.slug}`} className="text-sm font-medium text-accent-strong underline underline-offset-4">
+          Parking for the trip? All {airport.name} options compared →
+        </Link>
+      </p>
+      <p>
         <Link href={`/blue-badge/${airport.slug}`} className="text-sm font-medium text-accent-strong underline underline-offset-4">
           Blue Badge drop-off at {airport.name}: is it free? →
         </Link>
@@ -194,6 +202,16 @@ export default async function AvoidDropOffPage({ params }: { params: Promise<{ a
         sources={[{ label: `Official ${airport.name} drop-off page`, url: record.sourceUrl, verifiedAt: record.verifiedAt }]}
         method="Every figure — the forecourt charge, the free-alternative allowance and the penalty — is read from the airport's official page and re-verified on the date shown. We never republish unverified prices."
       />
+
+      {/* Mobile booking exit (2026-11-02 audit: this template carries a large share of GSC clicks and a
+          visitor who scrolls past the bridge above had no way back to the merchant block). Same
+          component and anchor as the drop-off, options and parking-vs-drop-off templates; it only
+          scrolls to #mf-merchant-block (never a direct /go link), so the `dropoff` /go surface is
+          untouched. Gated on the same merchant count as the bridge, since HolidayExtrasCard renders
+          the target block only when a merchant resolves. */}
+      {bridgeMerchantCount > 0 ? (
+        <StickyBookingBar airportName={airport.name} targetId="mf-merchant-block" hook="Parking for the trip?" />
+      ) : null}
     </article>
   );
 }

@@ -7,6 +7,7 @@ import { breadcrumbLd, faqPageLd, howToLd, JsonLd, speakableLd } from "@mathfami
 import { AnswerLead, AnswerPassage, Callout, CaveatChip, EmailCaptureSlot, FaqAccordion, FreshnessBadge, LatestUpdates, MiniAnswerBar, PageHeading, SourceCitation, SourcesBlock } from "@mathfamily/ui";
 import { BookingBridge } from "@/components/booking-bridge";
 import { HolidayExtrasCard } from "@/components/holiday-extras-card";
+import { StickyBookingBar } from "@/components/sticky-booking-bar";
 import { freshnessDelta } from "@/lib/content";
 import {
   blueBadgeAnswer,
@@ -69,9 +70,11 @@ export default async function BlueBadgePage({ params }: { params: Promise<{ airp
   const pageVerifiedAt = latestNews && latestNews.verifiedAt > record.verifiedAt ? latestNews.verifiedAt : record.verifiedAt;
 
   const calloutVariant = kind === "exempt" ? "free" : kind === "none" ? "warning" : "info";
-  // Same surface as the HolidayExtrasCard rendered further down this page — count always matches
-  // what's actually in the merchant block the bridge below links to.
-  const bridgeMerchantCount = resolveAllParkingMerchants(airport.slug, "dropoff").length;
+  // Page-type surface for /go attribution: AWIN's clickref becomes parkmath-<airport>-badge, so a booking
+  // from this template is distinguishable from the drop-off page (which keeps "dropoff"). Same surface as
+  // the HolidayExtrasCard below, so the bridge's merchant count always matches the block it links to.
+  const surface = "badge";
+  const bridgeMerchantCount = resolveAllParkingMerchants(airport.slug, surface).length;
 
   return (
     <article className="space-y-8">
@@ -182,7 +185,7 @@ export default async function BlueBadgePage({ params }: { params: Promise<{ airp
         </Callout>
       ) : null}
 
-      <HolidayExtrasCard product="parking" surface="dropoff" airportName={airport.name} airportSlug={airport.slug} extras={["hotels", "lounge", "transfers"]} />
+      <HolidayExtrasCard product="parking" surface={surface} airportName={airport.name} airportSlug={airport.slug} extras={["hotels", "lounge", "transfers"]} />
 
       <section className="mf-reveal space-y-2">
         <h2 className="mf-underline-grow text-xl font-semibold text-ink">Frequently asked questions</h2>
@@ -217,6 +220,11 @@ export default async function BlueBadgePage({ params }: { params: Promise<{ airp
             </li>
           ) : null}
           <li>
+            <Link href={`/airport-parking-options/${airport.slug}`} className="text-accent-strong underline underline-offset-4">
+              Parking for the trip? All {airport.name} options compared →
+            </Link>
+          </li>
+          <li>
             <a href="/blue-badge" className="text-accent-strong underline underline-offset-4">
               Blue Badge drop-off at every UK airport →
             </a>
@@ -233,6 +241,16 @@ export default async function BlueBadgePage({ params }: { params: Promise<{ airp
         sources={[{ label: `Official ${airport.name} drop-off page`, url: record.sourceUrl, verifiedAt: record.verifiedAt }]}
         method="The Blue Badge policy, the forecourt charge and any free alternative are read verbatim from the airport's official page and re-verified on the date shown. We classify the outcome (exempt, free window, concession or none) only from that published wording — we never invent a concession the airport doesn't publish."
       />
+
+      {/* Mobile booking exit (2026-11-02 audit: this template carries a large share of GSC clicks and a
+          visitor who scrolls past the bridge above had no way back to the merchant block). Same
+          component and anchor as the drop-off, options and parking-vs-drop-off templates; it only
+          scrolls to #mf-merchant-block (never a direct /go link), so the `dropoff` /go surface is
+          untouched. Gated on the same merchant count as the bridge, since HolidayExtrasCard renders
+          the target block only when a merchant resolves. */}
+      {bridgeMerchantCount > 0 ? (
+        <StickyBookingBar airportName={airport.name} targetId="mf-merchant-block" hook="Parking for the trip?" />
+      ) : null}
     </article>
   );
 }

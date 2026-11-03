@@ -27,7 +27,9 @@ export default function AirportParkingOptionsIndex() {
   // search demand. 2026-07-02 SEO pass — this hub previously had only a plain link grid, the weakest
   // internal-linking page in the cluster, while airport-parking-options/stansted sits flat at ~pos 64
   // (vs. drop-off-charges/stansted, which improved after the SAME kind of featured link).
-  const featuredSlugs = ["stansted", "southend", "bristol"];
+  // + exeter, norwich, prestwick, leeds-bradford (2026-11-02): GSC shows these four options pages within
+  // reach of page 1, so they get the hub's internal-link equity too.
+  const featuredSlugs = ["stansted", "southend", "bristol", "exeter", "leeds-bradford", "norwich", "prestwick"];
   const featured = featuredSlugs
     .map((slug) => records.find((r) => r.airportSlug === slug))
     .filter((r): r is (typeof records)[number] => Boolean(r))

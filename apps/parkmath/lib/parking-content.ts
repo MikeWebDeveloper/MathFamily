@@ -11,6 +11,14 @@ export function durationFromSlug(slug: string): number | null {
   return (DURATION_SLUGS as readonly string[]).includes(slug) ? days : null;
 }
 
+/** True when the airport's record carries a dated pre-book product, i.e. its parking page genuinely
+ *  shows a pre-book price beside the drive-up gate tariff. Most airports publish only the gate tariff
+ *  (merchant cards on the page carry no prices), so anything that promises "gate vs pre-book" — SERP
+ *  title, H1, schema description — must be conditional on this. */
+export function hasPrebookProduct(record: ParkingRecord): boolean {
+  return record.products.some((p) => p.productType === "prebook");
+}
+
 export interface ParkingPageModel extends ParkingComparison {
   answer: string;
 }

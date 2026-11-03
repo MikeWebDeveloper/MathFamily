@@ -9,7 +9,7 @@ import { StickyBookingBar } from "@/components/sticky-booking-bar";
 import { parkingCtaModel } from "@/lib/parking-content";
 import { searchName } from "@/lib/content";
 import { airportHasParkingVsDropOff } from "@/lib/parking-vs-drop-off-content";
-import { buildBreakEvenModel, buildOptionRows, buildOptionsFaqs, optionsAnswer, optionsInputs, type OptionRow } from "@/lib/options-content";
+import { buildBreakEvenModel, buildOptionRows, buildOptionsFaqs, optionsAnswer, optionsInputs, strikingDistanceOptions, type OptionRow } from "@/lib/options-content";
 import { latestDate, optionsMeta } from "@/lib/seo-meta";
 
 export const dynamicParams = false;
@@ -57,7 +57,9 @@ export default async function AirportParkingOptionsPage({ params }: { params: Pr
 
   const rows = buildOptionRows(dropOff, parking);
   const breakEven = buildBreakEvenModel(dropOff, parking, airport.name);
-  const faqs = buildOptionsFaqs(dropOff, parking, airport.name);
+  // On-page clarity for the airports GSC shows near page 1 (null for all others — see options-content.ts).
+  const striking = strikingDistanceOptions(airport.slug, dropOff, parking, airport.name);
+  const faqs = [...buildOptionsFaqs(dropOff, parking, airport.name), ...(striking?.extraFaqs ?? [])];
   const answer = optionsAnswer(dropOff, parking, airport.name);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
   const pageUrl = `${siteUrl}/airport-parking-options/${airport.slug}`;
@@ -85,11 +87,12 @@ export default async function AirportParkingOptionsPage({ params }: { params: Pr
       <JsonLd data={speakableLd({ url: pageUrl, dateModified: pageVerifiedAt })} />
 
       <header className="space-y-3">
-        <PageHeading>Is it cheaper to park or get dropped off at {sn} Airport?</PageHeading>
+        <PageHeading>{striking?.heading ?? `Is it cheaper to park or get dropped off at ${sn} Airport?`}</PageHeading>
         <div className="flex flex-wrap items-center gap-3">
           <FreshnessBadge verifiedAt={dropOff.verifiedAt} />
           <SourceCitation url={dropOff.sourceUrl} label={`Official ${airport.name} page`} />
         </div>
+        {striking ? <p className="text-base text-ink">{striking.intro}</p> : null}
         <p className="text-sm text-ink-muted">
           A neutral comparison of every way in and out of {airport.name}. The verified prices below come from the airport&apos;s
           own published pages — they decide our ranking, not commission.

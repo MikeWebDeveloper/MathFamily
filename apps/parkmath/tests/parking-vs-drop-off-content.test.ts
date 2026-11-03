@@ -6,6 +6,7 @@ import {
   dropOffCalculatorBridge,
   dropOffCalculatorBridgeLine,
   dropOffFeePence,
+  buildParkingCompareCta,
   dropOffParkingBridge,
   gateParkingPence,
   parkingEquivalenceLine,
@@ -282,12 +283,19 @@ describe("dropOffCalculatorBridge (above-the-fold £X-vs-£Y teaser, tranche 2 i
     const b = dropOffCalculatorBridge("gatwick");
     expect(b.show).toBe(true);
     expect(b.dropOffFeePence).not.toBeNull();
-    expect(b.parkingFromPence).not.toBeNull();
+    expect(b.gatePence).not.toBeNull();
     expect(Number.isInteger(b.dropOffFeePence!)).toBe(true);
-    expect(Number.isInteger(b.parkingFromPence!)).toBe(true);
-    // The "from" price can never exceed the drive-up gate price (it's the cheapest verified option).
+    expect(Number.isInteger(b.gatePence!)).toBe(true);
     expect(b.parkingDays).toBe(REFERENCE_DAYS);
-    expect(b.ctaHref).toBe(`/go/gatwick/parking?s=dropoffbridge`);
+    // Gatwick has only an official gate tariff on file: no pre-book price may be implied.
+    expect(b.prebookPence).toBeNull();
+    expect(b.prebookSnapshotDate).toBeNull();
+  });
+
+  it("CTA is a real comparison (the airport's options page) when several merchants serve the airport, not one merchant's /go page", () => {
+    const b = dropOffCalculatorBridge("gatwick");
+    expect(b.cta).toMatchObject({ kind: "compare", href: "/airport-parking-options/gatwick" });
+    expect(b.cta!.href).not.toContain("/go/");
   });
 
   it("fails closed for a FREE drop-off airport, even though it has a parking page (birmingham)", () => {
@@ -297,8 +305,8 @@ describe("dropOffCalculatorBridge (above-the-fold £X-vs-£Y teaser, tranche 2 i
     const b = dropOffCalculatorBridge("birmingham");
     expect(b.show).toBe(false);
     expect(b.dropOffFeePence).toBeNull();
-    expect(b.parkingFromPence).toBeNull();
-    expect(b.ctaHref).toBe("");
+    expect(b.gatePence).toBeNull();
+    expect(b.cta).toBeNull();
   });
 
   it("fails closed for a charging airport with no parking tariff at all (belfast-city)", () => {
@@ -308,7 +316,7 @@ describe("dropOffCalculatorBridge (above-the-fold £X-vs-£Y teaser, tranche 2 i
     // tranche and now has a real record — see the tier-1/calculator tests below.)
     const b = dropOffCalculatorBridge("belfast-city");
     expect(b.show).toBe(false);
-    expect(b.ctaHref).toBe("");
+    expect(b.cta).toBeNull();
   });
 
   it("fails closed for an unknown slug", () => {
@@ -320,34 +328,70 @@ describe("dropOffCalculatorBridge (above-the-fold £X-vs-£Y teaser, tranche 2 i
     const b = dropOffCalculatorBridge("prestwick");
     expect(b.show).toBe(true);
     expect(b.dropOffFeePence).toBe(450);
-    // Car Park Two 7-day gate price (REFERENCE_DAYS), no pre-book snapshot on file → "from" equals the
-    // gate price itself, not the 3-day (6650) or 14-day (16000) figure.
-    expect(b.parkingFromPence).toBe(10350);
+    // Car Park Two 7-day gate price (REFERENCE_DAYS), no pre-book snapshot on file → only the gate
+    // rate is stated, not the 3-day (6650) or 14-day (16000) figure, and no pre-book price.
+    expect(b.gatePence).toBe(10350);
+    expect(b.prebookPence).toBeNull();
     expect(b.parkingDays).toBe(REFERENCE_DAYS);
-    expect(b.ctaHref).toBe(`/go/prestwick/parking?s=dropoffbridge`);
+    expect(b.cta).toMatchObject({ kind: "compare", href: "/airport-parking-options/prestwick" });
   });
 
-  it("tranche 3 (2026-07-03): aberdeen's 'from' price is the cheaper PRE-BOOK snapshot, not the pricier gate rate", () => {
+  it("aberdeen: a real, cheaper PRE-BOOK snapshot is surfaced as a dated pre-book figure alongside the gate rate", () => {
     // Aberdeen has BOTH a gate price (12500p, £125.00) and a same-duration pre-book snapshot (4999p,
-    // £49.99). compareParking sorts by totalPence, so "cheapest" (what the compact bridge shows) is the
-    // pre-book snapshot — proving this bridge never silently shows the more expensive gate ceiling when a
-    // genuinely cheaper verified option exists for the same 7-day duration.
+    // £49.99). The pre-book price is a dated snapshot, never presented as the gate rate.
     const b = dropOffCalculatorBridge("aberdeen");
     expect(b.show).toBe(true);
-    expect(b.parkingFromPence).toBe(4999);
+    expect(b.gatePence).toBe(12500);
+    expect(b.prebookPence).toBe(4999);
+    expect(b.prebookSnapshotDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     expect(b.dropOffFeePence).toBe(700);
-    expect(b.ctaHref).toBe(`/go/aberdeen/parking?s=dropoffbridge`);
+    expect(b.cta).toMatchObject({ kind: "compare", href: "/airport-parking-options/aberdeen" });
   });
 });
 
 describe("dropOffCalculatorBridgeLine", () => {
-  it("renders the exact 'One drop-off costs £X — N days of parking from £Y.' shape when the bridge shows", () => {
+  it("labels a gate-only figure as the drive-up gate rate and never as a 'from' price (heathrow)", () => {
+    const line = dropOffCalculatorBridgeLine(dropOffCalculatorBridge("heathrow"));
+    expect(line).toBe(
+      "One drop-off costs £7. The drive-up gate rate for 7 days is £271.20 — pre-booking online is usually cheaper, so compare live prices."
+    );
+    expect(line).not.toMatch(/from £/);
+  });
+
+  it("states the gate rate and that pre-booking is usually cheaper for every gate-only airport, with no invented figure", () => {
     const line = dropOffCalculatorBridgeLine(dropOffCalculatorBridge("gatwick"));
-    expect(line).not.toBeNull();
-    expect(line).toMatch(/^One drop-off costs £[\d.]+ — 7 days of parking from £[\d.]+\.$/);
+    expect(line).toMatch(/^One drop-off costs £[\d.]+\. The drive-up gate rate for 7 days is £[\d.]+ — pre-booking online is usually cheaper, so compare live prices\.$/);
+  });
+
+  it("aberdeen: names the dated pre-book snapshot AND the gate rate it is measured against", () => {
+    const line = dropOffCalculatorBridgeLine(dropOffCalculatorBridge("aberdeen"))!;
+    expect(line).toContain("£49.99");
+    expect(line).toContain("£125 at the drive-up gate");
+    expect(line).toMatch(/pre-book/i);
+    expect(line).toMatch(/snapshot \d{4}-\d{2}-\d{2}/);
+    expect(line).toMatch(/drive-up gate/);
   });
 
   it("returns null when the bridge doesn't show (never renders a half-true line)", () => {
     expect(dropOffCalculatorBridgeLine(dropOffCalculatorBridge("birmingham"))).toBeNull();
+  });
+});
+
+describe("buildParkingCompareCta (where a drop-off bridge's 'Compare' goes)", () => {
+  const merchants = (n: number) =>
+    Array.from({ length: n }, (_, i) => ({ partnerId: `p${i}`, partnerName: `Partner ${i}` }));
+
+  it("several merchants → the airport's options page (a real comparison), plain internal link", () => {
+    const cta = buildParkingCompareCta({ slug: "exeter", surface: "dropoffbridge", merchants: merchants(3) });
+    expect(cta).toEqual({ kind: "compare", href: "/airport-parking-options/exeter", label: "Compare live prices →", partnerName: null });
+  });
+
+  it("exactly one merchant → straight to that merchant via the tracked /go link, labelled with its name (no 'Compare')", () => {
+    const cta = buildParkingCompareCta({ slug: "exeter", surface: "dropoffbridge", merchants: merchants(1) });
+    expect(cta).toEqual({ kind: "merchant", href: "/go/exeter/parking?s=dropoffbridge", label: "Check Partner 0 prices →", partnerName: "Partner 0" });
+  });
+
+  it("no merchant → null (fail closed, nothing to send a parker to)", () => {
+    expect(buildParkingCompareCta({ slug: "exeter", surface: "dropoffbridge", merchants: [] })).toBeNull();
   });
 });

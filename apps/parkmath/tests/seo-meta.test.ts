@@ -21,6 +21,7 @@ import {
   newsMeta,
   optionsMeta,
   parkingDurationMeta,
+  parkingHubHeading,
   parkingMeta,
   renderedTitleLength,
   type PageMeta
@@ -160,5 +161,53 @@ describe("every generated airport page fits the SERP budget", () => {
   });
   it("hub pages", () => {
     for (const [key, meta] of Object.entries(HUB_META)) expectFits(`hub:${key}`, meta);
+  });
+});
+
+describe("parking hub title/meta/H1 only promise what the page shows (2026-11-02 audit)", () => {
+  // The hub page lists the dataset's products. "Pre-book" may appear in the SERP snippet only for
+  // airports whose record actually carries a dated pre-book product; every other airport shows drive-up
+  // gate prices alone (merchant cards below them carry no prices), so a "gate vs pre-book" promise
+  // was a title/content mismatch.
+  const hasPrebook = (r: (typeof parkings)[number]) => r.products.some((p) => p.productType === "prebook");
+  const gateOnly = parkings.filter((r) => !hasPrebook(r));
+  const withPrebook = parkings.filter(hasPrebook);
+
+  it("the dataset has both kinds, so this guard is exercising something real", () => {
+    expect(gateOnly.length).toBeGreaterThan(0);
+    expect(withPrebook.length).toBeGreaterThan(0);
+  });
+
+  it("gate-only airports: title, description and H1 never say pre-book, and still fit the SERP budget", () => {
+    for (const r of gateOnly) {
+      const name = nameOf(r.airportSlug);
+      const meta = parkingMeta(name, r);
+      expectFits(`parking/${r.airportSlug}`, meta);
+      expect(meta.title, `title for ${r.airportSlug}`).not.toMatch(/pre-?book/i);
+      expect(meta.description, `description for ${r.airportSlug}`).not.toMatch(/pre-?book/i);
+      expect(parkingHubHeading(name, r), `H1 for ${r.airportSlug}`).not.toMatch(/pre-?book/i);
+    }
+  });
+
+  it("airports with a pre-book product keep the 'gate vs pre-book' framing, because the page does show both", () => {
+    for (const r of withPrebook) {
+      const name = nameOf(r.airportSlug);
+      expect(parkingMeta(name, r).title).toMatch(/gate vs pre-book/);
+      expect(parkingHubHeading(name, r)).toMatch(/gate vs pre-book/);
+    }
+  });
+
+  it("heathrow: same keyword intent (parking prices 2026), truthful, and ≤60 rendered", () => {
+    const r = parkings.find((x) => x.airportSlug === "heathrow")!;
+    const meta = parkingMeta(nameOf("heathrow"), r);
+    expect(meta.title).toContain("Heathrow");
+    expect(meta.title).toContain("parking prices 2026");
+    expect(meta.title).toMatch(/gate/i);
+    expect(meta.title).not.toMatch(/pre-?book/i);
+    expect(renderedTitleLength(meta.title)).toBeLessThanOrEqual(MAX_TITLE_LENGTH);
+    expect(meta.description.length).toBeLessThanOrEqual(MAX_DESCRIPTION_LENGTH);
+    // The 7-day gate figure is the one thing the description leads with, and it is not called "cheapest".
+    expect(meta.description).toContain("£271.20");
+    expect(meta.description).not.toMatch(/cheapest/i);
   });
 });
