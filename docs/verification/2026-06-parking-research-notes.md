@@ -491,3 +491,7 @@ Triggered by the 2026-10-17 full site check: the Glasgow pre-book "from £49.99"
   - Same dates, other products: Mid Stay £68.99, Valet £76.00, Terminal Multi-Storey £102.00, Priority Parking £121.00.
 - **Dataset change:** the prebook product is renamed from "published 'from' price" to "official online quote", price 4999 → **5599**, snapshotDate 2026-06-10 → **2026-10-17**. Record verifiedAt → 2026-10-17; dataset version 1.3.1 → 1.3.2.
 - **Effect on the site:** the 7-day saving vs the £140 gate price goes from £90.01 to **£84.01**. This is a dated sample; re-quote on each sweep, as for Stansted's date-dependent "from" point.
+
+## Daily ParkMath data check 2026-10-19 (parking dataset v1.3.3)
+
+Standing target **Newcastle** (`parking:newcastle`) re-read via jina `X-Engine: browser` from https://www.newcastleairport.com/car-parking/car-parking-options/. Long Stay turn-up table unchanged: "Up to 24 hours £50.00 / Up to 2 days £80.00 / Up to 3 days £120.00 / Up to 4 days £160.00 / Per day or part thereafter £40.00", so the stored 3/7/14-day totals (£120 / £280 / £560) stand. verifiedAt 2026-10-07 → 2026-10-19; dataset version 1.3.2 → 1.3.3. No other parking record was in scope today (all verified 2026-10-07 or later).
