@@ -249,7 +249,7 @@ export default async function BlueBadgePage({ params }: { params: Promise<{ airp
           untouched. Gated on the same merchant count as the bridge, since HolidayExtrasCard renders
           the target block only when a merchant resolves. */}
       {bridgeMerchantCount > 0 ? (
-        <StickyBookingBar airportName={airport.name} targetId="mf-merchant-block" hook="Leaving the car? Compare parking prices" />
+        <StickyBookingBar airportName={airport.name} targetId="mf-merchant-block" hook="Parking for the trip?" />
       ) : null}
     </article>
   );
