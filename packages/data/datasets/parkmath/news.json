@@ -1,6 +1,6 @@
 {
   "version": "1.1.1",
-  "lastUpdated": "2026-10-17",
+  "lastUpdated": "2026-11-03",
   "items": [
     {
       "id": "east-midlands-barrierless-anpr-may-2025",
@@ -15,6 +15,24 @@
       "publishedAt": "2025-05-01",
       "verifiedAt": "2026-10-17",
       "supersedes": null
+    },
+    {
+      "id": "east-midlands-rapid-dropoff-sep-2026",
+      "airportSlug": "east-midlands",
+      "category": "fee-change",
+      "title": "East Midlands drop-off rises to £8 (Sep 2026)",
+      "summary": "From 3pm on Tuesday 29 September 2026, East Midlands Airport raised its Rapid Drop Off charge from £5 for up to 15 minutes to £8 for up to 10 minutes, citing inflationary pressures and ongoing investment. Each extra minute is still £1 up to the 30-minute maximum, the zone stays barrier-free (pay online or by phone by midnight the following day), and a £100 Parking Charge applies if unpaid, reduced to £60 if paid within 14 days. Free parking for up to an hour in the Long Stay car park and free Blue Badge drop-off in Short Stay 1 remain available.",
+      "body": null,
+      "change": {
+        "label": "Rapid Drop Off",
+        "from": "£5 (15 min)",
+        "to": "£8 (10 min)"
+      },
+      "sourceUrl": "https://mediacentre.eastmidlandsairport.com/drop-off-charges-to-go-up-at-east-midlands-airport/",
+      "sourceLabel": "East Midlands Airport Media Centre",
+      "publishedAt": "2026-09-28",
+      "verifiedAt": "2026-11-03",
+      "supersedes": "east-midlands-barrierless-anpr-may-2025"
     },
     {
       "id": "bristol-dropoff-fee-jan-2026",
