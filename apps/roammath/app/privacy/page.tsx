@@ -4,7 +4,7 @@ import { CONTACT_EMAIL } from "../../lib/site";
 export const metadata: Metadata = { title: "Privacy", alternates: { canonical: "/privacy" } };
 
 /** Bump when the wording below changes, so readers can see how current the policy is. */
-const LAST_UPDATED = "2 November 2026";
+const LAST_UPDATED = "3 November 2026";
 
 export default function PrivacyPage() {
   return (
@@ -12,11 +12,11 @@ export default function PrivacyPage() {
       <h1 className="text-3xl font-bold text-ink">Privacy</h1>
       <p className="text-sm text-ink-muted">Last updated {LAST_UPDATED}.</p>
       <p className="text-ink-muted">
-        RoamMath does not set advertising or tracking cookies on its pages and does not require an account. We use
-        privacy-friendly, cookie-free analytics (Cloudflare Web Analytics and our own self-hosted Umami) to understand
-        which pages help people. Like any website, these see your IP address and browser type when a page loads, and
-        we use them only to estimate your country and to filter out bots. When you click a booking link we also count
-        the click (which country and which link) the same way.
+        RoamMath does not set advertising or tracking cookies on its pages, does not require an account, and does not
+        currently run any website analytics or tracking scripts of its own. Like any website, our hosting provider
+        (Vercel) receives your IP address and browser type when a page loads and keeps standard server logs. When you
+        click a booking link we log which country page and which link were clicked, without your IP address, so we can
+        see whether the links are used. If we add analytics, we will name the tool here first.
       </p>
       <p className="text-ink-muted">
         Some pages may contain affiliate links (for eSIMs, car hire or travel insurance), always clearly labelled

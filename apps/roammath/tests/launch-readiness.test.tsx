@@ -88,6 +88,8 @@ describe("trust pages", () => {
     const html = renderToStaticMarkup(<PrivacyPage />);
     expect(html).toContain(`mailto:${CONTACT_EMAIL}`);
     expect(html).not.toMatch(/ParkMath|parkmath|airport drop-off/i);
+    // The page must describe only what is actually wired: no analytics tool is named until one is live.
+    expect(html).not.toMatch(/Umami|Cloudflare Web Analytics/);
     expect(html).not.toContain("will be published when the operating company is registered");
   });
 });
