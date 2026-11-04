@@ -1,6 +1,6 @@
 {
-  "version": "1.1.1",
-  "lastUpdated": "2026-10-17",
+  "version": "1.1.2",
+  "lastUpdated": "2026-11-04",
   "items": [
     {
       "id": "east-midlands-barrierless-anpr-may-2025",
@@ -66,8 +66,8 @@
       "id": "edinburgh-dropoff-fee-may-2025",
       "airportSlug": "edinburgh",
       "category": "fee-change",
-      "title": "Edinburgh drop-off fee rises to £8.50 (May 2025)",
-      "summary": "Edinburgh Airport increased its pick-up and drop-off charge by £2.50, taking it to £8.50, effective 18 May, to help cover an extra £8 million business rates bill (a 142% rise). The free 30-minute drop-off/pick-up area remains available, with more spaces added.",
+      "title": "Edinburgh drop-off fee rises to £8.50 (May 2026)",
+      "summary": "Edinburgh Airport increased its pick-up and drop-off charge by £2.50, taking it to £8.50, effective 18 May 2026, to help cover an extra £8 million business rates bill (a 142% rise). The free 30-minute drop-off/pick-up area remains available, with more spaces added.",
       "body": null,
       "change": {
         "label": "Drop-off / pick-up",
@@ -76,8 +76,8 @@
       },
       "sourceUrl": "https://corporate.edinburghairport.com/drop-off-charge-increases",
       "sourceLabel": "Edinburgh Airport — Corporate / Media Centre (official)",
-      "publishedAt": "2025-05-01",
-      "verifiedAt": "2026-10-17",
+      "publishedAt": "2026-05-11",
+      "verifiedAt": "2026-11-04",
       "supersedes": null
     },
     {
