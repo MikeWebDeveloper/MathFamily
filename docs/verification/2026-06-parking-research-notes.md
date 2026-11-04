@@ -491,3 +491,23 @@ Triggered by the 2026-10-17 full site check: the Glasgow pre-book "from £49.99"
   - Same dates, other products: Mid Stay £68.99, Valet £76.00, Terminal Multi-Storey £102.00, Priority Parking £121.00.
 - **Dataset change:** the prebook product is renamed from "published 'from' price" to "official online quote", price 4999 → **5599**, snapshotDate 2026-06-10 → **2026-10-17**. Record verifiedAt → 2026-10-17; dataset version 1.3.1 → 1.3.2.
 - **Effect on the site:** the 7-day saving vs the £140 gate price goes from £90.01 to **£84.01**. This is a dated sample; re-quote on each sweep, as for Stansted's date-dependent "from" point.
+
+
+## Freshness sweep 2026-11-04 (ParkMath lounges + Priority Pass)
+
+Only the two in-scope records older than 46 days that no recent PR covers. Stansted, Leeds Bradford and East Midlands drop-off are in PRs #91 and #94.
+
+### Heathrow lounges (`lounges:heathrow`)
+- **Club Aspire T5** (no1lounges.com, browser-UA curl): "Prices from: £40"; Priority Pass, Lounge Key and Dragon Pass "pre-bookings only". Price unchanged. New in `notes`: "The Club Aspire Lounge will close on 16 November 2026", and "You can book the new No1 Lounge now from Spring 2027".
+- **Plaza Premium T5** (https://www.plazapremiumlounge.com/en-uk/find/europe/united-kingdom/london/london-heathrow-airport/international-departures-terminal-five?propertycode=PRPRTY981&currency=GBP&date=2026-11-04&time=1000, in-app browser; curl and jina were blocked on 2026-10-21): "from GBP 49.00". `walkInPence` 4750 → 4900. The old £47.50 2-hour walk-in figure came from a site-scoped web search in June, and neither the 2-hour wording nor the "~10% off online" line appears on the page today, so both are dropped from `notes`. The "from" price is date-dependent: the URL carries the date and time read. "Priority Pass accepted subject to capacity" was not re-read today and is carried over.
+- Record `verifiedAt` → 2026-11-04; lounges 1.1.1 → 1.1.2.
+
+### Priority Pass (`priority-pass:tiers`) — verified, no change
+Direct curl from UK egress (ipinfo country GB; page shows "United Kingdom"): Standard £69, £24 member and guest visit fee; Standard Plus £229, "10 FREE visits, then £24"; Prestige £419, "All Free Member visits", £24 guest fee. `verifiedAt` 2026-09-04 → 2026-11-04.
+
+### Reconfirmed, no dataset edit (not stale on `main`)
+- `drop-off:london-city` (in-app browser): £8.00 for 0-5 minutes, £1 per minute thereafter, maximum stay 10 minutes.
+- `parking:newcastle` (in-app browser): turn-up table up to 24 hours £50, 2 days £80, 3 days £120, 4 days £160, then £40 per day. 3/7/14-day totals stay £120/£280/£560.
+
+### Not verifiable
+- `drop-off:cardiff`: every cardiff-airport.com URL tried, including the `sourceUrl`, now redirects to the holding site info.cardiff-airport.com/home ("This website is currently undergoing improvements"), confirmed in a browser. Its sitemap has no parking or drop-off page, and the newest Wayback capture (2026-09-08) has no price text. The value stands on its 2026-10-07 verification and is unchanged.

@@ -1,15 +1,15 @@
 {
-  "version": "1.1.1",
-  "lastUpdated": "2026-10-07",
+  "version": "1.1.2",
+  "lastUpdated": "2026-11-04",
   "records": [
     {
       "airportSlug": "heathrow",
       "lounges": [
-        { "name": "Club Aspire Lounge (Terminal 5)", "walkInPence": 4000, "priorityPass": true, "notes": "Operator No1 Lounges; from-price per adult, pre-booking recommended. Priority Pass accepted pre-booking only." },
-        { "name": "Plaza Premium Lounge (Terminal 5)", "walkInPence": 4750, "priorityPass": true, "notes": "Operator Plaza Premium; on-the-day 2-hour walk-in rate (~10% off if booked online). Priority Pass accepted subject to capacity." }
+        { "name": "Club Aspire Lounge (Terminal 5)", "walkInPence": 4000, "priorityPass": true, "notes": "Operator No1 Lounges; from-price per adult, pre-booking recommended. Priority Pass accepted pre-booking only. Closes on 16 November 2026 for a refurbishment, expansion and rebrand; the operator takes bookings for the new No1 Lounge from Spring 2027." },
+        { "name": "Plaza Premium Lounge (Terminal 5)", "walkInPence": 4900, "priorityPass": true, "notes": "Operator Plaza Premium; official 'from' price, read 2026-11-04 for a same-day 10:00 entry and may vary by date. Priority Pass accepted subject to capacity." }
       ],
       "sourceUrl": "https://no1lounges.com/lounges-by-location/club-aspire-at-heathrow-t5/",
-      "verifiedAt": "2026-08-13"
+      "verifiedAt": "2026-11-04"
     },
     {
       "airportSlug": "gatwick",
