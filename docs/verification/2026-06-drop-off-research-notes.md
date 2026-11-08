@@ -634,3 +634,22 @@ Changed (3):
 - **Exeter** — Car Park P1 0-15 min now £8.00 (was £6.00); 15-60 min is £15 (the old penaltyNotes said £7.50). SEO title/description + Blue Badge text updated.
 
 Reconfirmed unchanged (20): heathrow £7 (PCN £80/£40), gatwick £10 / 10 min + £1/min to 20 min, £30 daily max, 30 min max stay, manchester £5.50/£6.50/£25, edinburgh £8.50 + £1/min, birmingham free first 10 min (Premium Set Down £7/15 min), glasgow £7/15 min + £1/min, bristol 8.50/10.50/13/30/60, belfast-international 5/8/13, newcastle Express 6/12/16/20/28, london-city £8/5 min + £1/min, max 10 min (the page does not restate the penalty amount; penaltyPence 10000 not re-read), aberdeen £7/15 min + £1/min, belfast-city £4/10 min, southampton £7/20 min (enforcement £80), cardiff 4.50/6/9/20, southend £8/10 min, bournemouth £8 up to 30 min (60-min £15 band not re-read: tariff table not exposed to the browser pane), norwich £8/20 min, inverness free 15 min, teesside £2.50/£5/£7 per hour, prestwick 4.50/8.50/14.50/21/33.
+
+## 2026-11-08 — daily ParkMath data check
+
+News sweep (`watchdog:news`): no changes flagged (note: watchdog is known-blind for stuck-pending pages; not a substitute for reading newsrooms).
+
+Re-verified against the airports' own pages today:
+
+| Record | Result | Source |
+|---|---|---|
+| drop-off:east-midlands | **CHANGED** — Rapid Drop-Off now "Up to 10 minutes £8; every minute after the first 10 minutes £1; maximum stay 30 minutes" (was £5 up to 15 min). Short Stay 1 now £12 up to 30 min / £14 up to 1 h (was £6 / £8). Penalty £100→£60 and Blue Badge 30/60 min unchanged. Effective date of the increase not stated on the page; `priorYearFeePence` left null. | https://www.eastmidlandsairport.com/parking/pick-up-and-drop-off/ |
+| drop-off:stansted | Unchanged: £10 up to 15 min, £28 over 15 (max stay 30 min), £100/£60 PCN. | https://www.stanstedairport.com/getting-to-and-from/pick-up-and-drop-off/ |
+| drop-off:leeds-bradford | Unchanged: £8 for 10 min; Blue Badge up to 60 min for the same £8 (read from the FAQ accordion in a browser). | https://www.leedsbradfordairport.co.uk/parking |
+| drop-off:london-city | Unchanged: £8 for 0–5 min, £1/min thereafter, max stay 10 min (curl 403; read in browser). | https://www.londoncityairport.com/parking/drop-off |
+| priority-pass:tiers | Unchanged: Standard £69, Standard Plus £229 (10 free visits), Prestige £419, £24 per visit. | https://www.prioritypass.com/en-GB/join-prioritypass |
+
+Not bumped / unverifiable today:
+- drop-off:cardiff — whole site is a holding page (info.cardiff-airport.com); old value kept, `verifiedAt` (2026-10-07) unchanged.
+- lounges:heathrow — Club Aspire T5 "from £40" confirmed, but Plaza Premium T5 (£47.50) page 403s on every rung tried; record `verifiedAt` NOT bumped.
+- parking:newcastle — excluded from dataset, no official prices obtained (not attempted beyond standing exclusion).
