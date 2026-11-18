@@ -491,3 +491,13 @@ Triggered by the 2026-10-17 full site check: the Glasgow pre-book "from £49.99"
   - Same dates, other products: Mid Stay £68.99, Valet £76.00, Terminal Multi-Storey £102.00, Priority Parking £121.00.
 - **Dataset change:** the prebook product is renamed from "published 'from' price" to "official online quote", price 4999 → **5599**, snapshotDate 2026-06-10 → **2026-10-17**. Record verifiedAt → 2026-10-17; dataset version 1.3.1 → 1.3.2.
 - **Effect on the site:** the 7-day saving vs the £140 gate price goes from £90.01 to **£84.01**. This is a dated sample; re-quote on each sweep, as for Stansted's date-dependent "from" point.
+
+## 2026-11-18 — daily check, `lounges:heathrow` (lounges v1.1.2)
+
+The record was 97 days old on main (verifiedAt 2026-08-13). Read today:
+
+- **Club Aspire Lounge (Terminal 5) is closed.** Its operator page, the record's old `sourceUrl` (https://no1lounges.com/lounges-by-location/club-aspire-at-heathrow-t5/), returned HTTP 404 to a direct fetch. The operator's Heathrow page (https://no1lounges.com/locations/london-heathrow/, HTTP 200) now says "No1 Lounges formerly known as Club Aspire coming soon at Heathrow Terminal 5" and offers no T5 lounge to book. The closure date (16 November 2026) and "bookings for the new No1 Lounge from Spring 2027" were read on the old page on 2026-11-04 (PR #96); they could not be re-read today because that page is gone.
+  - Dataset: `walkInPence` 4000 → **null**, `priorityPass` true → **false**, name suffixed "— closed, No1 Lounge coming soon", notes rewritten. The entry is kept (not deleted) so the page says the lounge is closed instead of silently dropping it.
+  - `sourceUrl` → https://no1lounges.com/locations/london-heathrow/ (the old URL can never be re-read). Watchlist regenerated.
+- **Plaza Premium Lounge (Terminal 5): "from GBP 49.00"** on https://www.plazapremiumlounge.com/en-uk/find/europe/united-kingdom/london/london-heathrow-airport (Departures, Terminal 5 card), read in a full browser; the site blocks headless fetches. Dataset: 4750 → **4900**, matching what PR #96 read on 2026-11-04.
+- Record `verifiedAt` → 2026-11-18. `tools/freshness/hashes.json` not touched (the entry for the dead URL is now orphaned).
