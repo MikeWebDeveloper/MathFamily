@@ -16,6 +16,10 @@ import {
 // than redirect, so this can never become an open redirect or emit a bare awin1.com link.
 export const dynamic = "force-dynamic";
 
+// robots.txt disallows /go/, but a crawler that ignores robots (or reaches a /go URL from an external
+// link) must still never index the redirect or its 404. Belt and braces: every response carries this.
+const NOINDEX = "noindex, nofollow";
+
 // Self-hosted Umami — same instance + website id as the client beacon (set in Vercel env for both
 // Preview and Production). A server-side custom event is a DURABLE click record we own and can read in
 // near-real-time, unlike the old console.log that only lived in ephemeral Vercel runtime logs.
@@ -131,7 +135,7 @@ export async function GET(
   const surface = new URL(req.url).searchParams.get("s") ?? "";
 
   const resolved = resolveGoTarget(target, airport, surface);
-  if (!resolved) return new Response("Not found", { status: 404 });
+  if (!resolved) return new Response("Not found", { status: 404, headers: { "X-Robots-Tag": NOINDEX } });
 
   // Keep a structured log line too — a zero-cost fallback signal in runtime logs / any log drain.
   console.log(
@@ -167,6 +171,6 @@ export async function GET(
   // 302 (temporary): the destination is per-click and must not be cached by intermediaries.
   return new Response(null, {
     status: 302,
-    headers: { Location: resolved.url, "Cache-Control": "no-store" },
+    headers: { Location: resolved.url, "Cache-Control": "no-store", "X-Robots-Tag": NOINDEX },
   });
 }

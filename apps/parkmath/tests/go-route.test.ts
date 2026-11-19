@@ -37,6 +37,35 @@ function buildRequest(headers: Record<string, string>, xff: string): Request {
   });
 }
 
+describe("GET /go/[airport]/[target] — never indexed", () => {
+  beforeEach(() => {
+    _resetDedupeStateForTests();
+    _resetVelocityStateForTests();
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(null, { status: 200 })));
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("the 302 to the partner carries X-Robots-Tag: noindex, nofollow", async () => {
+    const res = await GET(buildRequest(REAL_CLICK_HEADERS, "81.174.10.21"), {
+      params: Promise.resolve({ airport: "gatwick", target: "parking" }),
+    });
+    await hoisted.lastAfterPromise;
+    expect(res.status).toBe(302);
+    expect(res.headers.get("x-robots-tag")).toBe("noindex, nofollow");
+  });
+
+  it("the 404 for an unknown target is noindex too", async () => {
+    const res = await GET(buildRequest(REAL_CLICK_HEADERS, "81.174.10.22"), {
+      params: Promise.resolve({ airport: "gatwick", target: "no-such-target" }),
+    });
+    expect(res.status).toBe(404);
+    expect(res.headers.get("x-robots-tag")).toBe("noindex, nofollow");
+  });
+});
+
 describe("GET /go/[airport]/[target] — secFetchUser flows into the Umami click payload (2026-07-12 patch)", () => {
   let fetchMock: ReturnType<typeof vi.fn>;
 

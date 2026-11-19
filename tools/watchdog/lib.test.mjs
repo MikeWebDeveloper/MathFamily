@@ -2,9 +2,11 @@
 // Run: node --test tools/watchdog/*.test.mjs
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import {
   recordsOf, DURATION_SLUGS, enumerateRoutes, buildAwinLink, validateDeeplink,
   activePartners, expectedDeeplinks, destinationUrls, classifyResults, formatReport,
+  DEFAULT_ROAMMATH_URL, analyticsTags, parseEnvFile, judgeAwinStatus, judgeUmamiLogin, PLUMBING_FIX,
 } from "./lib.mjs";
 
 test("DURATION_SLUGS mirrors apps/parkmath/lib/parking-content.ts", () => {
@@ -157,4 +159,93 @@ test("formatReport renders page, destination, and deeplink failure branches", ()
   assert.ok(md.includes("`/news`") && md.includes("503"));
   assert.ok(md.includes("**affiliate destination**") && md.includes("https://he.test/parking"));
   assert.ok(md.includes("**deeplink**") && md.includes("bad clickref: WRONG"));
+});
+
+// ---- plumbing: the measurement pipes that failed silently in Nov 2026 --------------------------------
+// (AWIN token expired, Umami down, RoamMath shipped without its analytics beacon — none raised an alarm.)
+
+test("DEFAULT_ROAMMATH_URL mirrors apps/roammath/lib/site.ts PRODUCTION_SITE_URL", async () => {
+  const src = await readFile(new URL("../../apps/roammath/lib/site.ts", import.meta.url), "utf8");
+  const m = src.match(/PRODUCTION_SITE_URL\s*=\s*"([^"]+)"/);
+  assert.ok(m, "PRODUCTION_SITE_URL not found in site.ts");
+  assert.equal(DEFAULT_ROAMMATH_URL, m[1]);
+});
+
+test("analyticsTags finds the Cloudflare beacon and the Umami script host", () => {
+  const html = `<html><head>
+    <script defer="" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon="{&quot;token&quot;:&quot;x&quot;}"></script>
+    <script defer="" src="https://umami.example.test/script.js" data-website-id="abc"></script>
+  </head></html>`;
+  assert.deepEqual(analyticsTags(html), { cfBeacon: true, umamiScript: "https://umami.example.test/script.js" });
+});
+
+test("analyticsTags reports a page with no analytics at all", () => {
+  assert.deepEqual(analyticsTags("<html><body>hi</body></html>"), { cfBeacon: false, umamiScript: null });
+});
+
+test("analyticsTags matches the Umami tag whatever the attribute order", () => {
+  const html = `<script data-website-id="abc" src="https://u.test/script.js" defer></script>`;
+  assert.equal(analyticsTags(html).umamiScript, "https://u.test/script.js");
+});
+
+test("parseEnvFile reads KEY=VALUE lines, ignores comments/blanks, strips quotes", () => {
+  const env = parseEnvFile(`# comment\nA=1\n\nB="two words"\nC='3'\nexport D=4\nBROKEN\n`);
+  assert.deepEqual(env, { A: "1", B: "two words", C: "3", D: "4" });
+});
+
+test("judgeAwinStatus: 200 ok, 401 = expired token with the regenerate fix, 429 not an outage", () => {
+  assert.equal(judgeAwinStatus(200).ok, true);
+  const expired = judgeAwinStatus(401);
+  assert.equal(expired.ok, false);
+  assert.match(expired.detail, /401/);
+  assert.equal(judgeAwinStatus(429).ok, true);
+  assert.equal(judgeAwinStatus(500).ok, false);
+});
+
+test("judgeUmamiLogin: 200 ok, 401 = stale password, anything else = unreachable", () => {
+  assert.equal(judgeUmamiLogin(200).ok, true);
+  assert.match(judgeUmamiLogin(401).detail, /password/i);
+  assert.equal(judgeUmamiLogin(502).ok, false);
+  assert.equal(judgeUmamiLogin(null).ok, false);
+});
+
+test("every plumbing check has a fix line for the issue body", () => {
+  for (const name of ["umami-host", "umami-auth", "cf-beacon-parkmath", "cf-beacon-roammath", "awin-token"]) {
+    assert.ok(PLUMBING_FIX[name] && PLUMBING_FIX[name].length > 20, `missing fix for ${name}`);
+  }
+});
+
+test("classifyResults counts plumbing failures, and skipped checks are neither failures nor counted", () => {
+  const summary = classifyResults({
+    pageResults: [{ path: "/", ok: true }],
+    destResults: [],
+    deeplinkProblems: [],
+    plumbingResults: [
+      { name: "awin-token", ok: false, detail: "HTTP 401" },
+      { name: "cf-beacon-roammath", ok: true },
+      { name: "umami-auth", skipped: true, detail: "no tools/reels/analytics.env" },
+    ],
+  });
+  assert.equal(summary.ok, false);
+  assert.equal(summary.checked, 3);
+  assert.deepEqual(summary.failures.map((f) => f.type + ":" + f.name), ["plumbing:awin-token"]);
+  assert.equal(summary.skipped.length, 1);
+});
+
+test("classifyResults without plumbingResults keeps its old shape (backwards compatible)", () => {
+  const summary = classifyResults({ pageResults: [{ path: "/", ok: true }], destResults: [], deeplinkProblems: [] });
+  assert.equal(summary.ok, true);
+  assert.equal(summary.checked, 1);
+  assert.deepEqual(summary.skipped, []);
+});
+
+test("formatReport renders a plumbing failure with its fix and never a secret", () => {
+  const summary = classifyResults({
+    pageResults: [], destResults: [], deeplinkProblems: [],
+    plumbingResults: [{ name: "awin-token", ok: false, detail: "AWIN API answered HTTP 401" }],
+  });
+  const md = formatReport({ date: "2026-11-19", summary });
+  assert.ok(md.includes("**measurement** `awin-token`"));
+  assert.ok(md.includes("HTTP 401"));
+  assert.ok(md.includes(PLUMBING_FIX["awin-token"]));
 });

@@ -102,13 +102,82 @@ export function destinationUrls(partnersJson) {
   return [...set];
 }
 
-/** Combine page + destination + structural results into a pass/fail summary. */
-export function classifyResults({ pageResults, destResults, deeplinkProblems }) {
+// ---- plumbing: the measurement pipes -------------------------------------------------------------
+// In Nov 2026 three of them broke silently for 1-2 weeks each (AWIN token expired, the self-hosted Umami
+// went down with its Docker host, RoamMath shipped with no analytics beacon). These checks make the
+// watchdog's rolling issue say so. They are read-only: page HTML, the Umami script/login endpoints and the
+// AWIN *API* (api.awin.com) — never the awin1.com click tracker.
+
+// Mirror of apps/roammath/lib/site.ts:PRODUCTION_SITE_URL — a unit test keeps the two in sync.
+export const DEFAULT_ROAMMATH_URL = "https://www.roammath.co.uk";
+
+/** What the issue body tells Mike to do for each failing plumbing check (no secrets, no hostnames of the Mac). */
+export const PLUMBING_FIX = {
+  "umami-host": "Umami (affiliate-click + page analytics) is unreachable. Start OrbStack on the Mac (Umami runs in its Docker container) and set OrbStack to open at login.",
+  "umami-auth": "Affiliate-click counts can't be read from Umami. If umami-host is failing too, fix that first; otherwise log in to Umami and update UMAMI_USER/UMAMI_PASSWORD in tools/reels/analytics.env.",
+  "cf-beacon-parkmath": "No Cloudflare Web Analytics beacon on parkmath.co.uk. Set NEXT_PUBLIC_CF_BEACON_TOKEN in the ParkMath Vercel project and redeploy.",
+  "cf-beacon-roammath": "No Cloudflare Web Analytics beacon on roammath.co.uk, so its traffic is invisible. Set NEXT_PUBLIC_CF_BEACON_TOKEN in the RoamMath Vercel project and redeploy.",
+  "awin-token": "The AWIN API token is rejected, so revenue and programme status can't be read. Regenerate it at https://ui.awin.com/awin-api and update AWIN_API_TOKEN in tools/awin/.env.",
+};
+
+/** Find the analytics tags SiteAnalytics renders: the Cloudflare beacon and the Umami script (src of the
+ *  <script> that carries data-website-id). Pure string parsing — attribute order doesn't matter. */
+export function analyticsTags(html) {
+  const cfBeacon = /static\.cloudflareinsights\.com\/beacon\.min\.js/.test(html);
+  let umamiScript = null;
+  for (const tag of html.match(/<script\b[^>]*>/gi) ?? []) {
+    if (!/data-website-id=/i.test(tag)) continue;
+    const src = tag.match(/\ssrc=["']([^"']+)["']/i);
+    if (src) { umamiScript = src[1]; break; }
+  }
+  return { cfBeacon, umamiScript };
+}
+
+/** Minimal .env reader (KEY=VALUE, optional `export `, optional quotes; comments/blank/broken lines ignored). */
+export function parseEnvFile(text) {
+  const env = {};
+  for (const raw of text.split(/\r?\n/)) {
+    const line = raw.trim().replace(/^export\s+/, "");
+    if (!line || line.startsWith("#")) continue;
+    const eq = line.indexOf("=");
+    if (eq <= 0) continue;
+    let value = line.slice(eq + 1).trim();
+    if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) value = value.slice(1, -1);
+    env[line.slice(0, eq).trim()] = value;
+  }
+  return env;
+}
+
+/** AWIN /accounts answer → plumbing verdict. 429 is rate limiting, not an outage. */
+export function judgeAwinStatus(status) {
+  if (status === 200 || status === 429) return { ok: true, detail: `AWIN API answered HTTP ${status}` };
+  if (status === 401 || status === 403) return { ok: false, detail: `AWIN API answered HTTP ${status}: the token is invalid or expired` };
+  return { ok: false, detail: `AWIN API answered HTTP ${status ?? "no response"}` };
+}
+
+/** Umami /api/auth/login answer → plumbing verdict (null status = network error / timeout). */
+export function judgeUmamiLogin(status) {
+  if (status === 200) return { ok: true, detail: "Umami login works" };
+  if (status === 401 || status === 403) return { ok: false, detail: `Umami login answered HTTP ${status}: the stored password is stale` };
+  return { ok: false, detail: `Umami API unreachable (${status ? `HTTP ${status}` : "no response"})` };
+}
+
+/** Combine page + destination + structural (+ plumbing) results into a pass/fail summary.
+ *  A plumbing result with `skipped: true` (its secrets file isn't on this machine, e.g. CI) is listed in
+ *  `skipped` and is neither a failure nor counted as a check. */
+export function classifyResults({ pageResults, destResults, deeplinkProblems, plumbingResults = [] }) {
   const failures = [];
+  const skipped = [];
   for (const r of pageResults) if (!r.ok) failures.push({ type: "page", path: r.path, detail: r.detail });
   for (const r of destResults) if (!r.ok) failures.push({ type: "destination", url: r.url, detail: r.detail });
   for (const p of deeplinkProblems) failures.push({ type: "deeplink", url: p.url, detail: p.problems.join("; ") });
-  return { ok: failures.length === 0, failures, checked: pageResults.length + destResults.length };
+  let plumbingChecked = 0;
+  for (const r of plumbingResults) {
+    if (r.skipped) { skipped.push({ name: r.name, detail: r.detail }); continue; }
+    plumbingChecked += 1;
+    if (!r.ok) failures.push({ type: "plumbing", name: r.name, detail: r.detail, fix: PLUMBING_FIX[r.name] });
+  }
+  return { ok: failures.length === 0, failures, skipped, checked: pageResults.length + destResults.length + plumbingChecked };
 }
 
 /** Markdown body for docs/reports/watchdog-<date>.md (written on failure only). */
@@ -120,7 +189,11 @@ export function formatReport({ date, summary }) {
   for (const f of summary.failures) {
     if (f.type === "page") lines.push(`- **page** \`${f.path}\` — ${f.detail}`);
     else if (f.type === "destination") lines.push(`- **affiliate destination** ${f.url} — ${f.detail}`);
+    else if (f.type === "plumbing") lines.push(`- **measurement** \`${f.name}\` — ${f.detail}. Fix: ${f.fix ?? "see tools/watchdog/README.md"}`);
     else lines.push(`- **deeplink** \`${f.url}\` — ${f.detail}`);
+  }
+  if (summary.skipped?.length) {
+    lines.push("", "Skipped (no credentials on this machine): " + summary.skipped.map((s) => `\`${s.name}\``).join(", "));
   }
   return lines.join("\n") + "\n";
 }
