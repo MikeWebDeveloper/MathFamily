@@ -501,3 +501,13 @@ The record was 97 days old on main (verifiedAt 2026-08-13). Read today:
   - `sourceUrl` → https://no1lounges.com/locations/london-heathrow/ (the old URL can never be re-read). Watchlist regenerated.
 - **Plaza Premium Lounge (Terminal 5): "from GBP 49.00"** on https://www.plazapremiumlounge.com/en-uk/find/europe/united-kingdom/london/london-heathrow-airport (Departures, Terminal 5 card), read in a full browser; the site blocks headless fetches. Dataset: 4750 → **4900**, matching what PR #96 read on 2026-11-04.
 - Record `verifiedAt` → 2026-11-18. `tools/freshness/hashes.json` not touched (the entry for the dead URL is now orphaned).
+
+## 2026-11-19 — daily check, `lounges:glasgow` (lounges v1.1.3)
+
+Surfaced by the news watch: Glasgow Airport's site-wide alert banner carries "UpperDeck Lounge Refurbishments" (toilet refurbishment, "there may be some disruption"; no closure and no dates, so no news item). Following it to the lounge page showed a price change.
+
+- **UpperDeck Lounge, official page** https://www.glasgowairport.com/at-the-airport/airport-services/upperdeck-lounge/ (read in a full browser; the site 403s headless fetches). The top PRICING block, which the record quotes, now reads "Adult (18+): From £30 / Children (4-17) : From £17 / Infants (0-3) : Free". On 2026-10-07 the same block read "From £27".
+  - Dataset: `walkInPence` 2700 → **3000**; record `verifiedAt` → 2026-11-19.
+  - **Inconsistency on the official page:** a second "Useful Information → Pricing" block further down still reads "Adult: From £27 / Children: From £17". The top block is the one with age bands and the one that was edited, so it is treated as current; the lower block looks like an un-updated leftover. Flagged NEEDS-HUMAN in the PR.
+  - No tie-breaker available: aspirelounges.com/airports/glasgow-airport/ now returns the operator's Error404 page, and the newest Wayback capture of the Glasgow page is 2026-01-12.
+- Opening times (04:45–20:30) and maximum stay (3 hours) unchanged.
