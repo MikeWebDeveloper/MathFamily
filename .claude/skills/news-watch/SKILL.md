@@ -1,12 +1,13 @@
 ---
 name: news-watch
-description: Gather official airport news/updates into the ParkMath news dataset and open a PR. Modes — "check <news-refs...>" (targeted, watchdog-triggered) and "sweep" (scheduled). Use when asked to run a news check/sweep.
+description: Gather official airport news/updates into the ParkMath news dataset and add them to the rolling data PR. Modes — "check <news-refs...>" (targeted, watchdog-triggered) and "sweep" (scheduled). Use when asked to run a news check/sweep.
 ---
 
 # News-watch routine
 
 Extends the freshness pipeline to gather **official airport operational/fee updates** into
-`packages/data/datasets/parkmath/news.json` and open a **PR for human review**. It NEVER
+`packages/data/datasets/parkmath/news.json` and add them to the **rolling data PR for human
+review**. It NEVER
 edits cost datasets or code — `news.json` only.
 
 ## Hard rules (same trust model as /freshness)
@@ -17,7 +18,10 @@ edits cost datasets or code — `news.json` only.
   changes, terminal works, drop-off-zone relocations, car-park closures/openings, strikes,
   major operational changes. Out of scope: third-party/press, marketing, anything not on an
   official page.
-- **PR-only, never push to main. Bounded change: only `news.json`.**
+- **Rolling PR only, never push to main. Bounded change: only `news.json`.** News goes into the
+  same rolling data PR as freshness: follow **Branch and PR** in `.claude/skills/freshness/SKILL.md`
+  (lock, find the open `freshness/rolling-*` PR or start a cycle, work in its worktree). Never open a
+  separate `news/*` PR.
 - **Single-trigger pending:** the watchdog already de-dupes repeat triggers; do not re-PR an
   item already present (the merge helper dedupes too).
 
@@ -44,8 +48,10 @@ Targeted run for specific `news:<airport>` refs the watchdog flagged as changed.
    (Or apply `mergeNewsItems` semantics by hand and validate with
    `pnpm --filter @mathfamily/data test`.)
 5. Run `pnpm --filter @mathfamily/data test` — it must pass (validates the new `news.json`).
-6. Open a PR on a branch `news/<run-id>` touching ONLY `news.json`, body listing each new item
-   with its source URL + the verbatim quote, under a `## NEEDS-HUMAN` heading. Never merge it.
+6. Commit ONLY `news.json` to the rolling branch (`news: N candidate update(s) — <airports>`), push,
+   and add this run's section to the rolling PR (the PR body for a new cycle, otherwise a comment).
+   List each new item with its source URL and the verbatim quote, under a `## NEEDS-HUMAN` heading.
+   Never merge it.
 
 ### `sweep`
 Scheduled full pass:
@@ -54,9 +60,9 @@ Scheduled full pass:
 2. Extract the news refs: `refsWithPrefix(changed.flatMap(c => c.refs), "news:")`.
 3. If any, run the `check` flow above for those `news:<airport>` refs. If none changed, exit
    cleanly with "no news changes".
-4. Open one PR for all new items (or none).
+4. Add all new items to the rolling PR in one commit (or nothing).
 
 ## Output discipline
-- One PR per run at most; title `news: N candidate update(s) — <airports>`.
-- If nothing verifiable found, do nothing (no empty PRs).
-- Report: refs checked, items added, PR URL (or "no changes").
+- One commit per run at most, on the rolling branch. Never a separate PR.
+- If nothing verifiable found, do nothing (no empty commits or comments).
+- Report: refs checked, items added, rolling PR URL (or "no changes").
