@@ -48,7 +48,8 @@ Targeted run for specific `news:<airport>` refs the watchdog flagged as changed.
    (Or apply `mergeNewsItems` semantics by hand and validate with
    `pnpm --filter @mathfamily/data test`.)
 5. Run `pnpm --filter @mathfamily/data test` — it must pass (validates the new `news.json`).
-6. Commit ONLY `news.json` to the rolling branch (`news: N candidate update(s) — <airports>`), push,
+6. Commit ONLY `news.json` (plus the watchdog state file `tools/freshness/news-hashes.json`, which
+   the sweep rewrites) to the rolling branch (`news: N candidate update(s) — <airports>`), push,
    and add this run's section to the rolling PR (the PR body for a new cycle, otherwise a comment).
    List each new item with its source URL and the verbatim quote, under a `## NEEDS-HUMAN` heading.
    Never merge it.

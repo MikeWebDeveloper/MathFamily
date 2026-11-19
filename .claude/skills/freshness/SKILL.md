@@ -72,7 +72,7 @@ twice (Aug–Oct and Nov 2026), so don't.
    Older means it's stale, so `rmdir` it and take it again. **Always release it** (`rmdir`) when
    you finish, including after a failure or an early stop.
 2. **Find this cycle's branch.** Run `git fetch origin`, then:
-   `gh pr list --state open --json number,headRefName --jq '.[] | select(.headRefName | startswith("freshness/rolling-")) | "\(.number) \(.headRefName)"'`
+   `gh pr list --state open --limit 100 --json number,headRefName --jq '.[] | select(.headRefName | startswith("freshness/rolling-")) | "\(.number) \(.headRefName)"'`
    - One result: that is the branch, and the PR to update.
    - None: start a cycle. The branch is `freshness/rolling-YYYY-MM-DD` (today), cut from `origin/main`.
    - More than one: comment `NEEDS-HUMAN: more than one rolling PR is open` on the newest, release the lock, STOP.
@@ -80,10 +80,15 @@ twice (Aug–Oct and Nov 2026), so don't.
    move the main checkout's HEAD mid-run. The worktree is `.claude/worktrees/freshness-rolling`.
    - Missing: `git worktree add .claude/worktrees/freshness-rolling -b <branch> origin/main` (new
      cycle) or `git worktree add .claude/worktrees/freshness-rolling <branch>` (continuing).
-   - Present: `cd` into it, check it is clean (`git status --porcelain` empty; if not, NEEDS-HUMAN
-     comment + release + STOP). Then `git checkout -B <branch> origin/main` (new cycle, only when
-     no rolling PR is open) or `git checkout <branch> && git merge --ff-only origin/<branch>`
-     (continuing).
+   - Present: `cd` into it and check it is clean with `git status --porcelain --untracked-files=no`.
+     Changes to `tools/freshness/hashes.json` and `tools/freshness/news-hashes.json` don't count:
+     they are watchdog state that every run rewrites (`watchdog:news` persists news-hashes.json even
+     when nothing changed). Any other tracked change is NEEDS-HUMAN: comment, release, STOP.
+     Then:
+     - New cycle (only when no rolling PR is open): first
+       `git checkout -- tools/freshness/hashes.json tools/freshness/news-hashes.json`, since the next
+       watchdog run rebuilds them. Then `git checkout -B <branch> origin/main`.
+     - Continuing: `git checkout <branch> && git merge --ff-only origin/<branch>`.
    - Bring a continuing cycle up to date: `git merge --no-edit origin/main`. On a conflict,
      `git merge --abort`, comment `NEEDS-HUMAN: rolling branch conflicts with main in <files>` on
      the PR, release the lock, STOP. **Never rebase or force-push the rolling branch**: Mike may be
@@ -92,17 +97,31 @@ twice (Aug–Oct and Nov 2026), so don't.
 4. **Judge staleness on the rolling branch.** It already carries this cycle's verified values, so a
    record re-verified earlier in the cycle is not redone unless it is due again.
 5. **Commit and report** after the gate below passes. Make one commit per run:
-   `freshness: <date> — <n> re-verified, <m> changed` (news-watch uses `news: ...`). Then
-   `git push origin <branch>` (plain push).
+   `freshness: <date> — <n> re-verified, <m> changed` (news-watch uses `news: ...`). Include any
+   changes to the two watchdog state files in it. Then `git push origin <branch>` (plain push).
+   Never leave report files (such as `docs/reports/freshness-sweep-*.md`) in the worktree: the run's
+   report is its PR section, or your final output when there is no PR.
    - New cycle: `gh pr create --head <branch> --title "data: rolling review from <start date>"`.
-     The body explains that this PR collects every data run until merged and says "merge when
-     ready; the next run starts a new cycle". This run's section follows.
+     The body says:
+     - "This PR collects every data run until merged. Merge it when ready, and the next run
+       starts a new cycle."
+     - "While it is open, don't merge any other data PR (`freshness/*`, `news/*`, `data/*`):
+       main would then conflict with this branch and every run would stop. Close them instead,
+       using the coverage table below."
+     - **Coverage of older open data PRs:** one row per open non-rolling data PR, with
+       PR | records it changes | re-verified in this cycle? | not covered here (and why).
+       Read each PR's changed records with `gh pr diff <n> --name-only` plus its diff. A correction
+       this cycle does not re-cover (out of today's scope, unreachable source, a news item) is
+       listed so Mike knows what closing that PR would lose. If it's in scope, re-verify it in a
+       later run of this cycle instead.
+
+     This run's section follows the body.
    - Continuing: `gh pr comment <number> --body-file <file>` with this run's section.
    - A run's section has the change table (record | field | old | new | source URL), the
      staleness report (sweep mode), flagged/unverifiable items, and NEEDS-HUMAN if any.
    - If nothing changed and nothing was re-verified: no commit, no comment.
-   - If older non-rolling `freshness/*`, `news/*` or `data/*` PRs are still open, list them in the
-     section for Mike. Don't close them yourself.
+   - If older non-rolling data PRs are still open, keep the coverage table current in each run's
+     section (what this run newly covered). Don't close them yourself.
 6. Release the lock.
 
 ## Procedure
