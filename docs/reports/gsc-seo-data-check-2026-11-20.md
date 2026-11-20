@@ -112,9 +112,33 @@ Official-page spot check of 12 airports:
 6. **Add `sc-domain:roammath.co.uk` to Search Console.** It needs a DNS TXT record.
 7. **Skip:** llms.txt tuning (no engine uses it), more schema types, and Speakable (US English news only, so inert here). FAQ rich results ended in May 2026; keep the markup anyway, since it is harmless.
 
+## Second pass, same day: done
+
+- **Indexing requested** in Search Console for all 10 pages ("Indexing requested" confirmed for each):
+  - drop-off pages for Luton, Newcastle, Belfast International and Inverness;
+  - `/parking-price-index-2026`;
+  - `/avoid-drop-off-charge/manchester` and `/blue-badge/southampton`;
+  - `/abroad/` pages for Southend, Leeds Bradford and Newcastle.
+
+  Internal links were not the cause: Luton's drop-off page already had 13 inbound internal links.
+- **How-to-pay section and payment-wording fix**, in PR #101:
+  - **New section:** "How to pay the X drop-off charge" now sits in the first screen of every paid drop-off page, with a matching FAQ answer.
+  - **Barrier airports:** the FAQ told visitors at nine barrier airports they could pay after leaving. It no longer does.
+  - **Garbled sentences:** "pay by Ticketless ANPR…" is gone from the drop-off, Blue Badge and avoid pages.
+- **Stansted title and description test:** draft PR #103, stacked on rolling PR #102. Merge it after #102.
+- **First rolling data PR:**
+  - #102 opened at 07:34 UTC.
+  - It holds two commits (news, then freshness) and has a coverage table.
+  - It corrects East Midlands (£8 for 10 minutes), Cardiff and the Heathrow T5 lounges.
+  - It re-verifies Stansted, Leeds Bradford and London City as unchanged.
+  - CI is green.
+  - It lists #82–#98 as superseded (safe to close) and #99 as still needed.
+- **Bing Webmaster Tools:** not signed in in Chrome, so verification is left to Mike.
+
 ## Not checked
 
 - The Core Web Vitals report did not load.
 - The generative-AI report gives only impressions per page; there was no per-page AI split worth recording.
 - The new pages were not checked on a deployed preview; the evidence is the build output plus 404 passing app tests.
-- The Stansted title change has not been made.
+- The Stansted title change is in draft PR #103 and is not live.
+- The How-to-pay section was checked in the built HTML only. There was no visual check, because the preview server serves the main checkout.
