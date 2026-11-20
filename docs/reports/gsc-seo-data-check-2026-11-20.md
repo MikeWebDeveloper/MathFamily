@@ -143,6 +143,11 @@ Official-page spot check of 12 airports:
 
 - The Core Web Vitals report did not load.
 - The generative-AI report gives only impressions per page; there was no per-page AI split worth recording.
-- The new pages were not checked on a deployed preview; the evidence is the build output plus 404 passing app tests.
+- No deployed preview exists: Vercel's Ignored Build Step cancels PR previews. Instead, a local dev preview of main + #100–#103 was checked by eye. It covered:
+  - the Cardiff drop-off page (#102's new £4.50/10 min tariff, with no free-alternative block);
+  - the How-to-pay section on Stansted (pay later) and Newcastle (pay on exit);
+  - the Cardiff avoid page's 308 to its drop-off page;
+  - the `Disallow: /go/` lines in robots.txt.
+
+  That check found one wording flaw (a missing full stop on dataset notes), which was fixed in #101. The dev console's hydration warning on `mf-reveal` sections is already on main and not from these PRs.
 - The Stansted title change is in draft PR #103 and is not live.
-- The How-to-pay section was checked in the built HTML only. There was no visual check, because the preview server serves the main checkout.
