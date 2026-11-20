@@ -1,4 +1,23 @@
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import type { NextConfig } from "next";
+
+/**
+ * Airports whose /avoid-drop-off-charge/<slug> page doesn't exist: free airports and charging airports
+ * with no verified free alternative (lib/avoid-content.ts qualifiesForAvoidPage, kept in step by
+ * tests/avoid-redirects.test.ts). A re-verify can remove a free alternative (Cardiff, Nov 2026), and
+ * the avoid URL would then 404 and lose its rankings, so it 308s to the airport's drop-off page.
+ * Read from the dataset JSON because the config loads before Next transpiles the workspace's TS
+ * packages. Fails open to no redirects if the file can't be found.
+ */
+function airportsWithoutAvoidPage(): string[] {
+  const rel = "packages/data/datasets/parkmath/drop-off-fees.json";
+  const file = [join(process.cwd(), "../..", rel), join(process.cwd(), rel)].find((f) => existsSync(f));
+  if (!file) return [];
+  const data = JSON.parse(readFileSync(file, "utf8")) as { records?: unknown[] } | unknown[];
+  const records = (Array.isArray(data) ? data : data.records ?? []) as { airportSlug: string; isFree: boolean; freeAlternative: unknown }[];
+  return records.filter((r) => r.isFree || r.freeAlternative === null).map((r) => r.airportSlug);
+}
 
 // Allowlist the Plausible host (script load + event POST) only when a Plausible domain is configured,
 // mirroring SiteAnalytics so a self-hosted instance works without a second CSP edit. Inert until set.
@@ -82,6 +101,11 @@ const nextConfig: NextConfig = {
         destination: "/drop-off-charges/:airport",
         permanent: true,
       },
+      ...airportsWithoutAvoidPage().map((slug) => ({
+        source: `/avoid-drop-off-charge/${slug}`,
+        destination: `/drop-off-charges/${slug}`,
+        permanent: true,
+      })),
     ];
   }
 };
