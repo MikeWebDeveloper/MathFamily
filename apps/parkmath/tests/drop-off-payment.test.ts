@@ -146,6 +146,15 @@ describe("dropOffHowToPay", () => {
       if (r.penaltyPence !== null) expect(g!.points.join(" "), r.airportSlug).toContain(`£${(r.penaltyPence / 100).toFixed(2).replace(/\.00$/, "")}`);
     }
   });
+  it("ends every point with a full stop, even when the dataset note doesn't", () => {
+    // Newcastle's note reads "Red Route no-stopping zones operate on airport roads" (no full stop).
+    expect(dropOffHowToPay(bySlug("newcastle"), "Newcastle International Airport")!.points.at(-1)).toBe(
+      "Also note: Red Route no-stopping zones operate on airport roads."
+    );
+    for (const r of records.filter((x) => !x.isFree)) {
+      for (const p of dropOffHowToPay(r, nameOf(r.airportSlug))?.points ?? []) expect(p, `${r.airportSlug}: ${p}`).toMatch(/[.!?]$/);
+    }
+  });
   it("with no published payment wording, sends readers to the official page rather than guessing", () => {
     const g = dropOffHowToPay(bySlug("glasgow"), "Glasgow Airport")!;
     // About our data, not the airport: a null field doesn't mean the airport publishes nothing.

@@ -314,11 +314,13 @@ export function dropOffHowToPay(record: DropOffRecord, airportName: string): Dro
   const wording = record.paymentDeadline?.replace(/\.$/, "").trim();
   // Quote the airport only when it adds something ("(can also pay in advance or on the day)").
   if (wording && wording.toLowerCase() !== payByPhrase(record)?.toLowerCase()) points.push(`The airport's wording: ${wording}.`);
+  // Dataset notes don't always end in a full stop ("Red Route … on airport roads"); each point is a sentence.
+  const asSentence = (s: string) => (/[.!?]$/.test(s.trim()) ? s.trim() : `${s.trim()}.`);
   if (record.penaltyPence !== null) {
-    points.push(`If you don't pay or overstay: ${formatPence(record.penaltyPence)}. ${record.penaltyNotes ?? ""}`.trim());
+    points.push(`If you don't pay or overstay: ${formatPence(record.penaltyPence)}.${record.penaltyNotes ? ` ${asSentence(record.penaltyNotes)}` : ""}`);
   } else if (record.penaltyNotes) {
     // Without an amount the notes are other rules (red routes, re-entry), not a non-payment penalty.
-    points.push(`Also note: ${record.penaltyNotes}`);
+    points.push(`Also note: ${asSentence(record.penaltyNotes)}`);
   }
   return { heading: `How to pay the ${search} drop-off charge`, points, officialUrl: record.sourceUrl };
 }
