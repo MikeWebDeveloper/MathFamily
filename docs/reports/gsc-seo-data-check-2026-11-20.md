@@ -134,6 +134,10 @@ Official-page spot check of 12 airports:
   - CI is green.
   - It lists #82–#98 as superseded (safe to close) and #99 as still needed.
 - **Bing Webmaster Tools:** not signed in in Chrome, so verification is left to Mike.
+- **Combined check:**
+  - main + #100 + #101 + #102 + #103 merge cleanly, and the tests, typecheck, tool tests and build all pass.
+  - The only URL the sitemap loses is `/avoid-drop-off-charge/cardiff`, because #102 nulls Cardiff's free alternative. #101 now 308s it to the drop-off page using a rule derived from the data.
+- **Merge order:** #100, then #101, then #102 (merge commit, not squash), then mark #103 ready.
 
 ## Not checked
 
