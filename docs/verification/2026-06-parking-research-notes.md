@@ -491,3 +491,24 @@ Triggered by the 2026-10-17 full site check: the Glasgow pre-book "from £49.99"
   - Same dates, other products: Mid Stay £68.99, Valet £76.00, Terminal Multi-Storey £102.00, Priority Parking £121.00.
 - **Dataset change:** the prebook product is renamed from "published 'from' price" to "official online quote", price 4999 → **5599**, snapshotDate 2026-06-10 → **2026-10-17**. Record verifiedAt → 2026-10-17; dataset version 1.3.1 → 1.3.2.
 - **Effect on the site:** the 7-day saving vs the £140 gate price goes from £90.01 to **£84.01**. This is a dated sample; re-quote on each sweep, as for Stansted's date-dependent "from" point.
+
+## 2026-11-20 — daily ParkMath sweep (parking v1.3.3, lounges v1.1.2)
+
+- **`parking:newcastle`** — https://www.newcastleairport.com/car-parking/car-parking-options/ (jina
+  `X-Engine: browser`). Long Stay turn-up table: up to 24 hours £50.00, 2 days £80.00, 3 days
+  £120.00, 4 days £160.00, "Per day or part thereafter £40.00". Stored 3/7/14-day totals
+  (12000/28000/56000) unchanged. The stale "Verified 2026-06-27" inside `notes` corrected;
+  `verifiedAt` → 2026-11-20.
+- **`lounges:heathrow`** (record was 99 days old on the rolling branch):
+  - **Club Aspire Lounge (Terminal 5) is closed.** Old sourceUrl
+    https://no1lounges.com/lounges-by-location/club-aspire-at-heathrow-t5/ returns HTTP 404. The
+    operator's Heathrow page https://no1lounges.com/locations/london-heathrow/ reads "No1 Lounges
+    formerly known as Club Aspire coming soon at Heathrow Terminal 5"; its T5 page
+    (/lounges-by-location/no1-lounge-at-heathrow-t5/) says "This lounge is currently closed while we
+    create a brand-new flagship No1 Lounge experience at Heathrow Terminal 5", and the operator news
+    post gives "opening in early Spring 2027". `walkInPence` 4000 → null, `priorityPass` true →
+    false, name suffixed, notes rewritten. Entry kept so the page says it is closed.
+  - **Plaza Premium Lounge (Terminal 5): "from GBP 49.00"** on
+    https://www.plazapremiumlounge.com/en-uk/find/europe/united-kingdom/london/london-heathrow-airport
+    (Departures, Terminal 5 card), read in the in-app browser (headless fetches 403). 4750 → 4900.
+  - `sourceUrl` → https://no1lounges.com/locations/london-heathrow/; watchlist regenerated.
