@@ -10,9 +10,10 @@ import { DropOffCalculatorBridge } from "@/components/drop-off-calculator-bridge
 import { DropOffParkingBridge } from "@/components/drop-off-bridge";
 import { HolidayExtrasCard } from "@/components/holiday-extras-card";
 import { StickyBookingBar } from "@/components/sticky-booking-bar";
-import { bandPriceParenthetical, buildDropOffFaqs, dropOffChangeNote, dropOffTimeLimitNote, freshnessDelta, isPerEntryTariff, nearbyDropOffComparison, paymentDeadlineChip, searchName, trendNote } from "@/lib/content";
+import { bandPriceParenthetical, buildDropOffFaqs, dropOffChangeNote, dropOffHowToPay, dropOffPaymentMode, dropOffTimeLimitNote, freshnessDelta, isPerEntryTariff, nearbyDropOffComparison, payByPhrase, paymentDeadlineChip, searchName, trendNote } from "@/lib/content";
 import { airportHasParkingVsDropOff, dropOffParkingBridge } from "@/lib/parking-vs-drop-off-content";
 import { dropOffMeta } from "@/lib/seo-meta";
+import { dropOffVerifiedSentence, pageDates } from "@/lib/page-dates";
 
 export const dynamicParams = false;
 
@@ -55,6 +56,9 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
   const sn = searchName(airport.name);
   const faqs = buildDropOffFaqs(record, airport.name);
   const timeLimitNote = dropOffTimeLimitNote(record);
+  const payGuide = dropOffHowToPay(record, airport.name);
+  const payBy = payByPhrase(record);
+  const payMode = dropOffPaymentMode(record);
   const trend = trendNote(record);
   // Freshness/news hook, on the airport's own page (previously only on the hub's keystone wedge) —
   // the same "just changed" framing independent coverage (BBC, Reddit) is picking up on for Stansted.
@@ -70,7 +74,7 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
   const hasCompare = airportHasParkingVsDropOff(slug);
   const bridge = dropOffParkingBridge(slug);
   const latestNews = newsForAirport(airport.slug, 1)[0];
-  const pageVerifiedAt = latestNews && latestNews.verifiedAt > record.verifiedAt ? latestNews.verifiedAt : record.verifiedAt;
+  const dates = pageDates(record.verifiedAt, latestNews?.verifiedAt);
 
   return (
     <article className="space-y-8">
@@ -86,7 +90,7 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
           a purchasable Product/Offer, so modelling it as InStock gave no rich-result benefit on an
           independent data site and was the page's one genuine schema-misuse/quality risk. FAQPage +
           BreadcrumbList do all the SERP work. */}
-      <JsonLd data={speakableLd({ url: `${siteUrl}/drop-off-charges/${airport.slug}`, dateModified: pageVerifiedAt })} />
+      <JsonLd data={speakableLd({ url: `${siteUrl}/drop-off-charges/${airport.slug}`, dateModified: dates.dateModified })} />
 
       {/* Visible breadcrumb nav — BreadcrumbList JSON-LD already in head */}
       <nav aria-label="Breadcrumb" className="text-sm text-ink-muted">
@@ -105,16 +109,12 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
           <p className="text-sm text-ink-muted">Official name: {airport.name} ({airport.iata}).</p>
         ) : null}
         <div className="flex flex-wrap items-center gap-3">
-          <FreshnessBadge verifiedAt={pageVerifiedAt} deltaLabel={freshnessDelta(record) ?? undefined} />
+          <FreshnessBadge verifiedAt={dates.verifiedAt} deltaLabel={freshnessDelta(record) ?? undefined} />
           <SourceCitation url={record.sourceUrl} label={`Official ${airport.name} page`} />
         </div>
         {/* Freshness moat, above the fold: answers the ranked "is this current information" query
             and matches the verified-against-official-page snippet intent (intel §1, content spec §0). */}
-        <p className="text-sm text-ink-muted">
-          Yes, this is current information: {sn} Airport&apos;s drop-off charge was verified on{" "}
-          {new Date(`${pageVerifiedAt}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" })}{" "}
-          against the official {airport.name} page.
-        </p>
+        <p className="text-sm text-ink-muted">{dropOffVerifiedSentence(sn, airport.name, dates)}</p>
       </header>
 
       {changeNote ? (
@@ -142,7 +142,7 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
         {[
           ...(record.penaltyPence !== null ? [`Penalty if unpaid: ${formatPence(record.penaltyPence)}`] : []),
           ...(record.freeAlternative ? [`Free alternative: ${record.freeAlternative.name}${isPublicTransportAlt(record.freeAlternative) ? " (public transport)" : ` (${record.freeAlternative.minutesFree} min)`}`] : []),
-          ...(record.paymentDeadline ? [`Pay by: ${record.paymentDeadline}`] : [])
+          ...(paymentDeadlineChip(record) ? [paymentDeadlineChip(record)!] : [])
         ]}
       </AnswerLead>
 
@@ -159,6 +159,27 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
         />
         <UkMap markers={[{ lat: airport.lat, lng: airport.lng, active: true }]} className="hidden h-[160px] w-auto self-center text-brand-strong sm:block" aria-hidden />
       </div>
+
+      {/* How to pay, in the first screen (Nov 2026): the paid pages' dominant queries are about paying
+          ("pay stansted drop off", "stansted drop off payment"). Built only from the record — payment
+          mode, the airport's own wording, the penalty — and links the official source page. It
+          replaces the old "If you don't pay" section lower down, which labelled barrier wording as a
+          "Payment deadline". */}
+      {payGuide ? (
+        <section className="space-y-2" aria-labelledby="how-to-pay">
+          <h2 id="how-to-pay" className="mf-underline-grow text-xl font-semibold text-ink">{payGuide.heading}</h2>
+          <ul className="list-disc space-y-1 pl-5 text-sm text-ink-muted">
+            {payGuide.points.map((point) => (
+              <li key={point}>{point}</li>
+            ))}
+          </ul>
+          <p className="text-sm">
+            <a href={payGuide.officialUrl} rel="noopener" className="font-medium text-accent-strong underline underline-offset-2 hover:text-ink">
+              Payment details on the official {airport.name} page
+            </a>
+          </p>
+        </section>
+      ) : null}
 
       {/* Above-the-fold calculator bridge (P0, tranche 2 item 7): the punchy £X-vs-£Y teaser, right
           after the primary answer stat — highest position on the page a new CTA can take without
@@ -209,7 +230,7 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
 
       {timeLimitNote ? (
         <AnswerPassage question={`Is there a time limit on the ${sn} drop-off zone?`}>
-          {timeLimitNote}{record.paymentDeadline ? <> Payment is barrier-free: you can settle online by {record.paymentDeadline}.</> : null} This {sn} drop-off charge is sometimes called the {sn} drop-off levy, the {sn} airport levy charge, or the kiss-and-fly charge — they all refer to the same forecourt fee. These figures are read from the official {airport.name} page and verified {record.verifiedAt}.
+          {timeLimitNote}{payMode === "pay-later" && payBy ? <> You pay after your visit, by {payBy}.</> : payMode === "pay-on-exit" ? <> You pay as you leave the zone.</> : null} This {sn} drop-off charge is sometimes called the {sn} drop-off levy, the {sn} airport levy charge, or the kiss-and-fly charge — they all refer to the same forecourt fee. These figures are read from the official {airport.name} page and verified {record.verifiedAt}.
         </AnswerPassage>
       ) : null}
 
@@ -227,16 +248,6 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
           {airport.name} charges {formatPence(record.bands[0]?.totalPence ?? 0)} each time a vehicle enters the
           drop-off zone — the fee doesn&apos;t depend on how long you stop. {record.feeSummary}
         </Callout>
-      ) : null}
-
-      {!record.isFree ? (
-        <section className="mf-reveal space-y-2">
-          <h2 className="mf-underline-grow text-xl font-semibold text-ink">If you don&apos;t pay</h2>
-          <p className="text-sm text-ink-muted">
-            {record.penaltyPence !== null ? `Penalty: ${formatPence(record.penaltyPence)}. ` : ""}
-            {record.penaltyNotes ?? ""} {record.paymentDeadline ? `Payment deadline: ${record.paymentDeadline}.` : ""}
-          </p>
-        </section>
       ) : null}
 
       <HolidayExtrasCard

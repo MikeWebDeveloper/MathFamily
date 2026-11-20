@@ -1,5 +1,6 @@
 import { formatPence } from "@mathfamily/engine";
 import { isPublicTransportAlt, type DropOffRecord } from "@mathfamily/data";
+import { payInstruction, payInstructionWithPenalty } from "./payment";
 
 /** How the airport's published Blue Badge policy resolves, classified ONLY from the verbatim
  *  `blueBadgePolicy` prose the dataset carries. We never invent a policy: when the official page
@@ -149,9 +150,7 @@ export function buildBlueBadgeSteps(
   if (record.paymentDeadline) {
     steps.push({
       name: "If a charge still applies, pay before the deadline",
-      text: `Where the concession doesn't cover your stay, ${airportName} lets you pay by ${record.paymentDeadline}${
-        record.penaltyPence !== null ? ` — missing it risks a ${formatPence(record.penaltyPence)} penalty` : ""
-      }.`
+      text: `Where the concession doesn't cover your stay, ${payInstructionWithPenalty(record, airportName)}`
     });
   }
 
@@ -198,7 +197,7 @@ export function buildBlueBadgeFaqs(
     faqs.push({
       question: `What if I drop off without using the Blue Badge concession at ${airportName}?`,
       answer: `The standard rules apply: ${record.penaltyNotes ?? `a penalty of ${formatPence(record.penaltyPence)} may be charged for an unpaid visit`}.${
-        record.paymentDeadline ? ` Pay by ${record.paymentDeadline}.` : ""
+        record.paymentDeadline ? ` ${payInstruction(record, airportName)}.` : ""
       } (Verified ${record.verifiedAt}.)`
     });
   }

@@ -28,6 +28,20 @@ import {
 
 const airports = loadAirports();
 const nameOf = (slug: string) => airports.find((a) => a.slug === slug)!.name;
+/** A check date typed into SERP copy goes stale the day after the next re-verification:
+ *  "2026-10-07", "Verified 2026", "Verified June 2026", "updated on 7 Oct 2026". */
+const HARD_CODED_CHECK_DATE =
+  /20\d\d-\d\d-\d\d|\b(?:[Vv]erified|[Uu]pdated|[Cc]hecked)(?: on)? (?:\d{1,2} )?(?:(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)[a-z]* )?20\d\d/;
+
+describe("HARD_CODED_CHECK_DATE", () => {
+  it("catches ISO and month-name check dates but not a fee's effective date", () => {
+    for (const s of ["Verified 2026-10-07.", "Verified 2026.", "Verified June 2026.", "Updated on 7 Oct 2026", "checked September 2026"]) {
+      expect(s).toMatch(HARD_CODED_CHECK_DATE);
+    }
+    expect("£7 for up to 10 minutes (from 1 Sep 2026).").not.toMatch(HARD_CODED_CHECK_DATE);
+    expect("Stansted drop-off charge 2026 — £10").not.toMatch(HARD_CODED_CHECK_DATE);
+  });
+});
 const dropOffs = loadDropOffDataset().records;
 const parkings = loadParkingDataset().records;
 
@@ -154,7 +168,8 @@ describe("every generated airport page fits the SERP budget", () => {
         const description = r[d];
         if (title) expect(renderedTitleLength(title), `${r.airportSlug}.${t}: "${title}"`).toBeLessThanOrEqual(MAX_TITLE_LENGTH);
         if (description) expect(description.length, `${r.airportSlug}.${d}: "${description}"`).toBeLessThanOrEqual(MAX_DESCRIPTION_LENGTH);
-        for (const s of [title, description]) if (s) expect(s, `${r.airportSlug}: "${s}"`).not.toMatch(/20\d\d-\d\d-\d\d|[Vv]erified 20\d\d/);
+        // Also month-name dates: Southend's description said "Verified June 2026" into November.
+        for (const s of [title, description]) if (s) expect(s, `${r.airportSlug}: "${s}"`).not.toMatch(HARD_CODED_CHECK_DATE);
       }
     }
   });

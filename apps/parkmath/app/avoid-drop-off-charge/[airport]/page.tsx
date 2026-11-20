@@ -12,6 +12,8 @@ import { avoidAnswer, avoidLeadFacts, buildAvoidFaqs, buildAvoidSteps, qualifies
 import { airportHasParkingVsDropOff } from "@/lib/parking-vs-drop-off-content";
 import { resolveAllParkingMerchants } from "@/lib/partners";
 import { avoidDropOffMeta } from "@/lib/seo-meta";
+import { pageDates } from "@/lib/page-dates";
+import { payInstructionWithPenalty } from "@/lib/payment";
 
 export const dynamicParams = false;
 
@@ -57,7 +59,7 @@ export default async function AvoidDropOffPage({ params }: { params: Promise<{ a
   const bridgeMerchantCount = resolveAllParkingMerchants(airport.slug, "dropoff").length;
 
   const latestNews = newsForAirport(airport.slug, 1)[0];
-  const pageVerifiedAt = latestNews && latestNews.verifiedAt > record.verifiedAt ? latestNews.verifiedAt : record.verifiedAt;
+  const dates = pageDates(record.verifiedAt, latestNews?.verifiedAt);
 
   return (
     <article className="space-y-8">
@@ -77,12 +79,12 @@ export default async function AvoidDropOffPage({ params }: { params: Promise<{ a
           { name: `${airport.name} — avoid the charge`, url: pageUrl }
         ])}
       />
-      <JsonLd data={speakableLd({ url: pageUrl, dateModified: pageVerifiedAt })} />
+      <JsonLd data={speakableLd({ url: pageUrl, dateModified: dates.dateModified })} />
 
       <header className="space-y-3">
         <PageHeading>How to avoid the {airport.name} drop-off charge</PageHeading>
         <div className="flex flex-wrap items-center gap-3">
-          <FreshnessBadge verifiedAt={pageVerifiedAt} deltaLabel={freshnessDelta(record) ?? undefined} />
+          <FreshnessBadge verifiedAt={dates.verifiedAt} deltaLabel={freshnessDelta(record) ?? undefined} />
           <SourceCitation url={record.sourceUrl} label={`Official ${airport.name} page`} />
         </div>
       </header>
@@ -144,9 +146,7 @@ export default async function AvoidDropOffPage({ params }: { params: Promise<{ a
 
       {record.paymentDeadline ? (
         <Callout variant="info" title="If you can't avoid the forecourt">
-          {airport.name} lets you pay by {record.paymentDeadline}.
-          {record.penaltyPence !== null ? ` Miss it and the penalty is ${formatPence(record.penaltyPence)}.` : ""}{" "}
-          {record.penaltyNotes ?? ""}
+          {payInstructionWithPenalty(record, airport.name)} {record.penaltyNotes ?? ""}
         </Callout>
       ) : null}
 
