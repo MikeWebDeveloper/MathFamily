@@ -22,6 +22,12 @@ describe("dropOffPaymentMode", () => {
     expect(dropOffPaymentMode(withDeadline("Card / contactless / Apple Pay / Google Pay at the exit barrier"))).toBe("pay-on-exit");
     expect(dropOffPaymentMode(withDeadline("Ticketless ANPR barrier system; monitored 24/7"))).toBe("pay-on-exit");
   });
+  it("never reads barrierless / barrier-free / online wording without a deadline as pay-on-exit", () => {
+    // A wrong "No — you pay as you leave" is the same class of bug as the old wrong "Yes".
+    expect(dropOffPaymentMode(withDeadline("Online, barrierless ANPR"))).toBe("unknown");
+    expect(dropOffPaymentMode(withDeadline("Barrier-free — pay online"))).toBe("unknown");
+    expect(dropOffPaymentMode(withDeadline("Pay online via the airport website"))).toBe("unknown");
+  });
   it("claims nothing when the airport publishes no payment wording, or wording it can't classify", () => {
     expect(dropOffPaymentMode(withDeadline(null))).toBe("unknown");
     expect(dropOffPaymentMode(withDeadline("See the official page"))).toBe("unknown");
@@ -142,6 +148,7 @@ describe("dropOffHowToPay", () => {
   });
   it("with no published payment wording, sends readers to the official page rather than guessing", () => {
     const g = dropOffHowToPay(bySlug("glasgow"), "Glasgow Airport")!;
-    expect(g.points[0]).toBe("Glasgow Airport doesn't publish a separate payment deadline. Check the official page for how to pay before you travel.");
+    // About our data, not the airport: a null field doesn't mean the airport publishes nothing.
+    expect(g.points[0]).toBe("We haven't recorded how Glasgow Airport takes payment for drop-off. Check the official page before you travel.");
   });
 });

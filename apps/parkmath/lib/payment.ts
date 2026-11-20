@@ -20,11 +20,15 @@ export type DropOffPaymentMode = "pay-later" | "pay-on-exit" | "unknown";
 
 const PAY_LATER = /midnight|23:59|the day after|following day/i;
 const PAY_ON_EXIT = /on exit|barrier|payment station|on leaving/i;
+const NOT_AT_A_BARRIER = /barrierless|barrier-free|barrier free|online/i;
 
 export function dropOffPaymentMode(record: Pick<DropOffRecord, "paymentDeadline">): DropOffPaymentMode {
   const t = record.paymentDeadline;
   if (!t) return "unknown";
   if (PAY_LATER.test(t)) return "pay-later";
+  // "Barrierless" / "Barrier-free" / "online" contain or imply the opposite of a barrier you pay at;
+  // without a stated deadline they stay unknown rather than become a wrong "you pay as you leave".
+  if (NOT_AT_A_BARRIER.test(t)) return "unknown";
   if (PAY_ON_EXIT.test(t)) return "pay-on-exit";
   return "unknown";
 }

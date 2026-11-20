@@ -308,7 +308,8 @@ export function dropOffHowToPay(record: DropOffRecord, airportName: string): Dro
   } else if (mode === "pay-on-exit") {
     points.push("You pay as you leave the drop-off zone, not afterwards.");
   } else {
-    points.push(`${airportName} doesn't publish a separate payment deadline. Check the official page for how to pay before you travel.`);
+    // About our data, not the airport: a null field doesn't mean the airport publishes nothing.
+    points.push(`We haven't recorded how ${airportName} takes payment for drop-off. Check the official page before you travel.`);
   }
   const wording = record.paymentDeadline?.replace(/\.$/, "").trim();
   // Quote the airport only when it adds something ("(can also pay in advance or on the day)").
