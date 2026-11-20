@@ -1,4 +1,6 @@
 import { formatPence, loungeBreakEven, nearestAirports } from "@mathfamily/engine";
+import { dropOffPaymentMode, payByPhrase } from "./payment";
+export { dropOffPaymentMode, payByPhrase, paymentDeadlineChip, type DropOffPaymentMode } from "./payment";
 import { isPublicTransportAlt, type Airport, type DropOffRecord, type LoungeRecord, type PriorityPassTier } from "@mathfamily/data";
 
 /**
@@ -57,19 +59,36 @@ export function buildDropOffFaqs(record: DropOffRecord, airportName: string): { 
     });
   }
 
-  if (record.paymentDeadline) {
+  if (record.paymentDeadline && !record.isFree) {
+    // "How do I pay …" is the dominant query on the paid pages (GSC, Nov 2026: "pay stansted drop
+    // off", "stansted drop off payment", "how to pay for stansted drop off"). The answer is the
+    // How-to-pay guide's own lines, so the FAQ and the on-page section can't disagree.
+    const guide = dropOffHowToPay(record, airportName);
+    if (guide) faqs.push({ question: `How do I pay the ${search} drop-off charge?`, answer: guide.points.join(" ") });
+  }
+
+  const mode = dropOffPaymentMode(record);
+  const payBy = payByPhrase(record);
+  if (mode === "pay-later" && payBy) {
     faqs.push({
       question: `Can I pay the ${search} drop-off charge after I leave?`,
-      answer: `Yes — pay by ${record.paymentDeadline}. ${record.penaltyNotes ?? ""}`.trim()
+      answer: `Yes — pay by ${payBy}. ${record.penaltyNotes ?? ""}`.trim()
     });
-    // When the airport's deadline says payment is online, add the exact "pay … online" Q-match
+    // When the airport's wording says payment is online, add the exact "pay … online" Q-match
     // (GSC: "southend airport drop off payment online" pos 11.6, real payment-intent demand).
-    if (/online/i.test(record.paymentDeadline)) {
+    if (/online/i.test(record.paymentDeadline ?? "")) {
       faqs.push({
         question: `Can I pay the ${search} drop-off charge online?`,
-        answer: `Yes — ${search} Airport's drop-off charge is paid online (barrierless ANPR), not at a barrier. You can pay before your visit, on the day, or after you leave, by ${record.paymentDeadline.replace(/\s*\(online[^)]*\)/i, "")}. ${record.penaltyNotes ?? ""}`.trim()
+        answer: `Yes — ${search} Airport's drop-off charge is paid online, not at a barrier, by ${payBy}. ${record.penaltyNotes ?? ""}`.trim()
       });
     }
+  } else if (mode === "pay-on-exit") {
+    // Until Nov 2026 this said "Yes — pay by Ticketless ANPR … paid on exit" for every barrier
+    // airport (Newcastle, Liverpool, Leeds Bradford, …): a wrong "yes" in the FAQ JSON-LD.
+    faqs.push({
+      question: `Can I pay the ${search} drop-off charge after I leave?`,
+      answer: `No — you pay as you leave the drop-off zone. The airport's wording: ${record.paymentDeadline!.replace(/\.$/, "")}.`
+    });
   }
 
   // Penalty / PCN question — distinct per airport (Heathrow £80→£40 PCN, Bristol/Southend red-route
@@ -266,8 +285,41 @@ export function freshnessDelta(record: Pick<DropOffRecord, "isFree" | "bands" | 
 }
 
 /** The payment-deadline caveat text, driven by the real data (never generic copy). */
-export function paymentDeadlineChip(record: Pick<DropOffRecord, "paymentDeadline">): string | null {
-  return record.paymentDeadline ? `Pay by: ${record.paymentDeadline}` : null;
+export interface DropOffPayGuide {
+  heading: string;
+  points: string[];
+  officialUrl: string;
+}
+
+/**
+ * The drop-off page's "How to pay" section, and the "How do I pay …" FAQ answer. Every line comes
+ * from the record: the payment mode its wording implies, the wording itself, and the penalty. It
+ * says "online" only when the airport's wording does, and never invents a payment URL: the link is
+ * the record's own official source page. Null for free airports.
+ */
+export function dropOffHowToPay(record: DropOffRecord, airportName: string): DropOffPayGuide | null {
+  if (record.isFree) return null;
+  const search = searchName(airportName);
+  const mode = dropOffPaymentMode(record);
+  const points: string[] = [];
+  if (mode === "pay-later") {
+    const by = payByPhrase(record);
+    points.push(by ? `You pay after your visit: by ${by}.` : "You pay after your visit, by the deadline below.");
+  } else if (mode === "pay-on-exit") {
+    points.push("You pay as you leave the drop-off zone, not afterwards.");
+  } else {
+    points.push(`${airportName} doesn't publish a separate payment deadline. Check the official page for how to pay before you travel.`);
+  }
+  const wording = record.paymentDeadline?.replace(/\.$/, "").trim();
+  // Quote the airport only when it adds something ("(can also pay in advance or on the day)").
+  if (wording && wording.toLowerCase() !== payByPhrase(record)?.toLowerCase()) points.push(`The airport's wording: ${wording}.`);
+  if (record.penaltyPence !== null) {
+    points.push(`If you don't pay or overstay: ${formatPence(record.penaltyPence)}. ${record.penaltyNotes ?? ""}`.trim());
+  } else if (record.penaltyNotes) {
+    // Without an amount the notes are other rules (red routes, re-entry), not a non-payment penalty.
+    points.push(`Also note: ${record.penaltyNotes}`);
+  }
+  return { heading: `How to pay the ${search} drop-off charge`, points, officialUrl: record.sourceUrl };
 }
 
 /**

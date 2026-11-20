@@ -170,7 +170,8 @@ describe("buildBlueBadgeSteps", () => {
     const steps = buildBlueBadgeSteps(exemptRecord, "Heathrow");
     expect(steps.length).toBeGreaterThan(0);
     expect(steps.some((s) => s.text.includes("100% discount"))).toBe(true);
-    expect(steps.some((s) => s.text.includes("Midnight the day after"))).toBe(true);
+    // The deadline is lifted out of the airport's wording ("lets you pay by midnight the day after …").
+    expect(steps.some((s) => /lets you pay by midnight the day after/i.test(s.text))).toBe(true);
   });
   it("returns no steps for a no-process airport (no fabricated HowTo)", () => {
     expect(buildBlueBadgeSteps(noneRecord, "Luton")).toEqual([]);

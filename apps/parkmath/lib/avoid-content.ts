@@ -1,5 +1,6 @@
 import { formatPence } from "@mathfamily/engine";
 import { isPublicTransportAlt, type DropOffRecord, type FreeAlternative } from "@mathfamily/data";
+import { dropOffPaymentMode, payByPhrase, payInstruction, penaltyClause } from "./payment";
 
 /** "free for N minutes" for a car-park alternative, or the honest transport phrasing otherwise.
  *  Centralises the difference so no page hard-codes "free for {minutesFree} minutes". */
@@ -41,7 +42,17 @@ export function avoidLeadFacts(record: DropOffRecord): string[] {
   if (alt) facts.push(`Free alternative: ${alt.name}${isPublicTransportAlt(alt) ? " (public transport to the terminal)" : ` (${alt.minutesFree} min free)`}`);
   const fee = headlinePence(record);
   if (fee !== null) facts.push(`Forecourt charge avoided: ${formatPence(fee)} per drop-off`);
-  if (record.paymentDeadline) facts.push(`If you do use the forecourt, pay by: ${record.paymentDeadline}`);
+  if (record.paymentDeadline) {
+    const mode = dropOffPaymentMode(record);
+    const by = payByPhrase(record);
+    facts.push(
+      mode === "pay-later" && by
+        ? `If you do use the forecourt, pay by: ${by}`
+        : mode === "pay-on-exit"
+          ? "If you do use the forecourt, you pay on exit"
+          : `If you do use the forecourt: ${record.paymentDeadline}`
+    );
+  }
   if (record.penaltyPence !== null) facts.push(`Penalty for an unpaid forecourt visit: ${formatPence(record.penaltyPence)}`);
   return facts;
 }
@@ -78,11 +89,7 @@ export function buildAvoidSteps(
   if (record.paymentDeadline) {
     steps.push({
       name: "If you do pay, don't miss the deadline",
-      text: `If you can't avoid the forecourt, ${airportName} lets you pay by ${record.paymentDeadline}${
-        record.penaltyPence !== null
-          ? ` — missing it risks a ${formatPence(record.penaltyPence)} penalty`
-          : ""
-      }. ${record.penaltyNotes ?? ""}`.trim()
+      text: `If you can't avoid the forecourt, ${payInstruction(record, airportName)}${penaltyClause(record)}. ${record.penaltyNotes ?? ""}`.trim()
     });
   }
 
@@ -124,7 +131,7 @@ export function buildAvoidFaqs(
   if (record.paymentDeadline) {
     faqs.push({
       question: `If I use the ${airportName} forecourt, when do I have to pay?`,
-      answer: `Pay by ${record.paymentDeadline}.${
+      answer: `${whenToPay(record)}${
         record.penaltyPence !== null ? ` Otherwise you risk a ${formatPence(record.penaltyPence)} penalty.` : ""
       } ${record.penaltyNotes ?? ""}`.trim()
     });
@@ -141,4 +148,13 @@ export function avoidIndexSummary(
   if (rows.length === 0) return "No charging UK airport in our data currently publishes a free drop-off alternative.";
   const dearest = [...rows].sort((a, b) => b.feePence - a.feePence)[0]!;
   return `${rows.length} charging UK airports publish a verified free drop-off alternative. The biggest single saving is at ${dearest.name}: skip the ${formatPence(dearest.feePence)} forecourt fee by using the ${dearest.altName}.`;
+}
+
+/** "When do I have to pay?" answered from the airport's wording, never "Pay by <barrier wording>". */
+function whenToPay(record: DropOffRecord): string {
+  const mode = dropOffPaymentMode(record);
+  const by = payByPhrase(record);
+  if (mode === "pay-later" && by) return `Pay by ${by}.`;
+  if (mode === "pay-on-exit") return "As you leave: you pay on exit, not afterwards.";
+  return `${(record.paymentDeadline ?? "").replace(/\.$/, "")}.`;
 }

@@ -22,6 +22,7 @@ import { airportHasParkingVsDropOff } from "@/lib/parking-vs-drop-off-content";
 import { resolveAllParkingMerchants } from "@/lib/partners";
 import { blueBadgeMeta } from "@/lib/seo-meta";
 import { pageDates } from "@/lib/page-dates";
+import { payInstructionWithPenalty } from "@/lib/payment";
 
 export const dynamicParams = false;
 
@@ -177,9 +178,7 @@ export default async function BlueBadgePage({ params }: { params: Promise<{ airp
 
       {!record.isFree && record.paymentDeadline ? (
         <Callout variant="info" title="If a charge still applies">
-          {airport.name} lets you pay by {record.paymentDeadline}.
-          {record.penaltyPence !== null ? ` Miss it and the penalty is ${formatPence(record.penaltyPence)}.` : ""}{" "}
-          {record.penaltyNotes ?? ""}
+          {payInstructionWithPenalty(record, airport.name)} {record.penaltyNotes ?? ""}
         </Callout>
       ) : null}
 
