@@ -22,6 +22,7 @@ import {
   qualifiesForParkingVsDropOff
 } from "@/lib/parking-vs-drop-off-content";
 import { tripLengthModel } from "@/lib/trip-length-content";
+import { pageDates } from "@/lib/page-dates";
 
 export const dynamicParams = false;
 
@@ -79,7 +80,7 @@ export default async function ParkingVsDropOffPage({ params }: { params: Promise
   const pageUrl = `${siteUrl}/parking-vs-drop-off/${airport.slug}`;
 
   const latestNews = newsForAirport(airport.slug, 1)[0];
-  const pageVerifiedAt = latestNews && latestNews.verifiedAt > model.verifiedAt ? latestNews.verifiedAt : model.verifiedAt;
+  const dates = pageDates(model.verifiedAt, latestNews?.verifiedAt);
 
   // Covered durations for the reference grid — only durations the gate product actually prices.
   const gate = parking.products.find((p) => p.productType === "gate")!;
@@ -101,7 +102,7 @@ export default async function ParkingVsDropOffPage({ params }: { params: Promise
           { name: `${airport.name} — park or drop off`, url: pageUrl }
         ])}
       />
-      <JsonLd data={speakableLd({ url: pageUrl, dateModified: pageVerifiedAt })} />
+      <JsonLd data={speakableLd({ url: pageUrl, dateModified: dates.dateModified })} />
       {/* HowTo JSON-LD intentionally NOT emitted: Google retired HowTo rich results (Sep 2023) so it
           earns zero SERP benefit, and its steps duplicate the FAQPage's decision Q&A on the same page
           (a duplicate-structured-data quality risk). FAQPage carries the decision intent for AI/LLM
@@ -110,7 +111,7 @@ export default async function ParkingVsDropOffPage({ params }: { params: Promise
       <header className="space-y-3">
         <PageHeading>{parkingVsDropOffDecisionH1(airport.name)}</PageHeading>
         <div className="flex flex-wrap items-center gap-3">
-          <FreshnessBadge verifiedAt={pageVerifiedAt} />
+          <FreshnessBadge verifiedAt={dates.verifiedAt} />
           <SourceCitation url={dropOff.sourceUrl} label={`Official ${airport.name} drop-off`} />
           <SourceCitation url={parking.sourceUrl} label={`Official ${airport.name} parking`} />
         </div>

@@ -13,6 +13,7 @@ import { StickyBookingBar } from "@/components/sticky-booking-bar";
 import { bandPriceParenthetical, buildDropOffFaqs, dropOffChangeNote, dropOffTimeLimitNote, freshnessDelta, isPerEntryTariff, nearbyDropOffComparison, paymentDeadlineChip, searchName, trendNote } from "@/lib/content";
 import { airportHasParkingVsDropOff, dropOffParkingBridge } from "@/lib/parking-vs-drop-off-content";
 import { dropOffMeta } from "@/lib/seo-meta";
+import { dropOffVerifiedSentence, pageDates } from "@/lib/page-dates";
 
 export const dynamicParams = false;
 
@@ -70,7 +71,7 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
   const hasCompare = airportHasParkingVsDropOff(slug);
   const bridge = dropOffParkingBridge(slug);
   const latestNews = newsForAirport(airport.slug, 1)[0];
-  const pageVerifiedAt = latestNews && latestNews.verifiedAt > record.verifiedAt ? latestNews.verifiedAt : record.verifiedAt;
+  const dates = pageDates(record.verifiedAt, latestNews?.verifiedAt);
 
   return (
     <article className="space-y-8">
@@ -86,7 +87,7 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
           a purchasable Product/Offer, so modelling it as InStock gave no rich-result benefit on an
           independent data site and was the page's one genuine schema-misuse/quality risk. FAQPage +
           BreadcrumbList do all the SERP work. */}
-      <JsonLd data={speakableLd({ url: `${siteUrl}/drop-off-charges/${airport.slug}`, dateModified: pageVerifiedAt })} />
+      <JsonLd data={speakableLd({ url: `${siteUrl}/drop-off-charges/${airport.slug}`, dateModified: dates.dateModified })} />
 
       {/* Visible breadcrumb nav — BreadcrumbList JSON-LD already in head */}
       <nav aria-label="Breadcrumb" className="text-sm text-ink-muted">
@@ -105,16 +106,12 @@ export default async function DropOffPage({ params }: { params: Promise<{ airpor
           <p className="text-sm text-ink-muted">Official name: {airport.name} ({airport.iata}).</p>
         ) : null}
         <div className="flex flex-wrap items-center gap-3">
-          <FreshnessBadge verifiedAt={pageVerifiedAt} deltaLabel={freshnessDelta(record) ?? undefined} />
+          <FreshnessBadge verifiedAt={dates.verifiedAt} deltaLabel={freshnessDelta(record) ?? undefined} />
           <SourceCitation url={record.sourceUrl} label={`Official ${airport.name} page`} />
         </div>
         {/* Freshness moat, above the fold: answers the ranked "is this current information" query
             and matches the verified-against-official-page snippet intent (intel §1, content spec §0). */}
-        <p className="text-sm text-ink-muted">
-          Yes, this is current information: {sn} Airport&apos;s drop-off charge was verified on{" "}
-          {new Date(`${pageVerifiedAt}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" })}{" "}
-          against the official {airport.name} page.
-        </p>
+        <p className="text-sm text-ink-muted">{dropOffVerifiedSentence(sn, airport.name, dates)}</p>
       </header>
 
       {changeNote ? (
