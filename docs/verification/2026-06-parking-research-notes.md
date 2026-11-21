@@ -512,3 +512,13 @@ Triggered by the 2026-10-17 full site check: the Glasgow pre-book "from £49.99"
     https://www.plazapremiumlounge.com/en-uk/find/europe/united-kingdom/london/london-heathrow-airport
     (Departures, Terminal 5 card), read in the in-app browser (headless fetches 403). 4750 → 4900.
   - `sourceUrl` → https://no1lounges.com/locations/london-heathrow/; watchlist regenerated.
+
+## 2026-11-21 — daily ParkMath check, `lounges:glasgow` (lounges v1.1.3)
+
+Re-covers open PR #99 inside the rolling cycle. Glasgow Airport's site-wide alert banner still carries "UpperDeck Lounge Refurbishments" (no dates or closure stated, so no news item).
+
+- **UpperDeck Lounge, official page** https://www.glasgowairport.com/at-the-airport/airport-services/upperdeck-lounge/ (read via r.jina.ai with the browser engine; direct fetches 403). The top PRICING block reads "Adult (18+): From £30 / Children (4-17) : From £17 / Infants (0-3) : Free". On 2026-10-07 it read "From £27".
+  - Dataset: `walkInPence` 2700 → **3000**; record `verifiedAt` → 2026-11-21.
+  - **Inconsistency on the official page (unchanged since #99 saw it on 2026-11-19):** the lower "Useful Information → Pricing" block still reads "Adult: From £27 / Children: From £17". The top, age-banded block is treated as current. Flagged NEEDS-HUMAN.
+- Opening times (Monday–Sunday 04:45–20:30) and maximum stay (up to 3 hours) unchanged.
+- Also read today, unchanged and not re-stamped (verified yesterday in this cycle): Newcastle Long Stay turn-up-and-park £50 / £80 / £120 / £160, then £40 per day (https://www.newcastleairport.com/car-parking/car-parking-options/). London City drop-off page returned the Cloudflare "Performing security verification" page; value kept from 2026-11-20.
