@@ -1,15 +1,15 @@
 {
-  "version": "1.1.1",
-  "lastUpdated": "2026-10-07",
+  "version": "1.1.3",
+  "lastUpdated": "2026-11-21",
   "records": [
     {
       "airportSlug": "heathrow",
       "lounges": [
-        { "name": "Club Aspire Lounge (Terminal 5)", "walkInPence": 4000, "priorityPass": true, "notes": "Operator No1 Lounges; from-price per adult, pre-booking recommended. Priority Pass accepted pre-booking only." },
-        { "name": "Plaza Premium Lounge (Terminal 5)", "walkInPence": 4750, "priorityPass": true, "notes": "Operator Plaza Premium; on-the-day 2-hour walk-in rate (~10% off if booked online). Priority Pass accepted subject to capacity." }
+        { "name": "Club Aspire Lounge (Terminal 5) — closed, No1 Lounge coming soon", "walkInPence": null, "priorityPass": false, "notes": "Closed. Operator No1 Lounges: the Club Aspire T5 booking page returns 404 (2026-11-20); the operator's Heathrow page lists 'No1 Lounges formerly known as Club Aspire coming soon at Heathrow Terminal 5', and its T5 lounge page says the lounge is closed while a new flagship No1 Lounge is created, opening early Spring 2027. Last published from-price was £40 per adult. No price or Priority Pass access while closed." },
+        { "name": "Plaza Premium Lounge (Terminal 5)", "walkInPence": 4900, "priorityPass": true, "notes": "Operator Plaza Premium; official 'from GBP 49.00' price on plazapremiumlounge.com's London Heathrow listing (Departures, Terminal 5), read 2026-11-20; may vary by date. Priority Pass accepted subject to capacity." }
       ],
-      "sourceUrl": "https://no1lounges.com/lounges-by-location/club-aspire-at-heathrow-t5/",
-      "verifiedAt": "2026-08-13"
+      "sourceUrl": "https://no1lounges.com/locations/london-heathrow/",
+      "verifiedAt": "2026-11-20"
     },
     {
       "airportSlug": "gatwick",
@@ -65,10 +65,10 @@
     {
       "airportSlug": "glasgow",
       "lounges": [
-        { "name": "UpperDeck Lounge", "walkInPence": 2700, "priorityPass": true, "notes": "Operator Aspire; official Glasgow Airport page PRICING: 'Adult (18+): From £27, Children (4-17): From £17, Infants (0-3): Free'. Maximum stay up to 3 hours. Priority Pass accepted (prioritypass.com directory)." }
+        { "name": "UpperDeck Lounge", "walkInPence": 3000, "priorityPass": true, "notes": "Operator Aspire; official Glasgow Airport page PRICING: 'Adult (18+): From £30, Children (4-17): From £17, Infants (0-3): Free' (read 2026-11-21; was From £27 on 2026-10-07). A lower 'Useful Information' block on the same page still reads 'Adult: From £27'. Maximum stay up to 3 hours. Priority Pass accepted (prioritypass.com directory)." }
       ],
       "sourceUrl": "https://www.glasgowairport.com/at-the-airport/airport-services/upperdeck-lounge/",
-      "verifiedAt": "2026-10-07"
+      "verifiedAt": "2026-11-21"
     },
     {
       "airportSlug": "bristol",

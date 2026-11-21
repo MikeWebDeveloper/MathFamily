@@ -634,3 +634,53 @@ Changed (3):
 - **Exeter** — Car Park P1 0-15 min now £8.00 (was £6.00); 15-60 min is £15 (the old penaltyNotes said £7.50). SEO title/description + Blue Badge text updated.
 
 Reconfirmed unchanged (20): heathrow £7 (PCN £80/£40), gatwick £10 / 10 min + £1/min to 20 min, £30 daily max, 30 min max stay, manchester £5.50/£6.50/£25, edinburgh £8.50 + £1/min, birmingham free first 10 min (Premium Set Down £7/15 min), glasgow £7/15 min + £1/min, bristol 8.50/10.50/13/30/60, belfast-international 5/8/13, newcastle Express 6/12/16/20/28, london-city £8/5 min + £1/min, max 10 min (the page does not restate the penalty amount; penaltyPence 10000 not re-read), aberdeen £7/15 min + £1/min, belfast-city £4/10 min, southampton £7/20 min (enforcement £80), cardiff 4.50/6/9/20, southend £8/10 min, bournemouth £8 up to 30 min (60-min £15 band not re-read: tariff table not exposed to the browser pane), norwich £8/20 min, inverness free 15 min, teesside £2.50/£5/£7 per hour, prestwick 4.50/8.50/14.50/21/33.
+
+## 2026-11-20 — daily ParkMath sweep (drop-off v1.4.4)
+
+Scope: records with `verifiedAt` older than 46 days on the rolling branch (stansted, leeds-bradford,
+east-midlands, priority-pass), the standing target london-city, and the `pendingSince` Cardiff
+drop-off page. Transport: plain browser-UA curl (Stansted, East Midlands and Leeds Bradford tariffs
+read from the CMS JSON / Next.js RSC payload in the raw HTML; Cardiff's new HubSpot page), jina
+`X-Engine: browser` (London City).
+
+Changed (2):
+
+- **East Midlands** (`drop-off:east-midlands`). https://www.eastmidlandsairport.com/parking/pick-up-and-drop-off/
+  Rapid Drop-off table: "Up to 10 minutes | £8" and "Every minute after the first 10 minutes | £1".
+  Site ticker (timePosted 2026-09-28): "From Tuesday 29th September 2026, charges for the Rapid Drop
+  Off area at East Midlands Airport have changed: £8 for stays up to 10 minutes." Max stay 30 min and
+  the £100 / £60-in-14-days charge are unchanged. Short Stay 1 is now "Up to 30 minutes | £12",
+  "Up to 1 hour | £14" (was £6 / £8 in the Blue Badge text). Long Stay 2 still free for 60 min then
+  £1/min; "the shuttle service is currently unavailable and is expected to resume in spring 2027".
+  Bands `[{15,500}]` → `[{10,800}]`; feeSummary, penaltyNotes, blueBadgePolicy and
+  freeAlternative.details rewritten. `priorYearFeePence` left null: £5/15 min vs £8/10 min is not a
+  like-for-like prior-year figure.
+- **Cardiff** (`drop-off:cardiff`). The old page (cardiff-airport.com/car-parking-options/drop-off-and-pick-up-cwl/)
+  now lands on the info.cardiff-airport.com holding homepage. The official tariff is on
+  https://info.cardiff-airport.com/parking: "Drop Off Zone … Up to 10 minutes £4.50 Every additional
+  10 minutes £4.50"; "Pick Up Zone … Up to 10 minutes £4.50 10-20 minutes £6.00 20-60 minutes £9.00
+  Up to 2 hours £20.00 2-24 hours £50.00". The stored 450/600/900/2000 ladder is the **Pick Up**
+  ladder. Drop-off bands are now the published £4.50-per-10-minutes rate written out cumulatively
+  (10→450, 20→900, 30→1350, 40→1800, 50→2250, 60→2700; arithmetic = 450 × blocks). penaltyNotes
+  (Pick Up's 2–24h £50 text) → null. **freeAlternative → null**: the new page describes Car Park 2
+  only as "Formerly Long Stay … 6-7 minutes' walk" and states no free period; the "first 20 minutes
+  free" claim is no longer published anywhere on the site. sourceUrl repointed; watchlist
+  regenerated; the orphaned `pendingSince` hash entry for the dead `/parking-cwl/…` URL removed.
+
+Re-verified unchanged (verifiedAt → 2026-11-20):
+
+- **Stansted** — "Up to 15 minutes | £10", "Over 15 minutes | £28", "Maximum stay is 30 minutes",
+  £100 PCN reduced to £60 within 14 days, Mid Stay "Up to 60 minutes | Free". Blue Badge text
+  reworded to match the page: "All vehicles using the Express Set Down area must pay for their
+  visit. However, if you require longer than the allocated 15-minute period, please speak to one of
+  our traffic marshals" (the stored "extension to the 30-minute maximum stay" was not on the page).
+- **Leeds Bradford** — "0-10 minutes £8.00", 10-20 £10.00, 20-30 £13.50, 30-60 £16.50; Blue Badge
+  60 min for the same £8; One Hour Free Parking Zone in Mid Stay.
+- **London City** — "0 - 5 minutes | £8.00", "£1 per minute thereafter", "Maximum stay 10 minutes",
+  "£100.00 enforcement charge … reduced to £60.00 if paid within 14 days", Blue Badge 10 min free on
+  registration.
+- **Priority Pass** (UK egress, ipinfo = GB, "United Kingdom" residence selector): Standard "£69
+  Annual fee", "£24 Member visit fee"; Standard Plus "£229", "10 FREE visits, then £24"; Prestige
+  "£419", "All Free Member visits".
+
+Dataset `version` 1.4.3 → 1.4.4, `lastUpdated` → 2026-11-20.
