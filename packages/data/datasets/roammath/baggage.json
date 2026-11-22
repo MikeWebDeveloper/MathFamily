@@ -1,6 +1,6 @@
 {
-  "version": "1.0.0",
-  "lastUpdated": "2026-06-10",
+  "version": "1.0.1",
+  "lastUpdated": "2026-11-22",
   "records": [
     {
       "airlineSlug": "ryanair",
@@ -40,7 +40,7 @@
       ],
       "dynamicPricingNote": "Jet2 charges hold bags dynamically by route and date; only the excess per-kg rate is a published fixed figure",
       "sourceUrl": "https://www.jet2.com/en/baggage",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-11-22"
     },
     {
       "airlineSlug": "british-airways",
@@ -61,11 +61,11 @@
         { "item": "Carry-on bag (40x30x20cm, up to 10kg)", "minPence": 0, "maxPence": 0, "note": "Free for all passengers" },
         { "item": "Trolley/large cabin bag (55x40x23cm, WIZZ Priority)", "minPence": null, "maxPence": null, "note": "Priced dynamically by route and date; no fixed published GBP figure" },
         { "item": "Checked bag (10/20/26/32kg)", "minPence": null, "maxPence": null, "note": "Priced dynamically by route and date; no fixed published GBP figure" },
-        { "item": "Excess baggage per kg (converted)", "minPence": 1123, "maxPence": 1123, "note": "Published as EUR 13/kg; converted at 1 EUR = 0.864 GBP (08 Jun 2026)" }
+        { "item": "Excess baggage per kg (converted)", "minPence": 1089, "maxPence": 1089, "note": "Published as EUR 13/kg (airport surcharge); converted at 1 EUR = 0.83735 GBP (ECB reference rate, 20 Nov 2026)" }
       ],
       "dynamicPricingNote": "Wizz Air prices cabin and checked bags dynamically; the only published fixed rate is the EUR 13/kg airport excess fee (recorded converted to GBP)",
       "sourceUrl": "https://www.wizzair.com/en-gb/help-centre/booking-information-and-services/baggage/baggage-allowance/checked-in-baggage",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-11-22"
     },
     {
       "airlineSlug": "tui",
@@ -79,7 +79,7 @@
       ],
       "dynamicPricingNote": "TUI publishes fixed flight-only hold-bag and excess rates (package bookings include 20kg+); short-haul vs long-haul rates differ",
       "sourceUrl": "https://www.tui.co.uk/destinations/info/luggage-allowance",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-11-22"
     },
     {
       "airlineSlug": "virgin-atlantic",
@@ -99,13 +99,13 @@
       "airlineSlug": "aer-lingus",
       "airlineName": "Aer Lingus",
       "fees": [
-        { "item": "10kg cabin bag (Saver)", "minPence": 0, "maxPence": 0, "note": "Free if checked at the gate, or carried on; included with Plus/Advantage/AerSpace" },
+        { "item": "10kg cabin bag (Saver)", "minPence": 0, "maxPence": 0, "note": "Free if dropped off at check-in (collected at the carousel); taking it on board costs from £9.99 on Saver; included with Plus/Advantage/AerSpace" },
         { "item": "First checked bag (20kg/23kg)", "minPence": 0, "maxPence": null, "note": "Included free on Smart/Flex (23kg) and Plus/Advantage/AerSpace (20kg); Saver fares charged dynamically by route and channel" },
         { "item": "Overweight bag (23-32kg, converted)", "minPence": 6800, "maxPence": 6800, "note": "Published as GBP 68 / EUR 75; recorded as GBP figure" }
       ],
       "dynamicPricingNote": "Aer Lingus includes a checked bag on all fares above Saver; Saver checked-bag fees are dynamic by route and booking channel, while the overweight rate is a published fixed figure",
       "sourceUrl": "https://www.aerlingus.com/travel-information/baggage-information/checked-baggage/",
-      "verifiedAt": "2026-06-10"
+      "verifiedAt": "2026-11-22"
     },
     {
       "airlineSlug": "vueling",
