@@ -1,6 +1,6 @@
 {
-  "version": "1.3.3",
-  "lastUpdated": "2026-11-20",
+  "version": "1.3.4",
+  "lastUpdated": "2026-11-23",
   "records": [
     {
       "airportSlug": "heathrow",
@@ -9,16 +9,16 @@
           "productType": "gate",
           "name": "Park & Ride (formerly Long Stay) — drive-up",
           "prices": [
-            { "days": 3, "totalPence": 12160 },
-            { "days": 7, "totalPence": 27120 },
-            { "days": 14, "totalPence": 53300 }
+            { "days": 3, "totalPence": 13000 },
+            { "days": 7, "totalPence": 29000 },
+            { "days": 14, "totalPence": 57000 }
           ],
           "snapshotDate": null,
-          "notes": "Official drive-up tariff: £46.80 first 24h + £37.40 per subsequent 24h. 3/7/14-day totals computed from those official per-day rates (3d=46.80+2x37.40; 7d=46.80+6x37.40; 14d=46.80+13x37.40)."
+          "notes": "Official on-the-day tariff (table: 'First day £50.00', 'Additional 24-hour periods £40.00'; prose says periods 'starting at £40.00'). 3/7/14-day totals computed from those official per-day rates (3d=50+2x40; 7d=50+6x40; 14d=50+13x40). Previous tariff was £46.80 + £37.40/day (verified 2026-10-07)."
         }
       ],
       "sourceUrl": "https://www.heathrow.com/transport-and-directions/heathrow-parking/heathrow-park-and-ride",
-      "verifiedAt": "2026-10-07"
+      "verifiedAt": "2026-11-23"
     },
     {
       "airportSlug": "gatwick",
@@ -36,7 +36,7 @@
         }
       ],
       "sourceUrl": "https://www.gatwickairport.com/parking/roll-up-car-park-prices.html",
-      "verifiedAt": "2026-10-07"
+      "verifiedAt": "2026-11-23"
     },
     {
       "airportSlug": "manchester",
@@ -63,7 +63,7 @@
         }
       ],
       "sourceUrl": "https://www.manchesterairport.co.uk/parking/turn-up-and-park/",
-      "verifiedAt": "2026-10-07"
+      "verifiedAt": "2026-11-23"
     },
     {
       "airportSlug": "stansted",
@@ -90,7 +90,7 @@
         }
       ],
       "sourceUrl": "https://www.stanstedairport.com/parking/long-stay/",
-      "verifiedAt": "2026-10-07"
+      "verifiedAt": "2026-11-23"
     },
     {
       "airportSlug": "luton",
@@ -108,7 +108,7 @@
         }
       ],
       "sourceUrl": "https://www.london-luton.co.uk/parking-prices",
-      "verifiedAt": "2026-10-07"
+      "verifiedAt": "2026-11-23"
     },
     {
       "airportSlug": "edinburgh",
@@ -126,7 +126,7 @@
         }
       ],
       "sourceUrl": "https://www.edinburghairport.com/edinburgh-airport-parking/long-stay-parking",
-      "verifiedAt": "2026-10-07"
+      "verifiedAt": "2026-11-23"
     },
     {
       "airportSlug": "birmingham",
@@ -144,7 +144,7 @@
         }
       ],
       "sourceUrl": "https://www.birminghamairport.co.uk/parking/turn-up-prices/",
-      "verifiedAt": "2026-10-07"
+      "verifiedAt": "2026-11-23"
     },
     {
       "airportSlug": "bristol",
@@ -162,7 +162,7 @@
         }
       ],
       "sourceUrl": "https://www.bristolairport.co.uk/parking/parking-prices/",
-      "verifiedAt": "2026-10-07"
+      "verifiedAt": "2026-11-23"
     },
     {
       "airportSlug": "glasgow",
@@ -225,7 +225,7 @@
         }
       ],
       "sourceUrl": "https://www.leedsbradfordairport.co.uk/parking",
-      "verifiedAt": "2026-10-07"
+      "verifiedAt": "2026-11-23"
     },
     {
       "airportSlug": "liverpool",
@@ -243,7 +243,7 @@
         }
       ],
       "sourceUrl": "https://www.liverpoolairport.com/parking/long-stay",
-      "verifiedAt": "2026-10-07"
+      "verifiedAt": "2026-11-23"
     },
     {
       "airportSlug": "teesside",
@@ -279,7 +279,7 @@
         }
       ],
       "sourceUrl": "https://www.glasgowprestwick.com/parking/",
-      "verifiedAt": "2026-10-07"
+      "verifiedAt": "2026-11-23"
     },
     {
       "airportSlug": "aberdeen",
@@ -304,7 +304,7 @@
         }
       ],
       "sourceUrl": "https://www.aberdeenairport.com/transport-and-directions/aberdeen-airport-parking/long-stay-parking/",
-      "verifiedAt": "2026-10-07"
+      "verifiedAt": "2026-11-23"
     },
     {
       "airportSlug": "belfast-international",
@@ -322,7 +322,7 @@
         }
       ],
       "sourceUrl": "https://www.belfastairport.com/parking/long-stay-car-park",
-      "verifiedAt": "2026-10-07"
+      "verifiedAt": "2026-11-23"
     },
     {
       "airportSlug": "exeter",
@@ -340,7 +340,7 @@
         }
       ],
       "sourceUrl": "https://exeter-airport.co.uk/car-parking/",
-      "verifiedAt": "2026-10-07"
+      "verifiedAt": "2026-11-23"
     }
   ]
 }

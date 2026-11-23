@@ -522,3 +522,44 @@ Re-covers open PR #99 inside the rolling cycle. Glasgow Airport's site-wide aler
   - **Inconsistency on the official page (unchanged since #99 saw it on 2026-11-19):** the lower "Useful Information → Pricing" block still reads "Adult: From £27 / Children: From £17". The top, age-banded block is treated as current. Flagged NEEDS-HUMAN.
 - Opening times (Monday–Sunday 04:45–20:30) and maximum stay (up to 3 hours) unchanged.
 - Also read today, unchanged and not re-stamped (verified yesterday in this cycle): Newcastle Long Stay turn-up-and-park £50 / £80 / £120 / £160, then £40 per day (https://www.newcastleairport.com/car-parking/car-parking-options/). London City drop-off page returned the Cloudflare "Performing security verification" page; value kept from 2026-11-20.
+
+## 2026-11-23 — daily ParkMath sweep, 2026-10-07 batch (parking v1.3.4, lounges v1.1.4)
+
+Scope: every parking and lounge record still stamped 2026-10-07 (15 parking, 8 lounges), plus the
+standing target `parking:newcastle` (read-only, stamped 2026-11-20). Transport: browser-UA curl for
+most pages; jina `X-Engine: browser` for Bristol, Belfast International, Newcastle; in-app Browser
+pane for Birmingham (turn-up prices + lounges) and the Teesside retry.
+
+**Changed**
+
+- **parking:heathrow** — https://www.heathrow.com/transport-and-directions/heathrow-parking/heathrow-park-and-ride
+  Table: "First day £50.00", "Additional 24-hour periods £40.00"; prose: "On the day, pricing for
+  Park & Ride parking starts at £50.00 for the first day, with further 24-hour periods starting at
+  £40.00 per day." Was £46.80 + £37.40. Totals recomputed: 3d 50+2×40 = £130 (13000), 7d 50+6×40 =
+  £290 (29000), 14d 50+13×40 = £570 (57000).
+- **lounges:manchester** — https://escapelounges.com/uk/airport-lounges/
+  "Manchester Terminal 2 - Escape Lounges From £36.99 per person" (3999 → 3699);
+  "Manchester Terminal 3 – Escape Lounges From £31.99 per person" (2999 → 3199). From-price basis
+  unchanged. The listing also shows "The Executive by Escape Lounges From £57.99" at T2 (not in the
+  dataset).
+
+**Re-verified unchanged (verifiedAt → 2026-11-23)**
+
+- Parking: gatwick, manchester (incl. JetParks pre-book £54.99), stansted (Mid Stay £48 is on
+  /parking/turn-up-and-park/, not the record's Long Stay URL), luton, edinburgh, birmingham (Car Park 7
+  "Up to 24 hours £51.00", "Per day thereafter* £44.00"), bristol, leeds-bradford, liverpool,
+  prestwick, aberdeen (incl. pre-book £49.99), belfast-international, exeter (P2 unchanged; the page
+  now also publishes a P3 drive-up tariff — 3 days £70, 5 days £130, then £30/day — which the record's
+  notes call pre-book only; not added).
+- Lounges: gatwick (South £34, North £40), stansted £28.99, luton MyLounge £37.99, edinburgh £36.99,
+  birmingham (Aspire South "£42.99", No1 "£38"), bristol (£39.99 / £35), newcastle £46. Priority Pass
+  flags rest on the prioritypass.com directory and were not re-fetched.
+- Standing target parking:newcastle: £50 / £80 / £120 / £160, then £40/day — matches; not re-stamped
+  (verified 2026-11-20 this cycle).
+
+**Unverifiable — parking:teesside (kept, NOT re-stamped).** The official parking page no longer
+carries the "Standard turn-up and park rates" table that the 8200/10500/21000 values come from. Read
+via browser-UA curl, jina browser and the in-app Browser pane: the page now shows only the drop-off
+tariff (0–10 min £2.50, 10–60 min £5.00, £7 per hour after) and "Free parking for up to 2 hours when
+you spend minimum of £5 in the terminal". Values kept; verifiedAt stays 2026-10-07 (60-day warning
+on 2026-12-06). Needs a human decision.

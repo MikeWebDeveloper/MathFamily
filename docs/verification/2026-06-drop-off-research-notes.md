@@ -684,3 +684,33 @@ Re-verified unchanged (verifiedAt → 2026-11-20):
   "£419", "All Free Member visits".
 
 Dataset `version` 1.4.3 → 1.4.4, `lastUpdated` → 2026-11-20.
+
+## 2026-11-23 — daily ParkMath sweep, 2026-10-07 batch (drop-off v1.4.5)
+
+Scope: the 21 drop-off records stamped 2026-10-07, plus the standing target london-city (read-only,
+stamped 2026-11-20). Transport: browser-UA curl; jina `X-Engine: browser` for Bristol, Belfast
+International, Newcastle, Belfast City, Bournemouth, London City; in-app Browser pane for Birmingham
+and Glasgow (both block every headless rung). verifiedAt → 2026-11-23 on all 21.
+
+**Changed**
+
+- **drop-off:belfast-city** `freeAlternative.details` — https://www.belfastcityairport.com/Parking/Drop-Off-and-Pick-Up
+  "You can avail of ten minutes free Drop off & Pick up in our Long Stay Car Park … Staying a little
+  longer? Parking is just £7.00 for up to 1 hour." (was £8). Express "minimum charge of £4.00 applies
+  for the first ten minutes" and the "minimum of £8.00" re-entry-within-15-minutes charge unchanged.
+- **drop-off:manchester** `sourceUrl` — the old /parking/pick-up-and-drop-off/ now 301s to
+  https://www.manchesterairport.co.uk/getting-to-and-from/pick-up-and-drop-off/ ; repointed, watchlist
+  regenerated. Prices unchanged.
+
+**Re-verified unchanged:** heathrow £7 (PCN £80/£40; Park & Ride "0 - 29 mins Free"), gatwick £10 /
+10 min + £1/min, £30 max, 30-min max stay (penalty amount not restated on page), manchester, luton,
+edinburgh £8.50 + £1/min, birmingham free 10 min + no return within one hour (Premium Set Down £7 /
+15 min; Blue Badge text still absent, policy retained from 2026-06-10), glasgow "Pick up & Drop Off -
+15 minutes £7.00", "Per minute thereafter £1.00", "After 30 mins £50.00", bristol 8.50/10.50/13/30/60,
+belfast-international 5/8/13, newcastle Express bands, liverpool £7/£10/£25, aberdeen, southampton £7
+(Blue Badge line not on page), exeter, southend £8/10 min (Red Route / station notes not on page),
+bournemouth, norwich, inverness (free 15 min, £3.90 to 30 min per HIAL PDF), teesside £2.50/£5/£7 per
+hour, prestwick. Prior-year fees are historic and not re-read.
+
+**Standing target london-city:** "0 - 5 minutes £8.00", £1 per minute after, 10-min max, £100 → £60
+within 14 days — matches; not re-stamped (verified 2026-11-20).
