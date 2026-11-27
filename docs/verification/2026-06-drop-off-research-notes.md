@@ -714,3 +714,15 @@ hour, prestwick. Prior-year fees are historic and not re-read.
 
 **Standing target london-city:** "0 - 5 minutes £8.00", £1 per minute after, 10-min max, £100 → £60
 within 14 days — matches; not re-stamped (verified 2026-11-20).
+
+## 2026-11-27 — daily ParkMath check (drop-off v1.4.5, no change)
+
+Scope: no drop-off record is older than 46 days on the rolling branch; the daily news sweep found
+no announced drop-off fee change, so the only drop-off target was the standing hard-blocked one.
+
+- **Standing target london-city** — https://www.londoncityairport.com/parking/drop-off (jina
+  `X-Engine: browser`): "0 - 5 minutes £8.00", "5 minutes and above £1 per minute thereafter",
+  "Maximum stay 10 minutes", "£100.00 enforcement charge … reduced to £60.00 if paid within 14 days".
+  Matches the stored record; not re-stamped (verified 2026-11-20 this cycle).
+- Incidental: Teesside parking page still shows the drop-off tariff 0–10 min £2.50, 10–60 min £5.00,
+  £7 per hour thereafter (unchanged).

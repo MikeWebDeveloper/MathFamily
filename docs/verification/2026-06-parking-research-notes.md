@@ -563,3 +563,26 @@ via browser-UA curl, jina browser and the in-app Browser pane: the page now show
 tariff (0–10 min £2.50, 10–60 min £5.00, £7 per hour after) and "Free parking for up to 2 hours when
 you spend minimum of £5 in the terminal". Values kept; verifiedAt stays 2026-10-07 (60-day warning
 on 2026-12-06). Needs a human decision.
+
+## 2026-11-27 — daily ParkMath check (parking v1.3.4, lounges v1.1.4, no change)
+
+Scope: ParkMath records older than 46 days on the rolling branch (only `parking:teesside`,
+verifiedAt 2026-10-07), the standing target `parking:newcastle`, and nothing price-relevant from the
+news sweep. ParkMath has no `pendingSince` entries in `tools/freshness/hashes.json` (the three that are
+pending are RoamMath baggage pages, out of scope for the daily run).
+
+- **parking:teesside: still unverifiable (kept, NOT re-stamped).** Re-read
+  https://www.teessideinternational.com/teesside-airport-parking/ with browser-UA curl and jina. The
+  page still has no "Standard turn-up and park rates" table. Its only tariff is the drop-off one, plus
+  "Free parking for up to 2 hours when you spend minimum of £5 in the terminal". The only fees PDF
+  the page links to, `TIA_Fees-and-Charges_26.27-1st-edition-updated.pdf`, lists aeronautical
+  charges only (aircraft parking, passes), not car parking. verifiedAt stays 2026-10-07, and the
+  60-day warning fires on **2026-12-06**. Needs a human decision.
+- **Standing target parking:newcastle**, at https://www.newcastleairport.com/car-parking/car-parking-options/
+  (read with jina `X-Engine: browser`). The Long Stay turn-up table reads: up to 24 hours £50.00,
+  2 days £80.00, 3 days £120.00, 4 days £160.00, then "Per day or part thereafter £40.00". This matches
+  the stored record. Not re-stamped, because it was verified on 2026-11-20 in this cycle.
+- **Incidental: lounges:glasgow.** The official UpperDeck page still reads "Adult (18+): From £30",
+  matching the stored record. Its site-wide alert, "UpperDeck Lounge Refurbishments", is a toilet
+  refurbishment ("there may be some disruption"). It changes neither price nor access. Not re-stamped,
+  because it was verified on 2026-11-21.
