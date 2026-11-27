@@ -1,17 +1,10 @@
 {
-  "generatedAt": "2026-10-17",
+  "generatedAt": "2026-11-23",
   "entries": [
     {
       "url": "https://binaries.vodafone.co.uk/gbnnsauqav4t/3ynRZJ6BvgpyYyPmoIAHX0/ff9c9463c41c25d0cbf8f5d27f955afb/evo-paym-charges-guide.pdf",
       "refs": [
         "roaming:vodafone"
-      ],
-      "watchable": true
-    },
-    {
-      "url": "https://cardiff-airport.com/car-parking-options/drop-off-and-pick-up-cwl/",
-      "refs": [
-        "drop-off:cardiff"
       ],
       "watchable": true
     },
@@ -30,7 +23,7 @@
       "watchable": true
     },
     {
-      "url": "https://ee.co.uk/content/dam/help/terms-and-conditions/price-plans/mobile/sim-only-price-plans/_ee-pay-monthly-standard-and-non-standard-price-guide-31st_March_2026_1.1.pdf",
+      "url": "https://ee.co.uk/content/dam/help/terms-and-conditions/price-plans/mobile/_ee-pay-monthly-standard-and-non-standard-price-guide-4th_November_2026.pdf",
       "refs": [
         "roaming:ee"
       ],
@@ -69,6 +62,13 @@
       "watchable": true
     },
     {
+      "url": "https://info.cardiff-airport.com/parking",
+      "refs": [
+        "drop-off:cardiff"
+      ],
+      "watchable": true
+    },
+    {
       "url": "https://londonsouthendairport.com/corporate/media-centre/",
       "refs": [
         "news:southend"
@@ -97,6 +97,13 @@
       "watchable": true
     },
     {
+      "url": "https://no1lounges.com/locations/london-heathrow/",
+      "refs": [
+        "lounges:heathrow"
+      ],
+      "watchable": true
+    },
+    {
       "url": "https://no1lounges.com/lounges-by-location/aspire-at-newcastle/",
       "refs": [
         "lounges:newcastle"
@@ -107,13 +114,6 @@
       "url": "https://no1lounges.com/lounges-by-location/club-aspire-at-gatwick-south/",
       "refs": [
         "lounges:gatwick"
-      ],
-      "watchable": true
-    },
-    {
-      "url": "https://no1lounges.com/lounges-by-location/club-aspire-at-heathrow-t5/",
-      "refs": [
-        "lounges:heathrow"
       ],
       "watchable": true
     },
@@ -725,7 +725,7 @@
       "watchable": true
     },
     {
-      "url": "https://www.manchesterairport.co.uk/parking/pick-up-and-drop-off/",
+      "url": "https://www.manchesterairport.co.uk/getting-to-and-from/pick-up-and-drop-off/",
       "refs": [
         "drop-off:manchester"
       ],

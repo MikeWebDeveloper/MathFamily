@@ -1,6 +1,6 @@
 {
-  "version": "1.4.3",
-  "lastUpdated": "2026-10-07",
+  "version": "1.4.5",
+  "lastUpdated": "2026-11-23",
   "records": [
     {
       "airportSlug": "heathrow",
@@ -26,7 +26,7 @@
       },
       "priorYearFeePence": 600,
       "sourceUrl": "https://www.heathrow.com/transport-and-directions/terminal-drop-off-charge",
-      "verifiedAt": "2026-10-07",
+      "verifiedAt": "2026-11-23",
       "seoTitle": "Heathrow drop-off payment — £7 charge 2026",
       "seoDescription": "Heathrow drop-off: £7 per vehicle. Pay online by midnight next day. £80 penalty if unpaid. Free 30-minute Park & Ride alternative."
     },
@@ -54,7 +54,7 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://www.gatwickairport.com/transport-options/drop-off.html",
-      "verifiedAt": "2026-10-07",
+      "verifiedAt": "2026-11-23",
       "seoTitle": "Gatwick drop-off pay — £10 charge 2026",
       "seoDescription": "Gatwick drop-off: £10 for up to 10 minutes, then £1/min to a £30 max. Free 2-hour Long Stay alternative. Pay online by midnight next day.",
       "blueBadgeSeoTitle": "Gatwick Blue Badge drop-off — free if registered",
@@ -91,8 +91,8 @@
         "details": "Free drop-off area a little further from the terminals, with a free shuttle bus running 24/7 (journey takes a few minutes)"
       },
       "priorYearFeePence": 500,
-      "sourceUrl": "https://www.manchesterairport.co.uk/parking/pick-up-and-drop-off/",
-      "verifiedAt": "2026-10-07",
+      "sourceUrl": "https://www.manchesterairport.co.uk/getting-to-and-from/pick-up-and-drop-off/",
+      "verifiedAt": "2026-11-23",
       "seoTitle": "Manchester airport drop-off charges — £5.50 2026",
       "seoDescription": "Manchester Airport drop-off: £5.50 for 5 minutes up to £25 for 30. Free JetParks 1 alternative with 24/7 shuttle. Pay by midnight next day."
     },
@@ -116,7 +116,7 @@
       "penaltyPence": 10000,
       "penaltyNotes": "£100 Parking Charge Notice for non-payment, reduced to £60 if paid within 14 days. Maximum stay is 30 minutes, and a £28 charge applies for re-entering within 30 minutes of first entering.",
       "paymentDeadline": "23:59 the day after your visit",
-      "blueBadgePolicy": "Normal charges apply, but where the passenger holds a valid Blue Badge the driver is eligible for an extension to the 30-minute maximum stay if reasonably required",
+      "blueBadgePolicy": "All vehicles using the Express Set Down area must pay for their visit; if you need longer than the 15-minute period, speak to a traffic marshal on site for guidance",
       "freeAlternative": {
         "name": "Mid Stay car park free drop-off",
         "minutesFree": 60,
@@ -124,7 +124,7 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://www.stanstedairport.com/getting-to-and-from/pick-up-and-drop-off/",
-      "verifiedAt": "2026-09-03",
+      "verifiedAt": "2026-11-20",
       "seoTitle": "Stansted drop-off charge 2026 — £10, £28 over",
       "seoDescription": "Stansted Airport drop-off charge: £10 for up to 15 min, £28 beyond 15. Free Mid Stay drop-off zone; pay online by 23:59 the next day.",
       "blueBadgeSeoTitle": "Stansted Blue Badge drop-off — free option",
@@ -154,7 +154,7 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://www.london-luton.co.uk/to-and-from-lla/dropping-off",
-      "verifiedAt": "2026-10-07"
+      "verifiedAt": "2026-11-23"
     },
     {
       "airportSlug": "edinburgh",
@@ -181,7 +181,7 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://www.edinburghairport.com/edinburgh-airport-parking/drop-off-and-pick-up",
-      "verifiedAt": "2026-10-07",
+      "verifiedAt": "2026-11-23",
       "seoTitle": "Edinburgh airport drop-off — £8.50, free option",
       "seoDescription": "Edinburgh Airport drop-off: £8.50 for 10 minutes, then £1/min. Long Stay car park is free for the first 30 min. Blue Badge holders 1 hour free."
     },
@@ -204,7 +204,7 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://www.birminghamairport.co.uk/parking/drop-off-and-pick-up/",
-      "verifiedAt": "2026-10-07",
+      "verifiedAt": "2026-11-23",
       "blueBadgeSeoTitle": "Birmingham Blue Badge drop-off — 30 min free",
       "blueBadgeSeoDescription": "Blue Badge holders get the first 30 minutes free in Premium Set Down at Birmingham Airport: validate at the NCP cabin with the badge and registration."
     },
@@ -232,7 +232,7 @@
       },
       "priorYearFeePence": 600,
       "sourceUrl": "https://www.glasgowairport.com/to-and-from/pick-up-and-drop-off/",
-      "verifiedAt": "2026-10-07",
+      "verifiedAt": "2026-11-23",
       "seoTitle": "Glasgow airport drop-off charge — £7 2026",
       "seoDescription": "Glasgow Airport drop-off: £7 for up to 15 minutes, then £1/min, £50 beyond 30 min. Free 1-hour Long Stay zone. Blue Badge 30 minutes free."
     },
@@ -276,7 +276,7 @@
       },
       "priorYearFeePence": 700,
       "sourceUrl": "https://www.bristolairport.co.uk/parking/drop-off-and-pick-up/",
-      "verifiedAt": "2026-10-07",
+      "verifiedAt": "2026-11-23",
       "seoTitle": "Bristol Airport drop-off charge 2026 — £8.50 fee",
       "seoDescription": "Bristol Airport drop-off: £8.50 for up to 10 minutes in the Drop Off & Pick Up car park, £100 penalty if unpaid. Free option: the Waiting Zone (1 hour)."
     },
@@ -313,7 +313,7 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://www.belfastairport.com/parking/pick-up-and-drop-off",
-      "verifiedAt": "2026-10-07"
+      "verifiedAt": "2026-11-23"
     },
     {
       "airportSlug": "newcastle",
@@ -355,7 +355,7 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://www.newcastleairport.com/car-parking/picking-up-dropping-off/",
-      "verifiedAt": "2026-10-07",
+      "verifiedAt": "2026-11-23",
       "seoTitle": "Newcastle airport drop-off charges — £6 fee 2026",
       "seoDescription": "Newcastle Airport drop-off: £6 for up to 10 minutes, paid on exit by ANPR. Free 90-minute Waiting Zone with a free 24/7 shuttle bus.",
       "blueBadgeSeoTitle": "Newcastle Blue Badge drop-off — free 90-min zone",
@@ -394,7 +394,7 @@
       },
       "priorYearFeePence": 500,
       "sourceUrl": "https://www.liverpoolairport.com/parking/express-drop-off",
-      "verifiedAt": "2026-10-07",
+      "verifiedAt": "2026-11-23",
       "seoTitle": "Liverpool Airport drop-off charges 2026 — £7 fee",
       "seoDescription": "Liverpool John Lennon Airport drop-off: £7 for up to 10 minutes in Express Drop Off & Pick Up (from 1 Sep 2026). Free option: Drop-off 2, 20 min free."
     },
@@ -423,7 +423,7 @@
       },
       "priorYearFeePence": 0,
       "sourceUrl": "https://www.londoncityairport.com/parking/drop-off",
-      "verifiedAt": "2026-10-07"
+      "verifiedAt": "2026-11-20"
     },
     {
       "airportSlug": "leeds-bradford",
@@ -449,35 +449,35 @@
       },
       "priorYearFeePence": 700,
       "sourceUrl": "https://www.leedsbradfordairport.co.uk/parking",
-      "verifiedAt": "2026-09-04",
+      "verifiedAt": "2026-11-20",
       "optionsSeoTitle": "Leeds Bradford drop-off charge 2026 — £8 or free",
       "optionsSeoDescription": "How much does Leeds Bradford Airport charge for drop-off? £8 for up to 10 minutes, or free in the One Hour Free Parking Zone. Compared with parking."
     },
     {
       "airportSlug": "east-midlands",
       "isFree": false,
-      "feeSummary": "£5 for up to 15 minutes (Rapid Drop-off, barrier-free in front of the terminal)",
+      "feeSummary": "£8 for up to 10 minutes, then £1 per minute (Rapid Drop-off, barrier-free in front of the terminal)",
       "bands": [
         {
-          "upToMinutes": 15,
-          "totalPence": 500
+          "upToMinutes": 10,
+          "totalPence": 800
         }
       ],
       "maxStayMinutes": 30,
       "perMinuteAfterPence": 100,
       "maxChargePence": null,
       "penaltyPence": 10000,
-      "penaltyNotes": "Rapid Drop-Off is £5 for up to 15 minutes, then £1 per minute; maximum stay 30 minutes. A £100 Parking Charge is issued if payment is not received by midnight the day after your visit, reduced to £60 if paid within 14 days",
+      "penaltyNotes": "Rapid Drop-Off is £8 for up to 10 minutes, then £1 per minute; maximum stay 30 minutes (charges changed from 29 September 2026). A £100 Parking Charge is issued if payment is not received by midnight the day after your visit, reduced to £60 if paid within 14 days",
       "paymentDeadline": "Barrier-free — pay online by midnight the day after your visit (payment cannot be made on exit; no cash or cheque)",
-      "blueBadgePolicy": "Blue Badge holders park free for up to 30 minutes at Short Stay 1 (nearest the terminal) and up to 60 minutes at Long Stay 2, for both drop-off and pick-up. General drivers pay £6 for up to 30 minutes at Short Stay 1 (£8 up to 1 hour). No separate Blue Badge concession is published for the barrierless Rapid Drop-off lane",
+      "blueBadgePolicy": "Blue Badge holders park free for up to 30 minutes at Short Stay 1 (nearest the terminal) and up to 60 minutes at Long Stay 2, for both drop-off and pick-up. General drivers pay £12 for up to 30 minutes at Short Stay 1 (£14 up to 1 hour). No separate Blue Badge concession is published for the barrierless Rapid Drop-off lane",
       "freeAlternative": {
         "name": "Long Stay 2 car park",
         "minutesFree": 60,
-        "details": "Free for up to 60 minutes for drop-off and pick-up, then £1 per minute. Long Stay 2 is a 15–20 minute walk from the terminal, or take the free shuttle bus"
+        "details": "Free for up to 60 minutes for drop-off and pick-up, then £1 per minute. Long Stay 2 is a 15–20 minute walk from the terminal; the shuttle service is currently unavailable and is expected to resume in spring 2027"
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://www.eastmidlandsairport.com/parking/pick-up-and-drop-off/",
-      "verifiedAt": "2026-09-04"
+      "verifiedAt": "2026-11-20"
     },
     {
       "airportSlug": "aberdeen",
@@ -503,7 +503,7 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://www.aberdeenairport.com/transport-and-directions/dropping-off-at-aberdeen-airport/",
-      "verifiedAt": "2026-10-07"
+      "verifiedAt": "2026-11-23"
     },
     {
       "airportSlug": "belfast-city",
@@ -525,11 +525,11 @@
       "freeAlternative": {
         "name": "Long Stay car park",
         "minutesFree": 10,
-        "details": "Take a ticket on entry and reinsert it at the exit barrier within 10 minutes to avoid a charge; longer stays are charged at £8 for up to one hour"
+        "details": "Take a ticket on entry and reinsert it at the exit barrier within 10 minutes to avoid a charge; longer stays are charged at £7 for up to one hour"
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://www.belfastcityairport.com/Parking/Drop-Off-and-Pick-Up",
-      "verifiedAt": "2026-10-07"
+      "verifiedAt": "2026-11-23"
     },
     {
       "airportSlug": "southampton",
@@ -551,12 +551,12 @@
       "freeAlternative": null,
       "priorYearFeePence": null,
       "sourceUrl": "https://www.southamptonairport.com/to-from/pick-up-drop-off/",
-      "verifiedAt": "2026-10-07"
+      "verifiedAt": "2026-11-23"
     },
     {
       "airportSlug": "cardiff",
       "isFree": false,
-      "feeSummary": "£4.50 for up to 10 minutes in the Drop Off Zone",
+      "feeSummary": "£4.50 for up to 10 minutes in the Drop Off Zone, then £4.50 for every additional 10 minutes",
       "bands": [
         {
           "upToMinutes": 10,
@@ -564,32 +564,36 @@
         },
         {
           "upToMinutes": 20,
-          "totalPence": 600
-        },
-        {
-          "upToMinutes": 60,
           "totalPence": 900
         },
         {
-          "upToMinutes": 120,
-          "totalPence": 2000
+          "upToMinutes": 30,
+          "totalPence": 1350
+        },
+        {
+          "upToMinutes": 40,
+          "totalPence": 1800
+        },
+        {
+          "upToMinutes": 50,
+          "totalPence": 2250
+        },
+        {
+          "upToMinutes": 60,
+          "totalPence": 2700
         }
       ],
       "maxStayMinutes": null,
       "perMinuteAfterPence": null,
       "maxChargePence": null,
       "penaltyPence": null,
-      "penaltyNotes": "Vehicles must not be left unattended and may be removed; 2–24 hours costs £50, and £50 per day for all subsequent days",
+      "penaltyNotes": null,
       "paymentDeadline": null,
       "blueBadgePolicy": "Not specifically stated on the official page; a special assistance vehicle is available — check with the airport",
-      "freeAlternative": {
-        "name": "Car Park 2",
-        "minutesFree": 20,
-        "details": "First 20 minutes free in Car Park 2; a special assistance vehicle is available for passengers with reduced mobility"
-      },
+      "freeAlternative": null,
       "priorYearFeePence": null,
-      "sourceUrl": "https://cardiff-airport.com/car-parking-options/drop-off-and-pick-up-cwl/",
-      "verifiedAt": "2026-10-07"
+      "sourceUrl": "https://info.cardiff-airport.com/parking",
+      "verifiedAt": "2026-11-20"
     },
     {
       "airportSlug": "exeter",
@@ -615,7 +619,7 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://exeter-airport.co.uk/car-parking/",
-      "verifiedAt": "2026-10-07",
+      "verifiedAt": "2026-11-23",
       "optionsSeoTitle": "Exeter Airport drop-off charge 2026 — £8 or free",
       "optionsSeoDescription": "How much does Exeter Airport charge for drop-off? £8 for up to 15 minutes in Car Park P1, or free for 30 minutes in Car Park P4. Compared with parking."
     },
@@ -644,7 +648,7 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://londonsouthendairport.com/getting-to-and-from/pick-up-drop-off",
-      "verifiedAt": "2026-10-07",
+      "verifiedAt": "2026-11-23",
       "seoTitle": "Southend drop-off charge 2026 — £8, pay online",
       "seoDescription": "Southend Airport Express drop-off: £8 for up to 10 min, opposite the terminal. Pay online by midnight next day, barrierless ANPR. Verified June 2026."
     },
@@ -672,7 +676,7 @@
       "freeAlternative": null,
       "priorYearFeePence": null,
       "sourceUrl": "https://www.bournemouthairport.com/car-parking/",
-      "verifiedAt": "2026-10-07"
+      "verifiedAt": "2026-11-23"
     },
     {
       "airportSlug": "norwich",
@@ -694,7 +698,7 @@
       "freeAlternative": null,
       "priorYearFeePence": null,
       "sourceUrl": "https://www.norwichairport.co.uk/car-parking/",
-      "verifiedAt": "2026-10-07"
+      "verifiedAt": "2026-11-23"
     },
     {
       "airportSlug": "inverness",
@@ -715,7 +719,7 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://www.hial.co.uk/inverness-airport/airport-information-8/4",
-      "verifiedAt": "2026-10-07"
+      "verifiedAt": "2026-11-23"
     },
     {
       "airportSlug": "teesside",
@@ -745,7 +749,7 @@
       },
       "priorYearFeePence": null,
       "sourceUrl": "https://www.teessideinternational.com/teesside-airport-parking/",
-      "verifiedAt": "2026-10-07"
+      "verifiedAt": "2026-11-23"
     },
     {
       "airportSlug": "prestwick",
@@ -783,7 +787,7 @@
       "freeAlternative": null,
       "priorYearFeePence": null,
       "sourceUrl": "https://www.glasgowprestwick.com/parking/",
-      "verifiedAt": "2026-10-07",
+      "verifiedAt": "2026-11-23",
       "seoTitle": "Prestwick drop-off 2026 — £4.50 for a full hour",
       "seoDescription": "Prestwick Airport drop-off: £4.50 for a full 60 minutes in Car Park 1, outside the terminal, far longer than most UK airports. Blue Badge: 30 min free."
     }

@@ -491,3 +491,98 @@ Triggered by the 2026-10-17 full site check: the Glasgow pre-book "from £49.99"
   - Same dates, other products: Mid Stay £68.99, Valet £76.00, Terminal Multi-Storey £102.00, Priority Parking £121.00.
 - **Dataset change:** the prebook product is renamed from "published 'from' price" to "official online quote", price 4999 → **5599**, snapshotDate 2026-06-10 → **2026-10-17**. Record verifiedAt → 2026-10-17; dataset version 1.3.1 → 1.3.2.
 - **Effect on the site:** the 7-day saving vs the £140 gate price goes from £90.01 to **£84.01**. This is a dated sample; re-quote on each sweep, as for Stansted's date-dependent "from" point.
+
+## 2026-11-20 — daily ParkMath sweep (parking v1.3.3, lounges v1.1.2)
+
+- **`parking:newcastle`** — https://www.newcastleairport.com/car-parking/car-parking-options/ (jina
+  `X-Engine: browser`). Long Stay turn-up table: up to 24 hours £50.00, 2 days £80.00, 3 days
+  £120.00, 4 days £160.00, "Per day or part thereafter £40.00". Stored 3/7/14-day totals
+  (12000/28000/56000) unchanged. The stale "Verified 2026-06-27" inside `notes` corrected;
+  `verifiedAt` → 2026-11-20.
+- **`lounges:heathrow`** (record was 99 days old on the rolling branch):
+  - **Club Aspire Lounge (Terminal 5) is closed.** Old sourceUrl
+    https://no1lounges.com/lounges-by-location/club-aspire-at-heathrow-t5/ returns HTTP 404. The
+    operator's Heathrow page https://no1lounges.com/locations/london-heathrow/ reads "No1 Lounges
+    formerly known as Club Aspire coming soon at Heathrow Terminal 5"; its T5 page
+    (/lounges-by-location/no1-lounge-at-heathrow-t5/) says "This lounge is currently closed while we
+    create a brand-new flagship No1 Lounge experience at Heathrow Terminal 5", and the operator news
+    post gives "opening in early Spring 2027". `walkInPence` 4000 → null, `priorityPass` true →
+    false, name suffixed, notes rewritten. Entry kept so the page says it is closed.
+  - **Plaza Premium Lounge (Terminal 5): "from GBP 49.00"** on
+    https://www.plazapremiumlounge.com/en-uk/find/europe/united-kingdom/london/london-heathrow-airport
+    (Departures, Terminal 5 card), read in the in-app browser (headless fetches 403). 4750 → 4900.
+  - `sourceUrl` → https://no1lounges.com/locations/london-heathrow/; watchlist regenerated.
+
+## 2026-11-21 — daily ParkMath check, `lounges:glasgow` (lounges v1.1.3)
+
+Re-covers open PR #99 inside the rolling cycle. Glasgow Airport's site-wide alert banner still carries "UpperDeck Lounge Refurbishments" (no dates or closure stated, so no news item).
+
+- **UpperDeck Lounge, official page** https://www.glasgowairport.com/at-the-airport/airport-services/upperdeck-lounge/ (read via r.jina.ai with the browser engine; direct fetches 403). The top PRICING block reads "Adult (18+): From £30 / Children (4-17) : From £17 / Infants (0-3) : Free". On 2026-10-07 it read "From £27".
+  - Dataset: `walkInPence` 2700 → **3000**; record `verifiedAt` → 2026-11-21.
+  - **Inconsistency on the official page (unchanged since #99 saw it on 2026-11-19):** the lower "Useful Information → Pricing" block still reads "Adult: From £27 / Children: From £17". The top, age-banded block is treated as current. Flagged NEEDS-HUMAN.
+- Opening times (Monday–Sunday 04:45–20:30) and maximum stay (up to 3 hours) unchanged.
+- Also read today, unchanged and not re-stamped (verified yesterday in this cycle): Newcastle Long Stay turn-up-and-park £50 / £80 / £120 / £160, then £40 per day (https://www.newcastleairport.com/car-parking/car-parking-options/). London City drop-off page returned the Cloudflare "Performing security verification" page; value kept from 2026-11-20.
+
+## 2026-11-23 — daily ParkMath sweep, 2026-10-07 batch (parking v1.3.4, lounges v1.1.4)
+
+Scope: every parking and lounge record still stamped 2026-10-07 (15 parking, 8 lounges), plus the
+standing target `parking:newcastle` (read-only, stamped 2026-11-20). Transport: browser-UA curl for
+most pages; jina `X-Engine: browser` for Bristol, Belfast International, Newcastle; in-app Browser
+pane for Birmingham (turn-up prices + lounges) and the Teesside retry.
+
+**Changed**
+
+- **parking:heathrow** — https://www.heathrow.com/transport-and-directions/heathrow-parking/heathrow-park-and-ride
+  Table: "First day £50.00", "Additional 24-hour periods £40.00"; prose: "On the day, pricing for
+  Park & Ride parking starts at £50.00 for the first day, with further 24-hour periods starting at
+  £40.00 per day." Was £46.80 + £37.40. Totals recomputed: 3d 50+2×40 = £130 (13000), 7d 50+6×40 =
+  £290 (29000), 14d 50+13×40 = £570 (57000).
+- **lounges:manchester** — https://escapelounges.com/uk/airport-lounges/
+  "Manchester Terminal 2 - Escape Lounges From £36.99 per person" (3999 → 3699);
+  "Manchester Terminal 3 – Escape Lounges From £31.99 per person" (2999 → 3199). From-price basis
+  unchanged. The listing also shows "The Executive by Escape Lounges From £57.99" at T2 (not in the
+  dataset).
+
+**Re-verified unchanged (verifiedAt → 2026-11-23)**
+
+- Parking: gatwick, manchester (incl. JetParks pre-book £54.99), stansted (Mid Stay £48 is on
+  /parking/turn-up-and-park/, not the record's Long Stay URL), luton, edinburgh, birmingham (Car Park 7
+  "Up to 24 hours £51.00", "Per day thereafter* £44.00"), bristol, leeds-bradford, liverpool,
+  prestwick, aberdeen (incl. pre-book £49.99), belfast-international, exeter (P2 unchanged; the page
+  now also publishes a P3 drive-up tariff — 3 days £70, 5 days £130, then £30/day — which the record's
+  notes call pre-book only; not added).
+- Lounges: gatwick (South £34, North £40), stansted £28.99, luton MyLounge £37.99, edinburgh £36.99,
+  birmingham (Aspire South "£42.99", No1 "£38"), bristol (£39.99 / £35), newcastle £46. Priority Pass
+  flags rest on the prioritypass.com directory and were not re-fetched.
+- Standing target parking:newcastle: £50 / £80 / £120 / £160, then £40/day — matches; not re-stamped
+  (verified 2026-11-20 this cycle).
+
+**Unverifiable — parking:teesside (kept, NOT re-stamped).** The official parking page no longer
+carries the "Standard turn-up and park rates" table that the 8200/10500/21000 values come from. Read
+via browser-UA curl, jina browser and the in-app Browser pane: the page now shows only the drop-off
+tariff (0–10 min £2.50, 10–60 min £5.00, £7 per hour after) and "Free parking for up to 2 hours when
+you spend minimum of £5 in the terminal". Values kept; verifiedAt stays 2026-10-07 (60-day warning
+on 2026-12-06). Needs a human decision.
+
+## 2026-11-27 — daily ParkMath check (parking v1.3.4, lounges v1.1.4, no change)
+
+Scope: ParkMath records older than 46 days on the rolling branch (only `parking:teesside`,
+verifiedAt 2026-10-07), the standing target `parking:newcastle`, and nothing price-relevant from the
+news sweep. ParkMath has no `pendingSince` entries in `tools/freshness/hashes.json` (the three that are
+pending are RoamMath baggage pages, out of scope for the daily run).
+
+- **parking:teesside: still unverifiable (kept, NOT re-stamped).** Re-read
+  https://www.teessideinternational.com/teesside-airport-parking/ with browser-UA curl and jina. The
+  page still has no "Standard turn-up and park rates" table. Its only tariff is the drop-off one, plus
+  "Free parking for up to 2 hours when you spend minimum of £5 in the terminal". The only fees PDF
+  the page links to, `TIA_Fees-and-Charges_26.27-1st-edition-updated.pdf`, lists aeronautical
+  charges only (aircraft parking, passes), not car parking. verifiedAt stays 2026-10-07, and the
+  60-day warning fires on **2026-12-06**. Needs a human decision.
+- **Standing target parking:newcastle**, at https://www.newcastleairport.com/car-parking/car-parking-options/
+  (read with jina `X-Engine: browser`). The Long Stay turn-up table reads: up to 24 hours £50.00,
+  2 days £80.00, 3 days £120.00, 4 days £160.00, then "Per day or part thereafter £40.00". This matches
+  the stored record. Not re-stamped, because it was verified on 2026-11-20 in this cycle.
+- **Incidental: lounges:glasgow.** The official UpperDeck page still reads "Adult (18+): From £30",
+  matching the stored record. Its site-wide alert, "UpperDeck Lounge Refurbishments", is a toilet
+  refurbishment ("there may be some disruption"). It changes neither price nor access. Not re-stamped,
+  because it was verified on 2026-11-21.
